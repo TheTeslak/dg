@@ -1,7 +1,7 @@
 {
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "build": "npm run static && cross-env NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && cp _dist_redirects dist/_redirects",
     "dev": "vite --port 3333 --open",
@@ -53,8 +53,10 @@
     "@types/nprogress": "catalog:types",
     "@types/prompts": "catalog:types",
     "@unocss/preset-web-fonts": "catalog:build",
+    "@unpic/placeholder": "catalog:frontend",
     "@vitejs/plugin-vue": "catalog:build",
     "ansis": "catalog:dev",
+    "blurhash": "catalog:dev",
     "cross-env": "catalog:dev",
     "degit": "catalog:dev",
     "diacritics": "catalog:dev",
