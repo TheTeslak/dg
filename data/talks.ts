@@ -2,11 +2,11 @@ import type { Talk } from '~/types'
 
 export const talks: Talk[] = [
   {
-    title: 'Vite DevTools 前瞻介绍',
-    description: '提前预览 Vite DevTools 将会提供的能力，了解开发者工具的设计哲学，以及我们可以期待一些什么',
-    lang: 'zh',
+    title: 'Introducing Vite DevTools',
+    description: 'Introduction to Vite DevTools',
     presentations: [
       {
+        lang: 'zh',
         date: '2025-07-12',
         location: 'Shenzhen, China',
         conference: 'VueConf China',
@@ -14,6 +14,40 @@ export const talks: Talk[] = [
         recording: 'https://www.bilibili.com/video/BV1Nqb1zoENu/',
         pdf: 'https://talks.antfu.me/2025-07-12/pdf',
         spa: 'https://talks.antfu.me/2025/vueconf-china',
+      },
+      {
+        lang: 'en',
+        date: '2025-10-09',
+        location: 'Amsterdam, Netherlands',
+        conference: 'ViteConf',
+        conferenceUrl: 'https://viteconf.amsterdam/',
+        pdf: 'https://talks.antfu.me/2025-10-09/pdf',
+        spa: 'https://talks.antfu.me/2025/viteconf',
+        recording: 'https://youtu.be/tVd0JeSr8kg',
+      },
+      {
+        lang: 'ja',
+        date: '2025-10-25',
+        location: 'Tokyo, Japan',
+        conference: 'Vue Fes Japan',
+        conferenceUrl: 'https://vuefes.jp/2025/en/',
+        pdf: 'https://talks.antfu.me/2025-10-25/pdf',
+        spa: 'https://talks.antfu.me/2025/vuefes',
+      },
+    ],
+  },
+  {
+    title: 'Make Tools People Love',
+    description: 'What I\'ve learned about building tools that delight developers',
+    presentations: [
+      {
+        date: '2025-09-18',
+        location: 'Boston, USA',
+        conference: 'SquiggleConf',
+        conferenceUrl: 'https://2025.squiggleconf.com/',
+        recording: 'https://www.youtube.com/live/C_ePbVZqXrw?t=975',
+        pdf: 'https://talks.antfu.me/2025-09-18/pdf',
+        spa: 'https://talks.antfu.me/2025/squiggleconf',
       },
     ],
   },
@@ -67,6 +101,7 @@ export const talks: Talk[] = [
         location: 'Tokyo, Japan',
         conference: 'Vue Fes Japan',
         conferenceUrl: 'https://vuefes.jp/2024/en/',
+        recording: 'https://youtu.be/GpRzKOjckoU',
         pdf: 'https://talks.antfu.me/2024-10-19/pdf',
         spa: 'https://talks.antfu.me/2024/vue-fes-japan',
       },
@@ -92,6 +127,7 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://greece.cityjsconf.org/',
         pdf: 'https://talks.antfu.me/2024-06-08/pdf',
         spa: 'https://talks.antfu.me/2024/cityjs-athens',
+        recording: 'https://youtu.be/W26P4ss059E',
       },
       {
         date: '2024-06-13',
@@ -126,6 +162,7 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://2025.tskaigi.org/',
         pdf: 'https://talks.antfu.me/2025-05-23/pdf',
         spa: 'https://talks.antfu.me/2025/tskaigi',
+        recording: 'https://youtu.be/12njGF7etuo',
       },
     ],
   },
@@ -181,6 +218,7 @@ export const talks: Talk[] = [
         location: 'Amsterdam, Netherlands',
         conference: 'Vue Amsterdam',
         conferenceUrl: 'https://vuejs.amsterdam',
+        recording: 'https://youtu.be/67Pha7sZ6l0',
         pdf: 'https://antfu.me/talks/2024-02-29',
         spa: 'https://talks.antfu.me/2024/vue-amsterdam/1',
       },
@@ -189,6 +227,7 @@ export const talks: Talk[] = [
         location: 'Online',
         conference: 'Frontend Nation',
         conferenceUrl: 'https://frontendnation.com',
+        recording: 'https://youtu.be/YbyXsi4TPtc',
       },
       {
         date: '2024-10-03',
