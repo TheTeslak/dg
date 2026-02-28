@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { formatDate } from '~/logics'
+import { formatDate, resolvePath } from '~/logics'
 
 const { frontmatter } = defineProps({
   frontmatter: {
@@ -12,10 +12,32 @@ const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
 
-const base = 'https://antfu.me'
-const tweetUrl = computed(() => `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Reading @antfu7\'s ${base}${route.path}\n\nI think...`)}`)
-const elkUrl = computed(() => `https://elk.zone/intent/post?text=${encodeURIComponent(`Reading @antfu@m.webtoo.ls\'s ${base}${route.path}\n\nI think...`)}`)
-const blueskyUrl = computed(() => `https://bsky.app/intent/compose?text=${encodeURIComponent(`Reading @antfu.me ${base}${route.path}\n\nI think...`)}`)
+
+const supportedLocales = ['en', 'ru', 'es']
+
+const currentLocale = computed(() => {
+  const pathLocale = route.path.split('/')[1]
+  return supportedLocales.includes(pathLocale) ? pathLocale : 'en'
+})
+
+/**
+ * Determine the content type from frontmatter.
+ * Notes have type 'note', articles have no type (defaults to 'blog').
+ */
+const postType = computed(() => {
+  const type = frontmatter.type || 'blog'
+  if (type.split('+').includes('note')) return 'note'
+  return 'blog'
+})
+
+/**
+ * Link back to the listing page for the current content type.
+ */
+const backToAllPath = computed(() => {
+  if (postType.value === 'note')
+    return `/${currentLocale.value}/notes`
+  return `/${currentLocale.value}/articles`
+})
 
 onMounted(() => {
   const navigate = () => {
@@ -56,12 +78,15 @@ onMounted(() => {
 
       event.preventDefault()
       const { pathname, hash } = url
+      
+      const resolvedPath = resolvePath(pathname, route.path)
+
       if (hash && (!pathname || pathname === location.pathname)) {
         window.history.replaceState({}, '', hash)
         navigate()
       }
       else {
-        router.push({ path: pathname, hash })
+        router.push({ path: resolvedPath, hash })
       }
     }
   }
@@ -127,7 +152,7 @@ const ArtComponent = computed(() => {
       v-if="frontmatter.draft"
       class="slide-enter" bg-orange-4:10 text-orange-4 border="l-3 orange-4" px4 py2
     >
-      This is a draft post, the content may be incomplete. Please check back later.
+      {{ $t('blog-draft') }}
     </p>
   </div>
   <article
@@ -137,22 +162,29 @@ const ArtComponent = computed(() => {
   >
     <slot />
   </article>
-  <div v-if="route.path !== '/'" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
-    <template v-if="frontmatter.duration">
+  <div v-if="route.path !== '/' && frontmatter.date" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
+    <template v-if="frontmatter.telegram || frontmatter.mastodon">
       <span font-mono op50>> </span>
-      <span op50>comment on </span>
-      <a :href="blueskyUrl" target="_blank" op50>bluesky</a>
-      <span op25> / </span>
-      <a :href="elkUrl" target="_blank" op50>mastodon</a>
-      <span op25> / </span>
-      <a :href="tweetUrl" target="_blank" op50>twitter</a>
+      <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
+      <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" op50>{{ $t('post-link-telegram') }}</a>
+      <span v-if="frontmatter.telegram && frontmatter.mastodon" op25> / </span>
+      <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" op50>{{ $t('post-link-mastodon') }}</a>
     </template>
-    <br>
+
+    <!-- Prev / Next chronological navigation -->
+    <PostNavigation
+      v-if="frontmatter.date"
+      :current-path="route.path"
+      :type="postType"
+      class="mt-6 mb-4"
+    />
+
+    <!-- Back to listing -->
     <span font-mono op50>> </span>
     <RouterLink
-      :to="route.path.split('/').slice(0, -1).join('/') || '/'"
+      :to="backToAllPath"
       class="font-mono op50 hover:op75"
-      v-text="'cd ..'"
+      v-text="$t('action-back-to-all')"
     />
   </div>
 </template>

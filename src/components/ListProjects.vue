@@ -9,7 +9,7 @@ function slug(name: string) {
 <template>
   <div class="max-w-300 mx-auto">
     <p text-center mt--6 mb5 op50 text-lg italic>
-      Projects that I created or maintaining.
+      {{ $t('projects-subtitle') }}
     </p>
     <div class="prose pb5 mx-auto mt10 text-center">
       <div flex="~ gap-2 justify-center">
@@ -33,7 +33,7 @@ function slug(name: string) {
             i-ph-rocket-launch-duotone
             group-hover="i-ph-rocket-launch-fill text-amber"
           />
-          Recent Releases
+          {{ $t('projects-recent-releases') }}
         </a>
         <a
           href="https://yak.antfu.me"
@@ -95,7 +95,7 @@ function slug(name: string) {
     </div>
     <div class="prose pb5 mx-auto mt10 text-center">
       <div block mt-5>
-        <a href="https://antfu.me/stars-rank" target="_blank" op50>All projects sort by Stars</a>
+        <a href="https://antfu.me/stars-rank" target="_blank" op50>{{ $t('projects-sort-by-stars') }}</a>
       </div>
       <hr>
       <SponsorButtons />

@@ -1,13 +1,12 @@
 import dayjs from 'dayjs'
+import { nextTick } from 'vue'
 
 export const isDark = useDark()
-export const englishOnly = useLocalStorage('antfu-english-only', false)
+
+export const onlyLanguage = useLocalStorage('antfu-only-language', false)
+
 export const galleryView = useLocalStorage<'cover' | 'contain'>('antfu-gallery-view', 'cover')
 
-/**
- * Credit to [@hooray](https://github.com/hooray)
- * @see https://github.com/vuejs/vitepress/pull/2347
- */
 export function toggleDark(event: MouseEvent) {
   // @ts-expect-error experimental API
   const isAppearanceTransition = document.startViewTransition
@@ -57,4 +56,19 @@ export function formatDate(d: string | Date, onlyDate = true) {
   if (onlyDate || date.year() === dayjs().year())
     return date.format('MMM D')
   return date.format('MMM D, YYYY')
+}
+
+export function resolvePath(path: string, currentRoutePath: string) {
+  if (path.startsWith('http') || path.startsWith('#') || path.startsWith('mailto'))
+    return path
+
+  const parts = currentRoutePath.split('/')
+  const locale = ['en', 'ru', 'es'].includes(parts[1]) ? parts[1] : 'en'
+
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  
+  if (cleanPath.startsWith('en/') || cleanPath.startsWith('ru/') || cleanPath.startsWith('es/'))
+    return `/${cleanPath}`
+
+  return `/${locale}/${cleanPath}`
 }

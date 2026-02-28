@@ -50,7 +50,6 @@ export default defineConfig({
     VueRouter({
       extensions: ['.vue', '.md'],
       routesFolder: 'pages',
-      // logs: true,
       extendRoute(route) {
         const path = route.components.get('default')
         if (!path)
@@ -176,7 +175,7 @@ export default defineConfig({
           promises.push(
             fs.existsSync(`${id.slice(0, -3)}.png`)
               ? fs.copy(`${id.slice(0, -3)}.png`, `public/${path}`)
-              : generateOg(frontmatter.title!.replace(/\s-\s.*$/, '').trim(), `public/${path}`),
+              : generateOg(String(frontmatter.title).replace(/\s-\s.*$/, '').trim(), `public/${path}`),
           )
           frontmatter.image = `https://antfu.me/${path}`
         })()
@@ -247,7 +246,7 @@ async function generateOg(title: string, output: string) {
     return
 
   await fs.mkdir(dirname(output), { recursive: true })
-  // breakline every 30 chars
+  
   const lines = title.trim().split(/(.{0,30})(?:\s|$)/g).filter(Boolean)
 
   const data: Record<string, string> = {

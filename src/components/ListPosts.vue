@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { Post } from '~/types'
-import { useRouter } from 'vue-router/auto'
-import { englishOnly, formatDate } from '~/logics'
+import { useRouter, useRoute } from 'vue-router'
+import type { RouteRecordNormalized } from 'vue-router'
+import { formatDate, onlyLanguage } from '~/logics'
+import { useFluent } from 'fluent-vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   type?: string
@@ -9,27 +12,55 @@ const props = defineProps<{
   extra?: Post[]
 }>()
 
+const fluent = useFluent()
 const router = useRouter()
-const routes: Post[] = router.getRoutes()
-  .filter(i => i.path.startsWith('/posts') && i.meta.frontmatter.date && !i.meta.frontmatter.draft)
-  .filter(i => !i.path.endsWith('.html') && (i.meta.frontmatter.type || 'blog').split('+').includes(props.type))
-  .map(i => ({
-    path: i.meta.frontmatter.redirect || i.path,
-    title: i.meta.frontmatter.title,
-    date: i.meta.frontmatter.date,
-    lang: i.meta.frontmatter.lang,
-    duration: i.meta.frontmatter.duration,
-    recording: i.meta.frontmatter.recording,
-    upcoming: i.meta.frontmatter.upcoming,
-    redirect: i.meta.frontmatter.redirect,
-    place: i.meta.frontmatter.place,
-  }))
+const route = useRoute()
 
-const posts = computed(() =>
-  [...(props.posts || routes), ...props.extra || []]
+const locale = computed(() => {
+  const pathLocale = route.path.split('/')[1]
+  return ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
+})
+
+const supportedLocales = ['en', 'ru', 'es']
+
+const routes = computed<Post[]>(() => {
+  return router.getRoutes()
+    .filter((r: RouteRecordNormalized) => 
+      supportedLocales.some(l => r.path.startsWith(`/${l}/articles`)) && 
+      r.meta.frontmatter?.date && 
+      !r.meta.frontmatter?.draft
+    )
+    .filter((r: RouteRecordNormalized) => 
+      !r.path.endsWith('.html') && 
+      (r.meta.frontmatter?.type || 'blog').split('+').includes(props.type)
+    )
+    .map((r: RouteRecordNormalized) => ({
+      path: r.meta.frontmatter?.redirect || r.path,
+      title: r.meta.frontmatter?.title,
+      date: r.meta.frontmatter?.date,
+      lang: r.meta.frontmatter?.lang,
+      duration: r.meta.frontmatter?.duration,
+      recording: r.meta.frontmatter?.recording,
+      upcoming: r.meta.frontmatter?.upcoming,
+      redirect: r.meta.frontmatter?.redirect,
+      place: r.meta.frontmatter?.place,
+    }))
+})
+
+const posts = computed(() => {
+  const list = [...(props.posts || routes.value), ...props.extra || []]
     .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-    .filter(i => !englishOnly.value || !i.lang || i.lang === 'en'),
-)
+  
+  if (onlyLanguage.value) {
+    return list.filter(i => {
+      if (getPostLocale(i) !== locale.value) return false
+      const articleLang = i.lang
+      if (articleLang && articleLang !== locale.value) return false
+      return true
+    })
+  }
+  return list
+})
 
 const getYear = (a: Date | string | number) => new Date(a).getFullYear()
 const isFuture = (a?: Date | string | number) => a && new Date(a) > new Date()
@@ -40,8 +71,34 @@ function isSameGroup(a: Post, b?: Post) {
 
 function getGroupName(p: Post) {
   if (isFuture(p.date))
-    return 'Upcoming'
+    return fluent.format('blog-upcoming')
   return getYear(p.date)
+}
+
+function getPostLocale(post: Post): string {
+  if (post.path?.startsWith('/') && !post.path.startsWith('//')) {
+    const parts = post.path.split('/')
+    if (parts.length > 1 && supportedLocales.includes(parts[1])) {
+      return parts[1]
+    }
+  }
+  return post.lang || 'en'
+}
+
+function isPostInCurrentLang(post: Post) {
+  return getPostLocale(post) === locale.value
+}
+
+function getPostLangTag(post: Post) {
+  const postLocale = getPostLocale(post)
+  if (postLocale !== locale.value) {
+    return `[${postLocale.toUpperCase()}]`
+  }
+  const articleLang = post.lang
+  if (articleLang && articleLang !== postLocale) {
+    return `[${articleLang.toUpperCase()}]`
+  }
+  return null
 }
 </script>
 
@@ -49,7 +106,7 @@ function getGroupName(p: Post) {
   <ul>
     <template v-if="!posts.length">
       <div py2 op50>
-        { nothing here yet }
+        {{ $t('blog-nothing-here') }}
       </div>
     </template>
 
@@ -84,18 +141,18 @@ function getGroupName(p: Post) {
           "
           class="item block font-normal mb-6 mt-2 no-underline"
         >
-          <li class="no-underline" flex="~ col md:row gap-2 md:items-center">
+          <li 
+            class="no-underline" 
+            flex="~ col md:row gap-2 md:items-center"
+            :class="!isPostInCurrentLang(route) ? 'op40 hover:op80 transition-opacity' : ''"
+          >
             <div class="title text-lg leading-1.2em" flex="~ gap-2 wrap">
-              <span
-                v-if="route.lang === 'zh'"
-                align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 ml--12 mr2 my-auto hidden md:block"
-              >中文</span>
-              <span
-                v-if="route.lang === 'ja'"
-                align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 ml--15 mr2 my-auto hidden md:block"
-              >日本語</span>
+              <span 
+                v-if="getPostLangTag(route)" 
+                class="text-xs border border-current rounded px-1 py-0.5 my-auto op70 font-mono"
+              >
+                {{ getPostLangTag(route) }}
+              </span>
               <span align-middle>{{ route.title }}</span>
               <span
                 v-if="route.redirect"
@@ -131,16 +188,6 @@ function getGroupName(p: Post) {
               <span v-if="route.duration" text-sm op40 ws-nowrap>· {{ route.duration }}</span>
               <span v-if="route.platform" text-sm op40 ws-nowrap>· {{ route.platform }}</span>
               <span v-if="route.place" text-sm op40 ws-nowrap md:hidden>· {{ route.place }}</span>
-              <span
-                v-if="route.lang === 'zh'"
-                align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
-              >中文</span>
-              <span
-                v-if="route.lang === 'ja'"
-                align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
-              >日本語</span>
             </div>
           </li>
           <div v-if="route.place" op50 text-sm hidden mt--2 md:block>

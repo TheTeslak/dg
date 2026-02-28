@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { talks } from '../../data/talks'
-import { englishOnly, formatDate } from '../logics'
+import { formatDate, onlyLanguage } from '../logics'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const currentLocale = computed(() => {
+  const pathLocale = route.path.split('/')[1]
+  return ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
+})
 
 function getSlug(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-')
@@ -18,7 +26,7 @@ function daysLeft(date: string) {
 
 <template>
   <template v-for="talk, idx of talks" :key="idx">
-    <div v-if="!englishOnly || !talk.lang || talk.lang === 'en'">
+    <div v-if="!onlyLanguage || !talk.lang || talk.lang === currentLocale">
       <div v-if="idx !== 0" pt4>
         <hr>
       </div>
@@ -45,7 +53,7 @@ function daysLeft(date: string) {
       </div>
       <div grid="~ cols-1 md:cols-[1fr_max-content] gap-4" pt6>
         <template v-for="p, idx2 in talk.presentations" :key="idx2">
-          <template v-if="!englishOnly || !p.lang || p.lang === 'en'">
+          <template v-if="!onlyLanguage || !p.lang || p.lang === currentLocale">
             <div :lang="p.lang">
               <a :href="p.conferenceUrl" target="_blank" rel="noopener noreferrer">
                 {{ p.conference }}
@@ -67,19 +75,19 @@ function daysLeft(date: string) {
             <div flex="~ gap-3 justify-end items-center">
               <a v-if="p.recording" :href="p.recording" target="_blank" rel="noopener noreferrer" op50 hover:op100 important-transition-opacity duration-500 important-border-0>
                 <div i-ri-play-large-line />
-                Watch
+                {{ $t('talks-watch') }}
               </a>
               <a v-if="p.transcript" :href="p.transcript" target="_blank" rel="noopener noreferrer" op50 hover:op100 important-transition-opacity duration-500 important-border-0>
                 <div i-ri-file-list-3-line />
-                Transcript
+                {{ $t('talks-transcript') }}
               </a>
               <a v-if="p.spa" :href="p.spa" target="_blank" rel="noopener noreferrer" op50 hover:op100 important-transition-opacity duration-500 important-border-0>
                 <div i-ri-presentation-fill />
-                Slides
+                {{ $t('talks-slides') }}
               </a>
               <a v-if="p.pdf" :href="p.pdf" target="_blank" rel="noopener noreferrer" op50 hover:op100 important-transition-opacity duration-500 important-border-0>
                 <div i-ri-download-2-line />
-                PDF
+                {{ $t('talks-pdf') }}
               </a>
               <a
                 v-if="isFuture(p.date)" :href="p.conferenceUrl" target="_blank"
@@ -88,7 +96,7 @@ function daysLeft(date: string) {
                 font-serif bg-gray:15 px2 rounded font-bold mr--2
               >
                 <div i-ri-time-line />
-                in {{ daysLeft(p.date) }} days
+                {{ $t('talks-days-left', { days: daysLeft(p.date) }) }}
               </a>
             </div>
           </template>

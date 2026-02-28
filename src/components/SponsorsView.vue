@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SponsorsTiers from '../../public/sponsors.svg?component'
+import SponsorsTiers from '../assets/sponsors.svg?component'
 
 const showCircle = ref(true)
 </script>
@@ -7,11 +7,11 @@ const showCircle = ref(true)
 <template>
   <div flex="~ gap-2 items-center justify-center" z-100 mt-5>
     <button op50 hover:op100 :class="showCircle ? 'op75' : 'op50'" @click="showCircle = true">
-      Sponsor Circles
+      {{ $t('sponsors-circles') }}
     </button>
     <span op25>|</span>
     <button op50 hover:op100 :class="showCircle ? 'op50' : 'op75'" @click="showCircle = false">
-      Sponsor Tiers
+      {{ $t('sponsors-tiers') }}
     </button>
   </div>
 

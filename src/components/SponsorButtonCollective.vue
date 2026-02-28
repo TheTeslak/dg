@@ -9,6 +9,6 @@
       group-hover="i-ph-hand-heart-fill text-rose"
       transition-all duration-200 ease-out
     />
-    Sponsor the Ecosystem
+    {{ $t('sponsors-ecosystem') }}
   </a>
 </template>

@@ -1,13 +1,12 @@
 <template>
   <p>
-    If you enjoy my work and find them useful,
-    consider sponsor me and the ecosystem to help Open Source sustainable. Thank you!
+    {{ $t('sponsors-desc') }}
   </p>
 
   <p flex="~ gap-2 wrap items-center">
     <SponsorButtonCollective />
     <span op50 text-sm>
-      <a href="/posts/sponsorship-forwarding" target="_blank">How does this work?</a>
+      <a href="/articles/sponsorship-forwarding" target="_blank">{{ $t('sponsors-how-works') }}</a>
     </span>
   </p>
   <p flex="~ gap-2 wrap">
@@ -21,7 +20,7 @@
         group-hover="i-ph-heart-fill text-rose"
         transition-all duration-200 ease-out
       />
-      Sponsor to support Anthony
+      {{ $t('sponsors-support-me') }}
     </a>
     <a
       href="https://afdian.com/a/antfu"
@@ -33,7 +32,7 @@
         group-hover="i-ph-lightning-fill text-yellow"
         transition-all duration-200 ease-out
       />
-      在爱发电上支持我
+      {{ $t('sponsors-afdian') }}
     </a>
   </p>
 </template>

@@ -1,8 +1,10 @@
-catalogMode: prefer
-shellEmulator: true
-trustPolicy: no-downgrade
-
 packages: []
+
+catalog:
+  '@fluent/bundle': ^0.19.1
+  fluent-vue: ^3.8.1
+
+catalogMode: prefer
 
 catalogs:
   build:
@@ -95,3 +97,7 @@ onlyBuiltDependencies:
   - sharp
   - simple-git-hooks
   - unrs-resolver
+
+shellEmulator: true
+
+trustPolicy: no-downgrade

@@ -18,33 +18,56 @@ const markdown = MarkdownIt({
   linkify: true,
 })
 
+const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
+
 async function run() {
-  await buildBlogRSS()
+  for (const locale of SUPPORTED_LOCALES) {
+    await buildLocaleFeed(locale)
+  }
 }
 
-async function buildBlogRSS() {
-  const files = await fg('pages/posts/*.md')
+async function buildLocaleFeed(locale: string) {
+  const files = await fg(`pages/${locale}/articles/*.md`)
 
-  const options = {
-    title: 'Anthony Fu',
-    description: 'Anthony Fu\' Blog',
-    id: 'https://antfu.me/',
-    link: 'https://antfu.me/',
+  const localeTitles: Record<string, string> = {
+    en: 'Anthony Fu',
+    ru: 'Anthony Fu (Русский)',
+    es: 'Anthony Fu (Español)',
+  }
+
+  const localeDescriptions: Record<string, string> = {
+    en: 'Anthony Fu\'s Blog',
+    ru: 'Блог Anthony Fu',
+    es: 'Blog de Anthony Fu',
+  }
+
+  const feedName = locale === 'en' ? 'feed' : `feed-${locale}`
+  const feedUrl = `${DOMAIN}/${feedName}`
+
+  const options: FeedOptions = {
+    title: localeTitles[locale] || localeTitles.en,
+    description: localeDescriptions[locale] || localeDescriptions.en,
+    id: `${DOMAIN}/${locale}/`,
+    link: `${DOMAIN}/${locale}/`,
+    language: locale,
     copyright: 'CC BY-NC-SA 4.0 2021 © Anthony Fu',
     feedLinks: {
-      json: 'https://antfu.me/feed.json',
-      atom: 'https://antfu.me/feed.atom',
-      rss: 'https://antfu.me/feed.xml',
+      json: `${feedUrl}.json`,
+      atom: `${feedUrl}.atom`,
+      rss: `${feedUrl}.xml`,
     },
   }
+
   const posts: any[] = (
     await Promise.all(
-      files.filter(i => !i.includes('index'))
+      files
+        .filter(i => !i.includes('index') && !i.includes('[...'))
         .map(async (i) => {
           const raw = await fs.readFile(i, 'utf-8')
           const { data, content } = matter(raw)
 
-          if (data.lang !== 'en')
+          // Skip posts without date or drafts
+          if (!data.date || data.draft)
             return
 
           const html = markdown.render(content)
@@ -66,7 +89,10 @@ async function buildBlogRSS() {
 
   posts.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 
-  await writeFeed('feed', options, posts)
+  await writeFeed(feedName, options, posts)
+
+  // eslint-disable-next-line no-console
+  console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts → dist/${feedName}.xml`)
 }
 
 async function writeFeed(name: string, options: FeedOptions, items: Item[]) {
@@ -77,7 +103,6 @@ async function writeFeed(name: string, options: FeedOptions, items: Item[]) {
   const feed = new Feed(options)
 
   items.forEach(item => feed.addItem(item))
-  // items.forEach(i=> console.log(i.title, i.date))
 
   await fs.ensureDir(dirname(`./dist/${name}`))
   await fs.writeFile(`./dist/${name}.xml`, feed.rss2(), 'utf-8')

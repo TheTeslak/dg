@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useWindowScroll } from '@vueuse/core'
+
+const route = useRoute()
+
+const currentLocale = computed(() => {
+  const pathLocale = route.path.split('/')[1]
+  return ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
+})
+
 function toTop() {
   window.scrollTo({
     top: 0,
@@ -13,13 +24,13 @@ const { y: scroll } = useWindowScroll()
   <header class="header z-40">
     <RouterLink
       class="w-12 h-12 absolute xl:fixed m-5 select-none outline-none"
-      to="/"
+      :to="`/${currentLocale}`"
       focusable="false"
     >
       <Logo />
     </RouterLink>
     <button
-      title="Scroll to top"
+      :title="$t('action-to-top')"
       fixed right-3 bottom-3 w-10 h-10 hover:op100 rounded-full
       hover-bg-hex-8883 transition duration-300 z-100 print:hidden
       :class="scroll > 300 ? 'op30' : 'op0! pointer-events-none'"
@@ -30,43 +41,44 @@ const { y: scroll } = useWindowScroll()
     <nav class="nav">
       <div class="spacer" />
       <div class="right" print:op0>
-        <RouterLink to="/posts" title="Blog">
-          <span class="lt-md:hidden">Blog</span>
+        <RouterLink :to="`/${currentLocale}/notes`" :title="$t('nav-blog')">
+          <span class="lt-md:hidden">{{ $t('nav-blog') }}</span>
           <div i-ri-article-line md:hidden />
         </RouterLink>
-        <RouterLink to="/projects" title="Projects">
-          <span class="lt-md:hidden">Projects</span>
+        <RouterLink :to="`/${currentLocale}/projects`" :title="$t('nav-projects')">
+          <span class="lt-md:hidden">{{ $t('nav-projects') }}</span>
           <div i-ri-lightbulb-line class="md:hidden" />
         </RouterLink>
-        <RouterLink to="/talks" class="lt-md:hidden" title="Talks">
-          Talks
+        <RouterLink :to="`/${currentLocale}/photos`" :title="$t('nav-photos')" class="lt-md:hidden">
+          {{ $t('nav-photos') }}
         </RouterLink>
-        <RouterLink to="/sponsors-list" title="Sponsors">
-          <span class="lt-md:hidden">Sponsors</span>
+        <!-- hidden nav items (kept for future use) -->
+        <RouterLink v-if="false" :to="`/${currentLocale}/talks`" class="lt-md:hidden" :title="$t('nav-talks')">
+          {{ $t('nav-talks') }}
+        </RouterLink>
+        <RouterLink v-if="false" :to="`/${currentLocale}/sponsors-list`" :title="$t('nav-sponsors')">
+          <span class="lt-md:hidden">{{ $t('nav-sponsors') }}</span>
           <div i-ri-heart-line class="md:hidden" />
         </RouterLink>
-        <RouterLink to="/podcasts" class="lt-md:hidden" title="Podcasts">
+        <RouterLink v-if="false" :to="`/${currentLocale}/podcasts`" class="lt-md:hidden" :title="$t('nav-podcasts')">
           <div i-ri-mic-line />
         </RouterLink>
-        <RouterLink to="/photos" title="Photos">
-          <div i-ri-camera-3-line />
-        </RouterLink>
-        <RouterLink to="/demos" title="Demos">
+        <RouterLink v-if="false" :to="`/${currentLocale}/demos`" :title="$t('nav-demos')">
           <div i-ri-screenshot-line />
         </RouterLink>
-        <!-- <RouterLink to="/chat" title="Let's Chat">
-          <div i-ri-chat-1-line />
-        </RouterLink> -->
-        <a href="https://bsky.app/profile/antfu.me" target="_blank" title="Bluesky" class="lt-md:hidden">
-          <div i-ri-bluesky-line />
+        
+        <a href="https://t.me/" target="_blank" title="Telegram" class="lt-md:hidden">
+          <div i-ri-telegram-line />
         </a>
-        <a href="https://github.com/antfu" target="_blank" title="GitHub" class="lt-md:hidden">
+        <a v-if="false" href="https://github.com/antfu" target="_blank" title="GitHub" class="lt-md:hidden">
           <div i-uil-github-alt />
         </a>
-        <a href="/feed.xml" target="_blank" title="RSS" class="lt-md:hidden">
+        <a :href="currentLocale === 'en' ? '/feed.xml' : `/feed-${currentLocale}.xml`" target="_blank" title="RSS" class="lt-md:hidden">
           <div i-la-rss-square style="font-size:1.25rem; margin: 0 -0.125rem;" />
         </a>
+        
         <ToggleTheme />
+        <LanguageSelector />
       </div>
     </nav>
   </header>
