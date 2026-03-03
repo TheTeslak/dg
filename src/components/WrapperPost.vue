@@ -12,7 +12,6 @@ const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
 
-
 const supportedLocales = ['en', 'ru', 'es']
 
 const currentLocale = computed(() => {
@@ -26,7 +25,8 @@ const currentLocale = computed(() => {
  */
 const postType = computed(() => {
   const type = frontmatter.type || 'blog'
-  if (type.split('+').includes('note')) return 'note'
+  if (type.split('+').includes('note'))
+    return 'note'
   return 'blog'
 })
 
@@ -78,7 +78,7 @@ onMounted(() => {
 
       event.preventDefault()
       const { pathname, hash } = url
-      
+
       const resolvedPath = resolvePath(pathname, route.path)
 
       if (hash && (!pathname || pathname === location.pathname)) {
@@ -155,6 +155,11 @@ const ArtComponent = computed(() => {
       {{ $t('blog-draft') }}
     </p>
   </div>
+  <ScrollProgressToc
+    v-if="frontmatter.title"
+    :title="frontmatter.display ?? frontmatter.title"
+    :duration="frontmatter.duration"
+  />
   <article
     ref="content"
     :lang="frontmatter.lang"
