@@ -19,10 +19,10 @@ action-to-top = Наверх
 action-back-to-all = Ко всему
 
 blog-only-lang = Только { $lang }
-blog-nothing-here = { "{" } тут пока пусто { "}" }
+blog-nothing-here = { "{" } пока пусто { "}" }
 blog-upcoming = Скоро
-blog-draft = Это черновик, контент может быть неполным. Загляните позже.
-blog-read-more = Читать далее
+blog-draft = Черновик! Загляни позже.
+blog-read-more = Читать
 
 talks-watch = Смотреть
 talks-transcript = Транскрипт

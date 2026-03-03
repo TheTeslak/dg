@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Post } from '~/types'
-import { useRouter, useRoute } from 'vue-router'
 import type { RouteRecordNormalized } from 'vue-router'
-import { formatDate, onlyLanguage } from '~/logics'
+import type { Post } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { formatDate, onlyLanguage } from '~/logics'
 
 const props = defineProps<{
   type?: string
@@ -25,14 +25,14 @@ const supportedLocales = ['en', 'ru', 'es']
 
 const routes = computed<Post[]>(() => {
   return router.getRoutes()
-    .filter((r: RouteRecordNormalized) => 
-      supportedLocales.some(l => r.path.startsWith(`/${l}/articles`)) && 
-      r.meta.frontmatter?.date && 
-      !r.meta.frontmatter?.draft
+    .filter((r: RouteRecordNormalized) =>
+      supportedLocales.some(l => r.path.startsWith(`/${l}/articles`))
+      && r.meta.frontmatter?.date
+      && !r.meta.frontmatter?.draft,
     )
-    .filter((r: RouteRecordNormalized) => 
-      !r.path.endsWith('.html') && 
-      (r.meta.frontmatter?.type || 'blog').split('+').includes(props.type)
+    .filter((r: RouteRecordNormalized) =>
+      !r.path.endsWith('.html')
+      && (r.meta.frontmatter?.type || 'blog').split('+').includes(props.type),
     )
     .map((r: RouteRecordNormalized) => ({
       path: r.meta.frontmatter?.redirect || r.path,
@@ -50,12 +50,14 @@ const routes = computed<Post[]>(() => {
 const posts = computed(() => {
   const list = [...(props.posts || routes.value), ...props.extra || []]
     .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-  
+
   if (onlyLanguage.value) {
-    return list.filter(i => {
-      if (getPostLocale(i) !== locale.value) return false
+    return list.filter((i) => {
+      if (getPostLocale(i) !== locale.value)
+        return false
       const articleLang = i.lang
-      if (articleLang && articleLang !== locale.value) return false
+      if (articleLang && articleLang !== locale.value)
+        return false
       return true
     })
   }
@@ -85,18 +87,14 @@ function getPostLocale(post: Post): string {
   return post.lang || 'en'
 }
 
-function isPostInCurrentLang(post: Post) {
-  return getPostLocale(post) === locale.value
-}
-
 function getPostLangTag(post: Post) {
   const postLocale = getPostLocale(post)
   if (postLocale !== locale.value) {
-    return `[${postLocale.toUpperCase()}]`
+    return postLocale.toUpperCase()
   }
   const articleLang = post.lang
   if (articleLang && articleLang !== postLocale) {
-    return `[${articleLang.toUpperCase()}]`
+    return articleLang.toUpperCase()
   }
   return null
 }
@@ -141,18 +139,16 @@ function getPostLangTag(post: Post) {
           "
           class="item block font-normal mb-6 mt-2 no-underline"
         >
-          <li 
-            class="no-underline" 
+          <li
+            class="no-underline"
             flex="~ col md:row gap-2 md:items-center"
-            :class="!isPostInCurrentLang(route) ? 'op40 hover:op80 transition-opacity' : ''"
           >
             <div class="title text-lg leading-1.2em" flex="~ gap-2 wrap">
-              <span 
-                v-if="getPostLangTag(route)" 
-                class="text-xs border border-current rounded px-1 py-0.5 my-auto op70 font-mono"
-              >
-                {{ getPostLangTag(route) }}
-              </span>
+              <span
+                v-if="getPostLangTag(route)"
+                align-middle flex-none
+                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 ml--10 mr2 my-auto hidden md:block"
+              >{{ getPostLangTag(route) }}</span>
               <span align-middle>{{ route.title }}</span>
               <span
                 v-if="route.redirect"
@@ -188,6 +184,11 @@ function getPostLangTag(post: Post) {
               <span v-if="route.duration" text-sm op40 ws-nowrap>· {{ route.duration }}</span>
               <span v-if="route.platform" text-sm op40 ws-nowrap>· {{ route.platform }}</span>
               <span v-if="route.place" text-sm op40 ws-nowrap md:hidden>· {{ route.place }}</span>
+              <span
+                v-if="getPostLangTag(route)"
+                align-middle flex-none
+                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
+              >{{ getPostLangTag(route) }}</span>
             </div>
           </li>
           <div v-if="route.place" op50 text-sm hidden mt--2 md:block>

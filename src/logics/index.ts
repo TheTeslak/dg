@@ -53,9 +53,15 @@ export function toggleDark(event: MouseEvent) {
 
 export function formatDate(d: string | Date, onlyDate = true) {
   const date = dayjs(d)
-  if (onlyDate || date.year() === dayjs().year())
-    return date.format('MMM D')
-  return date.format('MMM D, YYYY')
+  const now = dayjs()
+  const isRecent = now.diff(date, 'day') < 14 && date.isBefore(now)
+  let formatted: string
+  if (onlyDate || date.year() === now.year())
+    formatted = date.format('MMM D')
+  else
+    formatted = date.format('MMM D, YYYY')
+  formatted = formatted.replace('.', '')
+  return isRecent ? `🌱 ${formatted}` : formatted
 }
 
 export function resolvePath(path: string, currentRoutePath: string) {
@@ -66,7 +72,7 @@ export function resolvePath(path: string, currentRoutePath: string) {
   const locale = ['en', 'ru', 'es'].includes(parts[1]) ? parts[1] : 'en'
 
   const cleanPath = path.startsWith('/') ? path.slice(1) : path
-  
+
   if (cleanPath.startsWith('en/') || cleanPath.startsWith('ru/') || cleanPath.startsWith('es/'))
     return `/${cleanPath}`
 
