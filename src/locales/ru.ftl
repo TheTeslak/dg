@@ -42,11 +42,11 @@ sponsors-circles = Круги спонсоров
 sponsors-tiers = Уровни спонсорства
 sponsors-how-works = Как это работает?
 
-footer-copyright = CC BY-NC-SA 4.0 2021-НАСТОЯЩЕЕ ВРЕМЯ © { -brand }
+footer-copyright = 2026 © { -brand }
 
 intro-desc = Привет, я { -brand }, фанатичный open-source разработчик.
 
-page-not-translated = Эта страница ещё не переведена. Показана оригинальная версия.
+page-not-translated = Страница ещё не переведена. Показана оригинальная версия.
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон

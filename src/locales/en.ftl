@@ -42,7 +42,7 @@ sponsors-circles = Sponsor Circles
 sponsors-tiers = Sponsor Tiers
 sponsors-how-works = How does this work?
 
-footer-copyright = CC BY-NC-SA 4.0 2021-PRESENT © { -brand }
+footer-copyright = 2026 © { -brand }
 
 intro-desc = Hey, I am { -brand }, a fanatical open sourceror.
 

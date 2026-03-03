@@ -42,7 +42,7 @@ sponsors-circles = Círculos de patrocinadores
 sponsors-tiers = Niveles de patrocinio
 sponsors-how-works = ¿Cómo funciona esto?
 
-footer-copyright = CC BY-NC-SA 4.0 2021-PRESENTE © { -brand }
+footer-copyright = 2026 © { -brand }
 
 intro-desc = Hola, soy { -brand }, un apasionado del código abierto.
 
