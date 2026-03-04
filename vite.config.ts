@@ -55,8 +55,34 @@ export default defineConfig({
         if (!path)
           return
 
+        const supportedLocales = ['en', 'ru', 'es']
+
         if (!path.includes('projects.md') && path.endsWith('.md')) {
           const { data } = matter(fs.readFileSync(path, 'utf-8'))
+
+          // Cross-locale aliases for articles
+          const articleMatch = path.match(/pages\/([a-z]{2})\/articles\/([^/]+)\.md$/)
+          if (articleMatch) {
+            const [, sourceLocale, slug] = articleMatch
+
+            if (slug !== 'index' && !slug.startsWith('[')) {
+              data.originalLocale = sourceLocale
+
+              const aliases: string[] = []
+              for (const targetLocale of supportedLocales) {
+                if (targetLocale === sourceLocale)
+                  continue
+                const targetFile = resolve(__dirname, `pages/${targetLocale}/articles/${slug}.md`)
+                if (!fs.existsSync(targetFile)) {
+                  aliases.push(`/${targetLocale}/articles/${slug}`)
+                }
+              }
+              if (aliases.length > 0) {
+                route.addAlias(aliases)
+              }
+            }
+          }
+
           route.addToMeta({
             frontmatter: data,
           })
@@ -246,7 +272,7 @@ async function generateOg(title: string, output: string) {
     return
 
   await fs.mkdir(dirname(output), { recursive: true })
-  
+
   const lines = title.trim().split(/(.{0,30})(?:\s|$)/g).filter(Boolean)
 
   const data: Record<string, string> = {

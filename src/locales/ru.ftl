@@ -50,3 +50,6 @@ page-not-translated = Страница ещё не переведена. Пок�
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон
+
+heading-link = ссылка на заголовок
+heading-copied = скопировано

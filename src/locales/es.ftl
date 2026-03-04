@@ -50,3 +50,6 @@ page-not-translated = Esta página aún no ha sido traducida. Mostrando la versi
 post-comment-on = comentar en
 post-link-telegram = Telegram
 post-link-mastodon = Mastodon
+
+heading-link = enlace al título
+heading-copied = copiado

@@ -114,6 +114,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/blocks-template': RouteRecordInfo<
+      '/en/articles/blocks-template',
+      '/en/articles/blocks-template',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/bonjour-paris': RouteRecordInfo<
       '/en/articles/bonjour-paris',
       '/en/articles/bonjour-paris',
@@ -986,6 +993,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/binfe-2020-zh.md': {
       routes:
         | '/en/articles/binfe-2020-zh'
+      views:
+        | never
+    }
+    'pages/en/articles/blocks-template.md': {
+      routes:
+        | '/en/articles/blocks-template'
       views:
         | never
     }

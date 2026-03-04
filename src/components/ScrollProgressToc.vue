@@ -362,6 +362,20 @@ html.dark .scroll-toc-item.is-active .scroll-toc-label {
   padding-left: 8px;
 }
 
+.scroll-toc-item:hover .scroll-toc-label {
+  color: #000;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+  text-underline-offset: 3px;
+}
+
+html.dark .scroll-toc-item:hover .scroll-toc-label {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 3px;
+}
+
 /* Show labels on hover */
 .scroll-toc.is-hovered .scroll-toc-label {
   opacity: 1;

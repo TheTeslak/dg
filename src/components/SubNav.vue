@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { onlyLanguage } from '../logics'
-import { computed } from 'vue'
 
 const inactiveStyle = 'opacity-20 hover:opacity-50'
 const activeStyle = 'opacity-100 underline'
@@ -28,7 +28,7 @@ const currentLocale = computed(() => {
       <RouterLink :to="`/${currentLocale}/articles`" class="!border-none" :class="route.path.includes('/articles') ? activeStyle : inactiveStyle">
         {{ $t('nav-articles') }}
       </RouterLink>
-      <!-- hidden tabs (kept for future use) -->
+      <!-- hidden tabs -->
       <RouterLink v-if="false" :to="`/${currentLocale}/talks`" class="!border-none" :class="route.path.includes('/talks') ? activeStyle : inactiveStyle">
         {{ $t('nav-talks') }}
       </RouterLink>

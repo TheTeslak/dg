@@ -1,4 +1,5 @@
 <script setup lang='ts'>
+import { useFluent } from 'fluent-vue'
 import { formatDate, resolvePath } from '~/logics'
 
 const { frontmatter } = defineProps({
@@ -8,6 +9,7 @@ const { frontmatter } = defineProps({
   },
 })
 
+const fluent = useFluent()
 const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
@@ -93,6 +95,33 @@ onMounted(() => {
 
   useEventListener(window, 'hashchange', navigate)
   useEventListener(content.value!, 'click', handleAnchors, { passive: false })
+
+  // Heading copy-link feature
+  const tooltipDefault = fluent.format('heading-link')
+  const tooltipCopied = fluent.format('heading-copied')
+
+  const headings = content.value!.querySelectorAll<HTMLElement>('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')
+  headings.forEach((heading) => {
+    heading.setAttribute('data-tooltip', tooltipDefault)
+  })
+
+  useEventListener(content.value!, 'click', (event: MouseEvent & { target: HTMLElement }) => {
+    // Skip if clicking on the anchor # link itself — let handleAnchors deal with it
+    if (event.target.closest('a.header-anchor'))
+      return
+
+    const heading = event.target.closest<HTMLElement>('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')
+    if (!heading)
+      return
+
+    const url = `${location.origin}${location.pathname}#${heading.id}`
+    navigator.clipboard.writeText(url).then(() => {
+      heading.setAttribute('data-tooltip', tooltipCopied)
+      setTimeout(() => {
+        heading.setAttribute('data-tooltip', tooltipDefault)
+      }, 2000)
+    })
+  }, { passive: true })
 
   setTimeout(() => {
     if (!navigate())
