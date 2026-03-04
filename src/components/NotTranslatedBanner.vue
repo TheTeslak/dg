@@ -1,11 +1,23 @@
 <script setup lang="ts">
+import type { SupportedLocale } from '~/logics/i18n-path'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { setPathLocale } from '~/logics/i18n-path'
+
+const props = withDefaults(defineProps<{
+  originalLocale?: SupportedLocale
+}>(), {
+  originalLocale: 'en',
+})
 
 const route = useRoute()
 
-const enPath = computed(() => {
-  return route.path.replace(/^\/[a-z]{2}/, '/en')
+const originalTo = computed(() => {
+  return {
+    path: setPathLocale(route.path, props.originalLocale),
+    query: route.query,
+    hash: route.hash,
+  }
 })
 </script>
 
@@ -14,7 +26,9 @@ const enPath = computed(() => {
     <div i-carbon-translate text-lg flex-none />
     <div>
       {{ $t('page-not-translated') }}
-      <RouterLink :to="enPath" class="underline ml1">EN →</RouterLink>
+      <RouterLink :to="originalTo" class="underline ml1">
+        {{ originalLocale.toUpperCase() }} →
+      </RouterLink>
     </div>
   </div>
 </template>

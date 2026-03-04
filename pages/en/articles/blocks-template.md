@@ -1,66 +1,66 @@
 ---
-title: Шаблон блоков и компонентов
+title: Blocks and Components Template
 date: 2026-03-03T00:00:00.000+00:00
-lang: ru
+lang: en
 duration: 5min
 ---
 
 [[toc]]
 
-Эта статья создана как краткий гайд-шаблон со всеми основными блоками и Vue компонентами, которые используются для оформления статей в этом проекте. Вы можете копировать исходный код этих элементов для создания новых постов.
+This article is a practical starter template with the core Markdown blocks and Vue components used in this project. Reuse these snippets when creating new posts to keep content consistent.
 
-## Текстовые элементы
+## Text Basics
 
-Стандартное Markdown форматирование: **Жирный текст**, _курсив_, ~~зачеркнутый текст~~, `встроенный inline-код` и [ссылки](https://example.com).
+Standard Markdown formatting: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, and [links](https://example.com).
 
-> Блок цитаты (Blockquote).
-> Подходит для выделения мыслей, цитат или выдержек из других источников.
+> A blockquote.
+> Useful for highlighting a key point, a quote, or an excerpt.
 
-### Списки
+### Lists
 
-**Ненумерованные:**
+**Unordered list:**
 
-- Первый пункт
-- Второй пункт
-  - Вложенный пункт
+- First item
+- Second item
+  - Nested item
 
-**Нумерованные:**
+**Ordered list:**
 
-1. Шаг первый
-2. Шаг второй
+1. Step one
+2. Step two
 
 ---
 
-_(горизонтальный разделитель - hr)_
+_(Horizontal divider / `hr`)_
 
-## Оповещения (GitHub Alerts)
+## Alerts (GitHub Style)
 
-Используются для привлечения внимания читателя к определенной информации:
+Use alerts to draw attention to important context:
 
 > [!NOTE]
-> **Заметка:** Полезная дополнительная информация.
+> **Note:** Supplemental information that helps understanding.
 
 > [!TIP]
-> **Совет:** Лайфхак или рекомендация по улучшению.
+> **Tip:** A practical suggestion or optimization.
 
 > [!IMPORTANT]
-> **Важно:** Ключевая информация, обязательная к прочтению.
+> **Important:** Critical information readers should not skip.
 
 > [!WARNING]
-> **Предупреждение:** Возможные ошибки или неочевидное поведение.
+> **Warning:** Potential mistakes or non-obvious behavior.
 
 > [!CAUTION]
-> **Осторожно:** Критические риски или деструктивные действия.
+> **Caution:** Critical risks or destructive actions.
 
-## Блоки кода (Shiki)
+## Code Blocks (Shiki)
 
-Подсветка синтаксиса с использованием Shiki. Поддерживает диффы и фокус:
+Syntax highlighting is provided by Shiki. Diff blocks are supported:
 
 ```ts
 import { ref } from 'vue'
 
 function hello(name: string) {
-  // Вывод в консоль
+  // Log to console
   console.log(`Hello, ${name}!`)
 }
 ```
@@ -72,44 +72,44 @@ function hello(name: string) {
   }
 ```
 
-## Vue Компоненты проекта
+## Project Vue Components
 
-В `markdown` файлах можно напрямую использовать компоненты Vue из директории `src/components`.
+In Markdown files, you can use Vue components directly from `src/components`.
 
-### Копирование текста (`TextCopy`)
+### Copyable Text (`TextCopy`)
 
-Полезно для вывода консольных команд.
+Useful for commands and snippets readers need to copy.
 `<TextCopy text="pnpm install" />`
 
 <TextCopy text="pnpm install" />
 
-### Ссылка на GitHub (`GitHubLink`)
+### GitHub Link (`GitHubLink`)
 
-Специальный компонент для ссылок на репозитории.
+Specialized component for linking repositories.
 `<GitHubLink repo="antfu/vueuse" name="VueUse" />`
 
 <GitHubLink repo="antfu/vueuse" name="VueUse" />
 
-### Встраивание YouTube (`YouTubeEmbed`)
+### YouTube Embed (`YouTubeEmbed`)
 
-Позволяет вставлять видео без загрузки тяжелого плеера сразу.
+Embeds a video without loading a heavy player immediately.
 `<YouTubeEmbed id="dQw4w9WgXcQ" />`
 
 <YouTubeEmbed id="dQw4w9WgXcQ" />
 
-### Встраивание Twitter/X (`Tweet`)
+### Twitter/X Embed (`Tweet`)
 
-`<Tweet>` компонент для нативного отображения твитов.
+Use `<Tweet>` for native tweet rendering.
 
 <Tweet>
   <p lang="en" dir="ltr">Just setting up my twttr</p>&mdash; jack (@jack) <a href="https://twitter.com/jack/status/20?ref_src=twsrc%5Etfw">March 21, 2006</a>
 </Tweet>
 
-### Спонсорские кнопки
+### Sponsor Buttons
 
 `<SponsorButtons />`
 <SponsorButtons />
 
 ---
 
-_Используйте этот файл как шпаргалку при написании новых материалов!_
+_Use this file as a quick reference when drafting new posts._

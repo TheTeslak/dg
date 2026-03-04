@@ -5,6 +5,7 @@ import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { formatDate, onlyLanguage } from '~/logics'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
   type?: string
@@ -17,16 +18,13 @@ const router = useRouter()
 const route = useRoute()
 
 const locale = computed(() => {
-  const pathLocale = route.path.split('/')[1]
-  return ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
+  return getLocaleFromPath(route.path)
 })
-
-const supportedLocales = ['en', 'ru', 'es']
 
 const routes = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
-      supportedLocales.some(l => r.path.startsWith(`/${l}/articles`))
+      r.path.startsWith(`/${locale.value}/articles`)
       && r.meta.frontmatter?.date
       && !r.meta.frontmatter?.draft,
     )
@@ -53,8 +51,6 @@ const posts = computed(() => {
 
   if (onlyLanguage.value) {
     return list.filter((i) => {
-      if (getPostLocale(i) !== locale.value)
-        return false
       const articleLang = i.lang
       if (articleLang && articleLang !== locale.value)
         return false
@@ -77,23 +73,9 @@ function getGroupName(p: Post) {
   return getYear(p.date)
 }
 
-function getPostLocale(post: Post): string {
-  if (post.path?.startsWith('/') && !post.path.startsWith('//')) {
-    const parts = post.path.split('/')
-    if (parts.length > 1 && supportedLocales.includes(parts[1])) {
-      return parts[1]
-    }
-  }
-  return post.lang || 'en'
-}
-
 function getPostLangTag(post: Post) {
-  const postLocale = getPostLocale(post)
-  if (postLocale !== locale.value) {
-    return postLocale.toUpperCase()
-  }
   const articleLang = post.lang
-  if (articleLang && articleLang !== postLocale) {
+  if (articleLang && articleLang !== locale.value) {
     return articleLang.toUpperCase()
   }
   return null

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { Post } from '~/types'
 import type { RouteRecordNormalized } from 'vue-router'
+import type { Post } from '~/types'
 import { formatDate } from '~/logics'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
   currentPath: string
@@ -11,11 +12,8 @@ const props = defineProps<{
 const router = useRouter()
 const route = useRoute()
 
-const supportedLocales = ['en', 'ru', 'es']
-
 const currentLocale = computed(() => {
-  const pathLocale = route.path.split('/')[1]
-  return supportedLocales.includes(pathLocale) ? pathLocale : 'en'
+  return getLocaleFromPath(route.path)
 })
 
 const postType = computed(() => props.type || 'blog')
@@ -23,13 +21,13 @@ const postType = computed(() => props.type || 'blog')
 const siblings = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
-      supportedLocales.some(l => r.path.startsWith(`/${l}/articles`))
+      r.path.startsWith(`/${currentLocale.value}/articles`)
       && r.meta.frontmatter?.date
-      && !r.meta.frontmatter?.draft
+      && !r.meta.frontmatter?.draft,
     )
     .filter((r: RouteRecordNormalized) =>
       !r.path.endsWith('.html')
-      && (r.meta.frontmatter?.type || 'blog').split('+').includes(postType.value)
+      && (r.meta.frontmatter?.type || 'blog').split('+').includes(postType.value),
     )
     .map((r: RouteRecordNormalized) => ({
       path: r.path,
@@ -46,11 +44,13 @@ const currentIndex = computed(() => {
 })
 
 const newerPost = computed(() => {
-  if (currentIndex.value <= 0) return null
+  if (currentIndex.value <= 0)
+    return null
   return siblings.value[currentIndex.value - 1]
 })
 const olderPost = computed(() => {
-  if (currentIndex.value < 0 || currentIndex.value >= siblings.value.length - 1) return null
+  if (currentIndex.value < 0 || currentIndex.value >= siblings.value.length - 1)
+    return null
   return siblings.value[currentIndex.value + 1]
 })
 
@@ -67,9 +67,8 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
     <RouterLink
       v-if="newerPost"
       :to="newerPost.path"
-      class="post-nav-link post-nav-newer"
+      class="post-nav-link post-nav-newer flex-1"
       flex="~ gap-3 items-center"
-      :class="{ 'flex-1': true }"
     >
       <div
         i-ri:arrow-left-s-line
@@ -90,9 +89,8 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
     <RouterLink
       v-if="olderPost"
       :to="olderPost.path"
-      class="post-nav-link post-nav-older"
+      class="post-nav-link post-nav-older flex-1"
       flex="~ gap-3 items-center justify-end"
-      :class="{ 'flex-1': true }"
     >
       <div flex="~ col items-end" min-w-0>
         <span class="post-nav-title" text-sm leading-snug text-right>

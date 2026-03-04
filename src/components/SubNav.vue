@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 import { onlyLanguage } from '../logics'
 
 const inactiveStyle = 'opacity-20 hover:opacity-50'
@@ -9,8 +10,7 @@ const activeStyle = 'opacity-100 underline'
 const route = useRoute()
 
 const currentLocale = computed(() => {
-  const pathLocale = route.path.split('/')[1]
-  return ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
+  return getLocaleFromPath(route.path)
 })
 </script>
 

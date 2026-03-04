@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { useFluent } from 'fluent-vue'
 import { formatDate, resolvePath } from '~/logics'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const { frontmatter } = defineProps({
   frontmatter: {
@@ -14,11 +15,8 @@ const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
 
-const supportedLocales = ['en', 'ru', 'es']
-
 const currentLocale = computed(() => {
-  const pathLocale = route.path.split('/')[1]
-  return supportedLocales.includes(pathLocale) ? pathLocale : 'en'
+  return getLocaleFromPath(route.path)
 })
 
 /**
@@ -184,6 +182,10 @@ const ArtComponent = computed(() => {
       {{ $t('blog-draft') }}
     </p>
   </div>
+  <NotTranslatedBanner
+    v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale"
+    :original-locale="frontmatter.originalLocale"
+  />
   <ScrollProgressToc
     v-if="frontmatter.title"
     :title="frontmatter.display ?? frontmatter.title"

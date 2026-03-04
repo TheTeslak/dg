@@ -1,31 +1,24 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFluent } from 'fluent-vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
 
-const fluent = useFluent()
 const router = useRouter()
 const route = useRoute()
 
-const currentLocale = computed(() => {
-  for (const bundle of fluent.bundles.value) {
-    return bundle.locales[0]
-  }
-  return 'en'
-})
-
-const availableLocales = ['en', 'ru', 'es']
+const currentLocale = computed(() => getLocaleFromPath(route.path))
+const availableLocales = supportedLocales
 
 function changeLang(lang: string) {
-  const currentPath = route.path
-  // Если путь корневой (например "/"), меняем на "/ru"
-  if (currentPath === '/' || currentPath === '/en' || currentPath === '/ru' || currentPath === '/es') {
-    router.push(`/${lang}`)
+  if (!isSupportedLocale(lang))
     return
-  }
-  // Иначе заменяем префикс
-  const newPath = currentPath.replace(/^\/[a-z]{2}/, `/${lang}`)
-  router.push(newPath)
+
+  const newPath = setPathLocale(route.path, lang)
+  router.push({
+    path: newPath,
+    query: route.query,
+    hash: route.hash,
+  })
 }
 </script>
 
@@ -37,7 +30,7 @@ function changeLang(lang: string) {
     >
       <div i-carbon-language text-xl />
     </button>
-    
+
     <template #popper="{ hide }">
       <div class="bg-base border border-base rounded py-2 min-w-35 shadow-lg flex flex-col">
         <button
