@@ -2,7 +2,10 @@
 title: Blocks and Components Template
 date: 2026-03-03T00:00:00.000+00:00
 lang: en
-duration: 5min
+duration: 5
+tags:
+  - template
+  - markdown
 ---
 
 [[toc]]
@@ -104,6 +107,20 @@ Use `<Tweet>` for native tweet rendering.
 <Tweet>
   <p lang="en" dir="ltr">Just setting up my twttr</p>&mdash; jack (@jack) <a href="https://twitter.com/jack/status/20?ref_src=twsrc%5Etfw">March 21, 2006</a>
 </Tweet>
+
+### Photos: Carousel and Tiles (`PhotoShowcase`)
+
+You can embed photos directly inside an article. They do not have to be limited to the `/photos` page.
+
+Use `mode="slide"` for a horizontal carousel:
+`<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />`
+
+<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />
+
+Use `mode="grid"` for tiled photos:
+`<PhotoShowcase mode="grid" :limit="8" />`
+
+<PhotoShowcase mode="grid" :limit="8" />
 
 ### Sponsor Buttons
 

@@ -8,6 +8,4 @@ art: dots
 
 <!-- @layout-full-width -->
 
-<NotTranslatedBanner />
-
 <ListDemos />

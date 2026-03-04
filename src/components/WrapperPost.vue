@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useFluent } from 'fluent-vue'
-import { formatDate, resolvePath } from '~/logics'
+import { formatDate, formatReadingDuration, resolvePath } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const { frontmatter } = defineProps({
@@ -17,6 +17,10 @@ const content = ref<HTMLDivElement>()
 
 const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
+})
+
+const localizedDuration = computed(() => {
+  return formatReadingDuration(frontmatter.duration, currentLocale.value)
 })
 
 /**
@@ -158,7 +162,7 @@ const ArtComponent = computed(() => {
       v-if="frontmatter.date"
       class="opacity-50 !-mt-6 slide-enter-50"
     >
-      {{ formatDate(frontmatter.date, false) }} <span v-if="frontmatter.duration">· {{ frontmatter.duration }}</span>
+      {{ formatDate(frontmatter.date, false) }} <span v-if="localizedDuration">· {{ localizedDuration }}</span>
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>
@@ -189,7 +193,7 @@ const ArtComponent = computed(() => {
   <ScrollProgressToc
     v-if="frontmatter.title"
     :title="frontmatter.display ?? frontmatter.title"
-    :duration="frontmatter.duration"
+    :duration="localizedDuration"
   />
   <article
     ref="content"

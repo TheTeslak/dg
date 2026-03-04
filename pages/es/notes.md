@@ -6,6 +6,4 @@ display: ''
 
 <SubNav />
 
-<NotTranslatedBanner />
-
 <ListPosts only-date type="note" />

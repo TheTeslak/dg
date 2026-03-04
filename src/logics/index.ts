@@ -64,6 +64,30 @@ export function formatDate(d: string | Date, onlyDate = true) {
   return isRecent ? `🌱 ${formatted}` : formatted
 }
 
+export function parseReadingMinutes(duration: unknown): number | undefined {
+  if (typeof duration === 'number' && Number.isFinite(duration))
+    return Math.max(1, Math.round(duration))
+
+  if (typeof duration === 'string') {
+    const match = duration.trim().match(/^(\d+)(?:\s*min)?$/i)
+    if (match)
+      return Math.max(1, Number.parseInt(match[1], 10))
+  }
+
+  return undefined
+}
+
+export function formatReadingDuration(duration: unknown, locale = 'en') {
+  const minutes = parseReadingMinutes(duration)
+  if (minutes == null)
+    return undefined
+
+  if (locale === 'ru')
+    return `${minutes} мин`
+
+  return `${minutes}min`
+}
+
 export function resolvePath(path: string, currentRoutePath: string) {
   if (path.startsWith('http') || path.startsWith('#') || path.startsWith('mailto'))
     return path

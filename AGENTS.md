@@ -33,6 +33,11 @@ Guidelines for coding agents working in this repository. Keep changes minimal, s
 - Locales: `en`, `ru`, `es`.
 - Article files live in `pages/<locale>/articles/*.md`.
 - Markdown frontmatter is used for metadata (`title`, `date`, `lang`, etc.).
+- Prefer `tags` (array of strings without `#`) over `hashtags`.
+- For article reading time, use `duration` as **number of minutes**. If omitted, build can auto-estimate it.
+- For custom OG images shared across locales, place source files at `public/og/articles/<slug>.<ext>` (`avif`, `webp`, `png`, `jpg`, `jpeg`).
+- `image` in frontmatter is a manual override; otherwise OG image is auto-resolved/generated per slug.
+- Build may emit warnings for unknown frontmatter keys or malformed metadata; treat warnings as content quality checks.
 - If editing localized content, keep locale parity where practical.
 - For locale path operations, prefer shared helpers in `src/logics/i18n-path.ts` instead of ad-hoc regex in components.
 - Language switch/navigation must preserve `query` and `hash`.

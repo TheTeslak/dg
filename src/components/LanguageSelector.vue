@@ -9,16 +9,28 @@ const route = useRoute()
 const currentLocale = computed(() => getLocaleFromPath(route.path))
 const availableLocales = supportedLocales
 
-function changeLang(lang: string) {
+async function changeLang(lang: string) {
   if (!isSupportedLocale(lang))
     return
 
   const newPath = setPathLocale(route.path, lang)
-  router.push({
+  const target = {
     path: newPath,
     query: route.query,
     hash: route.hash,
-  })
+  }
+
+  if (newPath === route.path)
+    return
+
+  await router.push(target)
+
+  // Alias routes for untranslated articles can be treated as duplicated navigation.
+  // In that case, fallback to hard navigation to ensure URL and locale switch.
+  if (route.path !== newPath && typeof window !== 'undefined') {
+    const href = router.resolve(target).href
+    window.location.assign(href)
+  }
 }
 </script>
 

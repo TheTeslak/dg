@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer'
-import { basename, dirname, resolve } from 'node:path'
+import { basename, dirname, extname, resolve } from 'node:path'
 import MarkdownItShiki from '@shikijs/markdown-it'
 import { transformerNotationDiff, transformerNotationHighlight, transformerNotationWordHighlight } from '@shikijs/transformers'
 import { rendererRich, transformerTwoslash } from '@shikijs/twoslash'
@@ -28,6 +28,44 @@ import SVG from 'vite-svg-loader'
 import { slugify } from './scripts/slugify'
 
 const promises: Promise<any>[] = []
+const frontmatterWarnings = new Set<string>()
+const queuedOgOutputs = new Set<string>()
+const normalizedFrontmatterById = new Map<string, Record<string, any>>()
+const supportedLocales = ['en', 'ru', 'es'] as const
+const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
+const frontmatterKnownKeys = new Set([
+  'art',
+  'class',
+  'date',
+  'description',
+  'display',
+  'draft',
+  'duration',
+  'hashtags',
+  'image',
+  'inperson',
+  'items',
+  'lang',
+  'link',
+  'mastodon',
+  'originalLocale',
+  'place',
+  'placeLink',
+  'platform',
+  'projects',
+  'radio',
+  'recording',
+  'redirect',
+  'subtitle',
+  'tags',
+  'telegram',
+  'title',
+  'tocAlwaysOn',
+  'type',
+  'upcoming',
+  'video',
+  'wrapperClass',
+])
 
 export default defineConfig({
   resolve: {
@@ -55,18 +93,18 @@ export default defineConfig({
         if (!path)
           return
 
-        const supportedLocales = ['en', 'ru', 'es']
-
         if (!path.includes('projects.md') && path.endsWith('.md')) {
-          const { data } = matter(fs.readFileSync(path, 'utf-8'))
+          const { data, content } = matter(fs.readFileSync(path, 'utf-8'))
+          const frontmatter = normalizeFrontmatter(data, content, path)
+          normalizedFrontmatterById.set(resolve(path), frontmatter)
 
           // Cross-locale aliases for articles
-          const articleMatch = path.match(/pages\/([a-z]{2})\/articles\/([^/]+)\.md$/)
+          const articleMatch = getArticleInfo(path)
           if (articleMatch) {
-            const [, sourceLocale, slug] = articleMatch
+            const { sourceLocale, slug } = articleMatch
 
             if (slug !== 'index' && !slug.startsWith('[')) {
-              data.originalLocale = sourceLocale
+              frontmatter.originalLocale = sourceLocale
 
               const aliases: string[] = []
               for (const targetLocale of supportedLocales) {
@@ -84,7 +122,7 @@ export default defineConfig({
           }
 
           route.addToMeta({
-            frontmatter: data,
+            frontmatter,
           })
         }
       },
@@ -194,16 +232,24 @@ export default defineConfig({
         (() => {
           if (!id.endsWith('.md'))
             return
+          const normalizedFrontmatter = normalizedFrontmatterById.get(resolve(id))
+          if (normalizedFrontmatter)
+            Object.assign(frontmatter, normalizedFrontmatter)
+          else
+            Object.assign(frontmatter, normalizeFrontmatter(frontmatter, '', id))
+
           const route = basename(id, '.md')
           if (route === 'index' || frontmatter.image || !frontmatter.title)
             return
-          const path = `og/${route}.png`
-          promises.push(
-            fs.existsSync(`${id.slice(0, -3)}.png`)
-              ? fs.copy(`${id.slice(0, -3)}.png`, `public/${path}`)
-              : generateOg(String(frontmatter.title).replace(/\s-\s.*$/, '').trim(), `public/${path}`),
-          )
+          const article = getArticleInfo(id)
+          const slug = article?.slug || route
+          const path = `og/${slug}.png`
           frontmatter.image = `https://antfu.me/${path}`
+
+          if (queuedOgOutputs.has(path))
+            return
+          queuedOgOutputs.add(path)
+          promises.push(ensureOgImage(id, frontmatter, `public/${path}`))
         })()
         const head = defaults(frontmatter, options)
         return { head, frontmatter }
@@ -266,6 +312,151 @@ export default defineConfig({
 })
 
 const ogSVg = fs.readFileSync('./scripts/og-template.svg', 'utf-8')
+
+function warnFrontmatter(message: string) {
+  if (frontmatterWarnings.has(message))
+    return
+  frontmatterWarnings.add(message)
+  console.warn(message)
+}
+
+function getArticleInfo(id: string) {
+  const match = id.match(/pages[\\/](?<locale>[a-z]{2})[\\/]articles[\\/](?<slug>[^/\\]+)\.md$/)
+  if (!match?.groups)
+    return
+  return {
+    sourceLocale: match.groups.locale,
+    slug: match.groups.slug,
+  }
+}
+
+function isRealArticle(id: string) {
+  const article = getArticleInfo(id)
+  return !!article && article.slug !== 'index' && !article.slug.startsWith('[')
+}
+
+function toDurationMinutes(duration: unknown): number | undefined {
+  if (typeof duration === 'number' && Number.isFinite(duration))
+    return Math.max(1, Math.round(duration))
+  if (typeof duration === 'string') {
+    const match = duration.trim().match(/^(\d+)(?:\s*min)?$/i)
+    if (match)
+      return Math.max(1, Number.parseInt(match[1], 10))
+  }
+  return undefined
+}
+
+function estimateReadingMinutes(content: string): number {
+  const noCodeFences = content.replace(/```[\s\S]*?```/g, ' ')
+  const noInlineCode = noCodeFences.replace(/`[^`]*`/g, ' ')
+  const noHtml = noInlineCode.replace(/<[^>]+>/g, ' ')
+  const noLinks = noHtml
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+
+  const latinWords = noLinks.match(/[a-z0-9]+(?:['’-][a-z0-9]+)*/gi)?.length || 0
+  const cjkChars = noLinks.match(/[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/g)?.length || 0
+  const units = latinWords + cjkChars
+  return Math.max(1, Math.ceil(units / 200))
+}
+
+function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: string, id: string) {
+  const frontmatter = { ...rawFrontmatter }
+
+  if (frontmatter.hashtags && !frontmatter.tags) {
+    frontmatter.tags = frontmatter.hashtags
+    warnFrontmatter(`[frontmatter] ${id}: "hashtags" is deprecated, use "tags".`)
+  }
+
+  if (frontmatter.tags != null) {
+    if (!Array.isArray(frontmatter.tags)) {
+      warnFrontmatter(`[frontmatter] ${id}: "tags" should be an array of strings.`)
+    }
+    else {
+      frontmatter.tags = frontmatter.tags
+        .filter((item: unknown) => typeof item === 'string')
+        .map((item: string) => item.trim().replace(/^#+/, ''))
+        .filter(Boolean)
+    }
+  }
+
+  if (frontmatter.duration != null) {
+    const minutes = toDurationMinutes(frontmatter.duration)
+    if (minutes != null)
+      frontmatter.duration = minutes
+    else
+      warnFrontmatter(`[frontmatter] ${id}: unable to parse "duration" value "${String(frontmatter.duration)}".`)
+  }
+  else if (isRealArticle(id)) {
+    frontmatter.duration = estimateReadingMinutes(content)
+  }
+
+  for (const key of Object.keys(frontmatter)) {
+    if (!frontmatterKnownKeys.has(key))
+      warnFrontmatter(`[frontmatter] ${id}: unknown field "${key}".`)
+  }
+
+  return frontmatter
+}
+
+function resolveOgSource(id: string) {
+  const article = getArticleInfo(id)
+  const bases = article
+    ? [
+        resolve(__dirname, `public/og/articles/${article.slug}`),
+        ...supportedLocales.map(locale => resolve(__dirname, `pages/${locale}/articles/${article.slug}`)),
+      ]
+    : [id.slice(0, -3)]
+
+  const matches: string[] = []
+  for (const ext of supportedOgSourceExtensions) {
+    for (const base of bases) {
+      const candidate = `${base}.${ext}`
+      if (fs.existsSync(candidate))
+        matches.push(candidate)
+    }
+  }
+
+  if (matches.length > 1) {
+    warnFrontmatter(`[og] ${id}: multiple OG sources found, using ${matches[0]}.`)
+  }
+
+  return matches[0]
+}
+
+async function copyOrConvertOg(source: string, output: string) {
+  await fs.mkdir(dirname(output), { recursive: true })
+
+  if (resolve(source) === resolve(output))
+    return
+
+  if (fs.existsSync(output)) {
+    const sourceStat = await fs.stat(source)
+    const outputStat = await fs.stat(output)
+    if (sourceStat.mtimeMs <= outputStat.mtimeMs)
+      return
+  }
+
+  const extension = extname(source).toLowerCase()
+  if (extension === '.png') {
+    await fs.copy(source, output)
+    return
+  }
+
+  await sharp(source)
+    .png()
+    .toFile(output)
+}
+
+async function ensureOgImage(id: string, frontmatter: Record<string, any>, output: string) {
+  const source = resolveOgSource(id)
+  if (source) {
+    await copyOrConvertOg(source, output)
+    return
+  }
+
+  await generateOg(String(frontmatter.title).replace(/\s-\s.*$/, '').trim(), output)
+}
 
 async function generateOg(title: string, output: string) {
   if (fs.existsSync(output))

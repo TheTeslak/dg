@@ -46,7 +46,8 @@ footer-copyright = 2026 © { -brand }
 
 intro-desc = Hola, soy { -brand }, un apasionado del código abierto.
 
-page-not-translated = Esta página aún no ha sido traducida. Mostrando la versión original.
+page-not-translated = Esta página aún no ha sido traducida.
+page-original-version = Versión original en { $lang }.
 post-comment-on = comentar en
 post-link-telegram = Telegram
 post-link-mastodon = Mastodon

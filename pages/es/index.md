@@ -5,8 +5,6 @@ image: https://antfu.me/og.png
 art: random
 ---
 
-<NotTranslatedBanner />
-
 Hola! Soy Anthony Fu, un apasionado del código abierto y diseñador-ingeniero.
 
 Trabajando en {NuxtLabs} / {Vercel}<br>

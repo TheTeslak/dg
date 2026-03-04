@@ -4,7 +4,7 @@ import type { Post } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { formatDate, onlyLanguage } from '~/logics'
+import { formatDate, formatReadingDuration, onlyLanguage } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -79,6 +79,10 @@ function getPostLangTag(post: Post) {
     return articleLang.toUpperCase()
   }
   return null
+}
+
+function getDurationLabel(duration?: Post['duration']) {
+  return formatReadingDuration(duration, locale.value)
 }
 </script>
 
@@ -163,7 +167,7 @@ function getPostLangTag(post: Post) {
               <span text-sm op50 ws-nowrap>
                 {{ formatDate(route.date, true) }}
               </span>
-              <span v-if="route.duration" text-sm op40 ws-nowrap>· {{ route.duration }}</span>
+              <span v-if="getDurationLabel(route.duration)" text-sm op40 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
               <span v-if="route.platform" text-sm op40 ws-nowrap>· {{ route.platform }}</span>
               <span v-if="route.place" text-sm op40 ws-nowrap md:hidden>· {{ route.place }}</span>
               <span

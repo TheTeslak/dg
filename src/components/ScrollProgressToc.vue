@@ -5,7 +5,10 @@ defineProps<{
 }>()
 
 const isHovered = ref(false)
+const isNearLeftEdge = ref(false)
+const LEFT_REVEAL_ZONE_PX = 240
 const trackEl = ref<HTMLElement>()
+const isAwake = computed(() => isHovered.value || isNearLeftEdge.value)
 
 const scrollY = ref(0)
 const docHeight = ref(1)
@@ -137,6 +140,10 @@ function onScroll() {
   scrollY.value = window.scrollY
 }
 
+function onMouseMove(e: MouseEvent) {
+  isNearLeftEdge.value = e.clientX <= LEFT_REVEAL_ZONE_PX
+}
+
 let recalcTimer: ReturnType<typeof setTimeout> | undefined
 function scheduleRecalc() {
   clearTimeout(recalcTimer)
@@ -149,6 +156,7 @@ onMounted(() => {
   setTimeout(collectHeadings, 1500)
 
   window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('mousemove', onMouseMove, { passive: true })
   window.addEventListener('resize', scheduleRecalc, { passive: true })
 
   const ro = new ResizeObserver(scheduleRecalc)
@@ -156,6 +164,7 @@ onMounted(() => {
 
   onUnmounted(() => {
     window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('resize', scheduleRecalc)
     ro.disconnect()
   })
@@ -166,10 +175,14 @@ onMounted(() => {
   <div
     v-if="headings.length"
     class="scroll-toc"
-    :class="{ 'is-hovered': isHovered }"
+    :class="{ 'is-hovered': isHovered, 'is-awake': isAwake }"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
   >
+    <div class="table-of-contents-anchor scroll-toc-anchor-hint">
+      <div class="i-ri-menu-2-fill" />
+    </div>
+
     <!-- Title (appears on hover) -->
     <div class="scroll-toc-title">
       <div class="scroll-toc-title-text">
@@ -278,6 +291,37 @@ onMounted(() => {
   top: 52px;
   bottom: 0;
   width: 100%;
+  opacity: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.scroll-toc.is-awake .scroll-toc-track {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.scroll-toc-anchor-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.scroll-toc.is-awake .scroll-toc-anchor-hint {
+  opacity: 0;
+  transform: translateX(-6px);
 }
 
 .scroll-toc-svg {

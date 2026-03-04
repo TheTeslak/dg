@@ -6,7 +6,7 @@ export interface Post {
   lang?: string
   desc?: string
   platform?: string
-  duration?: string
+  duration?: number | string
   recording?: string
   radio?: boolean
   video?: boolean
