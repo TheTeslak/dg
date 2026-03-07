@@ -229,7 +229,7 @@ const ArtComponent = computed(() => {
     </template>
 
     <!-- Referenced By (articles that backlink to this one) -->
-    <div v-if="referencedBy.length" class="referenced-by mt-6">
+    <div v-if="referencedBy.length" class="referenced-by mt-9">
       <div class="referenced-by-label">
         <div i-ri:links-line class="referenced-by-label-icon" />
         <span>{{ $t('post-referenced-by') }}</span>
@@ -254,7 +254,7 @@ const ArtComponent = computed(() => {
       v-if="frontmatter.date"
       :current-path="route.path"
       :type="postType"
-      class="mt-6 mb-4"
+      class="mt-9 mb-6"
     />
 
     <!-- Back to listing -->

@@ -27,6 +27,7 @@ const headings = ref<Heading[]>([])
 const DOT_HEIGHT = 3
 const GAP_SIZE = 4
 const MIN_DOT_GAP = 24
+const STEP_SIZE = 36
 
 function collectHeadings() {
   const article = document.querySelector('article')
@@ -53,11 +54,28 @@ function collectHeadings() {
   winHeight.value = window.innerHeight
 }
 
-// Track area height (the SVG drawing area)
+// Available height for the track area (matches CSS positioning)
+const availableTrackHeight = computed(() => {
+  // 80px top + 40px bottom + 52px title offset
+  return Math.max(100, winHeight.value - 172)
+})
+
+// Natural height based on heading count with fixed step
+const naturalTrackHeight = computed(() => {
+  const count = headings.value.length
+  if (count <= 1)
+    return STEP_SIZE
+  return (count - 1) * STEP_SIZE + DOT_HEIGHT
+})
+
+// Compact mode: enough space for fixed-step layout
+const isCompact = computed(() => naturalTrackHeight.value <= availableTrackHeight.value)
+
+// Effective track height used for rendering
 const trackHeight = computed(() => {
-  if (!trackEl.value)
-    return 400
-  return trackEl.value.clientHeight
+  if (isCompact.value)
+    return naturalTrackHeight.value
+  return availableTrackHeight.value
 })
 
 // Map a document-space value to track-space
@@ -70,6 +88,12 @@ const dotPositions = computed(() => {
   if (!headings.value.length)
     return []
 
+  // Compact mode: fixed step between dots
+  if (isCompact.value) {
+    return headings.value.map((_, i) => i * STEP_SIZE)
+  }
+
+  // Overflow mode: proportional mapping (existing logic)
   const raw = headings.value.map(h => docToTrack(h.offsetTop))
   const adjusted = [...raw]
 
@@ -194,7 +218,7 @@ onMounted(() => {
     </div>
 
     <!-- Track area -->
-    <div ref="trackEl" class="scroll-toc-track">
+    <div ref="trackEl" class="scroll-toc-track" :style="{ height: `${trackHeight}px` }">
       <!-- SVG draws: line segments + dot segments -->
       <svg
         class="scroll-toc-svg"
@@ -289,7 +313,6 @@ onMounted(() => {
   position: absolute;
   left: 0;
   top: 52px;
-  bottom: 0;
   width: 100%;
   opacity: 0;
   transform: translateX(-8px);
