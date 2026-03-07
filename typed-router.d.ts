@@ -226,6 +226,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/exploring-frontend': RouteRecordInfo<
+      '/en/articles/exploring-frontend',
+      '/en/articles/exploring-frontend',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/get-package-root': RouteRecordInfo<
       '/en/articles/get-package-root',
       '/en/articles/get-package-root',
@@ -1110,6 +1117,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/evolution-of-shiki-v1.md': {
       routes:
         | '/en/articles/evolution-of-shiki-v1'
+      views:
+        | never
+    }
+    'pages/en/articles/exploring-frontend.md': {
+      routes:
+        | '/en/articles/exploring-frontend'
       views:
         | never
     }

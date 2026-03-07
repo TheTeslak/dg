@@ -197,7 +197,7 @@ onMounted(() => {
 
 <template>
   <div
-    v-if="headings.length"
+    v-if="headings.length > 1"
     class="scroll-toc"
     :class="{ 'is-hovered': isHovered, 'is-awake': isAwake }"
     @mouseenter="isHovered = true"

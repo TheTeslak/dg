@@ -113,7 +113,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
 <style scoped>
 .post-nav-link {
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(125, 125, 125, 0.15);
+  border: 1px solid rgba(125, 125, 125, 0.25);
   border-radius: 0.5rem;
   text-decoration: none !important;
   transition: all 0.25s ease;
@@ -133,7 +133,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
 }
 
 .dark .post-nav-link {
-  border-color: rgba(125, 125, 125, 0.2);
+  border-color: rgba(125, 125, 125, 0.3);
 }
 
 .dark .post-nav-link:hover {

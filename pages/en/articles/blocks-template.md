@@ -4,6 +4,8 @@ date: 2026-03-03T00:00:00.000+00:00
 lang: en
 duration: 5
 backlink: about-yak-shaving
+telegram: https://t.me/your_post_link
+mastodon: https://mastodon.social/@antfu/your_post_link
 tags:
   - template
   - markdown
@@ -127,6 +129,32 @@ Use `mode="grid"` for tiled photos:
 
 `<SponsorButtons />`
 <SponsorButtons />
+
+### Article Links (`ArticleLinks`)
+
+Embed clickable preview cards linking to other articles. Useful for hub/collection posts.
+
+```
+<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+```
+
+<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+
+Pass an array of article **slugs** (filename without `.md`). The component resolves the title and excerpt automatically from each article's frontmatter.
+
+## Discussion Links
+
+Add `telegram` and/or `mastodon` fields to frontmatter to show discussion links at the bottom of the article:
+
+```yaml
+---
+title: My Article
+telegram: https://t.me/your_post_link
+mastodon: https://mastodon.social/@antfu/your_post_link
+---
+```
+
+They appear below the article content as "Comment on Telegram / Mastodon" links.
 
 ## Backlinks
 

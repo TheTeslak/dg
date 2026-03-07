@@ -42,6 +42,7 @@ const frontmatterKnownKeys = new Set([
   'display',
   'draft',
   'duration',
+  'excerpt',
   'hashtags',
   'image',
   'inperson',
@@ -374,6 +375,51 @@ function estimateReadingMinutes(content: string): number {
   return Math.max(1, Math.ceil(units / 200))
 }
 
+function extractExcerpt(content: string, maxLength: number): string {
+  let text = content
+    // Remove [[toc]] directives
+    .replace(/\[\[toc\]\]/gi, '')
+    // Remove code fences
+    .replace(/```[\s\S]*?```/g, '')
+    // Remove inline code
+    .replace(/`[^`]*`/g, '')
+    // Remove HTML tags and Vue components
+    .replace(/<[^>]+>/g, '')
+    // Remove images
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    // Convert links to just text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    // Remove headings markers
+    .replace(/^#{1,6}\s+/gm, '')
+    // Remove blockquote markers
+    .replace(/^>\s?/gm, '')
+    // Remove horizontal rules
+    .replace(/^-{3,}$/gm, '')
+    // Remove bold/italic markers
+    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+    .replace(/_{1,3}([^_]+)_{1,3}/g, '$1')
+    // Remove strikethrough
+    .replace(/~~([^~]+)~~/g, '$1')
+    // Collapse whitespace
+    .replace(/\n{2,}/g, '\n')
+    .trim()
+
+  // Take first meaningful lines (skip empty)
+  const lines = text.split('\n').filter(l => l.trim().length > 0)
+  text = lines.join(' ').trim()
+
+  if (text.length > maxLength) {
+    // Cut at last word boundary
+    text = text.slice(0, maxLength)
+    const lastSpace = text.lastIndexOf(' ')
+    if (lastSpace > maxLength * 0.6)
+      text = text.slice(0, lastSpace)
+    text += '…'
+  }
+
+  return text
+}
+
 function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: string, id: string) {
   const frontmatter = { ...rawFrontmatter }
 
@@ -403,6 +449,11 @@ function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: stri
   }
   else if (isRealArticle(id)) {
     frontmatter.duration = estimateReadingMinutes(content)
+  }
+
+  // Auto-generate excerpt from article body (first ~200 chars of clean text)
+  if (!frontmatter.excerpt && content && isRealArticle(id)) {
+    frontmatter.excerpt = extractExcerpt(content, 400)
   }
 
   for (const key of Object.keys(frontmatter)) {
