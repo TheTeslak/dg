@@ -7,7 +7,7 @@ art: dots
 ---
 
 <script setup lang="ts">
-import { projects } from '../en/projects.md'
+import { projects } from '~/data/projects'
 </script>
 
 <!-- @layout-full-width -->

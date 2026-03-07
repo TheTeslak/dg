@@ -133,6 +133,9 @@ export default defineConfig({
     }),
 
     Markdown({
+      include: [/\.md$/, /\.md\?vue$/],
+      // Exclude Vue SFC virtual blocks so markdown is only transformed once.
+      exclude: [/\.md\?vue&type=/],
       wrapperComponent: id => id.includes('/demo/')
         ? 'WrapperDemo'
         : 'WrapperPost',
@@ -467,9 +470,9 @@ async function generateOg(title: string, output: string) {
   const lines = title.trim().split(/(.{0,30})(?:\s|$)/g).filter(Boolean)
 
   const data: Record<string, string> = {
-    line1: lines[0],
-    line2: lines[1],
-    line3: lines[2],
+    line1: escapeSvgText(lines[0] || ''),
+    line2: escapeSvgText(lines[1] || ''),
+    line3: escapeSvgText(lines[2] || ''),
   }
   const svg = ogSVg.replace(/\{\{([^}]+)\}\}/g, (_, name) => data[name] || '')
 
@@ -483,4 +486,13 @@ async function generateOg(title: string, output: string) {
   catch (e) {
     console.error('Failed to generate og image', e)
   }
+}
+
+function escapeSvgText(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
 }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineProps<{ projects: Record<string, any[]> }>()
+import type { ProjectsBySection } from '~/data/projects'
+
+defineProps<{ projects: ProjectsBySection }>()
 
 function slug(name: string) {
   return name.toLowerCase().replace(/[\s\\/]+/g, '-')
