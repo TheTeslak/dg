@@ -3,6 +3,7 @@ title: Blocks and Components Template
 date: 2026-03-03T00:00:00.000+00:00
 lang: en
 duration: 5
+backlink: about-yak-shaving
 tags:
   - template
   - markdown
@@ -126,6 +127,29 @@ Use `mode="grid"` for tiled photos:
 
 `<SponsorButtons />`
 <SponsorButtons />
+
+## Backlinks
+
+Add an optional `backlink` field to frontmatter with the **slug** of a parent article:
+
+```yaml
+---
+title: My Article
+backlink: about-yak-shaving
+---
+```
+
+**What it does:**
+
+- **Top of the article** — shows a `⬑ Parent Article Title` link above the title
+- **Bottom of the parent** — automatically shows a "Referenced by" section listing articles that backlink to it
+
+The slug is locale-agnostic. If the target article isn't translated, the user sees the original content with a "not translated" banner (existing behavior).
+
+If the backlinked article is in a different language than the current UI locale, a small language tag (e.g. `EN`) appears next to the link.
+
+> [!NOTE]
+> This article itself has `backlink: about-yak-shaving` in its frontmatter — scroll up to see the backlink header.
 
 ---
 

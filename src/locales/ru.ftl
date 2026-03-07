@@ -51,6 +51,7 @@ page-original-version = Оригинальная { $lang } версия.
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон
+post-referenced-by = Ссылаются
 
 heading-link = ссылка на заголовок
 heading-copied = скопировано

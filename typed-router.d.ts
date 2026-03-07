@@ -107,6 +107,27 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/backlinks-demo-child-1': RouteRecordInfo<
+      '/en/articles/backlinks-demo-child-1',
+      '/en/articles/backlinks-demo-child-1',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/en/articles/backlinks-demo-child-2': RouteRecordInfo<
+      '/en/articles/backlinks-demo-child-2',
+      '/en/articles/backlinks-demo-child-2',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/en/articles/backlinks-demo-root': RouteRecordInfo<
+      '/en/articles/backlinks-demo-root',
+      '/en/articles/backlinks-demo-root',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/binfe-2020-zh': RouteRecordInfo<
       '/en/articles/binfe-2020-zh',
       '/en/articles/binfe-2020-zh',
@@ -987,6 +1008,24 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/async-with-composition-api.md': {
       routes:
         | '/en/articles/async-with-composition-api'
+      views:
+        | never
+    }
+    'pages/en/articles/backlinks-demo-child-1.md': {
+      routes:
+        | '/en/articles/backlinks-demo-child-1'
+      views:
+        | never
+    }
+    'pages/en/articles/backlinks-demo-child-2.md': {
+      routes:
+        | '/en/articles/backlinks-demo-child-2'
+      views:
+        | never
+    }
+    'pages/en/articles/backlinks-demo-root.md': {
+      routes:
+        | '/en/articles/backlinks-demo-root'
       views:
         | never
     }

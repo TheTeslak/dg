@@ -35,6 +35,7 @@ const supportedLocales = ['en', 'ru', 'es'] as const
 const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
 const frontmatterKnownKeys = new Set([
   'art',
+  'backlink',
   'class',
   'date',
   'description',
@@ -119,6 +120,16 @@ export default defineConfig({
                 route.addAlias(aliases)
               }
             }
+          }
+
+          // Validate backlink slug at build time
+          if (frontmatter.backlink) {
+            const backlinkSlug = frontmatter.backlink
+            const backlinkExists = supportedLocales.some(loc =>
+              fs.existsSync(resolve(__dirname, `pages/${loc}/articles/${backlinkSlug}.md`)),
+            )
+            if (!backlinkExists)
+              warnFrontmatter(`[frontmatter] ${path}: backlink "${backlinkSlug}" does not match any article.`)
           }
 
           route.addToMeta({

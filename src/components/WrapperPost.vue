@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, resolvePath } from '~/logics'
+import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const { frontmatter } = defineProps({
@@ -14,6 +15,9 @@ const fluent = useFluent()
 const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
+
+const { backlink } = useBacklink()
+const { referencedBy } = useReferencedBy()
 
 const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
@@ -155,6 +159,19 @@ const ArtComponent = computed(() => {
     :lang="frontmatter.lang"
     :class="[frontmatter.wrapperClass]"
   >
+    <div
+      v-if="backlink"
+      class="backlink-header slide-enter-50"
+    >
+      <RouterLink :to="backlink.path" class="backlink-link">
+        <div i-ri:corner-left-up-line class="backlink-icon" />
+        <span>{{ backlink.title }}</span>
+        <span
+          v-if="backlink.lang && backlink.lang !== currentLocale"
+          class="backlink-lang-tag"
+        >{{ backlink.lang.toUpperCase() }}</span>
+      </RouterLink>
+    </div>
     <h1 class="mb-0 slide-enter-50">
       {{ frontmatter.display ?? frontmatter.title }}
     </h1>
@@ -211,6 +228,27 @@ const ArtComponent = computed(() => {
       <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" op50>{{ $t('post-link-mastodon') }}</a>
     </template>
 
+    <!-- Referenced By (articles that backlink to this one) -->
+    <div v-if="referencedBy.length" class="referenced-by mt-6">
+      <div class="referenced-by-label">
+        <div i-ri:links-line class="referenced-by-label-icon" />
+        <span>{{ $t('post-referenced-by') }}</span>
+      </div>
+      <div v-for="ref in referencedBy" :key="ref.path" class="referenced-by-item">
+        <RouterLink :to="ref.path" class="referenced-by-link">
+          <div i-ri:corner-left-up-line class="backlink-icon" />
+          <span>{{ ref.title }}</span>
+        </RouterLink>
+        <span
+          v-if="ref.lang && ref.lang !== currentLocale"
+          class="backlink-lang-tag"
+        >{{ ref.lang.toUpperCase() }}</span>
+        <span v-if="ref.date" class="referenced-by-date">
+          {{ formatDate(ref.date, false) }}
+        </span>
+      </div>
+    </div>
+
     <!-- Prev / Next chronological navigation -->
     <PostNavigation
       v-if="frontmatter.date"
@@ -228,3 +266,73 @@ const ArtComponent = computed(() => {
     />
   </div>
 </template>
+
+<style scoped>
+.backlink-header {
+  margin-bottom: 0.25rem;
+}
+.backlink-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  opacity: 0.4;
+  text-decoration: none !important;
+  transition: opacity 0.2s ease;
+}
+.backlink-link:hover {
+  opacity: 0.75;
+}
+.backlink-icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+.backlink-lang-tag {
+  font-size: 0.65rem;
+  background: rgba(125, 125, 125, 0.15);
+  color: rgba(125, 125, 125, 0.7);
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.35rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.referenced-by {
+  border-top: 1px solid rgba(125, 125, 125, 0.15);
+  padding-top: 1rem;
+}
+.referenced-by-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  opacity: 0.45;
+  margin-bottom: 0.6rem;
+}
+.referenced-by-label-icon {
+  font-size: 0.9rem;
+}
+.referenced-by-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.referenced-by-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  text-decoration: none !important;
+}
+.referenced-by-link:hover {
+  opacity: 1;
+}
+.referenced-by-date {
+  font-size: 0.75rem;
+  opacity: 0.35;
+  white-space: nowrap;
+}
+</style>
