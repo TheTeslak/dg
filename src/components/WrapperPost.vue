@@ -174,13 +174,34 @@ onMounted(() => {
 
 const ArtComponent = computed(() => {
   let art = frontmatter.art
-  if (art === 'random')
-    art = Math.random() > 0.5 ? 'plum' : 'dots'
+  if (art === 'random') {
+    const weighted = [
+      'plum',
+      'plum',
+      'plum',
+      'dots',
+      'dots',
+      'cellular',
+      'cellular',
+    ]
+    const lastArt = typeof window !== 'undefined' ? localStorage.getItem('dg-last-art') : null
+    const filtered = lastArt ? weighted.filter(a => a !== lastArt) : weighted
+    const pool = filtered.length > 0 ? filtered : weighted
+    art = pool[Math.floor(Math.random() * pool.length)]
+    if (typeof window !== 'undefined')
+      localStorage.setItem('dg-last-art', art)
+  }
   if (typeof window !== 'undefined') {
     if (art === 'plum')
       return defineAsyncComponent(() => import('./ArtPlum.vue'))
     else if (art === 'dots')
       return defineAsyncComponent(() => import('./ArtDots.vue'))
+    else if (art === 'cellular')
+      return defineAsyncComponent(() => import('./ArtCellular.vue'))
+    else if (art === 'topography')
+      return defineAsyncComponent(() => import('./ArtTopography.vue'))
+    else if (art === 'interference')
+      return defineAsyncComponent(() => import('./ArtInterference.vue'))
   }
   return undefined
 })
