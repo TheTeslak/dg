@@ -133,11 +133,11 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
 }
 
 .dark .post-nav-link {
-  border-color: rgba(125, 125, 125, 0.3);
+  border-color: rgba(125, 125, 125, 0.4);
 }
 
 .dark .post-nav-link:hover {
-  border-color: rgba(125, 125, 125, 0.4);
+  border-color: rgba(125, 125, 125, 0.5);
   background: rgba(125, 125, 125, 0.08);
 }
 </style>

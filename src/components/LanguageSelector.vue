@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
+import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales, userLocalePref } from '~/logics/i18n-path'
 
 const router = useRouter()
 const route = useRoute()
@@ -12,6 +12,8 @@ const availableLocales = supportedLocales
 async function changeLang(lang: string) {
   if (!isSupportedLocale(lang))
     return
+
+  userLocalePref.value = lang
 
   const newPath = setPathLocale(route.path, lang)
   const target = {

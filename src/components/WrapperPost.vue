@@ -1,8 +1,9 @@
 <script setup lang='ts'>
+import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
-import { getLocaleFromPath } from '~/logics/i18n-path'
+import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
 
 const { frontmatter } = defineProps({
   frontmatter: {
@@ -45,6 +46,42 @@ const backToAllPath = computed(() => {
   if (postType.value === 'note')
     return `/${currentLocale.value}/notes`
   return `/${currentLocale.value}/articles`
+})
+
+/**
+ * SEO: Generate <link rel="alternate" hreflang="xx"> tags for all locales.
+ * Tells search engines that this page exists in multiple languages,
+ * preventing duplicate content penalties and enabling proper language indexing.
+ */
+const siteOrigin = 'https://antfu.me'
+
+const hreflangLinks = computed(() => {
+  const path = route.path
+  // Extract the locale-independent part: /en/articles/foo → /articles/foo
+  const match = path.match(/^\/(en|ru|es)(\/.+)$/)
+  if (!match)
+    return []
+
+  const pathSuffix = match[2] // e.g. "/articles/foo"
+
+  const links: { rel: string, hreflang: string, href: string }[] = supportedLocales.map(locale => ({
+    rel: 'alternate',
+    hreflang: locale,
+    href: `${siteOrigin}/${locale}${pathSuffix}`,
+  }))
+
+  // x-default: tells Google which version to show when no locale matches
+  links.push({
+    rel: 'alternate',
+    hreflang: 'x-default',
+    href: `${siteOrigin}/en${pathSuffix}`,
+  })
+
+  return links
+})
+
+useHead({
+  link: hreflangLinks,
 })
 
 onMounted(() => {

@@ -2,6 +2,8 @@ export const supportedLocales = ['en', 'ru', 'es'] as const
 
 export type SupportedLocale = typeof supportedLocales[number]
 
+export const userLocalePref = useLocalStorage<string>('site-locale-pref', '')
+
 const localePrefixRE = /^\/(en|ru|es)(?=\/|$)/
 
 export function isSupportedLocale(locale: string): locale is SupportedLocale {
