@@ -1,6 +1,6 @@
 ---
 title: Main Big Template
-date: 2026-03-03T00:00:00.000+00:00
+date: 2026-03-03T00:00:00+00:00
 lang: en
 duration: 5
 backlink: about-yak-shaving
@@ -36,8 +36,6 @@ Standard Markdown formatting: **bold text**, _italic text_, ~~strikethrough~~, `
 2. Step two
 
 ---
-
-_(Horizontal divider / `hr`)_
 
 ## Alerts (GitHub Style)
 
@@ -96,12 +94,29 @@ Specialized component for linking repositories.
 
 <GitHubLink repo="antfu/vueuse" name="VueUse" />
 
-### YouTube Embed (`YouTubeEmbed`)
+### YouTube & Video Links
 
-Embeds a video without loading a heavy player immediately.
+There are two ways to share YouTube content depending on your needs.
+
+#### 1. Embedded Video (`YouTubeEmbed`)
+
+Use the `<YouTubeEmbed>` component to embed a fully playable video without loading a heavy iframe immediately (improves page performance).
+
 `<YouTubeEmbed id="dQw4w9WgXcQ" />`
 
 <YouTubeEmbed id="dQw4w9WgXcQ" />
+
+#### 2. Inline Text Link with Icon (UnoCSS)
+
+If you just want a sleek inline link, you can embed UnoCSS icon classes (powered by Iconify). Search for any icon on [icones.js.org](https://icones.js.org/). Use the `<span />` tag with the `i-` prefix.
+
+```html
+<a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">
+  <span class="op75 i-simple-icons-youtube" /> Watch on YouTube
+</a>
+```
+
+**Example:** <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><span class="op75 i-simple-icons-youtube" /> Watch on YouTube</a>
 
 ### Twitter/X Embed (`Tweet`)
 

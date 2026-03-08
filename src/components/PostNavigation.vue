@@ -75,10 +75,10 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
         flex-none text-lg op40
       />
       <div flex="~ col" min-w-0>
-        <span class="post-nav-title" text-sm leading-snug>
+        <span class="post-nav-title" text-base leading-snug>
           {{ newerPost.title }}
         </span>
-        <span class="post-nav-date" text-xs op40 mt-0.5>
+        <span class="post-nav-date" text-base op45 mt-0.5>
           {{ formatDate(newerPost.date, false) }}
         </span>
       </div>
@@ -93,10 +93,10 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
       flex="~ gap-3 items-center justify-end"
     >
       <div flex="~ col items-end" min-w-0>
-        <span class="post-nav-title" text-sm leading-snug text-right>
+        <span class="post-nav-title" text-base leading-snug text-right>
           {{ olderPost.title }}
         </span>
-        <span class="post-nav-date" text-xs op40 mt-0.5>
+        <span class="post-nav-date" text-base op45 mt-0.5>
           {{ formatDate(olderPost.date, false) }}
         </span>
       </div>

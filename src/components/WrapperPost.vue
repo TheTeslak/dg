@@ -237,7 +237,7 @@ const ArtComponent = computed(() => {
     </h1>
     <p
       v-if="frontmatter.date"
-      class="opacity-50 !-mt-6 slide-enter-50"
+      class="opacity-50 !-mt-8 slide-enter-50"
     >
       {{ formatDate(frontmatter.date, false) }} <span v-if="localizedDuration">· {{ localizedDuration }}</span>
     </p>
@@ -333,7 +333,7 @@ const ArtComponent = computed(() => {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.15rem 0.6rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.6rem;
 }
 .backlink-header {
   display: flex;
@@ -379,7 +379,7 @@ const ArtComponent = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   opacity: 0.45;
   margin-bottom: 0.6rem;
 }
@@ -405,8 +405,8 @@ const ArtComponent = computed(() => {
   opacity: 1;
 }
 .referenced-by-date {
-  font-size: 0.75rem;
-  opacity: 0.35;
+  font-size: 1rem;
+  opacity: 0.45;
   white-space: nowrap;
 }
 </style>

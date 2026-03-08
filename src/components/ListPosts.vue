@@ -129,7 +129,7 @@ function getDurationLabel(duration?: Post['duration']) {
             class="no-underline"
             flex="~ col md:row gap-2 md:items-center"
           >
-            <div class="title text-lg leading-1.2em" flex="~ gap-2 wrap">
+            <div class="title text-xl leading-1.2em" flex="~ gap-2 wrap">
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
@@ -164,12 +164,12 @@ function getDurationLabel(duration?: Post['duration']) {
                 title="Provided in radio"
               />
 
-              <span text-sm op50 ws-nowrap>
+              <span text-xl op45 ws-nowrap>
                 {{ formatDate(route.date, true) }}
               </span>
-              <span v-if="getDurationLabel(route.duration)" text-sm op40 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
-              <span v-if="route.platform" text-sm op40 ws-nowrap>· {{ route.platform }}</span>
-              <span v-if="route.place" text-sm op40 ws-nowrap md:hidden>· {{ route.place }}</span>
+              <span v-if="getDurationLabel(route.duration)" text-xl op45 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
+              <span v-if="route.platform" text-xl op45 ws-nowrap>· {{ route.platform }}</span>
+              <span v-if="route.place" text-xl op45 ws-nowrap md:hidden>· {{ route.place }}</span>
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
@@ -177,7 +177,7 @@ function getDurationLabel(duration?: Post['duration']) {
               >{{ getPostLangTag(route) }}</span>
             </div>
           </li>
-          <div v-if="route.place" op50 text-sm hidden mt--2 md:block>
+          <div v-if="route.place" op45 text-xl hidden mt--2 md:block>
             {{ route.place }}
           </div>
         </component>
