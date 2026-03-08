@@ -35,35 +35,46 @@ export function useBacklink() {
 
   const currentLocale = computed(() => getLocaleFromPath(route.path))
 
-  const backlinkSlug = computed(() => route.meta.frontmatter?.backlink as string | undefined)
-
-  const backlink = computed<BacklinkInfo | null>(() => {
-    const slug = backlinkSlug.value
-    if (!slug)
-      return null
-
-    const targetPath = `/${currentLocale.value}/articles/${slug}`
-    const found = router.getRoutes().find(
-      (r: RouteRecordNormalized) =>
-        r.path === targetPath && r.meta.frontmatter?.title,
-    )
-    if (!found)
-      return null
-
-    const fm = found.meta.frontmatter!
-    return {
-      path: found.path,
-      title: fm.title as string,
-      lang: fm.lang as string | undefined,
-    }
+  const backlinkSlugs = computed<string[]>(() => {
+    const raw = route.meta.frontmatter?.backlink
+    if (!raw)
+      return []
+    const list = Array.isArray(raw) ? raw : [raw]
+    return [...new Set(list)]
   })
 
-  return { backlink }
+  const backlinks = computed<BacklinkInfo[]>(() => {
+    const slugs = backlinkSlugs.value
+    if (slugs.length === 0)
+      return []
+
+    const results: BacklinkInfo[] = []
+
+    for (const slug of slugs) {
+      const targetPath = `/${currentLocale.value}/articles/${slug}`
+      const found = router.getRoutes().find(
+        (r: RouteRecordNormalized) =>
+          r.path === targetPath && r.meta.frontmatter?.title,
+      )
+      if (found) {
+        const fm = found.meta.frontmatter!
+        results.push({
+          path: found.path,
+          title: fm.title as string,
+          lang: fm.lang as string | undefined,
+        })
+      }
+    }
+
+    return results
+  })
+
+  return { backlinks }
 }
 
 /**
  * Find all articles that backlink TO the current article.
- * I.e. articles whose frontmatter.backlink === currentSlug.
+ * I.e. articles whose frontmatter.backlink contains currentSlug.
  */
 export function useReferencedBy() {
   const router = useRouter()
@@ -78,12 +89,19 @@ export function useReferencedBy() {
       return []
 
     return router.getRoutes()
-      .filter((r: RouteRecordNormalized) =>
-        r.path.startsWith(`/${currentLocale.value}/articles/`)
-        && r.meta.frontmatter?.backlink === slug
-        && r.meta.frontmatter?.title
-        && !r.meta.frontmatter?.draft,
-      )
+      .filter((r: RouteRecordNormalized) => {
+        if (!r.path.startsWith(`/${currentLocale.value}/articles/`))
+          return false
+        if (!r.meta.frontmatter?.title || r.meta.frontmatter?.draft)
+          return false
+
+        const rawBacklink = r.meta.frontmatter?.backlink
+        if (!rawBacklink)
+          return false
+
+        const bLinks = Array.isArray(rawBacklink) ? rawBacklink : [rawBacklink]
+        return bLinks.includes(slug)
+      })
       .map(r => ({
         path: r.path,
         title: r.meta.frontmatter!.title as string,

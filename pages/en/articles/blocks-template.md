@@ -1,5 +1,5 @@
 ---
-title: Blocks and Components Template
+title: Main Big Template
 date: 2026-03-03T00:00:00.000+00:00
 lang: en
 duration: 5

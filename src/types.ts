@@ -1,7 +1,7 @@
 export interface Post {
   path: string
   title: string
-  backlink?: string
+  backlink?: string | string[]
   place?: string
   date: string
   lang?: string

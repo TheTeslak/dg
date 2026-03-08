@@ -121,6 +121,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/backlinks-demo-multi': RouteRecordInfo<
+      '/en/articles/backlinks-demo-multi',
+      '/en/articles/backlinks-demo-multi',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/backlinks-demo-root': RouteRecordInfo<
       '/en/articles/backlinks-demo-root',
       '/en/articles/backlinks-demo-root',
@@ -1027,6 +1034,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/backlinks-demo-child-2.md': {
       routes:
         | '/en/articles/backlinks-demo-child-2'
+      views:
+        | never
+    }
+    'pages/en/articles/backlinks-demo-multi.md': {
+      routes:
+        | '/en/articles/backlinks-demo-multi'
       views:
         | never
     }

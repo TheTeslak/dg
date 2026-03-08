@@ -17,7 +17,7 @@ const router = useRouter()
 const route = useRoute()
 const content = ref<HTMLDivElement>()
 
-const { backlink } = useBacklink()
+const { backlinks } = useBacklink()
 const { referencedBy } = useReferencedBy()
 
 const currentLocale = computed(() => {
@@ -218,17 +218,19 @@ const ArtComponent = computed(() => {
     :class="[frontmatter.wrapperClass]"
   >
     <div
-      v-if="backlink"
-      class="backlink-header slide-enter-50"
+      v-if="backlinks.length > 0"
+      class="backlinks-container slide-enter-50"
     >
-      <RouterLink :to="backlink.path" class="backlink-link">
-        <div i-ri:corner-left-up-line class="backlink-icon" />
-        <span>{{ backlink.title }}</span>
-        <span
-          v-if="backlink.lang && backlink.lang !== currentLocale"
-          class="backlink-lang-tag"
-        >{{ backlink.lang.toUpperCase() }}</span>
-      </RouterLink>
+      <div v-for="backlink in backlinks" :key="backlink.path" class="backlink-header">
+        <RouterLink :to="backlink.path" class="backlink-link">
+          <div i-ri:corner-left-up-line class="backlink-icon" />
+          <span>{{ backlink.title }}</span>
+          <span
+            v-if="backlink.lang && backlink.lang !== currentLocale"
+            class="backlink-lang-tag"
+          >{{ backlink.lang.toUpperCase() }}</span>
+        </RouterLink>
+      </div>
     </div>
     <h1 class="mb-0 slide-enter-50">
       {{ frontmatter.display ?? frontmatter.title }}
@@ -326,14 +328,28 @@ const ArtComponent = computed(() => {
 </template>
 
 <style scoped>
-.backlink-header {
+.backlinks-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.6rem;
   margin-bottom: 0.25rem;
+}
+.backlink-header {
+  display: flex;
+  align-items: center;
+}
+.backlink-header + .backlink-header::before {
+  content: '·';
+  opacity: 0.3;
+  margin-right: 0.6rem;
+  font-size: 0.8rem;
 }
 .backlink-link {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   opacity: 0.4;
   text-decoration: none !important;
   transition: opacity 0.2s ease;
@@ -380,7 +396,7 @@ const ArtComponent = computed(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   opacity: 0.6;
   transition: opacity 0.2s ease;
   text-decoration: none !important;

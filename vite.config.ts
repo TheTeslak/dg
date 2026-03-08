@@ -125,12 +125,14 @@ export default defineConfig({
 
           // Validate backlink slug at build time
           if (frontmatter.backlink) {
-            const backlinkSlug = frontmatter.backlink
-            const backlinkExists = supportedLocales.some(loc =>
-              fs.existsSync(resolve(__dirname, `pages/${loc}/articles/${backlinkSlug}.md`)),
-            )
-            if (!backlinkExists)
-              warnFrontmatter(`[frontmatter] ${path}: backlink "${backlinkSlug}" does not match any article.`)
+            const backlinks = Array.isArray(frontmatter.backlink) ? frontmatter.backlink : [frontmatter.backlink]
+            for (const backlinkSlug of backlinks) {
+              const backlinkExists = supportedLocales.some(loc =>
+                fs.existsSync(resolve(__dirname, `pages/${loc}/articles/${backlinkSlug}.md`)),
+              )
+              if (!backlinkExists)
+                warnFrontmatter(`[frontmatter] ${path}: backlink "${backlinkSlug}" does not match any article.`)
+            }
           }
 
           route.addToMeta({
