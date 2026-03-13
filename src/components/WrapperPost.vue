@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
-import { formatDate, formatReadingDuration, resolvePath } from '~/logics'
+import { formatDate, formatReadingDuration, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
 
@@ -239,7 +239,7 @@ const ArtComponent = computed(() => {
       v-if="frontmatter.date"
       class="opacity-50 !-mt-8 slide-enter-50"
     >
-      {{ formatDate(frontmatter.date, false) }} <span v-if="localizedDuration">· {{ localizedDuration }}</span>
+      <span v-if="isRecentPost(frontmatter.date, frontmatter.updated)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>
@@ -304,7 +304,7 @@ const ArtComponent = computed(() => {
           class="backlink-lang-tag"
         >{{ ref.lang.toUpperCase() }}</span>
         <span v-if="ref.date" class="referenced-by-date">
-          {{ formatDate(ref.date, false) }}
+          <span v-if="isRecentPost(ref.date, ref.updated)">🌱 </span>{{ formatDate(ref.date, false) }}
         </span>
       </div>
     </div>

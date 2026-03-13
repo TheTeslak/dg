@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Post } from '~/types'
-import { formatDate } from '~/logics'
+import { formatDate, isRecentPost } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -33,6 +33,7 @@ const siblings = computed<Post[]>(() => {
       path: r.path,
       title: r.meta.frontmatter?.title,
       date: r.meta.frontmatter?.date,
+      updated: r.meta.frontmatter?.updated,
       lang: r.meta.frontmatter?.lang,
       duration: r.meta.frontmatter?.duration,
     }))
@@ -79,7 +80,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
           {{ newerPost.title }}
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
-          {{ formatDate(newerPost.date, false) }}
+          <span v-if="isRecentPost(newerPost.date, newerPost.updated)">🌱 </span>{{ formatDate(newerPost.date, false) }}
         </span>
       </div>
     </RouterLink>
@@ -97,7 +98,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
           {{ olderPost.title }}
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
-          {{ formatDate(olderPost.date, false) }}
+          <span v-if="isRecentPost(olderPost.date, olderPost.updated)">🌱 </span>{{ formatDate(olderPost.date, false) }}
         </span>
       </div>
       <div

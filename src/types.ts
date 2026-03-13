@@ -4,6 +4,7 @@ export interface Post {
   backlink?: string | string[]
   place?: string
   date: string
+  updated?: string
   lang?: string
   desc?: string
   platform?: string

@@ -54,14 +54,18 @@ export function toggleDark(event: MouseEvent) {
 export function formatDate(d: string | Date, onlyDate = true) {
   const date = dayjs(d)
   const now = dayjs()
-  const isRecent = now.diff(date, 'day') < 14 && date.isBefore(now)
   let formatted: string
   if (onlyDate || date.year() === now.year())
     formatted = date.format('MMM D')
   else
     formatted = date.format('MMM D, YYYY')
-  formatted = formatted.replace('.', '')
-  return isRecent ? `🌱 ${formatted}` : formatted
+  return formatted.replace('.', '')
+}
+
+export function isRecentPost(date: string | Date, updated?: string | Date): boolean {
+  const effectiveDate = updated ? dayjs(updated) : dayjs(date)
+  const now = dayjs()
+  return now.diff(effectiveDate, 'day') < 15 && effectiveDate.isBefore(now)
 }
 
 export function parseReadingMinutes(duration: unknown): number | undefined {

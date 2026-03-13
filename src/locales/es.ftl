@@ -52,6 +52,7 @@ post-comment-on = comentar en
 post-link-telegram = Telegram
 post-link-mastodon = Mastodon
 post-referenced-by = Referenciado por
+post-updated = actualizado
 
 heading-link = enlace al título
 heading-copied = copiado

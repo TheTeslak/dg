@@ -65,6 +65,7 @@ const frontmatterKnownKeys = new Set([
   'tocAlwaysOn',
   'type',
   'upcoming',
+  'updated',
   'video',
   'wrapperClass',
 ])

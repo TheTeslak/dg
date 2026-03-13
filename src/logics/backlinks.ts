@@ -13,6 +13,7 @@ interface ReferencedByInfo {
   path: string
   title: string
   date: string
+  updated?: string
   lang?: string
 }
 
@@ -106,6 +107,7 @@ export function useReferencedBy() {
         path: r.path,
         title: r.meta.frontmatter!.title as string,
         date: r.meta.frontmatter!.date as string,
+        updated: r.meta.frontmatter!.updated as string | undefined,
         lang: r.meta.frontmatter!.lang as string | undefined,
       }))
       .sort((a, b) => +new Date(b.date) - +new Date(a.date))

@@ -4,7 +4,7 @@ import type { Post } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { formatDate, formatReadingDuration, onlyLanguage } from '~/logics'
+import { formatDate, formatReadingDuration, isRecentPost, onlyLanguage } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -36,6 +36,7 @@ const routes = computed<Post[]>(() => {
       path: r.meta.frontmatter?.redirect || r.path,
       title: r.meta.frontmatter?.title,
       date: r.meta.frontmatter?.date,
+      updated: r.meta.frontmatter?.updated,
       lang: r.meta.frontmatter?.lang,
       duration: r.meta.frontmatter?.duration,
       recording: r.meta.frontmatter?.recording,
@@ -165,7 +166,7 @@ function getDurationLabel(duration?: Post['duration']) {
               />
 
               <span text-xl op45 ws-nowrap>
-                {{ formatDate(route.date, true) }}
+                <span v-if="isRecentPost(route.date, route.updated)">🌱 </span>{{ formatDate(route.date, true) }}
               </span>
               <span v-if="getDurationLabel(route.duration)" text-xl op45 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
               <span v-if="route.platform" text-xl op45 ws-nowrap>· {{ route.platform }}</span>
