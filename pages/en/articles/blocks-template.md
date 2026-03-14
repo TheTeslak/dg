@@ -23,6 +23,10 @@ Standard Markdown formatting: **bold text**, _italic text_, ~~strikethrough~~, `
 > A blockquote.
 > Useful for highlighting a key point, a quote, or an excerpt.
 
+**Wisper quote block:**
+
+> <span font-wisper font-bold op80 text-1.4rem leading-2.1rem>"But somehow, there seems to be something, <br>something makes me hard to breathe."</span>
+
 ### Lists
 
 **Unordered list:**

@@ -38,9 +38,9 @@ export default defineConfig({
     presetWebFonts({
       fonts: {
         sans: 'Inter',
-        mono: 'DM Mono',
+        mono: 'IBM Plex Mono',
         condensed: 'Roboto Condensed',
-        wisper: 'Bad Script',
+        wisper: 'Caveat',
       },
       processors: createLocalFontProcessor(),
     }),
