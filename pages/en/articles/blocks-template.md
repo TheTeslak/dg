@@ -196,6 +196,18 @@ Shows interactive project sponsorship buttons.
 
 <SponsorButtons />
 
+### Spoiler / Collapsible Block (`Spoiler`)
+
+Collapsed by default. Useful for optional details, long lists, or plot spoilers.
+
+`<Spoiler title="Click to expand">`
+
+<Spoiler title="Click to expand">
+
+This content is hidden until the reader clicks the summary. You can put any Markdown here: **bold**, `code`, lists, images, etc.
+
+</Spoiler>
+
 ---
 
 ## Secondary Features
