@@ -22,3 +22,9 @@ onMounted(() => {
     </blockquote>
   </div>
 </template>
+
+<style>
+.twitter-tweet iframe {
+  clip-path: inset(0 round 12px) !important;
+}
+</style>

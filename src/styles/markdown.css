@@ -220,6 +220,20 @@ h6:focus .header-anchor {
   content: none;
 }
 
+/* GitHub Alerts Custom Spacing */
+.prose .markdown-alert {
+  padding-top: 0.9em;
+  padding-bottom: 0.5em;
+}
+
+.prose .markdown-alert .markdown-alert-title {
+  margin-bottom: 0.6em;
+}
+
+.prose .markdown-alert .markdown-alert-title + * {
+  margin-top: 0;
+}
+
 .prose s {
   opacity: 0.5;
 }

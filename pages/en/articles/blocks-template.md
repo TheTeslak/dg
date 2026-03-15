@@ -14,18 +14,32 @@ tags:
 
 [[toc]]
 
-This article is a practical starter template with the core Markdown blocks and Vue components used in this project. Reuse these snippets when creating new posts to keep content consistent.
+A quick copy-paste reference for Markdown blocks and custom Vue components.
 
-## Text Basics
+## Text & Formatting Basics
 
-Standard Markdown formatting: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, and [links](https://example.com).
+Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, and [links](https://example.com).
 
-> A blockquote.
+### Quotes
+
+> A standard blockquote.
 > Useful for highlighting a key point, a quote, or an excerpt.
 
-**Wisper quote block:**
+**Wisper quote block (custom styled):**
 
 > <span font-wisper font-bold op80 text-1.4rem leading-2.1rem>"But somehow, there seems to be something, <br>something makes me hard to breathe."</span>
+
+### UnoCSS Inline Styling
+
+You can apply UnoCSS utility classes directly to HTML tags to style text inline without writing custom CSS.
+
+```html
+<b important-text-hex-E3B65E>Velocity</b>
+<b important-text-hex-D777B1>Scope</b>
+<b important-text-hex-80BEDF>Quality</b>
+```
+
+**Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, and <b important-text-hex-80BEDF>Quality</b>.
 
 ### Lists
 
@@ -42,28 +56,9 @@ Standard Markdown formatting: **bold text**, _italic text_, ~~strikethrough~~, `
 
 ---
 
-## Alerts (GitHub Style)
+## Code Blocks
 
-Use alerts to draw attention to important context:
-
-> [!NOTE]
-> **Note:** Supplemental information that helps understanding.
-
-> [!TIP]
-> **Tip:** A practical suggestion or optimization.
-
-> [!IMPORTANT]
-> **Important:** Critical information readers should not skip.
-
-> [!WARNING]
-> **Warning:** Potential mistakes or non-obvious behavior.
-
-> [!CAUTION]
-> **Caution:** Critical risks or destructive actions.
-
-## Code Blocks (Shiki)
-
-Syntax highlighting is provided by Shiki. Diff blocks are supported:
+Syntax highlighting is provided by Shiki. Diff blocks are supported out of the box.
 
 ```ts
 import { ref } from 'vue'
@@ -81,39 +76,53 @@ function hello(name: string) {
   }
 ```
 
-## Project Vue Components
+---
 
-In Markdown files, you can use Vue components directly from `src/components`.
+## Media & Visuals
 
-### Copyable Text (`TextCopy`)
+These are the most frequently used components for embedding rich media and linking your articles together.
 
-Useful for commands and snippets readers need to copy.
-`<TextCopy text="pnpm install" />`
+### Photos: Carousel and Tiles (`PhotoShowcase`)
 
-<TextCopy text="pnpm install" />
+You can embed photos directly inside an article. They do not have to be limited to the `/photos` page.
 
-### GitHub Link (`GitHubLink`)
+**Horizontal carousel (`mode="slide"`):**
+`<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />`
 
-Specialized component for linking repositories.
-`<GitHubLink repo="antfu/vueuse" name="VueUse" />`
+<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />
 
-<GitHubLink repo="antfu/vueuse" name="VueUse" />
+**Tiled photos (`mode="grid"`):**
+`<PhotoShowcase mode="grid" :limit="8" />`
+
+<PhotoShowcase mode="grid" :limit="8" />
+
+### Article Links (`ArticleLinks`)
+
+Embed clickable preview cards linking to other articles. This is especially useful for hub or collection posts.
+
+```vue
+<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+```
+
+<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+
+_Note: Pass an array of article **slugs** (the filename without `.md`). The component resolves the title and excerpt automatically from each article's frontmatter._
 
 ### YouTube & Video Links
 
 There are two ways to share YouTube content depending on your needs.
 
-#### 1. Embedded Video (`YouTubeEmbed`)
+**1. Embedded Video (`YouTubeEmbed`)**
 
-Use the `<YouTubeEmbed>` component to embed a fully playable video without loading a heavy iframe immediately (improves page performance).
+Use the `<YouTubeEmbed>` component to embed a fully playable video without loading a heavy iframe immediately. This significantly improves page performance.
 
 `<YouTubeEmbed id="dQw4w9WgXcQ" />`
 
 <YouTubeEmbed id="dQw4w9WgXcQ" />
 
-#### 2. Inline Text Link with Icon (UnoCSS)
+**2. Inline Text Link with Icon (UnoCSS)**
 
-If you just want a sleek inline link, you can embed UnoCSS icon classes (powered by Iconify). Search for any icon on [icones.js.org](https://icones.js.org/). Use the `<span />` tag with the `i-` prefix.
+If you just want a sleek inline link, you can embed UnoCSS icon classes (powered by Iconify). Use the `<span />` tag with the `i-` prefix. Search for any icon on [icones.js.org](https://icones.js.org/).
 
 ```html
 <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">
@@ -121,48 +130,31 @@ If you just want a sleek inline link, you can embed UnoCSS icon classes (powered
 </a>
 ```
 
-**Example:** <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><span class="op75 i-simple-icons-youtube" /> Watch on YouTube</a>
+**Result:** <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><span class="op75 i-simple-icons-youtube" /> Watch on YouTube</a>
 
-### Twitter/X Embed (`Tweet`)
+---
 
-Use `<Tweet>` for native tweet rendering.
+## Meta & Navigation
 
-<Tweet>
-  <p lang="en" dir="ltr">Just setting up my twttr</p>&mdash; jack (@jack) <a href="https://twitter.com/jack/status/20?ref_src=twsrc%5Etfw">March 21, 2006</a>
-</Tweet>
+### Backlinks
 
-### Photos: Carousel and Tiles (`PhotoShowcase`)
+Add an optional `backlink` field to frontmatter with the **slug** of a parent article:
 
-You can embed photos directly inside an article. They do not have to be limited to the `/photos` page.
-
-Use `mode="slide"` for a horizontal carousel:
-`<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />`
-
-<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />
-
-Use `mode="grid"` for tiled photos:
-`<PhotoShowcase mode="grid" :limit="8" />`
-
-<PhotoShowcase mode="grid" :limit="8" />
-
-### Sponsor Buttons
-
-`<SponsorButtons />`
-<SponsorButtons />
-
-### Article Links (`ArticleLinks`)
-
-Embed clickable preview cards linking to other articles. Useful for hub/collection posts.
-
-```
-<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+```yaml
+---
+title: My Article
+backlink: about-yak-shaving
+---
 ```
 
-<ArticleLinks :links="['reimagine-atomic-css', 'rewrite-in-vite', 'icons-in-pure-css']" />
+**What it does:**
 
-Pass an array of article **slugs** (filename without `.md`). The component resolves the title and excerpt automatically from each article's frontmatter.
+- **Top of the article** — shows a `⬑ Parent Article Title` link above the title.
+- **Bottom of the parent** — automatically shows a "Referenced by" section listing articles that backlink to it.
 
-## Discussion Links
+_Note: The slug is locale-agnostic. If the backlinked article is in a different language than the current UI locale, a small language tag (e.g. `EN`) appears next to the link. Scroll up to the top of this page to see the backlink header._
+
+### Discussion Links
 
 Add `telegram` and/or `mastodon` fields to frontmatter to show discussion links at the bottom of the article:
 
@@ -176,28 +168,64 @@ mastodon: https://mastodon.social/@antfu/your_post_link
 
 They appear below the article content as "Comment on Telegram / Mastodon" links.
 
-## Backlinks
-
-Add an optional `backlink` field to frontmatter with the **slug** of a parent article:
-
-```yaml
 ---
-title: My Article
-backlink: about-yak-shaving
+
+## Interactive Utilities
+
+### Copyable Text (`TextCopy`)
+
+Useful for commands and snippets readers need to copy.
+
+`<TextCopy text="pnpm install" />`
+
+<TextCopy text="pnpm install" />
+
+### GitHub Link (`GitHubLink`)
+
+Specialized component for linking repositories.
+
+`<GitHubLink repo="antfu/vueuse" name="VueUse" />`
+
+<GitHubLink repo="antfu/vueuse" name="VueUse" />
+
+### Sponsor Buttons
+
+Shows interactive project sponsorship buttons.
+
+`<SponsorButtons />`
+
+<SponsorButtons />
+
 ---
-```
 
-**What it does:**
+## Secondary Features
 
-- **Top of the article** — shows a `⬑ Parent Article Title` link above the title
-- **Bottom of the parent** — automatically shows a "Referenced by" section listing articles that backlink to it
+### Alerts (GitHub Style)
 
-The slug is locale-agnostic. If the target article isn't translated, the user sees the original content with a "not translated" banner (existing behavior).
-
-If the backlinked article is in a different language than the current UI locale, a small language tag (e.g. `EN`) appears next to the link.
+Use alerts to draw attention to important context or edge cases.
 
 > [!NOTE]
-> This article itself has `backlink: about-yak-shaving` in its frontmatter — scroll up to see the backlink header.
+> **Note:** Supplemental information that helps understanding.
+
+> [!TIP]
+> **Tip:** A practical suggestion or optimization.
+
+> [!IMPORTANT]
+> **Important:** Critical information readers should not skip.
+
+> [!WARNING]
+> **Warning:** Potential mistakes or non-obvious behavior.
+
+> [!CAUTION]
+> **Caution:** Critical risks or destructive actions.
+
+### Twitter/X Embed (`Tweet`)
+
+Use `<Tweet>` for native tweet rendering.
+
+<Tweet>
+  <p lang="en" dir="ltr">Just setting up my twttr</p>&mdash; jack (@jack) <a href="https://twitter.com/jack/status/20?ref_src=twsrc%5Etfw">March 21, 2006</a>
+</Tweet>
 
 ---
 

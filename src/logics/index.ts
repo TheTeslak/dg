@@ -89,7 +89,7 @@ export function formatReadingDuration(duration: unknown, locale = 'en') {
   if (locale === 'ru')
     return `${minutes} мин`
 
-  return `${minutes}min`
+  return `${minutes} min`
 }
 
 export function resolvePath(path: string, currentRoutePath: string) {
