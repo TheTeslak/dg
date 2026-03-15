@@ -1,6 +1,7 @@
 ---
 title: Проекты - Anthony Fu
-display: Проекты
+display: От замысла до воплощения
+art: dots
 ---
 
 <script setup lang="ts">

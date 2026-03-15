@@ -1,8 +1,7 @@
 ---
 title: Proyectos - Anthony Fu
-display: Proyectos
+display: De la visión a la realidad
 description: Lista de proyectos
-wrapperClass: 'text-center'
 art: dots
 ---
 
@@ -10,5 +9,4 @@ art: dots
 import { projects } from '~/data/projects'
 </script>
 
-<!-- @layout-full-width -->
 <ListProjects :projects="projects" />

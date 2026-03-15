@@ -1,106 +1,74 @@
 <script setup lang="ts">
-import type { ProjectsBySection } from '~/data/projects'
+import type { ProjectItem, ProjectSection } from '~/data/projects'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 
-defineProps<{ projects: ProjectsBySection }>()
+defineProps<{ projects: ProjectSection[] }>()
+
+const route = useRoute()
+const currentLocale = computed(() => getLocaleFromPath(route.path))
 
 function slug(name: string) {
   return name.toLowerCase().replace(/[\s\\/]+/g, '-')
 }
+
+function getTitle(section: ProjectSection) {
+  if (currentLocale.value === 'ru')
+    return section.title_ru || section.title
+  if (currentLocale.value === 'es')
+    return section.title_es || section.title
+  return section.title
+}
+
+function getName(item: ProjectItem) {
+  if (currentLocale.value === 'ru')
+    return item.name_ru || item.name
+  if (currentLocale.value === 'es')
+    return item.name_es || item.name
+  return item.name
+}
+
+function getDesc(item: ProjectItem) {
+  if (currentLocale.value === 'ru')
+    return item.desc_ru || item.desc
+  if (currentLocale.value === 'es')
+    return item.desc_es || item.desc
+  return item.desc
+}
 </script>
 
 <template>
-  <div class="max-w-300 mx-auto">
-    <p text-center mt--6 mb5 op50 text-lg italic>
-      {{ $t('projects-subtitle') }}
-    </p>
-    <div class="prose pb5 mx-auto mt10 text-center">
-      <div flex="~ gap-2 justify-center">
-        <a
-          href="https://github.com/antfu"
-          target="_blank"
-          class="group btn-blue inline-block"
-        >
-          <div
-            i-ph-github-logo-duotone
-            group-hover="i-ph-github-logo-fill text-blue"
-          />
-          GitHub
-        </a>
-        <a
-          href="https://releases.antfu.me"
-          target="_blank"
-          class="group btn-amber inline-block"
-        >
-          <div
-            i-ph-rocket-launch-duotone
-            group-hover="i-ph-rocket-launch-fill text-amber"
-          />
-          {{ $t('projects-recent-releases') }}
-        </a>
-        <a
-          href="https://yak.antfu.me"
-          target="_blank"
-          class="group btn-lime inline-block"
-        >
-          <div
-            i-ph-cow-duotone
-            group-hover="i-ph-cow-duotone-fill text-lime"
-          />
-          Yak Map
-        </a>
-      </div>
-      <hr>
-    </div>
+  <div class="prose m-auto">
     <div
-      v-for="key, cidx in Object.keys(projects)" :key="key" slide-enter
+      v-for="section, cidx in projects" :key="section.title" slide-enter
       :style="{ '--enter-stage': cidx + 1 }"
     >
       <div
-        :id="slug(key)"
+        :id="slug(section.title)"
         select-none relative h18 mt5 pointer-events-none slide-enter
         :style="{
           '--enter-stage': cidx - 2,
           '--enter-step': '60ms',
         }"
       >
-        <span text-5em color-transparent absolute left--1rem top-0rem font-bold leading-1em text-stroke-1.5 text-stroke-hex-aaa op35 dark:op20>{{ key }}</span>
+        <span text-5em color-transparent absolute left--1rem top-0rem font-bold leading-1em text-stroke-1.5 text-stroke-hex-aaa op35 dark:op20>{{ getTitle(section) }}</span>
       </div>
       <div
-        class="project-grid py-2 max-w-500 w-max mx-auto"
-        grid="~ cols-1 md:cols-2 gap-4 lg:cols-3"
+        class="project-grid py-2"
       >
         <a
-          v-for="item, idx in projects[key]"
+          v-for="item, idx in section.projects"
           :key="idx"
-          class="item relative flex items-center"
+          class="item block font-normal no-underline"
           :href="item.link"
           target="_blank"
-          :title="item.name"
+          :title="getName(item)"
         >
-          <div v-if="item.icon" class="pt-2 pr-5">
-            <Slidev v-if="item.icon === 'slidev'" class="text-4xl opacity-50" />
-            <VueUse v-else-if="item.icon === 'vueuse'" class="text-4xl opacity-50" />
-            <VueReactivity v-else-if="item.icon === 'vue-reactivity'" class="text-4xl opacity-50" />
-            <VueDemi v-else-if="item.icon === 'vue-demi'" class="text-4xl opacity-50" />
-            <Unocss v-else-if="item.icon === 'unocss'" class="text-4xl opacity-50" />
-            <Vitest v-else-if="item.icon === 'vitest'" class="text-4xl opacity-50" />
-            <Elk v-else-if="item.icon === 'elk'" class="text-4xl opacity-50" />
-            <AnthonyFu v-else-if="item.icon === 'af'" class="text-4xl opacity-50" />
-            <div v-else class="text-3xl opacity-50" :class="item.icon || 'i-carbon-unknown'" />
-          </div>
-          <div class="flex-auto">
-            <div class="text-normal">{{ item.name }}</div>
-            <div class="desc text-sm opacity-50 font-normal" v-html="item.desc" />
-          </div>
+          <div class="title text-xl leading-1.2em">{{ getName(item) }}</div>
+          <div class="desc text-xl opacity-75 font-normal mt-1" v-html="getDesc(item)" />
         </a>
       </div>
-    </div>
-    <div class="prose pb5 mx-auto mt10 text-center">
-      <div block mt-5>
-        <a href="https://antfu.me/stars-rank" target="_blank" op50>{{ $t('projects-sort-by-stars') }}</a>
-      </div>
-      <hr>
-      <SponsorButtons />
     </div>
   </div>
   <div>
@@ -109,8 +77,8 @@ function slug(name: string) {
         <div class="i-ri-menu-2-fill" />
       </div>
       <ul>
-        <li v-for="key of Object.keys(projects)" :key="key">
-          <a :href="`#${slug(key)}`">{{ key }}</a>
+        <li v-for="section in projects" :key="section.title">
+          <a :href="`#${slug(section.title)}`">{{ getTitle(section) }}</a>
         </li>
       </ul>
     </div>
@@ -119,15 +87,7 @@ function slug(name: string) {
 
 <style scoped>
 .project-grid a.item {
-  background: transparent;
-  font-size: 1.1rem;
-  width: 350px;
-  max-width: 100%;
-  padding: 0.5rem 0.875rem 0.875rem;
-  border-radius: 6px;
-}
-
-.project-grid a.item:hover {
-  background: #88888811;
+  margin-bottom: 0.8rem;
+  padding: 0.4rem 0;
 }
 </style>
