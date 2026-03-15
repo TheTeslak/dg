@@ -37,9 +37,10 @@ You can apply UnoCSS utility classes directly to HTML tags to style text inline 
 <b important-text-hex-E3B65E>Velocity</b>
 <b important-text-hex-D777B1>Scope</b>
 <b important-text-hex-80BEDF>Quality</b>
+<span op75>(faded text)</span>
 ```
 
-**Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, and <b important-text-hex-80BEDF>Quality</b>.
+**Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, <b important-text-hex-80BEDF>Quality</b>, and an opacity badge <span op75>(faded text)</span>.
 
 ### Lists
 
