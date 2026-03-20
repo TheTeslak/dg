@@ -24,6 +24,12 @@ blog-upcoming = Upcoming
 blog-draft = This is a draft post, the content may be incomplete. Please check back later.
 blog-read-more = Read more
 
+search-placeholder = Search articles and notes...
+search-start-typing = Start typing to search
+search-no-results = No results found
+search-close = Close search
+search-loading = Loading search index...
+
 talks-watch = Watch
 talks-transcript = Transcript
 talks-slides = Slides

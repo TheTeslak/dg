@@ -24,6 +24,12 @@ blog-upcoming = Próximamente
 blog-draft = Este es un borrador, el contenido puede estar incompleto. Vuelve más tarde.
 blog-read-more = Leer más
 
+search-placeholder = Buscar artículos y notas...
+search-start-typing = Empieza a escribir para buscar
+search-no-results = No se encontraron resultados
+search-close = Cerrar búsqueda
+search-loading = Cargando índice de búsqueda...
+
 talks-watch = Ver
 talks-transcript = Transcripción
 talks-slides = Diapositivas
