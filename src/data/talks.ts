@@ -1,4 +1,3 @@
-
 export interface Talk {
   title: string
   lang?: string
@@ -29,8 +28,8 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://2025.tskaigi.org/',
         location: 'Tokyo',
         lang: 'en',
-      }
-    ]
+      },
+    ],
   },
   {
     title: 'VueとWebComponentsで作るAgnostic UI',
@@ -42,8 +41,8 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://vuejs-meetup.connpass.com/',
         location: 'Tokyo',
         lang: 'ja',
-      }
-    ]
+      },
+    ],
   },
   {
     title: 'Vite DevTools 前瞻介绍',
@@ -55,8 +54,8 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://vueconf.cn/',
         location: 'Shenzhen',
         lang: 'zh',
-      }
-    ]
+      },
+    ],
   },
   {
     title: 'Yak Shaving',
@@ -77,15 +76,15 @@ export const talks: Talk[] = [
         lang: 'zh',
       },
       {
-         date: '2024-10-19',
-         conference: 'Vue Fes Japan',
-         conferenceUrl: 'https://vuefes.jp/',
-         location: 'Tokyo',
-         lang: 'ja' 
-      }
-    ]
+        date: '2024-10-19',
+        conference: 'Vue Fes Japan',
+        conferenceUrl: 'https://vuefes.jp/',
+        location: 'Tokyo',
+        lang: 'ja',
+      },
+    ],
   },
-   {
+  {
     title: 'Make Tools People Love',
     presentations: [
       {
@@ -94,8 +93,8 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://2025.squiggleconf.com/',
         location: 'Boston',
         lang: 'en',
-      }
-    ]
+      },
+    ],
   },
   {
     title: 'Vite DevTools',
@@ -113,37 +112,37 @@ export const talks: Talk[] = [
         conferenceUrl: 'https://vuefes.jp/2025/',
         location: 'Tokyo',
         lang: 'ja',
-      }
-    ]
+      },
+    ],
   },
   {
     title: 'The Progressive Path',
     presentations: [
-       {
+      {
         date: '2024-02-27',
         conference: 'The Vue-niverse meetup',
         conferenceUrl: 'https://www.meetup.com/nl-NL/coven-of-wisdom-utrecht/events/298711260/',
         location: 'Utrecht, Netherlands',
-       },
-       {
+      },
+      {
         date: '2024-02-29',
         conference: 'Vue Amsterdam',
         conferenceUrl: 'https://vuejs.amsterdam/',
         location: 'Amsterdam',
-       },
-       {
-         date: '2024-06-01',
-         conference: 'Frontend Nation',
-         conferenceUrl: 'https://frontendnation.com/',
-         location: 'Online'
-       },
-       {
-         date: '2024-10-03',
-         conference: 'ViteConf',
-         conferenceUrl: 'https://viteconf.org/',
-         location: 'Online'
-       }
-    ]
+      },
+      {
+        date: '2024-06-01',
+        conference: 'Frontend Nation',
+        conferenceUrl: 'https://frontendnation.com/',
+        location: 'Online',
+      },
+      {
+        date: '2024-10-03',
+        conference: 'ViteConf',
+        conferenceUrl: 'https://viteconf.org/',
+        location: 'Online',
+      },
+    ],
   },
   {
     title: 'ESLint One for All Made Easy',
@@ -152,35 +151,35 @@ export const talks: Talk[] = [
         date: '2024-06-08',
         conference: 'CityJS Athens',
         conferenceUrl: 'https://greece.cityjsconf.org/',
-        location: 'Athens'
+        location: 'Athens',
       },
       {
         date: '2024-06-13',
         conference: 'JS Nation',
         conferenceUrl: 'https://jsnation.com/',
-        location: 'Amsterdam'
+        location: 'Amsterdam',
       },
       {
         date: '2024-12-07',
         conference: 'FEDAY',
         conferenceUrl: 'https://fequan.com/2024/',
         location: 'Xiamen',
-        lang: 'zh'
+        lang: 'zh',
       },
       {
         date: '2024-12-13',
         conference: 'React Day Berlin',
         conferenceUrl: 'https://reactday.berlin/',
-        location: 'Berlin (Remote)'
+        location: 'Berlin (Remote)',
       },
       {
         date: '2024-12-27',
         conference: 'WebConf Taiwan',
         conferenceUrl: 'https://webconf.tw/',
         location: 'Taipei',
-         lang: 'zh'
-      }
-    ]
+        lang: 'zh',
+      },
+    ],
   },
   {
     title: 'The Set Theory',
@@ -189,42 +188,42 @@ export const talks: Talk[] = [
         date: '2024-06-14',
         conference: 'React Summit',
         conferenceUrl: 'https://reactsummit.com/',
-        location: 'Amsterdam'
+        location: 'Amsterdam',
       },
-       {
+      {
         date: '2024-03-22',
         conference: 'React Paris',
         conferenceUrl: 'https://react.paris/',
-        location: 'Paris'
-      }
-    ]
+        location: 'Paris',
+      },
+    ],
   },
   {
-     title: 'Panel Discussions',
-     presentations: [
-       {
-         date: '2024-03-01',
-         conference: 'Devworld',
-         conferenceUrl: 'https://devworldconference.com/',
-         location: 'Amsterdam'
-       },
-       {
-         date: '2024-04-03',
-         conference: 'Vue.js Paris',
-         conferenceUrl: 'https://www.meetup.com/fr-FR/vuejs-paris/',
-         location: 'Paris'
-       }
-     ]
+    title: 'Panel Discussions',
+    presentations: [
+      {
+        date: '2024-03-01',
+        conference: 'Devworld',
+        conferenceUrl: 'https://devworldconference.com/',
+        location: 'Amsterdam',
+      },
+      {
+        date: '2024-04-03',
+        conference: 'Vue.js Paris',
+        conferenceUrl: 'https://www.meetup.com/fr-FR/vuejs-paris/',
+        location: 'Paris',
+      },
+    ],
   },
   {
-     title: 'Journey to Nuxt Icon',
-     presentations: [
-       {
-         date: '2024-11-12',
-         conference: 'Nuxt Nation',
-         conferenceUrl: 'https://nuxtnation.com/',
-         location: 'Online'
-       }
-     ]
-  }
+    title: 'Journey to Nuxt Icon',
+    presentations: [
+      {
+        date: '2024-11-12',
+        conference: 'Nuxt Nation',
+        conferenceUrl: 'https://nuxtnation.com/',
+        location: 'Online',
+      },
+    ],
+  },
 ]

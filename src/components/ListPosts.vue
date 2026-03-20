@@ -4,7 +4,7 @@ import type { Post } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { formatDate, formatReadingDuration, isRecentPost, onlyLanguage } from '~/logics'
+import { formatDate, formatReadingDuration, isDraftPost, isPostVisible, isRecentPost, onlyLanguage } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -25,8 +25,7 @@ const routes = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
       r.path.startsWith(`/${locale.value}/articles`)
-      && r.meta.frontmatter?.date
-      && !r.meta.frontmatter?.draft,
+      && isPostVisible(r.meta.frontmatter || {}),
     )
     .filter((r: RouteRecordNormalized) =>
       !r.path.endsWith('.html')
@@ -43,6 +42,7 @@ const routes = computed<Post[]>(() => {
       upcoming: r.meta.frontmatter?.upcoming,
       redirect: r.meta.frontmatter?.redirect,
       place: r.meta.frontmatter?.place,
+      type: r.meta.frontmatter?.type,
     }))
 })
 
@@ -166,7 +166,8 @@ function getDurationLabel(duration?: Post['duration']) {
               />
 
               <span text-xl op45 ws-nowrap>
-                <span v-if="isRecentPost(route.date, route.updated)">🌱 </span>{{ formatDate(route.date, true) }}
+                <span v-if="isDraftPost(route.type)">🚧 </span>
+                <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)">🌱 </span>{{ formatDate(route.date, true) }}
               </span>
               <span v-if="getDurationLabel(route.duration)" text-xl op45 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
               <span v-if="route.platform" text-xl op45 ws-nowrap>· {{ route.platform }}</span>

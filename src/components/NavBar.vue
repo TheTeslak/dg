@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useWindowScroll } from '@vueuse/core'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useWindowScroll } from '@vueuse/core'
 
 const route = useRoute()
 
@@ -66,7 +66,7 @@ const { y: scroll } = useWindowScroll()
         <RouterLink v-if="false" :to="`/${currentLocale}/demos`" :title="$t('nav-demos')">
           <div i-ri-screenshot-line />
         </RouterLink>
-        
+
         <a href="https://t.me/" target="_blank" title="Telegram" class="lt-md:hidden">
           <div i-ri-telegram-line />
         </a>
@@ -76,7 +76,7 @@ const { y: scroll } = useWindowScroll()
         <a :href="currentLocale === 'en' ? '/feed.xml' : `/feed-${currentLocale}.xml`" target="_blank" title="RSS" class="lt-md:hidden">
           <div i-la-rss-square style="font-size:1.25rem; margin: 0 -0.125rem;" />
         </a>
-        
+
         <ToggleTheme />
         <LanguageSelector />
       </div>

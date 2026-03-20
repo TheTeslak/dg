@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import { nextTick } from 'vue'
 
+export * from './post-visibility'
+
 export const isDark = useDark()
 
 export const onlyLanguage = useLocalStorage('antfu-only-language', false)

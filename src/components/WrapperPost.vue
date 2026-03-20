@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
-import { formatDate, formatReadingDuration, isRecentPost, resolvePath } from '~/logics'
+import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
 
@@ -82,6 +82,12 @@ const hreflangLinks = computed(() => {
 
 useHead({
   link: hreflangLinks,
+  meta: [
+    {
+      name: 'robots',
+      content: (frontmatter.draft || isDraftPost(frontmatter.type)) ? 'noindex, nofollow' : 'index, follow',
+    },
+  ],
 })
 
 onMounted(() => {
@@ -224,7 +230,9 @@ const ArtComponent = computed(() => {
       <div v-for="backlink in backlinks" :key="backlink.path" class="backlink-header">
         <RouterLink :to="backlink.path" class="backlink-link">
           <div i-ri:corner-left-up-line class="backlink-icon" />
-          <span>{{ backlink.title }}</span>
+          <span>
+            <span v-if="isDraftPost(backlink.type)">🚧 </span>{{ backlink.title }}
+          </span>
           <span
             v-if="backlink.lang && backlink.lang !== currentLocale"
             class="backlink-lang-tag"
@@ -239,7 +247,8 @@ const ArtComponent = computed(() => {
       v-if="frontmatter.date"
       class="opacity-50 !-mt-8 slide-enter-50"
     >
-      <span v-if="isRecentPost(frontmatter.date, frontmatter.updated)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+      <span v-if="isDraftPost(frontmatter.type)">🚧 </span>
+      <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>
@@ -256,17 +265,15 @@ const ArtComponent = computed(() => {
     >
       {{ frontmatter.subtitle }}
     </p>
-    <p
-      v-if="frontmatter.draft"
-      class="slide-enter" bg-orange-4:10 text-orange-4 border="l-3 orange-4" px4 py2
-    >
-      {{ $t('blog-draft') }}
-    </p>
+    <PostNoticeBanner
+      v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
+      is-draft
+    />
+    <PostNoticeBanner
+      v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
+      :original-locale="frontmatter.originalLocale"
+    />
   </div>
-  <NotTranslatedBanner
-    v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale"
-    :original-locale="frontmatter.originalLocale"
-  />
   <ScrollProgressToc
     v-if="frontmatter.title"
     :title="frontmatter.display ?? frontmatter.title"
@@ -304,7 +311,8 @@ const ArtComponent = computed(() => {
           class="backlink-lang-tag"
         >{{ ref.lang.toUpperCase() }}</span>
         <span v-if="ref.date" class="referenced-by-date">
-          <span v-if="isRecentPost(ref.date, ref.updated)">🌱 </span>{{ formatDate(ref.date, false) }}
+          <span v-if="isDraftPost(ref.type)">🚧 </span>
+          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)">🌱 </span>{{ formatDate(ref.date, false) }}
         </span>
       </div>
     </div>

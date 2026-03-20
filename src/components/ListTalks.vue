@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { talks } from '../../data/talks'
 import { formatDate, onlyLanguage } from '../logics'
-import { useRoute } from 'vue-router'
 
 const route = useRoute()
 

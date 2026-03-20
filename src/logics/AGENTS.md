@@ -37,7 +37,7 @@ Guidance for locale and routing-related logic in `src/logics/` and consumers.
 ## Consumer Expectations
 
 - Language switchers and locale links must preserve `query` and `hash`.
-- `NotTranslatedBanner` should link to `originalLocale` path (while preserving `query`/`hash`).
+- `PostNoticeBanner` should link to `originalLocale` path (while preserving `query`/`hash`).
 - Lists/navigation that are locale-aware should filter by URL locale prefix and rely on route metadata.
 
 ## If Adding a New Locale

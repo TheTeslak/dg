@@ -1,12 +1,14 @@
 import type { RouteRecordNormalized } from 'vue-router'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { isPostVisible } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 interface BacklinkInfo {
   path: string
   title: string
   lang?: string
+  type?: string
 }
 
 interface ReferencedByInfo {
@@ -15,6 +17,7 @@ interface ReferencedByInfo {
   date: string
   updated?: string
   lang?: string
+  type?: string
 }
 
 /**
@@ -55,7 +58,9 @@ export function useBacklink() {
       const targetPath = `/${currentLocale.value}/articles/${slug}`
       const found = router.getRoutes().find(
         (r: RouteRecordNormalized) =>
-          r.path === targetPath && r.meta.frontmatter?.title,
+          r.path === targetPath
+          && r.meta.frontmatter?.title
+          && isPostVisible(r.meta.frontmatter || {}),
       )
       if (found) {
         const fm = found.meta.frontmatter!
@@ -63,6 +68,7 @@ export function useBacklink() {
           path: found.path,
           title: fm.title as string,
           lang: fm.lang as string | undefined,
+          type: fm.type as string | undefined,
         })
       }
     }
@@ -93,7 +99,7 @@ export function useReferencedBy() {
       .filter((r: RouteRecordNormalized) => {
         if (!r.path.startsWith(`/${currentLocale.value}/articles/`))
           return false
-        if (!r.meta.frontmatter?.title || r.meta.frontmatter?.draft)
+        if (!r.meta.frontmatter?.title || !isPostVisible(r.meta.frontmatter || {}))
           return false
 
         const rawBacklink = r.meta.frontmatter?.backlink
@@ -109,6 +115,7 @@ export function useReferencedBy() {
         date: r.meta.frontmatter!.date as string,
         updated: r.meta.frontmatter!.updated as string | undefined,
         lang: r.meta.frontmatter!.lang as string | undefined,
+        type: r.meta.frontmatter!.type as string | undefined,
       }))
       .sort((a, b) => +new Date(b.date) - +new Date(a.date))
   })

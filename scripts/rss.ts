@@ -5,6 +5,7 @@ import { Feed } from 'feed'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
+import { isPostVisible } from '../src/logics/post-visibility'
 
 const DOMAIN = 'https://antfu.me'
 const AUTHOR = {
@@ -66,8 +67,8 @@ async function buildLocaleFeed(locale: string) {
           const raw = await fs.readFile(i, 'utf-8')
           const { data, content } = matter(raw)
 
-          // Skip posts without date or drafts
-          if (!data.date || data.draft)
+          // Skip posts that are not publicly visible.
+          if (!isPostVisible(data))
             return
 
           const html = markdown.render(content)
@@ -91,7 +92,6 @@ async function buildLocaleFeed(locale: string) {
 
   await writeFeed(feedName, options, posts)
 
-  // eslint-disable-next-line no-console
   console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts → dist/${feedName}.xml`)
 }
 

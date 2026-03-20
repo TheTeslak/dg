@@ -53,6 +53,7 @@ post-link-telegram = Telegram
 post-link-mastodon = Mastodon
 post-referenced-by = Referenced by
 post-updated = updated
+post-draft-notice = Draft
 
 heading-link = link to heading
 heading-copied = copied

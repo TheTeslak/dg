@@ -14,6 +14,8 @@ export interface Post {
   video?: boolean
   inperson?: boolean
   redirect?: string
+  type?: string
+  upcoming?: boolean
 }
 
 export interface Talk {

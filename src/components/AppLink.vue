@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { resolvePath } from '~/logics'
 import { useRoute } from 'vue-router'
+import { resolvePath } from '~/logics'
 
 const props = defineProps<{
   to: string
@@ -14,7 +14,8 @@ const isExternalLink = computed(() => {
 })
 
 const resolvedTo = computed(() => {
-  if (isExternalLink.value) return props.to
+  if (isExternalLink.value)
+    return props.to
   return resolvePath(props.to, route.path)
 })
 </script>

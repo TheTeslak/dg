@@ -28,6 +28,7 @@ talks.forEach((talk) => {
 })
 
 talks.sort((a, b) => {
-  if (!a.presentations.length || !b.presentations.length) return 0
+  if (!a.presentations.length || !b.presentations.length)
+    return 0
   return new Date(b.presentations[0].date).getTime() - new Date(a.presentations[0].date).getTime()
 })

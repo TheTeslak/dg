@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Post } from '~/types'
-import { formatDate, isRecentPost } from '~/logics'
+import { formatDate, isDraftPost, isPostVisible, isRecentPost } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -22,8 +22,7 @@ const siblings = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
       r.path.startsWith(`/${currentLocale.value}/articles`)
-      && r.meta.frontmatter?.date
-      && !r.meta.frontmatter?.draft,
+      && isPostVisible(r.meta.frontmatter || {}),
     )
     .filter((r: RouteRecordNormalized) =>
       !r.path.endsWith('.html')
@@ -36,6 +35,7 @@ const siblings = computed<Post[]>(() => {
       updated: r.meta.frontmatter?.updated,
       lang: r.meta.frontmatter?.lang,
       duration: r.meta.frontmatter?.duration,
+      type: r.meta.frontmatter?.type,
     }))
     .sort((a, b) => +new Date(b.date) - +new Date(a.date))
 })
@@ -80,7 +80,8 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
           {{ newerPost.title }}
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
-          <span v-if="isRecentPost(newerPost.date, newerPost.updated)">🌱 </span>{{ formatDate(newerPost.date, false) }}
+          <span v-if="isDraftPost(newerPost.type)">🚧 </span>
+          <span v-if="isRecentPost(newerPost.date, newerPost.updated) && !isDraftPost(newerPost.type)">🌱 </span>{{ formatDate(newerPost.date, false) }}
         </span>
       </div>
     </RouterLink>
@@ -98,7 +99,8 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
           {{ olderPost.title }}
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
-          <span v-if="isRecentPost(olderPost.date, olderPost.updated)">🌱 </span>{{ formatDate(olderPost.date, false) }}
+          <span v-if="isDraftPost(olderPost.type)">🚧 </span>
+          <span v-if="isRecentPost(olderPost.date, olderPost.updated) && !isDraftPost(olderPost.type)">🌱 </span>{{ formatDate(olderPost.date, false) }}
         </span>
       </div>
       <div

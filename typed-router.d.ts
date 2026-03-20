@@ -93,6 +93,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/article-frontmatter-params': RouteRecordInfo<
+      '/en/articles/article-frontmatter-params',
+      '/en/articles/article-frontmatter-params',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/async-sync-in-between': RouteRecordInfo<
       '/en/articles/async-sync-in-between',
       '/en/articles/async-sync-in-between',
@@ -1010,6 +1017,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/animated-svg-logo.md': {
       routes:
         | '/en/articles/animated-svg-logo'
+      views:
+        | never
+    }
+    'pages/en/articles/article-frontmatter-params.md': {
+      routes:
+        | '/en/articles/article-frontmatter-params'
       views:
         | never
     }

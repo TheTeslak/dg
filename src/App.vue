@@ -4,6 +4,14 @@ const route = useRoute()
 const imageModel = ref<HTMLImageElement>()
 const imageAlt = ref<string>()
 
+function getRectCenter(el: HTMLElement) {
+  const rect = el.getBoundingClientRect()
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  }
+}
+
 function setImageModel(img: HTMLImageElement) {
   imageModel.value = img
   imageAlt.value = img.alt
@@ -30,10 +38,10 @@ useEventListener('click', async (e) => {
     return
 
   // Do not open image when they are moving. Mainly for mobile to avoid conflict with hovering behavior.
-  const pos = first.getBoundingClientRect()
+  const pos = getRectCenter(first)
   await new Promise(resolve => setTimeout(resolve, 50))
-  const newPos = first.getBoundingClientRect()
-  if (pos.left !== newPos.left || pos.top !== newPos.top)
+  const newPos = getRectCenter(first)
+  if (Math.abs(pos.x - newPos.x) > 1 || Math.abs(pos.y - newPos.y) > 1)
     return
 
   setImageModel(first)
