@@ -80,7 +80,7 @@ catalogs:
       specifier: ^3.8.1
       version: 3.8.1
     minisearch:
-      specifier: 'catalog:'
+      specifier: ^7.1.0
       version: 7.2.0
   dev:
     '@antfu/eslint-config':

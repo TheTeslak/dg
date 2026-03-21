@@ -68,13 +68,13 @@ const { y: scroll } = useWindowScroll()
         </RouterLink>
 
         <a href="https://t.me/" target="_blank" title="Telegram" class="lt-md:hidden">
-          <div i-ri-telegram-line />
+          <div i-ri-telegram-2-line class="scale-110" />
         </a>
         <a v-if="false" href="https://github.com/antfu" target="_blank" title="GitHub" class="lt-md:hidden">
           <div i-uil-github-alt />
         </a>
         <a :href="currentLocale === 'en' ? '/feed.xml' : `/feed-${currentLocale}.xml`" target="_blank" title="RSS" class="lt-md:hidden">
-          <div i-la-rss-square style="font-size:1.25rem; margin: 0 -0.125rem;" />
+          <div i-ri-rss-line />
         </a>
 
         <ToggleTheme />
