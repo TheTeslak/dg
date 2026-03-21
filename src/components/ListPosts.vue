@@ -134,7 +134,7 @@ function getDurationLabel(duration?: Post['duration']) {
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
-                class="text-xs bg-zinc:25 text-zinc5 rounded px-1 py-0.5 ml--10 mr2 my-auto hidden md:block"
+                class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 ml--10 mr2 my-auto hidden md:block"
               >{{ getPostLangTag(route) }}</span>
               <span align-middle>{{ route.title }}</span>
               <span
@@ -175,7 +175,7 @@ function getDurationLabel(duration?: Post['duration']) {
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
-                class="text-xs bg-zinc:25 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
+                class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto md:hidden"
               >{{ getPostLangTag(route) }}</span>
             </div>
           </li>

@@ -155,8 +155,8 @@ function getDurationLabel(duration: number | null) {
 
 .search-result-lang-tag {
   font-size: 0.75rem;
-  background: rgba(125, 125, 125, 0.25);
-  color: rgba(125, 125, 125, 1);
+  background: rgba(125, 125, 125, 0.15);
+  color: rgba(150, 150, 150, 1);
   border-radius: 0.25rem;
   padding: 0.15rem 0.3rem;
   line-height: 1.2;
