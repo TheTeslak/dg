@@ -257,3 +257,17 @@ html:not(.dark) [img-dark] {
 .fade-leave-to {
   opacity: 0;
 }
+
+/* ==highlight== mark in article content */
+.prose mark {
+  background: rgba(30, 30, 30, 0.88);
+  color: #fff;
+  border-radius: 0.15em;
+  padding: 0.05em 0.25em;
+  margin: 0 0.02em;
+}
+
+.dark .prose mark {
+  background: rgba(235, 235, 235, 0.9);
+  color: #111;
+}

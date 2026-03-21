@@ -18,7 +18,7 @@ A quick copy-paste reference for Markdown blocks and custom Vue components.
 
 ## Text & Formatting Basics
 
-Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, and [links](https://example.com).
+Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, [links](https://example.com), and ==highlighted text==.
 
 ### Quotes
 

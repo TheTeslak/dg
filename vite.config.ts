@@ -245,6 +245,35 @@ export default defineConfig({
         })
 
         md.use(GitHubAlerts)
+
+        // Custom ==highlight== syntax (Obsidian-style mark)
+        // Converts ==text== to <mark>text</mark>, no external plugin needed.
+        md.inline.ruler.before('emphasis', 'mark', (state, silent) => {
+          if (silent)
+            return false
+          const start = state.pos
+          const src = state.src
+          if (src.charCodeAt(start) !== 0x3D /* = */ || src.charCodeAt(start + 1) !== 0x3D)
+            return false
+
+          const end = src.indexOf('==', start + 2)
+          if (end === -1)
+            return false
+
+          const content = src.slice(start + 2, end)
+          if (!content)
+            return false
+
+          const tokenOpen = state.push('mark_open', 'mark', 1)
+          tokenOpen.markup = '=='
+          const tokenText = state.push('text', '', 0)
+          tokenText.content = content
+          const tokenClose = state.push('mark_close', 'mark', -1)
+          tokenClose.markup = '=='
+
+          state.pos = end + 2
+          return true
+        })
       },
       frontmatterPreprocess(frontmatter, options, id, defaults) {
         (() => {

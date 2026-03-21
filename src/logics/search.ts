@@ -204,15 +204,36 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
   if (!ms || !docs || !query.trim())
     return []
 
+  // Build a lookup map for body text (not stored in MiniSearch to save memory)
+  const bodyMap = new Map(docs.map(d => [d.id, d.body]))
+
+  // Cache for exact-match checks per document (avoid repeated regex)
+  const exactMatchCache = new Map<string, boolean>()
+
   const results = ms.search(query, {
     boost: { title: 10, description: 5, tags: 3, body: 1 },
     prefix: true,
     fuzzy: 0.2,
     combineWith: 'AND',
+    // Boost documents where the search term appears as an exact whole word.
+    // Docs with only prefix matches (e.g. "searching" for query "search") are penalized.
+    boostDocument: (docId, term) => {
+      const cacheKey = `${docId}:${term}`
+      if (!exactMatchCache.has(cacheKey)) {
+        const body = bodyMap.get(String(docId)) || ''
+        const title = docs.find(d => d.id === String(docId))?.title || ''
+        const text = `${title} ${body}`
+        try {
+          const wordBoundary = new RegExp(`\\b${escapeRegex(term)}\\b`, 'i')
+          exactMatchCache.set(cacheKey, wordBoundary.test(text))
+        }
+        catch {
+          exactMatchCache.set(cacheKey, false)
+        }
+      }
+      return exactMatchCache.get(cacheKey) ? 1.0 : 0.6
+    },
   })
-
-  // Build a lookup map for body text (not stored in MiniSearch to save memory)
-  const bodyMap = new Map(docs.map(d => [d.id, d.body]))
 
   return results
     .map((result) => {
