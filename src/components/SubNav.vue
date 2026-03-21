@@ -7,7 +7,7 @@ import { getLocaleFromPath } from '~/logics/i18n-path'
 import { useSearch } from '~/logics/search'
 import { onlyLanguage } from '../logics'
 
-const inactiveStyle = 'opacity-20 hover:opacity-50'
+const inactiveStyle = 'opacity-30 hover:opacity-60'
 const activeStyle = 'opacity-100 underline'
 
 const fluent = useFluent()
@@ -60,7 +60,8 @@ const modKey = computed(() => {
   <div class="prose m-auto mb-8 select-none animate-none! op100!">
     <button
       v-show="!isSearchOpen"
-      flex="~ gap1" items-center mb2 op30 text-sm
+      flex="~ gap1" items-center mb2 text-sm
+      class="op60 hover:op100 focus-visible:op100 active:op80 transition-all outline-none rounded-sm"
       @click="onlyLanguage = !onlyLanguage"
     >
       <div :class="onlyLanguage ? 'i-carbon-checkbox-checked' : 'i-carbon-checkbox'" />
@@ -128,7 +129,7 @@ const modKey = computed(() => {
 
 .search-trigger {
   cursor: pointer;
-  opacity: 0.25;
+  opacity: 0.4;
   transition: opacity 0.2s ease;
   font-size: 1.1rem;
   flex-shrink: 0;
@@ -138,7 +139,7 @@ const modKey = computed(() => {
   color: inherit;
 }
 .search-trigger:hover {
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .search-input-container {
@@ -146,7 +147,7 @@ const modKey = computed(() => {
   align-items: center;
   gap: 0.6rem;
   width: 100%;
-  border: 1px solid rgba(125, 125, 125, 0.3);
+  border: 1px solid rgba(125, 125, 125, 0.45);
   border-radius: 0.5rem;
   padding: 0.45rem 0.75rem;
   font-size: 1.1rem;
@@ -155,11 +156,11 @@ const modKey = computed(() => {
 }
 
 .search-input-container:focus-within {
-  border-color: rgba(125, 125, 125, 0.5);
+  border-color: rgba(125, 125, 125, 0.75);
 }
 
 .search-input-icon {
-  opacity: 0.35;
+  opacity: 0.55;
   flex-shrink: 0;
   font-size: 1rem;
 }
@@ -176,12 +177,12 @@ const modKey = computed(() => {
 }
 
 .search-input::placeholder {
-  opacity: 0.35;
+  opacity: 0.55;
 }
 
 .search-close-btn {
   cursor: pointer;
-  opacity: 0.3;
+  opacity: 0.45;
   transition: opacity 0.2s ease;
   flex-shrink: 0;
   padding: 0.15rem;
@@ -191,7 +192,7 @@ const modKey = computed(() => {
   font-size: 1rem;
 }
 .search-close-btn:hover {
-  opacity: 0.7;
+  opacity: 1;
 }
 
 @keyframes search-expand {
@@ -208,9 +209,9 @@ const modKey = computed(() => {
 }
 
 .dark .search-input-container {
-  border-color: rgba(125, 125, 125, 0.4);
+  border-color: rgba(125, 125, 125, 0.6);
 }
 .dark .search-input-container:focus-within {
-  border-color: rgba(125, 125, 125, 0.6);
+  border-color: rgba(125, 125, 125, 0.9);
 }
 </style>

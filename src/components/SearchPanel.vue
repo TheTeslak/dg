@@ -132,7 +132,7 @@ function getDurationLabel(duration: number | null) {
 }
 
 .search-result-title {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 600;
   line-height: 1.4;
   display: flex;
@@ -154,11 +154,11 @@ function getDurationLabel(duration: number | null) {
 }
 
 .search-result-lang-tag {
-  font-size: 0.65rem;
-  background: rgba(125, 125, 125, 0.15);
-  color: rgba(125, 125, 125, 0.7);
-  border-radius: 0.2rem;
-  padding: 0.05rem 0.35rem;
+  font-size: 0.75rem;
+  background: rgba(125, 125, 125, 0.25);
+  color: rgba(125, 125, 125, 1);
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.3rem;
   line-height: 1.2;
   flex-shrink: 0;
 }
@@ -176,9 +176,9 @@ function getDurationLabel(duration: number | null) {
 }
 
 .search-result-snippet {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.55;
-  opacity: 0.55;
+  opacity: 0.9;
   padding: 0.2rem 0;
 }
 
@@ -212,7 +212,7 @@ function getDurationLabel(duration: number | null) {
 .search-result-meta {
   display: flex;
   gap: 0.35rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding-bottom: 0.75rem;
 }
 

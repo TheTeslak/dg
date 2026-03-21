@@ -134,7 +134,7 @@ function getDurationLabel(duration?: Post['duration']) {
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 ml--10 mr2 my-auto hidden md:block"
+                class="text-xs bg-zinc:25 text-zinc5 rounded px-1 py-0.5 ml--10 mr2 my-auto hidden md:block"
               >{{ getPostLangTag(route) }}</span>
               <span align-middle>{{ route.title }}</span>
               <span
@@ -165,17 +165,17 @@ function getDurationLabel(duration?: Post['duration']) {
                 title="Provided in radio"
               />
 
-              <span text-xl op45 ws-nowrap>
+              <span text-xl op60 ws-nowrap>
                 <span v-if="isDraftPost(route.type)">🚧 </span>
                 <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)">🌱 </span>{{ formatDate(route.date, true) }}
               </span>
-              <span v-if="getDurationLabel(route.duration)" text-xl op45 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
-              <span v-if="route.platform" text-xl op45 ws-nowrap>· {{ route.platform }}</span>
-              <span v-if="route.place" text-xl op45 ws-nowrap md:hidden>· {{ route.place }}</span>
+              <span v-if="getDurationLabel(route.duration)" text-xl op60 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
+              <span v-if="route.platform" text-xl op60 ws-nowrap>· {{ route.platform }}</span>
+              <span v-if="route.place" text-xl op60 ws-nowrap md:hidden>· {{ route.place }}</span>
               <span
                 v-if="getPostLangTag(route)"
                 align-middle flex-none
-                class="text-xs bg-zinc:15 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
+                class="text-xs bg-zinc:25 text-zinc5 rounded px-1 py-0.5 my-auto md:hidden"
               >{{ getPostLangTag(route) }}</span>
             </div>
           </li>

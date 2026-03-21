@@ -24,8 +24,8 @@ blog-upcoming = Скоро
 blog-draft = Черновик! Загляни позже.
 blog-read-more = Читать
 
-search-placeholder = Поиск по статьям и заметкам...
-search-start-typing = Начните вводить запрос
+search-placeholder = Поиск по статьям и заметкам
+search-start-typing = Введите запрос
 search-no-results = Ничего не найдено
 search-close = Закрыть поиск
 search-loading = Загрузка индекса...
