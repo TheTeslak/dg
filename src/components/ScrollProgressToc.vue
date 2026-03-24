@@ -26,8 +26,12 @@ const headings = ref<Heading[]>([])
 // Dot is a tiny line segment; gaps surround it
 const DOT_HEIGHT = 3
 const GAP_SIZE = 4
-const MIN_DOT_GAP = 24
-const STEP_SIZE = 36
+const STEP_SIZE = 22
+const STEP_GAP_MULTIPLIER = 1.5
+const PADDING_TOP = 16
+const PADDING_BOTTOM = 16
+
+const scrollWrapperEl = ref<HTMLElement>()
 
 function collectHeadings() {
   const article = document.querySelector('article')
@@ -54,89 +58,49 @@ function collectHeadings() {
   winHeight.value = window.innerHeight
 }
 
-// Available height for the track area (matches CSS positioning)
-const availableTrackHeight = computed(() => {
-  // 80px top + 40px bottom + 52px title offset
-  return Math.max(100, winHeight.value - 172)
-})
-
-// Natural height based on heading count with fixed step
-const naturalTrackHeight = computed(() => {
-  const count = headings.value.length
-  if (count <= 1)
-    return STEP_SIZE
-  return (count - 1) * STEP_SIZE + DOT_HEIGHT
-})
-
-// Compact mode: enough space for fixed-step layout
-const isCompact = computed(() => naturalTrackHeight.value <= availableTrackHeight.value)
-
-// Effective track height used for rendering
-const trackHeight = computed(() => {
-  if (isCompact.value)
-    return naturalTrackHeight.value
-  return availableTrackHeight.value
-})
-
-// Map a document-space value to track-space
-function docToTrack(val: number): number {
-  return (val / docHeight.value) * trackHeight.value
-}
-
-// Dot positions: top edge of each dot segment
+// Dot positions: dynamic stepping based on hierarchy rules
 const dotPositions = computed(() => {
-  if (!headings.value.length)
-    return []
+  const pos: number[] = []
+  let currentY = PADDING_TOP
 
-  // Compact mode: fixed step between dots
-  if (isCompact.value) {
-    return headings.value.map((_, i) => i * STEP_SIZE)
+  for (let i = 0; i < headings.value.length; i++) {
+    if (i > 0) {
+      const prev = headings.value[i - 1]
+      const curr = headings.value[i]
+      let gap = STEP_SIZE
+      // If current heading is higher level (e.g. going from h3 back to h2)
+      if (curr.level < prev.level) {
+        gap = STEP_SIZE * STEP_GAP_MULTIPLIER
+      }
+      currentY += gap
+    }
+    pos.push(currentY)
   }
-
-  // Overflow mode: proportional mapping (existing logic)
-  const raw = headings.value.map(h => docToTrack(h.offsetTop))
-  const adjusted = [...raw]
-
-  // Enforce minimum gap between consecutive dots
-  for (let i = 1; i < adjusted.length; i++) {
-    if (adjusted[i] - adjusted[i - 1] < MIN_DOT_GAP)
-      adjusted[i] = adjusted[i - 1] + MIN_DOT_GAP
-  }
-
-  // If last dot pushed beyond track, scale everything back proportionally
-  const lastPos = adjusted[adjusted.length - 1]
-  const maxAllowed = trackHeight.value - DOT_HEIGHT
-  if (lastPos > maxAllowed && lastPos > 0) {
-    const scale = maxAllowed / lastPos
-    for (let i = 0; i < adjusted.length; i++)
-      adjusted[i] *= scale
-  }
-
-  return adjusted
+  return pos
 })
 
-// Line segments: the thin lines BETWEEN the dot gaps
+// Track height calculates from the very last dot
+const trackHeight = computed(() => {
+  if (!dotPositions.value.length)
+    return PADDING_TOP + PADDING_BOTTOM
+  return dotPositions.value[dotPositions.value.length - 1] + DOT_HEIGHT + PADDING_BOTTOM
+})
+
+// Line segments: the thin lines strictly BETWEEN dots
 const lineSegments = computed(() => {
   const segs: { y1: number, y2: number }[] = []
   const dots = dotPositions.value
-  const th = trackHeight.value
 
-  if (!dots.length) {
-    segs.push({ y1: 0, y2: th })
+  if (dots.length <= 1)
     return segs
-  }
 
-  let prevEnd = 0
-  for (const dotTop of dots) {
-    const segEnd = dotTop - GAP_SIZE
-    if (segEnd > prevEnd)
-      segs.push({ y1: prevEnd, y2: segEnd })
-    prevEnd = dotTop + DOT_HEIGHT + GAP_SIZE
+  for (let i = 0; i < dots.length - 1; i++) {
+    const y1 = dots[i] + DOT_HEIGHT + GAP_SIZE
+    const y2 = dots[i + 1] - GAP_SIZE
+    if (y2 > y1) {
+      segs.push({ y1, y2 })
+    }
   }
-
-  // Final segment after last dot
-  if (th > prevEnd)
-    segs.push({ y1: prevEnd, y2: th })
 
   return segs
 })
@@ -150,6 +114,18 @@ const activeIndex = computed(() => {
       active = i
   }
   return active
+})
+
+// Auto-scroll the ToC so that the active item is visible
+watch(activeIndex, (idx) => {
+  const wrapper = scrollWrapperEl.value
+  if (!wrapper || idx < 0)
+    return
+  const targetY = dotPositions.value[idx] ?? 0
+  const wrapperH = wrapper.clientHeight
+  // Scroll so the active item is roughly centered
+  const desired = targetY - wrapperH / 2 + STEP_SIZE / 2
+  wrapper.scrollTo({ top: Math.max(0, desired), behavior: 'smooth' })
 })
 
 function scrollToHeading(id: string) {
@@ -217,53 +193,56 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Track area -->
-    <div ref="trackEl" class="scroll-toc-track" :style="{ height: `${trackHeight}px` }">
-      <!-- SVG draws: line segments + dot segments -->
-      <svg
-        class="scroll-toc-svg"
-        :width="8"
-        :height="trackHeight"
-        :viewBox="`0 0 8 ${trackHeight}`"
-      >
-        <!-- Thin line segments (between dot gaps) -->
-        <line
-          v-for="(seg, i) in lineSegments"
-          :key="`seg-${i}`"
-          x1="4"
-          :y1="seg.y1"
-          x2="4"
-          :y2="seg.y2"
-          class="scroll-toc-line"
-        />
+    <!-- Scrollable wrapper for the track area -->
+    <div ref="scrollWrapperEl" class="scroll-toc-scroll-wrapper">
+      <!-- Track area -->
+      <div ref="trackEl" class="scroll-toc-track" :style="{ height: `${trackHeight}px` }">
+        <!-- SVG draws: line segments + dot segments -->
+        <svg
+          class="scroll-toc-svg"
+          :width="8"
+          :height="trackHeight"
+          :viewBox="`0 0 8 ${trackHeight}`"
+        >
+          <!-- Thin line segments (between dot gaps) -->
+          <line
+            v-for="(seg, i) in lineSegments"
+            :key="`seg-${i}`"
+            x1="4"
+            :y1="seg.y1"
+            x2="4"
+            :y2="seg.y2"
+            class="scroll-toc-line"
+          />
 
-        <!-- Dot segments: tiny line pieces that look like dots -->
-        <line
-          v-for="(pos, i) in dotPositions"
-          :key="`dot-${i}`"
-          x1="4"
-          :y1="pos"
-          x2="4"
-          :y2="pos + DOT_HEIGHT"
-          stroke-linecap="round"
-          class="scroll-toc-dot"
-          :class="{ 'is-active': i === activeIndex }"
-        />
-      </svg>
+          <!-- Dot segments: tiny line pieces that look like dots -->
+          <line
+            v-for="(pos, i) in dotPositions"
+            :key="`dot-${i}`"
+            x1="4"
+            :y1="pos"
+            x2="4"
+            :y2="pos + DOT_HEIGHT"
+            stroke-linecap="round"
+            class="scroll-toc-dot"
+            :class="{ 'is-active': i === activeIndex }"
+          />
+        </svg>
 
-      <!-- Heading labels (positioned over the SVG, appear on hover) -->
-      <div
-        v-for="(heading, i) in headings"
-        :key="heading.id"
-        class="scroll-toc-item"
-        :class="{
-          'is-active': i === activeIndex,
-          'is-h3': heading.level === 3,
-        }"
-        :style="{ top: `${dotPositions[i] + DOT_HEIGHT / 2}px` }"
-        @click="scrollToHeading(heading.id)"
-      >
-        <span class="scroll-toc-label">{{ heading.text }}</span>
+        <!-- Heading labels (positioned over the SVG, appear on hover) -->
+        <div
+          v-for="(heading, i) in headings"
+          :key="heading.id"
+          class="scroll-toc-item"
+          :class="{
+            'is-active': i === activeIndex,
+            'is-h3': heading.level === 3,
+          }"
+          :style="{ top: `${dotPositions[i] + DOT_HEIGHT / 2}px` }"
+          @click="scrollToHeading(heading.id)"
+        >
+          <span class="scroll-toc-label">{{ heading.text }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -281,6 +260,8 @@ onMounted(() => {
   pointer-events: auto;
   cursor: default;
   display: none;
+  /* Flex column so title + scroll-wrapper stack naturally */
+  flex-direction: column;
 }
 
 .scroll-toc::before {
@@ -294,7 +275,7 @@ onMounted(() => {
 
 @media (min-width: 1024px) {
   .scroll-toc {
-    display: block;
+    display: flex;
   }
 }
 
@@ -308,12 +289,15 @@ onMounted(() => {
   }
 }
 
-/* ── Track area (holds SVG + labels) ── */
-.scroll-toc-track {
-  position: absolute;
-  left: 0;
-  top: 52px;
-  width: 100%;
+/* ── Scrollable wrapper ── */
+.scroll-toc-scroll-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: clip;
+  /* Hide scrollbar visually but keep scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
   opacity: 0;
   transform: translateX(-8px);
   pointer-events: none;
@@ -322,16 +306,25 @@ onMounted(() => {
     transform 0.25s ease;
 }
 
-.scroll-toc.is-awake .scroll-toc-track {
+.scroll-toc-scroll-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.scroll-toc.is-awake .scroll-toc-scroll-wrapper {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
 }
 
-.scroll-toc-anchor-hint {
-  position: absolute;
-  top: 0;
+/* ── Track area (holds SVG + labels) ── */
+.scroll-toc-track {
+  position: relative;
   left: 0;
+  width: 100%;
+}
+
+.scroll-toc-anchor-hint {
+  flex-shrink: 0;
   margin-left: 0 !important;
   margin-right: 0 !important;
   opacity: 1;
@@ -452,12 +445,12 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
 
 /* ── Title block (top, visible on hover) ── */
 .scroll-toc-title {
-  position: absolute;
-  top: 0;
+  flex-shrink: 0;
   left: 4px;
   pointer-events: none;
   opacity: 0;
   transform: translateX(-4px);
+  margin-bottom: 8px;
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
