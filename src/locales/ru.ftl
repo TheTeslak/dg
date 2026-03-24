@@ -52,8 +52,7 @@ footer-copyright = 2026 © { -brand }
 
 intro-desc = Привет, я { -brand }, фанатичный open-source разработчик.
 
-page-not-translated = Страница ещё не переведена.
-page-original-version = Оригинальная { $lang } версия.
+page-not-translated = Страница ещё не переведена. Показана { $lang } версия.
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон

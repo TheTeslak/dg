@@ -104,7 +104,7 @@ function getDurationLabel(duration?: Post['duration']) {
           '--enter-step': '60ms',
         }"
       >
-        <span text-8em color-transparent absolute left--3rem top--2rem font-bold text-stroke-2 text-stroke-hex-aaa op10>{{ getGroupName(route) }}</span>
+        <span text-8em color-transparent absolute left--3rem top--2rem font-bold text-stroke-1 text-stroke-hex-aaa op10>{{ getGroupName(route) }}</span>
       </div>
       <div
         class="slide-enter"

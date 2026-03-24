@@ -20,8 +20,7 @@ const props = withDefaults(defineProps<{
   <div v-else class="prose m-auto my-8 slide-enter" bg-blue-4:10 text-blue-4 border="l-3 blue-4" px4 py3 flex="~ gap-2 items-center">
     <div i-carbon-translate text-lg flex-none />
     <div class="text-[75%] leading-tight">
-      {{ $t('page-not-translated') }}
-      <span class="whitespace-nowrap">&nbsp;{{ $t('page-original-version', { lang: props.originalLocale.toUpperCase() }) }}</span>
+      {{ $t('page-not-translated', { lang: props.originalLocale.toUpperCase() }) }}
     </div>
   </div>
 </template>

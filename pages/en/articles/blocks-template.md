@@ -4,6 +4,7 @@ date: 2026-03-03T00:00:00+00:00
 updated: 2026-03-13T00:00:00+00:00
 lang: en
 duration: 5
+description: A comprehensive reference for Markdown blocks and custom Vue components used in this blog's articles.
 backlink: about-yak-shaving
 telegram: https://t.me/your_post_link
 mastodon: https://mastodon.social/@antfu/your_post_link
