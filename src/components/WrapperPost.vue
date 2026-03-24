@@ -234,7 +234,7 @@ const ArtComponent = computed(() => {
           </span>
           <span
             v-if="backlink.lang && backlink.lang !== currentLocale"
-            class="backlink-lang-tag"
+            class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
           >{{ backlink.lang.toUpperCase() }}</span>
         </RouterLink>
       </div>
@@ -250,8 +250,6 @@ const ArtComponent = computed(() => {
         <span v-if="isDraftPost(frontmatter.type)">🚧 </span>
         <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
       </span>
-      <span class="opacity-50"> · </span>
-      <PostCopyLink />
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>
@@ -311,7 +309,7 @@ const ArtComponent = computed(() => {
         </RouterLink>
         <span
           v-if="ref.lang && ref.lang !== currentLocale"
-          class="backlink-lang-tag"
+          class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
         >{{ ref.lang.toUpperCase() }}</span>
         <span v-if="ref.date" class="referenced-by-date">
           <span v-if="isDraftPost(ref.type)">🚧 </span>
@@ -370,15 +368,6 @@ const ArtComponent = computed(() => {
 }
 .backlink-icon {
   font-size: 0.85rem;
-  flex-shrink: 0;
-}
-.backlink-lang-tag {
-  font-size: 0.65rem;
-  background: rgba(125, 125, 125, 0.15);
-  color: rgba(125, 125, 125, 0.7);
-  border-radius: 0.2rem;
-  padding: 0.05rem 0.35rem;
-  line-height: 1.2;
   flex-shrink: 0;
 }
 

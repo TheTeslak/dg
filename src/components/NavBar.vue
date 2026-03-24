@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useWindowScroll } from '@vueuse/core'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { getCanonicalUrl } from '~/logics/site'
 
 const route = useRoute()
 
@@ -18,6 +19,30 @@ function toTop() {
 }
 
 const { y: scroll } = useWindowScroll()
+
+// Copy link logic
+const copied = ref(false)
+let copiedTimeout: ReturnType<typeof setTimeout> | undefined
+
+const isPostPage = computed(() => {
+  return /\/(?:articles|notes)\//.test(route.path)
+})
+
+async function copyLink() {
+  const url = getCanonicalUrl(route.path)
+  await navigator.clipboard.writeText(url)
+  copied.value = true
+  if (copiedTimeout)
+    clearTimeout(copiedTimeout)
+  copiedTimeout = setTimeout(() => {
+    copied.value = false
+  }, 2000)
+}
+
+onBeforeUnmount(() => {
+  if (copiedTimeout)
+    clearTimeout(copiedTimeout)
+})
 </script>
 
 <template>
@@ -29,15 +54,37 @@ const { y: scroll } = useWindowScroll()
     >
       <Logo />
     </RouterLink>
-    <button
-      :title="$t('action-to-top')"
-      fixed right-3 bottom-3 w-10 h-10 hover:op100 rounded-full
-      hover-bg-hex-8883 transition duration-300 z-100 print:hidden
-      :class="scroll > 300 ? 'op30' : 'op0! pointer-events-none'"
-      @click="toTop()"
+    <!-- Fixed bottom-right action buttons (desktop) -->
+    <div
+      class="fixed right-3 bottom-3 z-100 flex items-center gap-2 transition duration-300 print:hidden"
+      :class="scroll > 300 ? 'op30 hover:op100' : 'op0! pointer-events-none'"
     >
-      <div i-ri-arrow-up-line />
-    </button>
+      <!-- Copy Link button (only on post pages) -->
+      <button
+        v-if="isPostPage"
+        class="flex items-center justify-center min-w-10 h-10 hover-bg-hex-8883 rounded-full transition-all duration-300 overflow-hidden"
+        :class="copied ? 'pl-3 pr-4' : 'px-0'"
+        :title="copied ? $t('post-link-copied') : $t('post-copy-link')"
+        @click="copyLink()"
+      >
+        <div :class="copied ? 'i-ri-check-line' : 'i-ri-links-line'" class="shrink-0" />
+        <span
+          class="text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300"
+          :class="copied ? 'ml-2 max-w-40 opacity-100' : 'ml-0 max-w-0 opacity-0'"
+        >
+          {{ $t('post-link-copied') }}
+        </span>
+      </button>
+
+      <!-- Scroll to top -->
+      <button
+        class="flex items-center justify-center w-10 h-10 hover-bg-hex-8883 rounded-full transition duration-300"
+        :title="$t('action-to-top')"
+        @click="toTop()"
+      >
+        <div i-ri-arrow-up-line />
+      </button>
+    </div>
     <nav class="nav">
       <div class="spacer" />
       <div class="right" print:op0>
@@ -133,5 +180,12 @@ const { y: scroll } = useWindowScroll()
 
 .nav .right > * {
   margin: auto;
+}
+
+/* Hide desktop fixed actions on mobile — mobile action bar takes over */
+@media (max-width: 1023px) {
+  .fixed.right-3.bottom-3 {
+    display: none !important;
+  }
 }
 </style>

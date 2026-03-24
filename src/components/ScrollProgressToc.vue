@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { getCanonicalUrl } from '~/logics/site'
+
 defineProps<{
   title: string
   duration?: string
 }>()
+
+const route = useRoute()
 
 const isHovered = ref(false)
 const isNearLeftEdge = ref(false)
@@ -128,11 +132,23 @@ watch(activeIndex, (idx) => {
   wrapper.scrollTo({ top: Math.max(0, desired), behavior: 'smooth' })
 })
 
+// ── Mobile ToC logic ──
+const isMobileOpen = ref(false)
+
 function scrollToHeading(id: string) {
   const el = document.getElementById(id)
   if (el) {
     const y = el.getBoundingClientRect().top + window.scrollY - 40
-    window.scrollTo({ top: y, behavior: 'smooth' })
+    // If mobile ToC is open, close it first then scroll after animation
+    if (isMobileOpen.value) {
+      isMobileOpen.value = false
+      setTimeout(() => {
+        window.scrollTo({ top: y, behavior: 'smooth' })
+      }, 350)
+    }
+    else {
+      window.scrollTo({ top: y, behavior: 'smooth' })
+    }
   }
 }
 
@@ -148,6 +164,34 @@ let recalcTimer: ReturnType<typeof setTimeout> | undefined
 function scheduleRecalc() {
   clearTimeout(recalcTimer)
   recalcTimer = setTimeout(collectHeadings, 200)
+}
+
+watch(isMobileOpen, (open) => {
+  if (open) {
+    document.body.style.overflow = 'hidden'
+  }
+  else {
+    document.body.style.overflow = ''
+  }
+})
+
+function closeMobileSheet() {
+  isMobileOpen.value = false
+}
+
+// ── Mobile Copy Link logic ──
+const mobileCopied = ref(false)
+let mobileCopiedTimeout: ReturnType<typeof setTimeout> | undefined
+
+async function mobileCopyLink() {
+  const url = getCanonicalUrl(route.path)
+  await navigator.clipboard.writeText(url)
+  mobileCopied.value = true
+  if (mobileCopiedTimeout)
+    clearTimeout(mobileCopiedTimeout)
+  mobileCopiedTimeout = setTimeout(() => {
+    mobileCopied.value = false
+  }, 2000)
 }
 
 onMounted(() => {
@@ -167,11 +211,15 @@ onMounted(() => {
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('resize', scheduleRecalc)
     ro.disconnect()
+    document.body.style.overflow = ''
+    if (mobileCopiedTimeout)
+      clearTimeout(mobileCopiedTimeout)
   })
 })
 </script>
 
 <template>
+  <!-- ── Desktop ToC (unchanged) ── -->
   <div
     v-if="headings.length > 1"
     class="scroll-toc"
@@ -246,10 +294,76 @@ onMounted(() => {
       </div>
     </div>
   </div>
+
+  <!-- ── Mobile Action Bar ── -->
+  <div v-if="headings.length > 1" class="mobile-action-bar">
+    <!-- Open ToC button -->
+    <button
+      class="mobile-action-btn"
+      :title="$t('heading-link')"
+      @click="isMobileOpen = true"
+    >
+      <div class="i-ri-menu-2-fill" />
+    </button>
+    <!-- Copy Link button -->
+    <button
+      class="mobile-action-btn"
+      :class="{ 'is-copied': mobileCopied }"
+      :title="mobileCopied ? $t('post-link-copied') : $t('post-copy-link')"
+      @click="mobileCopyLink()"
+    >
+      <div :class="mobileCopied ? 'i-ri-check-line' : 'i-ri-links-line'" />
+    </button>
+  </div>
+
+  <!-- ── Mobile Bottom Sheet ── -->
+  <Teleport to="body">
+    <Transition name="mobile-toc-backdrop">
+      <div
+        v-if="isMobileOpen"
+        class="mobile-toc-backdrop"
+        @click="closeMobileSheet"
+      />
+    </Transition>
+    <Transition name="mobile-toc-sheet">
+      <div
+        v-if="isMobileOpen"
+        class="mobile-toc-sheet"
+      >
+        <!-- Sheet header -->
+        <div class="mobile-toc-sheet-header">
+          <div class="mobile-toc-sheet-title">
+            {{ title }}
+          </div>
+          <button class="mobile-toc-sheet-close" @click="closeMobileSheet">
+            <div i-ri-close-line />
+          </button>
+        </div>
+        <div v-if="duration" class="mobile-toc-sheet-duration">
+          {{ duration }}
+        </div>
+        <!-- Sheet content: heading list -->
+        <div class="mobile-toc-sheet-list">
+          <button
+            v-for="(heading, i) in headings"
+            :key="heading.id"
+            class="mobile-toc-sheet-item"
+            :class="{
+              'is-active': i === activeIndex,
+              'is-h3': heading.level === 3,
+            }"
+            @click="scrollToHeading(heading.id)"
+          >
+            {{ heading.text }}
+          </button>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <style>
-/* ── Container ── */
+/* ── Desktop Container ── */
 .scroll-toc {
   position: fixed;
   left: 18px;
@@ -502,5 +616,253 @@ html.dark .scroll-toc-title-duration {
   .scroll-toc {
     display: none !important;
   }
+  .mobile-action-bar {
+    display: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE ACTION BAR
+   ═══════════════════════════════════════════════ */
+.mobile-action-bar {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mobile-action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  html.dark .mobile-action-bar {
+    background: rgba(0, 0, 0, 0.72);
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.mobile-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  font-size: 1.15rem;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.dark .mobile-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mobile-action-btn:active {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+html.dark .mobile-action-btn:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.mobile-action-btn.is-copied {
+  color: rgba(34, 170, 85, 0.85);
+}
+
+html.dark .mobile-action-btn.is-copied {
+  color: rgba(80, 220, 130, 0.85);
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE BOTTOM SHEET
+   ═══════════════════════════════════════════════ */
+
+/* Backdrop */
+.mobile-toc-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.dark .mobile-toc-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Backdrop transition */
+.mobile-toc-backdrop-enter-active,
+.mobile-toc-backdrop-leave-active {
+  transition: opacity 0.3s ease;
+}
+.mobile-toc-backdrop-enter-from,
+.mobile-toc-backdrop-leave-to {
+  opacity: 0;
+}
+
+/* Sheet */
+.mobile-toc-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 401;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.1);
+}
+
+html.dark .mobile-toc-sheet {
+  background: rgba(20, 20, 20, 0.96);
+  box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Sheet transition */
+.mobile-toc-sheet-enter-active,
+.mobile-toc-sheet-leave-active {
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.mobile-toc-sheet-enter-from,
+.mobile-toc-sheet-leave-to {
+  transform: translateY(100%);
+}
+
+/* Sheet header */
+.mobile-toc-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0;
+  flex-shrink: 0;
+}
+
+.mobile-toc-sheet-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 3rem);
+}
+
+html.dark .mobile-toc-sheet-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mobile-toc-sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.dark .mobile-toc-sheet-close {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.mobile-toc-sheet-duration {
+  font-size: 0.78rem;
+  color: rgba(120, 120, 120, 0.55);
+  padding: 0.2rem 1.25rem 0;
+  flex-shrink: 0;
+}
+
+html.dark .mobile-toc-sheet-duration {
+  color: rgba(160, 160, 160, 0.45);
+}
+
+/* Sheet scrollable list */
+.mobile-toc-sheet-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.75rem 1rem 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-toc-sheet-list::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-toc-sheet-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.55);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.dark .mobile-toc-sheet-item {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mobile-toc-sheet-item.is-h3 {
+  padding-left: 1.75rem;
+  font-size: 0.87rem;
+}
+
+.mobile-toc-sheet-item.is-active {
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html.dark .mobile-toc-sheet-item.is-active {
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-toc-sheet-item:active {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+html.dark .mobile-toc-sheet-item:active {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>
