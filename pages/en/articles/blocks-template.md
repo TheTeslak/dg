@@ -17,6 +17,52 @@ tags:
 
 A quick copy-paste reference for Markdown blocks and custom Vue components.
 
+---
+
+## Meta, Configuration & Navigation
+
+### Frontmatter Reference
+
+Every article begins with a YAML block. The fields here drive both SEO and on-page UI elements.
+
+```yaml
+---
+title: My Article
+description: SEO and social preview text (max 400 chars).
+date: 2026-03-24T10:00:00Z
+lang: en # UI locale (en, ru, es)
+duration: 8min # manual override (e.g. '8min' or '5')
+backlink: parent-slug # link to parent article above title
+draft: true # hide from index and search engines
+originalLocale: ru # source language for non-translated posts
+---
+```
+
+#### Field Logic & Behavior
+
+- **`draft` (Visibility)**: When set to `true`, the article is excluded from the main list and search engines (`noindex`). It also triggers the **Draft Banner** at the top. Use this for works-in-progress.
+- **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.
+- **`originalLocale` (Translation)**: When an article is not yet translated, this field indicates the source language. If it differs from the current page locale, a **Translation Banner** will appear pointing users to the original version.
+- **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
+
+### Article Status & Banners
+
+Special banners that automatically or manually indicate the current state of the post.
+
+**Draft Notice:**
+Shows when `draft: true` is set.
+`<PostNoticeBanner is-draft />`
+
+<PostNoticeBanner is-draft />
+
+**Translation Notice:**
+Shows when `originalLocale` is different from the current page language.
+`<PostNoticeBanner original-locale="ru" />`
+
+<PostNoticeBanner original-locale="ru" />
+
+---
+
 ## Text & Formatting Basics
 
 Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~~strikethrough~~, `inline code`, [links](https://example.com), and ==highlighted text==.
@@ -29,6 +75,20 @@ Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~
 **Wisper quote block (custom styled):**
 
 > <span font-wisper font-bold op80 text-1.4rem leading-2.1rem>"But somehow, there seems to be something, <br>something makes me hard to breathe."</span>
+
+### Semantic Labels & Badges
+
+Beyond simple bolding, you can use technical-style badges for categorization or status labels.
+
+```html
+<code important-text-lime>test</code>
+<code important-text-purple>lint</code>
+<code important-text-cyan>build</code>
+<code important-text-orange>script</code>
+<code important-text-green>frontend</code>
+```
+
+**Result:** <code important-text-lime>test</code>, <code important-text-purple>lint</code>, <code important-text-cyan>build</code>, <code important-text-orange>script</code>, and <code important-text-green>frontend</code>.
 
 ### UnoCSS Inline Styling
 
@@ -76,6 +136,15 @@ function hello(name: string) {
 -   console.log(`Hi, ${name}!`)
 +   console.log(`Hello, ${name}!`)
   }
+```
+
+**Highlighting lines:**
+Add `// [!code highlight]` to a line to highlight it.
+
+```ts
+function hello() {
+  console.log('Hello World') // [!code highlight]
+}
 ```
 
 ---
@@ -136,39 +205,34 @@ If you just want a sleek inline link, you can embed UnoCSS icon classes (powered
 
 ---
 
-## Meta & Navigation
+## Secondary Features
 
-### Backlinks
+### Alerts (GitHub Style)
 
-Add an optional `backlink` field to frontmatter with the **slug** of a parent article:
+Use alerts to draw attention to important context or edge cases.
 
-```yaml
----
-title: My Article
-backlink: about-yak-shaving
----
-```
+> [!NOTE]
+> **Note:** Supplemental information that helps understanding.
 
-**What it does:**
+> [!TIP]
+> **Tip:** A practical suggestion or optimization.
 
-- **Top of the article** — shows a `⬑ Parent Article Title` link above the title.
-- **Bottom of the parent** — automatically shows a "Referenced by" section listing articles that backlink to it.
+> [!IMPORTANT]
+> **Important:** Critical information readers should not skip.
 
-_Note: The slug is locale-agnostic. If the backlinked article is in a different language than the current UI locale, a small language tag (e.g. `EN`) appears next to the link. Scroll up to the top of this page to see the backlink header._
+> [!WARNING]
+> **Warning:** Potential mistakes or non-obvious behavior.
 
-### Discussion Links
+> [!CAUTION]
+> **Caution:** Critical risks or destructive actions.
 
-Add `telegram` and/or `mastodon` fields to frontmatter to show discussion links at the bottom of the article:
+### Twitter/X Embed (`Tweet`)
 
-```yaml
----
-title: My Article
-telegram: https://t.me/your_post_link
-mastodon: https://mastodon.social/@antfu/your_post_link
----
-```
+Use `<Tweet>` for native tweet rendering.
 
-They appear below the article content as "Comment on Telegram / Mastodon" links.
+<Tweet>
+  <p lang="en" dir="ltr">Just setting up my twttr</p>&mdash; jack (@jack) <a href="https://twitter.com/jack/status/20?ref_src=twsrc%5Etfw">March 21, 2006</a>
+</Tweet>
 
 ---
 

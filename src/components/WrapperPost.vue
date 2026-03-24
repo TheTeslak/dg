@@ -4,6 +4,7 @@ import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
+import { siteOrigin } from '~/logics/site'
 
 const { frontmatter } = defineProps({
   frontmatter: {
@@ -53,8 +54,6 @@ const backToAllPath = computed(() => {
  * Tells search engines that this page exists in multiple languages,
  * preventing duplicate content penalties and enabling proper language indexing.
  */
-const siteOrigin = 'https://antfu.me'
-
 const hreflangLinks = computed(() => {
   const path = route.path
   // Extract the locale-independent part: /en/articles/foo → /articles/foo
@@ -245,10 +244,14 @@ const ArtComponent = computed(() => {
     </h1>
     <p
       v-if="frontmatter.date"
-      class="opacity-50 !-mt-8 slide-enter-50"
+      class="!-mt-8 slide-enter-50"
     >
-      <span v-if="isDraftPost(frontmatter.type)">🚧 </span>
-      <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+      <span class="opacity-50">
+        <span v-if="isDraftPost(frontmatter.type)">🚧 </span>
+        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+      </span>
+      <span class="opacity-50"> · </span>
+      <PostCopyLink />
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>

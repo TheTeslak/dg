@@ -59,6 +59,8 @@ post-link-mastodon = Mastodon
 post-referenced-by = Referenced by
 post-updated = updated
 post-draft-notice = Draft
+post-copy-link = copy link
+post-link-copied = copied
 
 heading-link = link to heading
 heading-copied = copied

@@ -26,6 +26,7 @@ import Inspect from 'vite-plugin-inspect'
 import Exclude from 'vite-plugin-optimize-exclude'
 import SVG from 'vite-svg-loader'
 import { slugify } from './scripts/slugify'
+import { siteOrigin } from './src/logics/site'
 
 const promises: Promise<any>[] = []
 const frontmatterWarnings = new Set<string>()
@@ -291,7 +292,7 @@ export default defineConfig({
           const article = getArticleInfo(id)
           const slug = article?.slug || route
           const path = `og/${slug}.png`
-          frontmatter.image = `https://antfu.me/${path}`
+          frontmatter.image = `${siteOrigin}/${path}`
 
           if (queuedOgOutputs.has(path))
             return

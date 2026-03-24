@@ -59,6 +59,8 @@ post-link-mastodon = Мастодон
 post-referenced-by = Ссылаются
 post-updated = обновлена
 post-draft-notice = Черновик
+post-copy-link = ссылка
+post-link-copied = скопировано
 
 heading-link = ссылка на заголовок
 heading-copied = скопировано

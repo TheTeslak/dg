@@ -343,7 +343,7 @@ onMounted(() => {
 .scroll-toc-svg {
   position: absolute;
   left: 4px;
-  top: 0;
+  top: 2px;
   overflow: visible;
 }
 
