@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 <template>
   <header class="header z-40">
     <RouterLink
-      class="w-12 h-12 absolute xl:fixed m-5 select-none outline-none"
+      class="w-12 h-12 absolute lg:fixed m-5 select-none outline-none"
       :to="`/${currentLocale}`"
       focusable="false"
     >

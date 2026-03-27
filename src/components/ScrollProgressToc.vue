@@ -370,7 +370,9 @@ onMounted(() => {
   top: 80px;
   bottom: 40px;
   z-index: 200;
-  width: 200px;
+  width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 40px);
+  min-width: 200px;
+  max-width: 400px;
   pointer-events: auto;
   cursor: default;
   display: none;
@@ -396,7 +398,7 @@ onMounted(() => {
 @media (min-width: 1280px) {
   .scroll-toc {
     left: 28px;
-    width: 260px;
+    width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 50px);
   }
   .scroll-toc::before {
     width: 28px;
@@ -410,8 +412,8 @@ onMounted(() => {
   overflow-y: auto;
   overflow-x: clip;
   /* Hide scrollbar visually but keep scroll functionality */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   opacity: 0;
   transform: translateX(-8px);
   pointer-events: none;
@@ -421,7 +423,7 @@ onMounted(() => {
 }
 
 .scroll-toc-scroll-wrapper::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .scroll-toc.is-awake .scroll-toc-scroll-wrapper {
@@ -497,19 +499,21 @@ html.dark .scroll-toc-dot.is-active {
 .scroll-toc-item {
   position: absolute;
   left: 20px;
+  right: 12px;
   transform: translateY(-50%);
   cursor: pointer;
   padding: 2px 0;
 }
 
 .scroll-toc-label {
+  display: block;
   font-size: 0.82rem;
   line-height: 1.3;
   color: rgba(80, 80, 80, 0.65);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 170px;
+  width: 100%;
   opacity: 0;
   transform: translateX(-4px);
   transition:
@@ -560,7 +564,8 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
 /* ── Title block (top, visible on hover) ── */
 .scroll-toc-title {
   flex-shrink: 0;
-  left: 4px;
+  padding-left: 4px;
+  padding-right: 12px;
   pointer-events: none;
   opacity: 0;
   transform: translateX(-4px);
@@ -580,13 +585,10 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
   font-weight: 600;
   line-height: 1.25;
   color: rgba(40, 40, 40, 0.85);
-  max-width: 185px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
+  width: 100%;
 }
 
 html.dark .scroll-toc-title-text {
@@ -603,14 +605,7 @@ html.dark .scroll-toc-title-duration {
   color: rgba(160, 160, 160, 0.45);
 }
 
-@media (min-width: 1280px) {
-  .scroll-toc-label {
-    max-width: 220px;
-  }
-  .scroll-toc-title-text {
-    max-width: 235px;
-  }
-}
+/* Media queries for max-widths removed in favor of fluid widths */
 
 @media print {
   .scroll-toc {
