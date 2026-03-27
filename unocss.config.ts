@@ -16,6 +16,7 @@ export default defineConfig({
       'bg-base': 'bg-[var(--c-bg)]',
       'color-base': 'text-black dark:text-white',
       'border-base': 'border-[#8884]',
+      'quote-wisper': 'font-wisper font-bold op80 text-1.75rem leading-2rem',
     },
     [/^btn-(\w+)$/, ([_, color]) => `op50 px2.5 py1 transition-all duration-200 ease-out no-underline! hover:(op100 text-${color} bg-${color}/10) border border-base! rounded`],
   ],

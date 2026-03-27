@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "auto-imports.d.ts",
+    "components.d.ts",
+    "typed-router.d.ts",
+    "shims.d.ts",
+    "externals.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "data/**/*.ts",
+    "demo/**/*.ts",
+    "photos/**/*.ts",
+    "pages/**/*.vue"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "temp"
+  ]
+}

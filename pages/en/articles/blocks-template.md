@@ -74,7 +74,8 @@ Standard Markdown formatting is fully supported: **bold text**, _italic text_, ~
 
 **Wisper quote block (custom styled):**
 
-> <span font-wisper font-bold op80 text-1.4rem leading-2.1rem>"But somehow, there seems to be something, <br>something makes me hard to breathe."</span>
+> <span class="quote-wisper">"But somehow, there seems to be something, <br>
+> something makes me hard to breathe."</span>
 
 ### Semantic Labels & Badges
 

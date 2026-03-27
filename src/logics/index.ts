@@ -9,12 +9,17 @@ export const onlyLanguage = useLocalStorage('antfu-only-language', false)
 
 export const galleryView = useLocalStorage<'cover' | 'contain'>('antfu-gallery-view', 'cover')
 
-export function toggleDark(event: MouseEvent) {
-  // @ts-expect-error experimental API
-  const isAppearanceTransition = document.startViewTransition
-    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+type DocumentWithOptionalViewTransition = Document & {
+  startViewTransition?: Document['startViewTransition']
+}
 
-  if (!isAppearanceTransition) {
+export function toggleDark(event: MouseEvent) {
+  // lib.dom models this API as always present, but we still need a runtime guard.
+  const startViewTransition = (document as DocumentWithOptionalViewTransition)
+    .startViewTransition
+    ?.bind(document)
+
+  if (!startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     isDark.value = !isDark.value
     return
   }
@@ -25,7 +30,7 @@ export function toggleDark(event: MouseEvent) {
     Math.max(x, innerWidth - x),
     Math.max(y, innerHeight - y),
   )
-  const transition = document.startViewTransition(async () => {
+  const transition = startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()
   })
@@ -55,6 +60,8 @@ export function toggleDark(event: MouseEvent) {
 
 export function formatDate(d: string | Date, onlyDate = true) {
   const date = dayjs(d)
+  if (!date.isValid())
+    return ''
   const now = dayjs()
   let formatted: string
   if (onlyDate || date.year() === now.year())

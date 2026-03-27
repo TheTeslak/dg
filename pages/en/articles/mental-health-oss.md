@@ -121,7 +121,8 @@ The amount of work required to maintain multiple high-traffic open source projec
 
 I want to keep those projects alive and keep them moving forward; I want to write more blog posts to share my thoughts; I want to do more talks, to travel and meet people; I want to do more live streams as I know many are waiting for it; I have to clean this thing up, to do that release; I also want to learn French; And spend more time with my family - I mean, this is probably just life. People have their own concerns and responsibilities, I ain't any more special or busier than others.
 
-> <span font-wisper font-bold op80 text-1.4rem leading-2.1rem>"But somehow, there seems to be something, <br>something makes me hard to breathe."</span>
+> <span class="quote-wisper">"But somehow, there seems to be something, <br>
+> something makes me hard to breathe."</span>
 
 I am probably reluctant to admit my potential burnout. Not because I am afraid of it, but more like, I don't want to give up and handle it passively. I know to take rest when I need it, but calling myself "burnout" and giving up is an "easy way out" to escape from the responsibilities. I want to find out the _"root cause"_ and try to improve the situation instead of just _"workaround"_ it. As we talked about previously, the shift of "expectations", and the re-evaluation of my "unpreparedness" and "self-expectations" are my solutions to the moments when I was close to burnout for different reasons. By adjusting myself and adopting, I was usually able to recover from the low points in roughly a week and keep moving forward.
 

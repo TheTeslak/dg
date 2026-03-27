@@ -16,11 +16,18 @@ const MIN_BRANCH = 30
 const len = ref(6)
 const stopped = ref(false)
 
+type VendorCanvasRenderingContext2D = CanvasRenderingContext2D & {
+  backingStorePixelRatio?: number
+  mozBackingStorePixelRatio?: number
+  msBackingStorePixelRatio?: number
+  oBackingStorePixelRatio?: number
+  webkitBackingStorePixelRatio?: number
+}
+
 function initCanvas(canvas: HTMLCanvasElement, width = 400, height = 400, _dpi?: number) {
-  const ctx = canvas.getContext('2d')!
+  const ctx = canvas.getContext('2d')! as VendorCanvasRenderingContext2D
 
   const dpr = window.devicePixelRatio || 1
-  // @ts-expect-error vendor
   const bsr = ctx.webkitBackingStorePixelRatio || ctx.mozBackingStorePixelRatio || ctx.msBackingStorePixelRatio || ctx.oBackingStorePixelRatio || ctx.backingStorePixelRatio || 1
 
   const dpi = _dpi || dpr / bsr

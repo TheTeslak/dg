@@ -9,6 +9,9 @@
     "static": "rimraf temp && degit antfu/static temp --force && tsx scripts/copy-sponsors",
     "redirects": "tsx scripts/redirects.ts",
     "lint": "eslint .",
+    "typecheck": "pnpm typecheck:app && pnpm typecheck:node",
+    "typecheck:app": "vue-tsc --noEmit -p tsconfig.app.json",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
     "compress": "tsx scripts/img-compress-staged.ts",
     "photos": "tsx scripts/photos-manage.ts",
     "prepare": "simple-git-hooks"
@@ -96,7 +99,8 @@
     "vite-plugin-inspect": "catalog:build",
     "vite-plugin-optimize-exclude": "catalog:build",
     "vite-ssg": "catalog:build",
-    "vite-svg-loader": "catalog:build"
+    "vite-svg-loader": "catalog:build",
+    "vue-tsc": "catalog:dev"
   },
   "resolutions": {
     "vite": "catalog:build"

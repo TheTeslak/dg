@@ -61,6 +61,7 @@ catalogs:
     simple-git-hooks: ^2.13.1
     tsx: ^4.21.0
     typescript: ~5.9.3
+    vue-tsc: ^3.0.6
   frontend:
     '@antfu/utils': ^9.3.0
     '@unhead/vue': ^2.0.19

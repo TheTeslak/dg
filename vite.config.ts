@@ -10,7 +10,6 @@ import anchor from 'markdown-it-anchor'
 import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import MarkdownItMagicLink from 'markdown-it-magic-link'
-// @ts-expect-error missing types
 import TOC from 'markdown-it-table-of-contents'
 import sharp from 'sharp'
 import UnoCSS from 'unocss/vite'
@@ -27,6 +26,7 @@ import Exclude from 'vite-plugin-optimize-exclude'
 import SVG from 'vite-svg-loader'
 import { slugify } from './scripts/slugify'
 import { siteOrigin } from './src/logics/site'
+import 'vite-ssg'
 
 const promises: Promise<any>[] = []
 const frontmatterWarnings = new Set<string>()
@@ -455,6 +455,16 @@ function extractExcerpt(content: string, maxLength: number): string {
 
 function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: string, id: string) {
   const frontmatter = { ...rawFrontmatter }
+
+  // Normalize date fields: gray-matter/js-yaml may parse ISO dates into
+  // native Date objects.  Serialising a Date through route meta (SSG / SSR)
+  // can produce "Invalid Date" strings.  Convert them to ISO strings early.
+  for (const key of ['date', 'updated'] as const) {
+    if (frontmatter[key] instanceof Date) {
+      const d = frontmatter[key] as Date
+      frontmatter[key] = Number.isNaN(d.getTime()) ? undefined : d.toISOString()
+    }
+  }
 
   if (frontmatter.hashtags && !frontmatter.tags) {
     frontmatter.tags = frontmatter.hashtags

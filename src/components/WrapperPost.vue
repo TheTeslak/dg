@@ -266,9 +266,8 @@ const ArtComponent = computed(() => {
     >
       {{ frontmatter.subtitle }}
     </p>
-    <PostNoticeBanner
+    <PostDraftBanner
       v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
-      is-draft
     />
     <PostNoticeBanner
       v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"

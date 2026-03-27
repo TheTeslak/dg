@@ -2,59 +2,63 @@
 
 ## Purpose
 
-Guidelines for coding agents working in this repository. Keep changes minimal, safe, and consistent with the current architecture.
+Guidelines for coding agents in this repository. Keep changes minimal, safe, and consistent with the existing architecture.
 
 ## Tech Stack
 
 - Vue 3 + Vite + Vite SSG
 - File-based routing via `unplugin-vue-router` (`pages/`)
 - Markdown pages rendered as Vue (`.md` + `.vue`)
-- UnoCSS for styling
-- TypeScript (strict mode)
+- UnoCSS styling
+- TypeScript strict mode
 - ESLint via `@antfu/eslint-config`
-- Netlify deployment (`dist/`, SPA fallback redirects)
+- Netlify deployment (`dist/` folder, SPA fallback redirects)
 
 ## Package Manager
 
-- This project uses `pnpm`.
-- Use `pnpm` for install, scripts, and lockfile updates.
+- Use `pnpm` for installs, scripts, and lockfile updates.
 
 ## Key Directories
 
-- `src/` - app code (components, styles, logic, locales)
-- `pages/` - route content (`en`, `ru`, `es`), including articles
-- `public/` - static assets (images, icons, OG, admin)
-- `scripts/` - build/content tooling (RSS, redirects, images, photos)
-- `data/`, `photos/`, `demo/` - structured content/media sources
+- `src/` - App code (components, styles, logic, locales)
+- `pages/` - Route content (`en`, `ru`, `es`), including articles
+- `public/` - Static assets (images, icons, OG, admin)
+- `scripts/` - Build and content tooling (RSS, redirects, image processing)
+- `data/`, `photos/`, `demo/` - Structured content and media sources
 
 ## Content and Routing Rules
 
-- Routes are generated from `pages/` (`.md` and `.vue`).
+- Routes auto-generate from `pages/`.
 - Locales: `en`, `ru`, `es`.
-- Article files live in `pages/<locale>/articles/*.md`.
-- Markdown frontmatter is used for metadata (`title`, `date`, `lang`, etc.).
-- Prefer `tags` (array of strings without `#`) over `hashtags`.
-- For article reading time, use `duration` as **number of minutes**. If omitted, build can auto-estimate it.
-- For custom OG images shared across locales, place source files at `public/og/articles/<slug>.<ext>` (`avif`, `webp`, `png`, `jpg`, `jpeg`).
-- `image` in frontmatter is a manual override; otherwise OG image is auto-resolved/generated per slug.
-- Build may emit warnings for unknown frontmatter keys or malformed metadata; treat warnings as content quality checks.
-- If editing localized content, keep locale parity where practical.
-- For locale path operations, prefer shared helpers in `src/logics/i18n-path.ts` instead of ad-hoc regex in components.
-- Language switch/navigation must preserve `query` and `hash`.
-- Article fallback aliases are built in `vite.config.ts`; if a new localized article file is added, route generation prefers that file and fallback alias is no longer used.
+- Articles belong in `pages/<locale>/articles/*.md`.
+- Frontmatter defines metadata (`title`, `date`, `lang`).
+- Use `tags` (string array without `#`), not `hashtags`.
+- `duration` defines reading time in minutes. If omitted, it's auto-estimated.
+- Place shared custom OG images at `public/og/articles/<slug>.<ext>` (`avif`, `webp`, `png`, `jpg`, `jpeg`).
+- Frontmatter `image` overrides the auto-generated OG image.
+- Treat build warnings regarding frontmatter as content quality checks.
+- Maintain parity across locales when editing content.
+- Use `src/logics/i18n-path.ts` helpers for locale paths instead of custom regex.
+- Navigation must preserve `query` and `hash`.
+- Fallback aliases are in `vite.config.ts`. New localized files replace fallback aliases.
 
 ## Development Workflow
 
-1. Read related files before editing and preserve existing patterns.
+1. Read related files to preserve existing patterns.
 2. Make focused changes; avoid broad refactors unless requested.
-3. Prefer updating existing utilities/components over introducing duplicates.
-4. Keep imports, naming, and style aligned with nearby code.
-5. For content changes, validate frontmatter and links.
+3. Re-use existing utilities/components instead of creating duplicates.
+4. Align imports, naming, and style with surrounding code.
+5. Validate frontmatter and links when modifying content.
 
-## Do / Don't
+## Do
 
-- Do keep changes small, reversible, and explain non-obvious decisions.
-- Do preserve SSR/SSG compatibility (avoid client-only assumptions outside guarded blocks).
-- Don't rename/move large content trees unless requested.
-- Don't introduce new dependencies when existing ones can solve the task.
-- Don't switch tooling conventions (package manager, lint style, routing model).
+- Keep changes small and reversible.
+- Explain non-obvious design choices.
+- Write clear messages.
+- Preserve SSR/SSG compatibility; avoid client-only assumptions outside guarded blocks.
+
+## Don't
+
+- Rename or move large content trees unless requested.
+- Introduce new dependencies if existing ones suffice.
+- Change tooling conventions (package manager, linting, routing).
