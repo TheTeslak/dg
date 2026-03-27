@@ -133,10 +133,10 @@
   line-height: 1.5;
 }
 .prose figure figcaption {
-  color: #6b7280;
+  color: inherit;
   font-size: 0.875em;
-  line-height: 1.4285714;
-  margin-top: 0.8571429em;
+  line-height: 1.5;
+  margin-top: 0.75em;
 }
 .prose code {
   --uno: font-mono;
@@ -221,20 +221,20 @@
   margin-bottom: 1.25em;
 }
 .prose img {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
 }
 .prose .photos img {
   margin-top: 0;
   margin-bottom: 0;
 }
 .prose video {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
 }
 .prose figure {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
 }
 .prose figure > * {
   margin-top: 0;

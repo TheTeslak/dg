@@ -33,14 +33,16 @@ date: 2026-03-24T10:00:00Z
 lang: en # UI locale (en, ru, es)
 duration: 8min # manual override (e.g. '8min' or '5')
 backlink: parent-slug # link to parent article above title
-draft: true # hide from index and search engines
+type: note+draft # post type and status (combined with '+')
 originalLocale: ru # source language for non-translated posts
 ---
 ```
 
 #### Field Logic & Behavior
 
-- **`draft` (Visibility)**: When set to `true`, the article is excluded from the main list and search engines (`noindex`). It also triggers the **Draft Banner** at the top. Use this for works-in-progress.
+- **`type` (Status & Visibility)**: This field controls where the post appears and its status.
+  - `type: draft` or `draft: true`: Fully hidden from lists and RSS. Use for private WIPs.
+  - `type: note+draft` (or `blog+draft`): Visible in lists with a **🚧 indicator**, but still marked as a draft internally (`noindex`).
 - **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.
 - **`originalLocale` (Translation)**: When an article is not yet translated, this field indicates the source language. If it differs from the current page locale, a **Translation Banner** will appear pointing users to the original version.
 - **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
@@ -167,6 +169,36 @@ You can embed photos directly inside an article. They do not have to be limited 
 `<PhotoShowcase mode="grid" :limit="8" />`
 
 <PhotoShowcase mode="grid" :limit="8" />
+
+### Standard Images
+
+Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`. Images without `alt` text render without a caption wrapper.
+
+**Without caption** (no alt text → no `<figure>` wrapper):
+
+```markdown
+![](/images/ai-qrcode-final.jpg)
+```
+
+![](/images/ai-qrcode-final.jpg)
+
+**With caption** (alt text → auto `<figure>` + `<figcaption>`):
+
+```markdown
+![AI-generated QR code with artistic styling](/images/ai-qrcode-final.jpg)
+```
+
+![AI-generated QR code with artistic styling](/images/ai-qrcode-final.jpg)
+
+### Wide Images (`img-wide`)
+
+If you want a single large image that breaks out of the content container on desktop (like YouTube embeds do) but perfectly fits the screen on mobile, simply apply the `img-wide` class to your image tags.
+
+```html
+<img src="/images/ai-qrcode-final.jpg" class="img-wide" />
+```
+
+<img src="/images/ai-qrcode-final.jpg" class="img-wide" />
 
 ### Article Links (`ArticleLinks`)
 

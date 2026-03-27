@@ -31,7 +31,7 @@ function handleWheel(e: WheelEvent) {
 <template>
   <div
     ref="container"
-    class="photos flex gap-4 py3" w-screen of-x-auto
+    class="photos flex gap-4 pt3 pb1" w-screen of-x-auto
     style="margin-left: calc(var(--prose-margin) * -1); padding-left: var(--prose-margin); padding-right: var(--prose-margin);"
     @wheel="handleWheel"
   >
@@ -52,3 +52,12 @@ function handleWheel(e: WheelEvent) {
     </div>
   </div>
 </template>
+
+<style scoped>
+.photos::-webkit-scrollbar {
+  display: none;
+}
+.photos {
+  scrollbar-width: none;
+}
+</style>

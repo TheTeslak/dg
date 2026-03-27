@@ -247,6 +247,50 @@ export default defineConfig({
 
         md.use(GitHubAlerts)
 
+        // Convert standalone ![alt](src) into <figure><img><figcaption>alt</figcaption></figure>.
+        // Only triggers when <p> contains a single <img> with non-empty alt text.
+        // Images without alt text stay as plain <img> inside <p> — no figure wrapper.
+        md.core.ruler.after('inline', 'image_figures', (state) => {
+          const tokens = state.tokens
+          for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i]
+            if (token.type !== 'paragraph_open')
+              continue
+
+            const inline = tokens[i + 1]
+            const close = tokens[i + 2]
+            if (!inline || inline.type !== 'inline' || !close || close.type !== 'paragraph_close')
+              continue
+
+            // Check: inline children must be exactly one image token
+            const children = inline.children || []
+            if (children.length !== 1 || children[0].type !== 'image')
+              continue
+
+            const imgToken = children[0]
+            const alt = imgToken.content?.trim()
+            if (!alt)
+              continue
+
+            // Rewrite paragraph_open → figure_open
+            token.type = 'figure_open'
+            token.tag = 'figure'
+
+            // Rewrite paragraph_close → figure_close
+            close.type = 'figure_close'
+            close.tag = 'figure'
+
+            // Insert figcaption tokens after the inline (before figure_close)
+            const captionOpen = new state.Token('html_block', '', 0)
+            captionOpen.content = `<figcaption>${md.utils.escapeHtml(alt)}</figcaption>\n`
+
+            // Clear the alt from the image so it doesn't duplicate as attr
+            // (keep it as the HTML alt attribute on <img> for a11y)
+            tokens.splice(i + 2, 0, captionOpen)
+            i += 1 // skip the inserted token
+          }
+        })
+
         // Custom ==highlight== syntax (Obsidian-style mark)
         // Converts ==text== to <mark>text</mark>, no external plugin needed.
         md.inline.ruler.before('emphasis', 'mark', (state, silent) => {
