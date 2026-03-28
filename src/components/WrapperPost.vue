@@ -4,6 +4,7 @@ import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
+import { artOverride } from '~/logics/keyboard-nav'
 import { siteOrigin } from '~/logics/site'
 
 const { frontmatter } = defineProps({
@@ -177,7 +178,26 @@ onMounted(() => {
   }, 1)
 })
 
+const artComponentMap: Record<string, () => Promise<any>> = {
+  plum: () => import('./ArtPlum.vue'),
+  dots: () => import('./ArtDots.vue'),
+  cellular: () => import('./ArtCellular.vue'),
+  topography: () => import('./ArtTopography.vue'),
+  interference: () => import('./ArtInterference.vue'),
+}
+
 const ArtComponent = computed(() => {
+  // No art in frontmatter — this page has no background
+  if (!frontmatter.art)
+    return undefined
+
+  // Keyboard override takes priority when set
+  if (artOverride.value && artComponentMap[artOverride.value]) {
+    return typeof window !== 'undefined'
+      ? defineAsyncComponent(artComponentMap[artOverride.value])
+      : undefined
+  }
+
   let art = frontmatter.art
   if (art === 'random') {
     const weighted = [
@@ -196,25 +216,19 @@ const ArtComponent = computed(() => {
     if (typeof window !== 'undefined')
       localStorage.setItem('dg-last-art', art)
   }
-  if (typeof window !== 'undefined') {
-    if (art === 'plum')
-      return defineAsyncComponent(() => import('./ArtPlum.vue'))
-    else if (art === 'dots')
-      return defineAsyncComponent(() => import('./ArtDots.vue'))
-    else if (art === 'cellular')
-      return defineAsyncComponent(() => import('./ArtCellular.vue'))
-    else if (art === 'topography')
-      return defineAsyncComponent(() => import('./ArtTopography.vue'))
-    else if (art === 'interference')
-      return defineAsyncComponent(() => import('./ArtInterference.vue'))
-  }
+
+  if (typeof window !== 'undefined' && artComponentMap[art])
+    return defineAsyncComponent(artComponentMap[art])
+
   return undefined
 })
 </script>
 
 <template>
   <ClientOnly v-if="ArtComponent">
-    <component :is="ArtComponent" />
+    <div data-art>
+      <component :is="ArtComponent" />
+    </div>
   </ClientOnly>
   <div
     v-if="frontmatter.display ?? frontmatter.title"

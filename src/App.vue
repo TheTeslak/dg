@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { useKeyboardNav } from '~/logics/keyboard-nav'
+
 const route = useRoute()
+
+useKeyboardNav()
 
 const imageModel = ref<HTMLImageElement>()
 const imageAlt = ref<string>()

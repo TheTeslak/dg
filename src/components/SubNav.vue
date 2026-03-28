@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onKeyStroke } from '@vueuse/core'
+import { onKeyStroke, useEventListener } from '@vueuse/core'
 import { useFluent } from 'fluent-vue'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getLocaleFromPath } from '~/logics/i18n-path'
+import { isEditableTarget } from '~/logics/keyboard-nav'
 import { useSearch } from '~/logics/search'
 import { onlyLanguage } from '../logics'
 
@@ -47,6 +48,31 @@ onKeyStroke('k', (e) => {
 onKeyStroke('Escape', () => {
   if (isSearchOpen.value)
     closeSearch()
+})
+
+// Type-to-search: open search panel when user types any printable character
+useEventListener(typeof document !== 'undefined' ? document : null, 'keydown', (e: KeyboardEvent) => {
+  // Skip modifier combos (Ctrl+C, Cmd+V, etc.)
+  if (e.ctrlKey || e.metaKey || e.altKey)
+    return
+  // Only react to single printable characters (letters, digits, punctuation)
+  if (e.key.length !== 1)
+    return
+  // Don't intercept if user is already typing somewhere
+  if (isEditableTarget(e.target))
+    return
+
+  if (!isSearchOpen.value) {
+    // Open search and seed the query with the typed character
+    e.preventDefault()
+    searchQuery.value = e.key
+    openSearch()
+  }
+  else if (searchInputRef.value && document.activeElement !== searchInputRef.value) {
+    // Search is open but input hasn't focused yet (fast typing edge case)
+    e.preventDefault()
+    searchQuery.value += e.key
+  }
 })
 
 const modKey = computed(() => {
