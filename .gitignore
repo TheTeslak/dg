@@ -16,3 +16,5 @@ src/data/sponsors-circles.json
 public/assets/fonts
 dirmerger.py
 dg-*.txt
+public/search-index.json
+public/sitemap.xml
