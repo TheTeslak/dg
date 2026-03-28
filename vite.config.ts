@@ -23,8 +23,10 @@ import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import Exclude from 'vite-plugin-optimize-exclude'
+import generateSitemap from 'vite-ssg-sitemap'
 import SVG from 'vite-svg-loader'
 import { slugify } from './scripts/slugify'
+import { isPostVisible } from './src/logics/post-visibility'
 import { siteOrigin } from './src/logics/site'
 import 'vite-ssg'
 
@@ -400,6 +402,31 @@ export default defineConfig({
 
   ssgOptions: {
     formatting: 'minify',
+    onFinished() {
+      // Build the list of excluded routes:
+      // draft/dateless articles + always-excluded system routes.
+      const articleLocales = ['en', 'ru', 'es'] as const
+      const excludedRoutes: string[] = ['/404']
+
+      for (const locale of articleLocales) {
+        const dir = resolve(__dirname, `pages/${locale}/articles`)
+        if (!fs.existsSync(dir))
+          continue
+        for (const file of fs.readdirSync(dir)) {
+          if (!file.endsWith('.md') || file.startsWith('['))
+            continue
+          const slug = file.replace(/\.md$/, '')
+          const { data } = matter(fs.readFileSync(resolve(dir, file), 'utf-8'))
+          if (!isPostVisible(data))
+            excludedRoutes.push(`/${locale}/articles/${slug}`)
+        }
+      }
+
+      generateSitemap({
+        hostname: siteOrigin,
+        exclude: excludedRoutes,
+      })
+    },
   },
 })
 

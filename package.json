@@ -99,6 +99,7 @@
     "vite-plugin-inspect": "catalog:build",
     "vite-plugin-optimize-exclude": "catalog:build",
     "vite-ssg": "catalog:build",
+    "vite-ssg-sitemap": "catalog:",
     "vite-svg-loader": "catalog:build",
     "vue-tsc": "catalog:dev"
   },

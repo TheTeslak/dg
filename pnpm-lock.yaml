@@ -82,6 +82,9 @@ catalogs:
     minisearch:
       specifier: ^7.1.0
       version: 7.2.0
+    vite-ssg-sitemap:
+      specifier: ^0.10.0
+      version: 0.10.0
   dev:
     '@antfu/eslint-config':
       specifier: ^6.7.2
@@ -502,6 +505,9 @@ importers:
       vite-ssg:
         specifier: catalog:build
         version: 28.2.2(canvas@3.2.0)(postcss@8.5.6)(prettier@3.7.4)(unhead@2.0.19)(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(terser@5.31.3)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+      vite-ssg-sitemap:
+        specifier: 'catalog:'
+        version: 0.10.0
       vite-svg-loader:
         specifier: catalog:build
         version: 5.1.0(vue@3.5.26(typescript@5.9.3))
@@ -3902,6 +3908,9 @@ packages:
     resolution: {integrity: sha512-vRb2u5XlvNa51bt+mz6QS+UHns2tGi1Z9CHuaAnPOWiAtQCZEjavUf/56oRFXauj/0ROl2FvOJ2YFD1k6sGJNQ==}
     peerDependencies:
       vite: ^7.3.0
+
+  vite-ssg-sitemap@0.10.0:
+    resolution: {integrity: sha512-OIja4fqUMcvWl5+bxQARe3LgzWTd8U/dWHWgrqiC7vv3AmTn0YnhMNUAimQ0M/0Aa9myEIAGLV0yKlYbKP8BJQ==}
 
   vite-ssg@28.2.2:
     resolution: {integrity: sha512-aZQNtNMh+fVfaXjD+FZcSaE4Pnm/x/Rj5s9ce48CWLZjztfdijmrsTbda9B9ADnUL9VZy6N5yIa7GqC3XI+PCA==}
@@ -7911,6 +7920,8 @@ snapshots:
   vite-plugin-optimize-exclude@0.0.1(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(terser@5.31.3)(tsx@4.21.0)(yaml@2.8.2)):
     dependencies:
       vite: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(terser@5.31.3)(tsx@4.21.0)(yaml@2.8.2)
+
+  vite-ssg-sitemap@0.10.0: {}
 
   vite-ssg@28.2.2(canvas@3.2.0)(postcss@8.5.6)(prettier@3.7.4)(unhead@2.0.19)(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(terser@5.31.3)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3)):
     dependencies:
