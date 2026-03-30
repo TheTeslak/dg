@@ -83,6 +83,14 @@ onKeyStroke('Escape', (e) => {
     e.preventDefault()
   }
 })
+
+onMounted(() => {
+  // eslint-disable-next-line no-console
+  console.log(
+    '%c👁 if you gaze long into an abyss, the abyss also gazes at you',
+    'color: #888; font-size: 14px; font-family: monospace;',
+  )
+})
 </script>
 
 <template>
