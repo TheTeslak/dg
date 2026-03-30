@@ -295,6 +295,38 @@ Shows interactive project sponsorship buttons.
 
 <SponsorButtons />
 
+### Glossary Term (Marginal Annotation) (`GlossaryTerm`)
+
+Adds a dashed underline to a term and displays its definition in a margin note on desktop or a bottom sheet on mobile when clicked.
+
+**1. Simple Definition via Props**
+
+```html
+<GlossaryTerm
+  term="Gradient Descent"
+  definition="An iterative optimization algorithm for finding a local minimum of a differentiable function."
+>
+  gradient descent
+</GlossaryTerm>
+```
+
+In machine learning, <GlossaryTerm term="Gradient Descent" definition="An iterative optimization algorithm for finding a local minimum of a differentiable function.">gradient descent</GlossaryTerm> is used to minimize the loss function.
+
+**2. Rich Definition with HTML**
+
+The `definition` prop accepts HTML, so you can include links, `<mark>`, `<code>`, etc.:
+
+```html
+<GlossaryTerm
+  term="Vite"
+  definition="A frontend build tool that improves the <a href='/en/articles/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."
+>
+  Vite
+</GlossaryTerm>
+```
+
+Many modern frameworks are now powered by <GlossaryTerm term="Vite" definition="A frontend build tool that improves the <a href='/en/articles/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR.">Vite</GlossaryTerm> under the hood.
+
 ### Spoiler / Collapsible Block (`Spoiler`)
 
 Collapsed by default. Useful for optional details, long lists, or plot spoilers.

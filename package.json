@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.26.1",
   "scripts": {
     "build": "npm run static && tsx ./scripts/search-index.ts && cross-env NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && cp _dist_redirects dist/_redirects",
-    "dev": "vite --port 3333 --open",
+    "dev": "NODE_OPTIONS='--require ./scripts/node-localstorage-polyfill.cjs' vite --port 3333 --open",
     "preview": "vite preview",
     "static": "rimraf temp && degit antfu/static temp --force && tsx scripts/copy-sponsors",
     "redirects": "tsx scripts/redirects.ts",
