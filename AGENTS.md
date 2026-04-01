@@ -11,7 +11,7 @@ Guidelines for coding agents in this repository. Keep changes minimal, safe, and
 - The migration does not need a compatibility layer between Vue and Qwik.
 - Preserve public, user-visible behavior and appearance for the pages and flows that are currently in scope.
 - Work continuously toward a full-site rewrite until the entire in-scope site is migrated.
-- If a part of the site is currently too risky, too expensive, or not practical to port safely in the current pass, it may be skipped only if it is recorded in `TECHDEBT.md` with enough detail to resume later.
+- If a part of the site is currently too risky, too expensive, or not practical to port safely in the current pass, it may be skipped only if the remaining gap is called out clearly in the current `README.md` migration status or the active handoff summary.
 
 ### Rewrite Quality Bar
 
@@ -77,8 +77,8 @@ Guidelines for coding agents in this repository. Keep changes minimal, safe, and
 3. Re-use existing utilities/components instead of creating duplicates.
 4. Align imports, naming, and style with surrounding code.
 5. Validate frontmatter and links when modifying content.
-6. Record dangerous migrations, temporary workarounds, and intentionally deferred items in `TECHDEBT.md`.
-7. At the very end of the rewrite, replace or update the root `README.md` with a short two-paragraph structure and a short local run instruction.
+6. Record dangerous migrations, temporary workarounds, and intentionally deferred items in the current `README.md` migration status or active handoff summary.
+7. Keep the root `README.md` short and current enough that a paused rewrite can be resumed without re-discovering the visible migration gaps.
 
 ## Do
 
