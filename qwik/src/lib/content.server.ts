@@ -1,5 +1,7 @@
 import type {
   LocaleOverview,
+  MarkdownPageDocument,
+  MarkdownPageFrontmatter,
   PostDocument,
   PostFrontmatter,
   PostSummary,
@@ -20,6 +22,7 @@ const markdown = new MarkdownIt({
   linkify: true,
   typographer: true,
 })
+const simplePageSlugs = new Set(['bar', 'bookmarks', 'use'])
 
 export async function getHomeOverview(): Promise<LocaleOverview[]> {
   return Promise.all(
@@ -132,6 +135,41 @@ export async function getPost(
   }
 }
 
+export async function getPage(
+  locale: string,
+  slug: string,
+): Promise<MarkdownPageDocument | null> {
+  if (!isSupportedLocale(locale) || !simplePageSlugs.has(slug))
+    return null
+
+  const file = resolve(pagesRoot, locale, `${slug}.md`)
+  try {
+    const raw = await readFile(file, 'utf-8')
+    const parsed = matter(raw)
+    const frontmatter = parsed.data as MarkdownPageFrontmatter
+
+    if (!frontmatter.title)
+      return null
+    if (hasUnsupportedEmbeds(parsed.content))
+      return null
+
+    return {
+      slug,
+      locale,
+      title: frontmatter.title,
+      display: frontmatter.display,
+      subtitle: frontmatter.subtitle,
+      description: frontmatter.description,
+      className: frontmatter.class,
+      html: renderMarkdown(parsed.content),
+      raw: parsed.content,
+    }
+  }
+  catch {
+    return null
+  }
+}
+
 function isPostVisible(frontmatter: PostFrontmatter): boolean {
   if (!frontmatter.date)
     return false
@@ -144,4 +182,14 @@ function isPostVisible(frontmatter: PostFrontmatter): boolean {
 function hasType(typeValue: string | undefined, type: 'blog' | 'note'): boolean {
   const types = (typeValue || 'blog').split('+').filter(Boolean)
   return types.includes(type)
+}
+
+function renderMarkdown(content: string): string {
+  return markdown.render(
+    content.replace(/^\[\[toc\]\]\s*$/gim, '').trim(),
+  )
+}
+
+function hasUnsupportedEmbeds(content: string): boolean {
+  return /<\s*[A-Z][\w-]*/.test(content)
 }

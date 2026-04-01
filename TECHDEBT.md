@@ -6,6 +6,7 @@
 - Locale preference is now persisted for migrated locale routes and `/` performs a client-side redirect based on saved preference or browser language. Exact static-host parity is still incomplete because the first paint remains a fallback chooser before hydration.
 - Navbar parity is still partial. The visible `notes`, `projects`, and `photos` routes now exist, but theme toggle, exact language-selector UX, scroll-to-top, copy-link actions, and other header affordances from the Vue site are still missing.
 - Full markdown parity is pending. The Qwik app currently renders article markdown with a basic server-side `markdown-it` pipeline, without the Vue site's custom Shiki, Twoslash, GitHub alerts, magic links, TOC, standalone figure transform, or embedded Vue component behavior.
+- Standalone markdown pages currently use a safe allowlist (`use`, `bookmarks`, `bar`) in Qwik. Pages with Vue-only embeds or richer markdown transforms still need dedicated ports before they can be exposed safely.
 - Home page parity is pending. The current Qwik locale landing pages use structured server-loaded summaries instead of rendering `pages/<locale>/index.md`.
 - Search, image lightbox, keyboard navigation, floating tooltips, scroll progress, and other client-side UX details remain to be ported.
 - The first Qwik `photos` route ships a basic grid and layout toggle, but it does not yet match the Vue gallery behavior, blurhash placeholders, or media interactions.

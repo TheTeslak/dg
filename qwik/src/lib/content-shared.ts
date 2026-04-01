@@ -40,8 +40,32 @@ export interface LocaleOverview {
   latestNotes: PostSummary[]
 }
 
+export interface MarkdownPageFrontmatter {
+  title?: string
+  display?: string
+  subtitle?: string
+  description?: string
+  class?: string
+}
+
+export interface MarkdownPageDocument {
+  slug: string
+  locale: SupportedLocale
+  title: string
+  display?: string
+  subtitle?: string
+  description?: string
+  className?: string
+  html: string
+  raw: string
+}
+
 export function formatDate(locale: SupportedLocale, date: string): string {
   return new Intl.DateTimeFormat(localeDateTag(locale), {
     dateStyle: 'medium',
   }).format(new Date(date))
+}
+
+export function stripSiteSuffix(title: string): string {
+  return title.replace(/\s*-\s*Anthony Fu\s*$/, '')
 }
