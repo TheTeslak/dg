@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es2020",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@qwik.dev/core",
+    "lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "strict": true,
+    "noEmit": true,
+    "outDir": "tmp",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "./*.d.ts", "./*.config.ts"]
+}

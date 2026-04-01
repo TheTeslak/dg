@@ -1,0 +1,32 @@
+{
+  "name": "@dg/qwik",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
+  },
+  "scripts": {
+    "build": "qwik build",
+    "build.client": "vite build",
+    "build.preview": "vite build --ssr src/entry.preview.tsx",
+    "dev": "vite --mode ssr",
+    "preview": "qwik build preview && vite preview",
+    "start": "vite --mode ssr",
+    "typecheck": "tsc --incremental --noEmit",
+    "qwik": "qwik"
+  },
+  "devDependencies": {
+    "@qwik.dev/core": "catalog:",
+    "@qwik.dev/optimizer": "catalog:",
+    "@qwik.dev/router": "catalog:",
+    "@types/node": "catalog:types",
+    "@unocss/reset": "catalog:frontend",
+    "fast-glob": "catalog:dev",
+    "gray-matter": "catalog:build",
+    "markdown-it": "catalog:build",
+    "ts-morph": "catalog:",
+    "typescript": "catalog:dev",
+    "unocss": "catalog:build",
+    "vite": "catalog:build"
+  }
+}

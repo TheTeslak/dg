@@ -1,0 +1,21 @@
+@import '@unocss/reset/tailwind.css';
+@import '../../src/styles/main.css';
+@import '../../src/styles/prose.css';
+@import '../../src/styles/markdown.css';
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  text-underline-offset: 0.2em;
+}
+
+.qwik-shell {
+  min-height: 100vh;
+}
+
+.qwik-shell main {
+  width: min(100%, 76rem);
+  margin: 0 auto;
+}

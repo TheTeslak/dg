@@ -3,14 +3,20 @@ catalogMode: prefer
 shellEmulator: true
 
 trustPolicy: no-downgrade
-
-packages: []
+packages:
+  - qwik
 
 catalog:
   '@fluent/bundle': ^0.19.1
+  '@playwright/test': 1.59.0
+  '@qwik.dev/core': 2.0.0-beta.30
+  '@qwik.dev/optimizer': 2.0.1-beta.0
+  '@qwik.dev/router': 2.0.0-beta.30
   fluent-vue: ^3.8.2
   minisearch: ^7.1.0
+  ts-morph: 23.0.0
   vite-ssg-sitemap: ^0.10.0
+  vitest: 3.2.4
 
 catalogs:
   build:
@@ -96,6 +102,7 @@ catalogs:
     '@types/node': ^25.0.3
     '@types/nprogress': ^0.2.3
     '@types/prompts': ^2.4.9
+
 onlyBuiltDependencies:
   - canvas
   - esbuild
