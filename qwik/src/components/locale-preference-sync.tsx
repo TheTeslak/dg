@@ -11,8 +11,8 @@ export const LocalePreferenceSync = component$<LocalePreferenceSyncProps>(
     useVisibleTask$(({ track }) => {
       track(() => locale)
       syncLocalePreference(locale)
-    })
+    }, { strategy: 'document-ready' })
 
-    return null
+    return <span hidden aria-hidden="true" />
   },
 )

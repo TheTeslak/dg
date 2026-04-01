@@ -26,19 +26,29 @@ export default component$(() => {
     )
   }
 
-  const title = page.display || stripSiteSuffix(page.title)
-  const wrapperClass = page.className || 'prose mx-auto max-w-3xl'
+  const title = page.display !== undefined
+    ? page.display
+    : stripSiteSuffix(page.title)
+  const showHeader = title !== ''
+  const wrapperClass = page.layoutFullWidth
+    ? (page.className || '')
+    : (page.className || 'prose m-auto')
+  const articleClass = [wrapperClass, 'slide-enter-content'].filter(Boolean).join(' ')
 
   return (
-    <article class={wrapperClass}>
-      <header class="mb-10">
-        <h1>{title}</h1>
-        {page.subtitle
-          ? (
-              <p class="text-lg op70">{page.subtitle}</p>
-            )
-          : null}
-      </header>
+    <article class={articleClass}>
+      {showHeader
+        ? (
+            <header class="mb-10">
+              <h1>{title}</h1>
+              {page.subtitle
+                ? (
+                    <p class="text-lg op70">{page.subtitle}</p>
+                  )
+                : null}
+            </header>
+          )
+        : null}
 
       <div dangerouslySetInnerHTML={page.html} />
     </article>

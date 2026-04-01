@@ -26,6 +26,10 @@ Guidelines for coding agents in this repository. Keep changes minimal, safe, and
 - Do not treat `temp/sponsors.json`, `scripts/sponsors-circles.ts`, or generated `src/data/sponsors-circles.json` as required parity blockers.
 - Do not rewrite hidden sections that are not currently exposed in the navbar.
 - Do not rewrite hidden tabs or hidden sections in the articles area that are not currently exposed to users.
+- Treat the currently hidden route entries as out of scope unless the user explicitly re-enables them:
+  - hidden navbar entries: `talks`, `sponsors-list`, `podcasts`, `demos`
+  - hidden article-area tabs: `talks`, `podcasts`, `streams`
+- Treat the hidden GitHub navbar icon as out of scope unless explicitly requested later.
 - If a feature is hidden in the current site and the user has not explicitly asked to bring it forward, omit it from the Qwik rewrite.
 
 ## Tech Stack

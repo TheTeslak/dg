@@ -76,6 +76,18 @@ catalogs:
     '@fluent/bundle':
       specifier: ^0.19.1
       version: 0.19.1
+    '@iconify-json/carbon':
+      specifier: ^1.2.20
+      version: 1.2.20
+    '@iconify-json/ph':
+      specifier: ^1.2.2
+      version: 1.2.2
+    '@iconify-json/ri':
+      specifier: ^1.2.10
+      version: 1.2.10
+    '@iconify-json/simple-icons':
+      specifier: ^1.2.76
+      version: 1.2.76
     '@playwright/test':
       specifier: 1.59.0
       version: 1.59.0
@@ -88,12 +100,21 @@ catalogs:
     '@qwik.dev/router':
       specifier: 2.0.0-beta.30
       version: 2.0.0-beta.30
+    '@unocss/preset-attributify':
+      specifier: 66.5.10
+      version: 66.5.10
+    '@unocss/preset-icons':
+      specifier: 66.5.10
+      version: 66.5.10
     fluent-vue:
       specifier: ^3.8.2
       version: 3.8.2
     minisearch:
       specifier: ^7.1.0
       version: 7.2.0
+    ts-morph:
+      specifier: 23.0.0
+      version: 23.0.0
     vite-ssg-sitemap:
       specifier: ^0.10.0
       version: 0.10.0
@@ -488,7 +509,7 @@ importers:
         specifier: catalog:dev
         version: 2.13.1
       ts-morph:
-        specifier: 23.0.0
+        specifier: 'catalog:'
         version: 23.0.0
       tsx:
         specifier: catalog:dev
@@ -541,6 +562,18 @@ importers:
 
   qwik:
     devDependencies:
+      '@iconify-json/carbon':
+        specifier: 'catalog:'
+        version: 1.2.20
+      '@iconify-json/ph':
+        specifier: 'catalog:'
+        version: 1.2.2
+      '@iconify-json/ri':
+        specifier: 'catalog:'
+        version: 1.2.10
+      '@iconify-json/simple-icons':
+        specifier: 'catalog:'
+        version: 1.2.76
       '@qwik.dev/core':
         specifier: 'catalog:'
         version: 2.0.0-beta.30(prettier@3.7.4)(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@3.2.4(@types/debug@4.1.12)(@types/node@25.0.3)(jiti@2.6.1)(jsdom@28.1.0(canvas@3.2.0))(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -553,6 +586,12 @@ importers:
       '@types/node':
         specifier: catalog:types
         version: 25.0.3
+      '@unocss/preset-attributify':
+        specifier: 'catalog:'
+        version: 66.5.10
+      '@unocss/preset-icons':
+        specifier: 'catalog:'
+        version: 66.5.10
       '@unocss/reset':
         specifier: catalog:frontend
         version: 66.5.10
@@ -566,7 +605,7 @@ importers:
         specifier: catalog:build
         version: 14.1.1
       ts-morph:
-        specifier: 23.0.0
+        specifier: 'catalog:'
         version: 23.0.0
       typescript:
         specifier: catalog:dev
@@ -1063,6 +1102,18 @@ packages:
   '@humanwhocodes/retry@0.4.2':
     resolution: {integrity: sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==}
     engines: {node: '>=18.18'}
+
+  '@iconify-json/carbon@1.2.20':
+    resolution: {integrity: sha512-wqyxKEbIRdzGdfCAwQqn8iSfO6jx0m1toZAAQdx1NFjxd6iFl1YY4eKI1woWt7XOxs7s7phMW530kDD867JZGw==}
+
+  '@iconify-json/ph@1.2.2':
+    resolution: {integrity: sha512-PgkEZNtqa8hBGjHXQa4pMwZa93hmfu8FUSjs/nv4oUU6yLsgv+gh9nu28Kqi8Fz9CCVu4hj1MZs9/60J57IzFw==}
+
+  '@iconify-json/ri@1.2.10':
+    resolution: {integrity: sha512-WWMhoncVVM+Xmu9T5fgu2lhYRrKTEWhKk3Com0KiM111EeEsRLiASjpsFKnC/SrB6covhUp95r2mH8tGxhgd5Q==}
+
+  '@iconify-json/simple-icons@1.2.76':
+    resolution: {integrity: sha512-lLRlA8yaf+1L5VCPRvR9lynoSklsddKHEylchmZJKdj/q2xVQ1ZAEJ8SCQlv9cbgtMefnlyM98U+8Si2aoFZPA==}
 
   '@iconify/json@2.2.456':
     resolution: {integrity: sha512-u2215knwHqSTgvRwkwziitJr5Js25KukLhW8C58fUGyNsD6P5EWoOb5nA0o8K8tzqUBi/622XTdf7wN2hmK+NA==}
@@ -5343,6 +5394,22 @@ snapshots:
   '@humanwhocodes/retry@0.3.1': {}
 
   '@humanwhocodes/retry@0.4.2': {}
+
+  '@iconify-json/carbon@1.2.20':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/ph@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/ri@1.2.10':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/simple-icons@1.2.76':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/json@2.2.456':
     dependencies:

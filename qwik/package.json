@@ -16,10 +16,16 @@
     "qwik": "qwik"
   },
   "devDependencies": {
+    "@iconify-json/carbon": "catalog:",
+    "@iconify-json/ph": "catalog:",
+    "@iconify-json/ri": "catalog:",
+    "@iconify-json/simple-icons": "catalog:",
     "@qwik.dev/core": "catalog:",
     "@qwik.dev/optimizer": "catalog:",
     "@qwik.dev/router": "catalog:",
     "@types/node": "catalog:types",
+    "@unocss/preset-attributify": "catalog:",
+    "@unocss/preset-icons": "catalog:",
     "@unocss/reset": "catalog:frontend",
     "fast-glob": "catalog:dev",
     "gray-matter": "catalog:build",

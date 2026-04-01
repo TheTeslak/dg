@@ -28,7 +28,7 @@ export default component$(() => {
       ),
       { replaceState: true },
     )
-  })
+  }, { strategy: 'document-ready' })
 
   return (
     <section class="mx-auto flex max-w-5xl flex-col gap-8">

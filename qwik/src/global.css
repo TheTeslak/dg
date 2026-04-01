@@ -15,7 +15,117 @@ a {
   min-height: 100vh;
 }
 
-.qwik-shell main {
-  width: min(100%, 76rem);
-  margin: 0 auto;
+.header h1 {
+  margin-bottom: 0;
+}
+
+.nav {
+  padding: 2rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto max-content;
+  box-sizing: border-box;
+}
+
+.nav > * {
+  margin: auto;
+}
+
+.nav img {
+  margin-bottom: 0;
+}
+
+.nav a,
+.nav button {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav a {
+  transition: opacity 0.2s ease;
+  opacity: 0.6;
+  outline: none;
+}
+
+.nav a:hover {
+  opacity: 1;
+  text-decoration-color: inherit;
+}
+
+.nav .right {
+  display: grid;
+  grid-gap: 1.2rem;
+  grid-auto-flow: column;
+  align-items: center;
+}
+
+.nav .right > * {
+  margin: auto;
+}
+
+.logo-path {
+  stroke-dashoffset: 1px;
+  stroke-dasharray: 350px 0;
+  animation: grow 10s ease forwards infinite;
+  transform-origin: center;
+  stroke: #303030;
+  animation-delay: 0s;
+}
+
+.dark .logo-path {
+  stroke: #fdfdfd;
+}
+
+.copyright {
+  min-height: 2.5rem;
+}
+
+.no-copyright ~ .copyright {
+  display: none;
+}
+
+@keyframes grow {
+  0% {
+    stroke-dashoffset: 1px;
+    stroke-dasharray: 0 350px;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  40% {
+    stroke-dasharray: 350px 0;
+  }
+
+  85% {
+    stroke-dasharray: 350px 0;
+  }
+
+  95%,
+  100% {
+    stroke-dasharray: 0 350px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-path {
+    animation: none !important;
+    stroke-dasharray: unset !important;
+  }
+}
+
+@media print {
+  .logo-path {
+    animation: none !important;
+    stroke-dasharray: unset !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .nav .right {
+    grid-gap: 0.9rem;
+  }
 }

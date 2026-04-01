@@ -1,14 +1,32 @@
 import type { DocumentHead } from '@qwik.dev/router'
+import type { SupportedLocale } from '../../../lib/locales'
 import { component$ } from '@qwik.dev/core'
 import { routeLoader$ } from '@qwik.dev/router'
 import { PostList } from '../../../components/post-list'
 import { SectionTabs } from '../../../components/section-tabs'
 import { isSupportedLocale } from '../../../lib/locales'
 
+const copy: Record<SupportedLocale, { title: string, description: string, empty: string }> = {
+  en: {
+    title: 'Notes',
+    description: 'Short-form notes rendered from the existing markdown archive.',
+    empty: 'No visible notes in this locale.',
+  },
+  ru: {
+    title: 'Заметки',
+    description: 'Короткие заметки, отрендеренные из существующего markdown-архива.',
+    empty: 'В этой локали нет видимых заметок.',
+  },
+  es: {
+    title: 'Notas',
+    description: 'Notas cortas renderizadas desde el archivo markdown existente.',
+    empty: 'No hay notas visibles en esta configuración regional.',
+  },
+}
+
 export const useNotes = routeLoader$(async ({ params }) => {
-  if (!isSupportedLocale(params.lang)) {
+  if (!isSupportedLocale(params.lang))
     return null
-  }
 
   const { listPosts } = await import('../../../lib/content.server')
   return {
@@ -29,28 +47,34 @@ export default component$(() => {
     )
   }
 
+  const page = copy[data.locale]
+
   return (
     <section class="mx-auto max-w-4xl">
       <SectionTabs locale={data.locale} current="notes" />
       <div class="prose mb-8 max-w-none">
-        <h1>Notes</h1>
-        <p>Short-form notes rendered from the existing markdown archive.</p>
+        <h1>{page.title}</h1>
+        <p>{page.description}</p>
       </div>
-      <PostList
-        locale={data.locale}
-        posts={data.posts}
-        emptyMessage="No visible notes in this locale."
-      />
+      <PostList locale={data.locale} posts={data.posts} emptyMessage={page.empty} />
     </section>
   )
 })
 
-export const head: DocumentHead = {
-  title: 'Notes',
-  meta: [
-    {
-      name: 'description',
-      content: 'Visible notes rendered by the Qwik rewrite.',
-    },
-  ],
+export const head: DocumentHead = ({ resolveValue }) => {
+  const data = resolveValue(useNotes)
+  const locale = data?.locale && isSupportedLocale(data.locale)
+    ? data.locale
+    : 'en'
+  const page = copy[locale]
+
+  return {
+    title: page.title,
+    meta: [
+      {
+        name: 'description',
+        content: page.description,
+      },
+    ],
+  }
 }
