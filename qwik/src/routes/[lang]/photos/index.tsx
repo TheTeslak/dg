@@ -1,7 +1,7 @@
 import type { DocumentHead } from '@qwik.dev/router'
 import type { SupportedLocale } from '../../../lib/locales'
-import { component$, useSignal } from '@qwik.dev/core'
-import { routeLoader$ } from '@qwik.dev/router'
+import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core'
+import { Link, routeLoader$ } from '@qwik.dev/router'
 import { PhotoGrid } from '../../../components/photo-grid'
 import { isSupportedLocale } from '../../../lib/locales'
 import { photos } from '../../../lib/photos'
@@ -11,23 +11,31 @@ const copy: Record<
   {
     title: string
     description: string
-    note: string
+    noteBefore: string
+    noteLink: string
+    toggleLabel: string
   }
 > = {
   en: {
     title: 'Photos',
     description: 'Photos by Anthony Fu.',
-    note: 'Thanks for being interested in these photos.',
+    noteBefore: 'Thank you for being interested in my photos. You can find the tools I use',
+    noteLink: 'here',
+    toggleLabel: 'Toggle photo layout',
   },
   ru: {
     title: 'Фото',
     description: 'Фотографии Anthony Fu.',
-    note: 'Спасибо за интерес к этим фотографиям.',
+    noteBefore: 'Спасибо за интерес к моим фотографиям. Список техники, которую я использую, можно найти',
+    noteLink: 'здесь',
+    toggleLabel: 'Переключить вид галереи',
   },
   es: {
     title: 'Fotos',
     description: 'Fotos de Anthony Fu.',
-    note: 'Gracias por interesarte por estas fotos.',
+    noteBefore: 'Gracias por interesarte por estas fotos. Puedes encontrar las herramientas que uso',
+    noteLink: 'aquí',
+    toggleLabel: 'Cambiar diseño de fotos',
   },
 }
 
@@ -45,6 +53,16 @@ export default component$(() => {
   const data = usePhotosPage().value
   const view = useSignal<'cover' | 'contain'>('cover')
 
+  useVisibleTask$(({ cleanup }) => {
+    const saved = window.localStorage.getItem('antfu-gallery-view')
+    if (saved === 'cover' || saved === 'contain')
+      view.value = saved
+
+    cleanup(() => {
+      window.localStorage.setItem('antfu-gallery-view', view.value)
+    })
+  }, { strategy: 'document-ready' })
+
   if (!data) {
     return (
       <section class="prose mx-auto max-w-3xl">
@@ -57,31 +75,42 @@ export default component$(() => {
   const page = copy[data.locale]
 
   return (
-    <section class="mx-auto max-w-6xl">
-      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div class="prose max-w-none">
-          <h1>{page.title}</h1>
-          <p>{page.description}</p>
-        </div>
-
+    <section class="mx-auto max-w-[125rem]">
+      <div class="absolute left-6 top-20 flex flex-col items-center justify-center gap-1 sm:fixed">
         <button
           type="button"
-          class="rounded-full border border-base px-4 py-2 transition-colors hover:bg-black/3 dark:hover:bg-white/6"
-          aria-label="Toggle photo layout"
+          title={page.toggleLabel}
+          aria-label={page.toggleLabel}
+          class="rounded-full p-2 op20 transition-colors hover:bg-[#8881] hover:op100"
           onClick$={() => {
             view.value = view.value === 'cover' ? 'contain' : 'cover'
+            window.localStorage.setItem('antfu-gallery-view', view.value)
           }}
         >
-          {view.value === 'cover' ? 'Contain' : 'Cover'}
+          <span
+            aria-hidden="true"
+            class={view.value === 'cover' ? 'i-ri-grid-line' : 'i-ri-layout-masonry-line'}
+          />
         </button>
       </div>
 
-      <PhotoGrid photos={data.photos} view={view.value} />
+      <div class="prose mx-auto">
+        <h1>{page.title}</h1>
+      </div>
 
-      <div class="prose mx-auto mt-10 max-w-3xl">
-        <p>
-          <em>{page.note}</em>
-        </p>
+      <div class="mt-[-2.5rem]">
+        <PhotoGrid photos={data.photos} view={view.value} />
+      </div>
+
+      <div class="prose mx-auto mt-10">
+        <div>
+          <em class="op50">
+            {page.noteBefore}
+            {' '}
+            <Link href={`/${data.locale}/use`}>{page.noteLink}</Link>
+            .
+          </em>
+        </div>
       </div>
     </section>
   )

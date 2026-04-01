@@ -11,7 +11,7 @@
 - Post/article parity is still partial. The Qwik article wrapper now supports place metadata, backlinks, referenced-by lists, comment links, and adjacent navigation, but translation notices, scroll-progress TOC, and some post-specific decorations from the Vue site are still missing.
 - Notes/articles listing parity is still partial. The Qwik lists now use year-grouped rows closer to the original site, but search-panel parity and language-filter affordances are still missing.
 - Search, image lightbox, keyboard navigation, floating tooltips, scroll progress, and other client-side UX details remain to be ported.
-- The first Qwik `photos` route ships a basic grid and layout toggle, but it does not yet match the Vue gallery behavior, blurhash placeholders, or media interactions.
+- The Qwik `photos` route now has a persisted layout toggle and blurhash placeholders, but it still does not match the Vue gallery behavior around lightbox/media interactions and deeper gallery affordances.
 - The visible `use`, `bookmarks`, `bar`, and `media` routes now exist in Qwik, but they still need deeper parity work around layout behavior, richer markdown rendering, and page-specific interactions.
 - Rich markdown articles that embed Vue-only components like `Tweet`, `YouTubeEmbed`, `GitHubLink`, `SponsorButtonCollective`, `QRCode*`, or custom demo components are still only partially represented in Qwik and remain one of the largest parity gaps.
 - Generative art, Pixi, Matter.js, WebGL, demos, and similar browser-heavy experiences remain to be ported and will need careful `useTask$()` / `useVisibleTask$()` boundaries.
