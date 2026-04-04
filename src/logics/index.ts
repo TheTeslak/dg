@@ -9,6 +9,8 @@ export const onlyLanguage = useLocalStorage('antfu-only-language', false)
 
 export const galleryView = useLocalStorage<'cover' | 'contain'>('antfu-gallery-view', 'cover')
 
+export const isLightboxOpen = ref(false)
+
 type DocumentWithOptionalViewTransition = Document & {
   startViewTransition?: Document['startViewTransition']
 }

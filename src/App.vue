@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isLightboxOpen } from '~/logics'
 import { useKeyboardNav } from '~/logics/keyboard-nav'
 
 const route = useRoute()
@@ -8,6 +9,8 @@ useKeyboardNav()
 const imageModel = ref<HTMLImageElement>()
 const imageAlt = ref<string>()
 const imageClasses = ref<string>()
+
+watch(imageModel, img => isLightboxOpen.value = !!img)
 
 function getRectCenter(el: HTMLElement) {
   const rect = el.getBoundingClientRect()

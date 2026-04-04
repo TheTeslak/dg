@@ -11,20 +11,16 @@ const photos = computed(() => {
     return raw.slice(0, props.limit)
   return raw
 })
-
-function toggleView() {
-  galleryView.value = galleryView.value === 'cover' ? 'contain' : 'cover'
-}
 </script>
 
 <template>
-  <div flex="~ gap-1 col items-center justify-center" absolute sm:fixed left-6 top-20>
+  <div class="flex justify-center mb-6 relative z-10 slide-enter">
     <button
-      title="Switch view"
-      rounded-full p2 op20 hover="op100 bg-#8881"
-      @click="toggleView"
+      class="flex items-center gap-2 px-4 py-2 rounded-full op40 hover:op80 transition-all duration-300 outline-none select-none"
+      @click="galleryView = galleryView === 'cover' ? 'contain' : 'cover'"
     >
-      <div :class="galleryView === 'cover' ? 'i-ri-grid-line' : 'i-ri-layout-masonry-line'" />
+      <div class="text-lg" :class="galleryView === 'cover' ? 'i-ri-layout-masonry-line' : 'i-ri-grid-line'" />
+      {{ galleryView === 'cover' ? $t('photos-view-contain') : $t('photos-view-cover') }}
     </button>
   </div>
   <PhotoGrid :photos="photos" :view="galleryView" />

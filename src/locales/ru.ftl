@@ -64,3 +64,6 @@ post-link-copied = скопировано
 
 heading-link = ссылка на заголовок
 heading-copied = скопировано
+
+photos-view-cover = Кадрировать
+photos-view-contain = Без обрезки

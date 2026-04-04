@@ -2,6 +2,7 @@ import { onKeyStroke, useLocalStorage } from '@vueuse/core'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getLocaleFromPath } from './i18n-path'
+import { isLightboxOpen } from './index'
 
 /**
  * Available art styles for background decoration.
@@ -31,11 +32,6 @@ export function isEditableTarget(target: EventTarget | null): boolean {
   if (target.isContentEditable)
     return true
   return false
-}
-
-function isImageLightboxOpen(): boolean {
-  // App.vue renders backdrop-blur-7 on the lightbox overlay
-  return !!document.querySelector('[class*="backdrop-blur"]')
 }
 
 /**
@@ -71,7 +67,7 @@ export function useKeyboardNav() {
   onKeyStroke('ArrowRight', (e) => {
     if (isEditableTarget(e.target))
       return
-    if (isImageLightboxOpen())
+    if (isLightboxOpen.value)
       return
 
     const idx = findNavIndex()
@@ -87,7 +83,7 @@ export function useKeyboardNav() {
   onKeyStroke('ArrowLeft', (e) => {
     if (isEditableTarget(e.target))
       return
-    if (isImageLightboxOpen())
+    if (isLightboxOpen.value)
       return
 
     const idx = findNavIndex()
@@ -104,7 +100,7 @@ export function useKeyboardNav() {
   onKeyStroke('ArrowDown', (e) => {
     if (isEditableTarget(e.target))
       return
-    if (isImageLightboxOpen())
+    if (isLightboxOpen.value)
       return
     // Only cycle if an art component is currently rendered
     if (!document.querySelector('[data-art]'))
@@ -120,7 +116,7 @@ export function useKeyboardNav() {
   onKeyStroke('ArrowUp', (e) => {
     if (isEditableTarget(e.target))
       return
-    if (isImageLightboxOpen())
+    if (isLightboxOpen.value)
       return
     if (!document.querySelector('[data-art]'))
       return

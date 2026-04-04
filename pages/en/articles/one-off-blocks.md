@@ -6,21 +6,7 @@ description: Reference for localized Vue components used for complex interactive
 type: note
 ---
 
-A quick reference for specialized Vue components. These blocks solve specific complex tasks — like interactive demos or galleries — keeping the core text template clean.
-
-## Structural & Index Components
-
-These are primarily used on hub/index pages to list content, not inside standard articles.
-
-### `<PhotoGalleryAll>`
-
-Renders a large masonry grid of all photos. Used in `photos-page.md`.
-
-```html
-<PhotoGalleryAll :limit="12" class="gap-1!" />
-```
-
-<PhotoGalleryAll :limit="12" class="gap-1!" />
+A quick reference for specialized Vue components. These blocks solve specific complex tasks — like interactive demos — keeping the core text template clean.
 
 ## One-off Interactive Demos
 

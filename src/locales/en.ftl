@@ -64,3 +64,6 @@ post-link-copied = copied
 
 heading-link = link to heading
 heading-copied = copied
+
+photos-view-cover = Crop to fit
+photos-view-contain = Do not crop

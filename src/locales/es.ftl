@@ -64,3 +64,6 @@ post-link-copied = copiado
 
 heading-link = enlace al título
 heading-copied = copiado
+
+photos-view-cover = Recortar
+photos-view-contain = Sin recortar
