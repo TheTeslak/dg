@@ -181,7 +181,7 @@ Luckily, if you are using ESLint, you can have the [`vue/no-watch-after-await`](
 
 ### Wrap the Async Function as "Reactive Sync"
 
-In some situations, your logic might be relying on the data that fetched asynchronously. In this way, you could consider using the [trick I have shared on VueDay 2021](/articles/composable-vue-vueday-2021#async-to-sync) to **turn your async function into a sync reactive state**.
+In some situations, your logic might be relying on the data that fetched asynchronously. In this way, you could consider using a trick to **turn your async function into a sync reactive state**.
 
 ```ts
 const data = await fetch('https://api.github.com/').then(r => r.json())

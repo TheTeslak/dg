@@ -191,13 +191,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/composable-vue-vueday-2021': RouteRecordInfo<
-      '/en/articles/composable-vue-vueday-2021',
-      '/en/articles/composable-vue-vueday-2021',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/destructuring-with-object-or-array': RouteRecordInfo<
       '/en/articles/destructuring-with-object-or-array',
       '/en/articles/destructuring-with-object-or-array',
@@ -453,6 +446,13 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/ohayo-tokyo': RouteRecordInfo<
       '/en/articles/ohayo-tokyo',
       '/en/articles/ohayo-tokyo',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/en/articles/one-off-blocks': RouteRecordInfo<
+      '/en/articles/one-off-blocks',
+      '/en/articles/one-off-blocks',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -1104,12 +1104,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/composable-vue-vueday-2021.md': {
-      routes:
-        | '/en/articles/composable-vue-vueday-2021'
-      views:
-        | never
-    }
     'pages/en/articles/destructuring-with-object-or-array.md': {
       routes:
         | '/en/articles/destructuring-with-object-or-array'
@@ -1329,6 +1323,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/ohayo-tokyo.md': {
       routes:
         | '/en/articles/ohayo-tokyo'
+      views:
+        | never
+    }
+    'pages/en/articles/one-off-blocks.md': {
+      routes:
+        | '/en/articles/one-off-blocks'
       views:
         | never
     }

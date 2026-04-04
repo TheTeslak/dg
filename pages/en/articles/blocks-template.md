@@ -106,6 +106,17 @@ You can apply UnoCSS utility classes directly to HTML tags to style text inline 
 
 **Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, <b important-text-hex-80BEDF>Quality</b>, and an opacity badge <span op75>(faded text)</span>.
 
+### Alternative Translations (Ruby Text)
+
+You can use HTML `<ruby>` tags to display tiny annotations (like translations or pronunciations) above the main text. This is a standard HTML feature and works with any language, such as writing English translations over Russian words.
+
+```html
+<ruby lang="ja">東京<rp>(</rp><rt>Tokyo</rt><rp>)</rp></ruby>
+<ruby lang="ru">Медведь<rp>(</rp><rt>Bear</rt><rp>)</rp></ruby>
+```
+
+**Result:** <ruby lang="ja">東京<rp>(</rp><rt>Tokyo</rt><rp>)</rp></ruby> and <ruby lang="ru">Медведь<rp>(</rp><rt>Bear</rt><rp>)</rp></ruby>.
+
 ### Lists
 
 **Unordered list:**
@@ -199,6 +210,74 @@ If you want a single large image that breaks out of the content container on des
 ```
 
 <img src="/images/ai-qrcode-final.jpg" class="img-wide" />
+
+### Dark Mode Inversion (`dark:filter-invert`)
+
+For SVG diagrams or charts designed for a light background, apply `dark:filter-invert` so colors automatically invert in dark mode. This attribute is preserved in the lightbox overlay.
+
+```html
+<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert />
+```
+
+<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert />
+
+### Media Card (`MediaCard`)
+
+A reusable card for embedding an image with metadata inline in an article. Not tied to any specific content type — works for books, people, products, or anything with an image and a title. Two layout variants:
+
+**1. Float variant (`variant="float"`)** — image floats left, text wraps around it. On mobile, it becomes a compact horizontal strip with text flowing below (no wrapping on narrow screens).
+
+```vue
+<MediaCard
+  variant="float"
+  image="https://covers.openlibrary.org/b/id/8739161-M.jpg"
+  title="Thinking, Fast and Slow"
+  subtitle="Daniel Kahneman"
+>
+Kahneman explains why we make systematic errors...
+</MediaCard>
+```
+
+Sample:
+
+<MediaCard variant="float" image="https://covers.openlibrary.org/b/id/8739161-M.jpg" title="Thinking, Fast and Slow" subtitle="Daniel Kahneman">
+
+The architecture of human cognition is governed by a fundamental duality: the interplay between immediate, heuristic-driven intuition and the deliberate, resource-intensive nature of logical analysis. This tension defines how we perceive external stimuli and construct our internal models of reality. While our primary cognitive mode operates through rapid, subconscious pattern recognition—the biological equivalent of an autopilot—it is precisely this efficiency that introduces systemic biases into our decision-making frameworks. Cognitive errors are not random failures but predictable ripples in the way our brains process complex information. By examining the mechanics of this internal friction, we can move beyond mere awareness and begin to implement robust mental scaffolds that safeguard our judgment against the invisible gravity of instinctual errors.
+
+</MediaCard>
+
+**2. Aside variant (default)** — horizontal card with image on the left and info on the right.
+
+```vue
+<MediaCard
+  image="https://covers.openlibrary.org/b/id/12818862-M.jpg"
+  title="The Master and Margarita"
+  subtitle="Mikhail Bulgakov · 1967"
+  description="A novel about the Devil's visit to Soviet Moscow. About cowardice, honesty, and immortality. One of the most quoted and important texts of 20th-century Russian literature."
+/>
+```
+
+Sample:
+
+<MediaCard
+  image="https://covers.openlibrary.org/b/id/12818862-M.jpg"
+  title="The Master and Margarita"
+  subtitle="Mikhail Bulgakov · 1967"
+  description="A novel about the Devil's visit to Soviet Moscow. About cowardice, honesty, and immortality. One of the most quoted and important texts of 20th-century Russian literature."
+/>
+
+**Props Reference:**
+
+| Prop          | Type                 | Description                                                                           |
+| ------------- | -------------------- | ------------------------------------------------------------------------------------- |
+| `variant`     | `'float' \| 'aside'` | Layout mode. Default: `aside`                                                         |
+| `image`       | `string`             | Image URL (required)                                                                  |
+| `title`       | `string`             | Card title (required)                                                                 |
+| `subtitle`    | `string`             | Secondary line (author, date, role, etc.)                                             |
+| `description` | `string`             | Description text (aside variant)                                                      |
+| `ratio`       | `string`             | Force aspect ratio (e.g. `"2/3"`, `"1/1"`). Default: auto (image natural proportions) |
+
+_The `ratio` prop is useful when images have inconsistent proportions. For example, `ratio="2/3"` for book covers or `ratio="1/1"` for avatars will crop and fit the image to that exact shape._
 
 ### Article Links (`ArticleLinks`)
 

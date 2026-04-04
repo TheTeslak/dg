@@ -7,6 +7,7 @@ useKeyboardNav()
 
 const imageModel = ref<HTMLImageElement>()
 const imageAlt = ref<string>()
+const imageClasses = ref<string>()
 
 function getRectCenter(el: HTMLElement) {
   const rect = el.getBoundingClientRect()
@@ -16,14 +17,32 @@ function getRectCenter(el: HTMLElement) {
   }
 }
 
+function getLightboxClasses(img: HTMLImageElement): string {
+  return img.className
+    .split(/\s+/)
+    .filter(cls => cls.includes('filter'))
+    .join(' ')
+}
+
 function setImageModel(img: HTMLImageElement) {
   imageModel.value = img
-  imageAlt.value = img.alt
-  const figure = img.closest('figure')
-  if (figure) {
-    const caption = figure.querySelector('figcaption')
-    if (caption?.textContent)
-      imageAlt.value ||= caption.textContent
+  imageClasses.value = getLightboxClasses(img)
+
+  // Show caption only for gallery/carousel photos, not standalone article images
+  const isGalleryPhoto = img.dataset.photoIndex != null
+    || !!img.closest('.photos')
+
+  if (isGalleryPhoto) {
+    imageAlt.value = img.alt
+    const figure = img.closest('figure')
+    if (figure) {
+      const caption = figure.querySelector('figcaption')
+      if (caption?.textContent)
+        imageAlt.value ||= caption.textContent
+    }
+  }
+  else {
+    imageAlt.value = undefined
   }
 }
 
@@ -102,7 +121,7 @@ onMounted(() => {
   <Transition name="fade">
     <div v-if="imageModel" fixed top-0 left-0 right-0 bottom-0 z-500 backdrop-blur-7 @click="imageModel = undefined">
       <div absolute top-0 left-0 right-0 bottom-0 bg-black:50 z--1 />
-      <img :src="imageModel.src" :alt="imageModel.alt" :class="imageModel.className" max-w-screen max-h-screen w-full h-full object-contain>
+      <img :src="imageModel.src" :alt="imageModel.alt" :class="imageClasses" max-w-screen max-h-screen w-full h-full object-contain>
       <div v-if="imageAlt" text-white bg-black:50 absolute right-5 bottom-5 px2 py1 flex justify-center items-center>
         {{ imageAlt }}
       </div>
