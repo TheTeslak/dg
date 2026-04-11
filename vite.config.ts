@@ -293,6 +293,29 @@ export default defineConfig({
           }
         })
 
+        // Warn if article images lack alt text
+        md.core.ruler.after('image_figures', 'image_alt_check', (state) => {
+          const id = state.env?.id || state.env?.path || ''
+          if (!isRealArticle(id))
+            return
+
+          const tokens = state.tokens
+          for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i]
+            if (token.type !== 'inline' || !token.children)
+              continue
+            for (const child of token.children) {
+              if (child.type !== 'image')
+                continue
+              const alt = child.content?.trim()
+              if (!alt) {
+                const src = child.attrGet('src') || '(unknown)'
+                warnFrontmatter(`[a11y] ${id}: image "${src}" is missing alt text (WCAG 1.1.1).`)
+              }
+            }
+          }
+        })
+
         // Custom ==highlight== syntax (Obsidian-style mark)
         // Converts ==text== to <mark>text</mark>, no external plugin needed.
         md.inline.ruler.before('emphasis', 'mark', (state, silent) => {

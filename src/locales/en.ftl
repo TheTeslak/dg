@@ -52,7 +52,7 @@ footer-copyright = 2026 © { -brand }
 
 intro-desc = Hey, I am { -brand }, a fanatical open sourceror.
 
-page-not-translated = This page hasn't been translated yet. Showing { $lang } version.
+page-not-translated = Not yet translated, showing { $lang } version
 post-comment-on = comment on
 post-link-telegram = Telegram
 post-link-mastodon = Mastodon

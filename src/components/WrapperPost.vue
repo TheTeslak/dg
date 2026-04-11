@@ -195,20 +195,16 @@ onMounted(() => {
   const tooltipDefault = fluent.format('heading-link')
   const tooltipCopied = fluent.format('heading-copied')
 
-  const headings = content.value!.querySelectorAll<HTMLElement>('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')
+  const headingSelector = 'h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'
+  const headings = content.value!.querySelectorAll<HTMLElement>(headingSelector)
   headings.forEach((heading) => {
     heading.setAttribute('data-tooltip', tooltipDefault)
+    // Keyboard accessibility for copy-link
+    heading.setAttribute('tabindex', '0')
+    heading.setAttribute('aria-description', 'Press Enter to copy link')
   })
 
-  useEventListener(content.value!, 'click', (event: MouseEvent & { target: HTMLElement }) => {
-    // Skip if clicking on the anchor # link itself — let handleAnchors deal with it
-    if (event.target.closest('a.header-anchor'))
-      return
-
-    const heading = event.target.closest<HTMLElement>('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')
-    if (!heading)
-      return
-
+  function copyHeadingLink(heading: HTMLElement) {
     const url = `${location.origin}${location.pathname}#${heading.id}`
     navigator.clipboard.writeText(url).then(() => {
       heading.setAttribute('data-tooltip', tooltipCopied)
@@ -216,7 +212,32 @@ onMounted(() => {
         heading.setAttribute('data-tooltip', tooltipDefault)
       }, 2000)
     })
+  }
+
+  useEventListener(content.value!, 'click', (event: MouseEvent & { target: HTMLElement }) => {
+    // Skip if clicking on the anchor # link itself — let handleAnchors deal with it
+    if (event.target.closest('a.header-anchor'))
+      return
+
+    const heading = event.target.closest<HTMLElement>(headingSelector)
+    if (!heading)
+      return
+
+    copyHeadingLink(heading)
   }, { passive: true })
+
+  // Keyboard support for copy-link
+  useEventListener(content.value!, 'keydown', (event: KeyboardEvent) => {
+    if (event.key !== 'Enter' && event.key !== ' ')
+      return
+
+    const heading = (event.target as HTMLElement).closest<HTMLElement>(headingSelector)
+    if (!heading)
+      return
+
+    event.preventDefault()
+    copyHeadingLink(heading)
+  })
 
   // ── Glossary: close on click outside ──
   useEventListener(document, 'click', (e: MouseEvent) => {
@@ -316,9 +337,9 @@ const ArtComponent = computed(() => {
     >
       <div v-for="backlink in backlinks" :key="backlink.path" class="backlink-header">
         <RouterLink :to="backlink.path" class="backlink-link">
-          <div i-ri:corner-left-up-line class="backlink-icon" />
+          <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
           <span>
-            <span v-if="isDraftPost(backlink.type)">🚧 </span>{{ backlink.title }}
+            <span v-if="isDraftPost(backlink.type)" role="img" aria-label="Draft">🚧 </span>{{ backlink.title }}
           </span>
           <span
             v-if="backlink.lang && backlink.lang !== currentLocale"
@@ -335,8 +356,8 @@ const ArtComponent = computed(() => {
       class="!-mt-8 slide-enter-50"
     >
       <span class="opacity-50">
-        <span v-if="isDraftPost(frontmatter.type)">🚧 </span>
-        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+        <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
+        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
       </span>
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
@@ -442,12 +463,12 @@ const ArtComponent = computed(() => {
     <!-- Referenced By (articles that backlink to this one) -->
     <div v-if="referencedBy.length" class="referenced-by mt-9">
       <div class="referenced-by-label">
-        <div i-ri:links-line class="referenced-by-label-icon" />
+        <div i-ri:links-line class="referenced-by-label-icon" aria-hidden="true" />
         <span>{{ $t('post-referenced-by') }}</span>
       </div>
       <div v-for="ref in referencedBy" :key="ref.path" class="referenced-by-item">
         <RouterLink :to="ref.path" class="referenced-by-link">
-          <div i-ri:corner-left-up-line class="backlink-icon" />
+          <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
           <span>{{ ref.title }}</span>
         </RouterLink>
         <span
@@ -455,8 +476,8 @@ const ArtComponent = computed(() => {
           class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
         >{{ ref.lang.toUpperCase() }}</span>
         <span v-if="ref.date" class="referenced-by-date">
-          <span v-if="isDraftPost(ref.type)">🚧 </span>
-          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)">🌱 </span>{{ formatDate(ref.date, false) }}
+          <span v-if="isDraftPost(ref.type)" role="img" aria-label="Draft">🚧 </span>
+          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(ref.date, false) }}
         </span>
       </div>
     </div>

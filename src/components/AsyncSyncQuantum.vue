@@ -180,6 +180,7 @@ onMounted(() => {
     >
       <canvas
         ref="canvas"
+        aria-hidden="true"
         ma
         transition-all
         duration-300

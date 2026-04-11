@@ -119,6 +119,7 @@ const modKey = computed(() => {
         <button
           class="search-trigger"
           :title="`${fluent.format('search-placeholder')} (${modKey}+K)`"
+          :aria-label="fluent.format('search-placeholder')"
           @click="openSearch"
         >
           <div i-ri:search-line />
@@ -134,10 +135,12 @@ const modKey = computed(() => {
           type="text"
           class="search-input"
           :placeholder="fluent.format('search-placeholder')"
+          :aria-label="fluent.format('search-placeholder')"
         >
         <button
           class="search-close-btn"
           :title="fluent.format('search-close')"
+          :aria-label="fluent.format('search-close')"
           @click="closeSearch"
         >
           <div i-ri:close-line />
@@ -166,6 +169,11 @@ const modKey = computed(() => {
 }
 .search-trigger:hover {
   opacity: 0.7;
+}
+
+.search-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .search-input-container {
@@ -219,6 +227,11 @@ const modKey = computed(() => {
 }
 .search-close-btn:hover {
   opacity: 1;
+}
+
+.search-close-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 @keyframes search-expand {

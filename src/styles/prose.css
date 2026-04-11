@@ -61,7 +61,7 @@
   content: counter(list-item, var(--list-counter-style, decimal)) '.';
   position: absolute;
   font-weight: 400;
-  color: #6b7280;
+  color: var(--fg-light, #888);
   left: 0;
 }
 .prose ul > li {
@@ -71,7 +71,7 @@
 .prose ul > li::before {
   content: '';
   position: absolute;
-  background-color: #d1d5db;
+  background-color: var(--fg-light, #888);
   border-radius: 50%;
   width: 0.375em;
   height: 0.375em;

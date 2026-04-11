@@ -88,9 +88,9 @@ function getDurationLabel(duration?: Post['duration']) {
 </script>
 
 <template>
-  <ul>
+  <ul role="list">
     <template v-if="!posts.length">
-      <div py2 op50>
+      <div role="listitem" py2 op50>
         {{ $t('blog-nothing-here') }}
       </div>
     </template>
@@ -98,6 +98,7 @@ function getDurationLabel(duration?: Post['duration']) {
     <template v-for="route, idx in posts" :key="route.path">
       <div
         v-if="!isSameGroup(route, posts[idx - 1])"
+        role="listitem"
         select-none relative h20 pointer-events-none slide-enter
         :style="{
           '--enter-stage': idx - 2,
@@ -107,6 +108,7 @@ function getDurationLabel(duration?: Post['duration']) {
         <span text-8em color-transparent absolute left--3rem top--2rem font-bold text-stroke-2 text-stroke-hex-aaa op10>{{ getGroupName(route) }}</span>
       </div>
       <div
+        role="listitem"
         class="slide-enter"
         :style="{
           '--enter-stage': idx,
@@ -126,7 +128,7 @@ function getDurationLabel(duration?: Post['duration']) {
           "
           class="item block font-normal mb-6 mt-2 no-underline"
         >
-          <li
+          <div
             class="no-underline"
             flex="~ col md:row gap-2 md:items-center"
           >
@@ -142,6 +144,7 @@ function getDurationLabel(duration?: Post['duration']) {
                 align-middle op50 flex-none text-xs ml--1.5
                 i-carbon-arrow-up-right
                 title="External"
+                aria-hidden="true"
               />
             </div>
 
@@ -166,8 +169,8 @@ function getDurationLabel(duration?: Post['duration']) {
               />
 
               <span text-xl op60 ws-nowrap>
-                <span v-if="isDraftPost(route.type)">🚧 </span>
-                <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)">🌱 </span>{{ formatDate(route.date, true) }}
+                <span v-if="isDraftPost(route.type)" role="img" aria-label="Draft">🚧 </span>
+                <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(route.date, true) }}
               </span>
               <span v-if="getDurationLabel(route.duration)" text-xl op60 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
               <span v-if="route.platform" text-xl op60 ws-nowrap>· {{ route.platform }}</span>
@@ -178,7 +181,7 @@ function getDurationLabel(duration?: Post['duration']) {
                 class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto md:hidden"
               >{{ getPostLangTag(route) }}</span>
             </div>
-          </li>
+          </div>
           <div v-if="route.place" op45 text-xl hidden mt--2 md:block>
             {{ route.place }}
           </div>

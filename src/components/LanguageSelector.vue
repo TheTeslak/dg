@@ -38,12 +38,17 @@ async function changeLang(lang: string) {
 
 <template>
   <VDropdown :distance="6" placement="bottom-end">
-    <button
-      title="Change Language"
-      class="nav-item select-none op50 hover:op100 transition outline-none"
-    >
-      <div i-carbon-language text-xl />
-    </button>
+    <template #default="{ shown }">
+      <button
+        title="Change Language"
+        aria-label="Change Language"
+        class="nav-item select-none op75 hover:op100 transition outline-none"
+        aria-haspopup="menu"
+        :aria-expanded="shown"
+      >
+        <div i-carbon-language text-xl />
+      </button>
+    </template>
 
     <template #popper="{ hide }">
       <div class="bg-base border border-base rounded py-2 min-w-35 shadow-lg flex flex-col">

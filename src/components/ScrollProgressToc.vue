@@ -9,10 +9,11 @@ defineProps<{
 const route = useRoute()
 
 const isHovered = ref(false)
+const isFocused = ref(false)
 const isNearLeftEdge = ref(false)
 const LEFT_REVEAL_ZONE_PX = 240
 const trackEl = ref<HTMLElement>()
-const isAwake = computed(() => isHovered.value || isNearLeftEdge.value)
+const isAwake = computed(() => isHovered.value || isNearLeftEdge.value || isFocused.value)
 
 const scrollY = ref(0)
 const docHeight = ref(1)
@@ -226,6 +227,8 @@ onMounted(() => {
     :class="{ 'is-hovered': isHovered, 'is-awake': isAwake }"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
+    @focusin="isFocused = true"
+    @focusout="isFocused = false"
   >
     <div class="table-of-contents-anchor scroll-toc-anchor-hint">
       <div class="i-ri-menu-2-fill" />
@@ -277,8 +280,8 @@ onMounted(() => {
           />
         </svg>
 
-        <!-- Heading labels (positioned over the SVG, appear on hover) -->
-        <div
+        <!-- Heading labels (positioned over the SVG, appear on focus/hover) -->
+        <button
           v-for="(heading, i) in headings"
           :key="heading.id"
           class="scroll-toc-item"
@@ -287,10 +290,12 @@ onMounted(() => {
             'is-h3': heading.level === 3,
           }"
           :style="{ top: `${dotPositions[i] + DOT_HEIGHT / 2}px` }"
+          :aria-label="heading.text"
+          :aria-current="i === activeIndex ? 'true' : undefined"
           @click="scrollToHeading(heading.id)"
         >
           <span class="scroll-toc-label">{{ heading.text }}</span>
-        </div>
+        </button>
       </div>
     </div>
   </div>
@@ -352,6 +357,8 @@ onMounted(() => {
               'is-active': i === activeIndex,
               'is-h3': heading.level === 3,
             }"
+            :aria-label="heading.text"
+            :aria-current="i === activeIndex ? 'true' : undefined"
             @click="scrollToHeading(heading.id)"
           >
             {{ heading.text }}
@@ -503,6 +510,12 @@ html.dark .scroll-toc-dot.is-active {
   transform: translateY(-50%);
   cursor: pointer;
   padding: 2px 0;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  text-align: left;
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 .scroll-toc-label {
@@ -554,8 +567,8 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
   text-underline-offset: 3px;
 }
 
-/* Show labels on hover */
-.scroll-toc.is-hovered .scroll-toc-label {
+/* Show labels on focus/hover */
+.scroll-toc.is-awake .scroll-toc-label {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
@@ -575,7 +588,7 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
     transform 0.3s ease;
 }
 
-.scroll-toc.is-hovered .scroll-toc-title {
+.scroll-toc.is-awake .scroll-toc-title {
   opacity: 1;
   transform: translateX(0);
 }

@@ -18,8 +18,10 @@ function copy() {
   <div ref="el" class="gap-1 items-center">
     <slot />
     <button
-      title="Copy" inline ml2 op30 hover:op100 text-sm transition
-      :class="copied ? 'i-carbon-checkmark text-green' : 'i-carbon-copy'" @click="copy()"
-    />
+      title="Copy" aria-label="Copy" inline ml2 op30 hover:op100 text-sm transition
+      @click="copy()"
+    >
+      <div :class="copied ? 'i-carbon-checkmark text-green' : 'i-carbon-copy'" aria-hidden="true" />
+    </button>
   </div>
 </template>

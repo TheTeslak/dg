@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
     <RouterLink
       class="w-12 h-12 absolute lg:fixed m-5 select-none outline-none"
       :to="`/${currentLocale}`"
-      focusable="false"
+      aria-label="Home"
     >
       <Logo />
     </RouterLink>
@@ -80,12 +80,13 @@ onBeforeUnmount(() => {
       <button
         class="flex items-center justify-center w-10 h-10 hover-bg-hex-8883 rounded-full transition duration-300"
         :title="$t('action-to-top')"
+        :aria-label="$t('action-to-top')"
         @click="toTop()"
       >
         <div i-ri-arrow-up-line />
       </button>
     </div>
-    <nav class="nav">
+    <nav class="nav" role="navigation" aria-label="Main Navigation">
       <div class="spacer" />
       <div class="right" print:op0>
         <RouterLink :to="`/${currentLocale}/notes`" :title="$t('nav-blog')">
@@ -158,16 +159,24 @@ onBeforeUnmount(() => {
   margin-bottom: 0;
 }
 
-.nav a {
+.nav a,
+.nav button {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
   transition: opacity 0.2s ease;
-  opacity: 0.6;
+  opacity: 0.75;
   outline: none;
 }
 
-.nav a:hover {
+.nav a:focus-visible,
+.nav button:focus-visible {
+  outline: 2px solid rgba(125, 125, 125, 0.4);
+  outline-offset: 4px;
+}
+
+.nav a:hover,
+.nav button:hover {
   opacity: 1;
   text-decoration-color: inherit;
 }

@@ -87,9 +87,10 @@ export const createApp = ViteSSG(
             currentPrimary,
             ...currentBundles.filter(b => b.locales[0] !== targetLocale),
           ]
-
-          document.querySelector('html')?.setAttribute('lang', targetLocale)
         }
+
+        // Always sync <html lang> with the current route locale (WCAG 3.1.1)
+        document.querySelector('html')?.setAttribute('lang', targetLocale)
 
         NProgress.start()
         next()

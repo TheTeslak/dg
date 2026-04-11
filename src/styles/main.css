@@ -206,6 +206,14 @@ html:not(.dark) [img-dark] {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html:not(.no-sliding) [slide-enter],
+  html:not(.no-sliding) .slide-enter,
+  html:not(.no-sliding) .slide-enter-content > * {
+    animation: none !important;
+  }
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
