@@ -1,6 +1,6 @@
 -brand = Teslak
 
-meta-description = Портфолио и блог { -brand }
+meta-description = Блог { -brand }
 
 nav-blog = Блог
 nav-articles = Статьи
@@ -14,7 +14,7 @@ nav-photos = Фото
 nav-sponsors = Спонсоры
 nav-chat = Чат
 
-action-toggle-theme = Переключить тему
+action-toggle-theme = Сменить тему
 action-to-top = Наверх
 action-back-to-all = Ко всему
 

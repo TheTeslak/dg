@@ -1,6 +1,6 @@
 -brand = Teslak
 
-meta-description = { -brand }'s Portfolio and Blog
+meta-description = { -brand }'s Blog
 
 nav-blog = Blog
 nav-articles = Articles
