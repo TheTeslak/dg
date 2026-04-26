@@ -22,6 +22,7 @@ defineProps<{
   border-radius: 0.5rem;
   margin: 1.25em 0;
   overflow: hidden;
+  transition: border-radius 0.25s ease;
 }
 
 .spoiler-summary {
@@ -64,6 +65,7 @@ defineProps<{
   padding: 0 1em 0.8em;
   font-size: inherit;
   color: var(--fg);
+  overflow: hidden;
 }
 
 /* Remove extra top margin from the first child inside spoiler content */

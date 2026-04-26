@@ -61,6 +61,7 @@ const frontmatterKnownKeys = new Set([
   'radio',
   'recording',
   'redirect',
+  'sources',
   'subtitle',
   'tags',
   'telegram',
@@ -314,6 +315,204 @@ export default defineConfig({
               }
             }
           }
+        })
+
+        // ── Sources block: assign IDs to external links ──
+        // Assigns ID to external links for sources back-referencing.
+        md.core.ruler.after('image_alt_check', 'source_link_ids', (state) => {
+          const id = state.env?.id || state.env?.path || ''
+          if (!isRealArticle(id))
+            return
+
+          // Check for sources block presence
+          let hasSourcesBlock = false
+          for (const token of state.tokens) {
+            if (token.type === 'html_block' && token.content.includes('<!-- sources -->')) {
+              hasSourcesBlock = true
+              break
+            }
+          }
+          if (!hasSourcesBlock)
+            return
+
+          // Find index to scan links before sources block
+          let sourcesStartIdx = -1
+          for (let i = 0; i < state.tokens.length; i++) {
+            if (state.tokens[i].type === 'html_block' && state.tokens[i].content.includes('<!-- sources -->')) {
+              sourcesStartIdx = i
+              break
+            }
+          }
+
+          const linkMap = new Map<string, string[]>()
+          const linkOrder: string[] = [] // URLs in first appearance order
+          let refCounter = 0
+
+          for (let i = 0; i < sourcesStartIdx; i++) {
+            const token = state.tokens[i]
+            if (token.type !== 'inline' || !token.children)
+              continue
+            for (const child of token.children) {
+              // Markdown links
+              if (child.type === 'link_open') {
+                const href = child.attrGet('href')
+                if (!href || !/^https?:\/\//.test(href))
+                  continue
+
+                const refId = `src-ref-${++refCounter}`
+                child.attrSet('id', refId)
+
+                const ids = linkMap.get(href) || []
+                ids.push(refId)
+                linkMap.set(href, ids)
+
+                if (!linkOrder.includes(href))
+                  linkOrder.push(href)
+              }
+              // HTML inline links
+              else if (child.type === 'html_inline' && child.content.startsWith('<a ')) {
+                const hrefMatch = child.content.match(/href="(https?:\/\/[^"]+)"/)
+                if (!hrefMatch)
+                  continue
+                const href = hrefMatch[1]
+
+                const refId = `src-ref-${++refCounter}`
+                // Inject ID into tag
+                child.content = child.content.replace(/^<a /, `<a id="${refId}" `)
+
+                const ids = linkMap.get(href) || []
+                ids.push(refId)
+                linkMap.set(href, ids)
+
+                if (!linkOrder.includes(href))
+                  linkOrder.push(href)
+              }
+            }
+          }
+
+          state.env.sourceLinkMap = linkMap
+          state.env.sourceLinkOrder = linkOrder
+        })
+
+        // ── Sources block: render the spoiler with back-references ──
+        // Renders sources spoiler with back-references.
+        md.core.ruler.after('source_link_ids', 'sources_block', (state) => {
+          const id = state.env?.id || state.env?.path || ''
+          if (!isRealArticle(id))
+            return
+
+          const linkMap: Map<string, string[]> | undefined = state.env.sourceLinkMap
+          if (!linkMap)
+            return
+
+          // Find block markers
+          let startIdx = -1
+          let endIdx = -1
+          for (let i = 0; i < state.tokens.length; i++) {
+            const token = state.tokens[i]
+            if (token.type === 'html_block') {
+              if (startIdx === -1 && token.content.trim().startsWith('<!-- sources'))
+                startIdx = i
+              else if (startIdx !== -1 && token.content.trim().startsWith('<!-- /sources'))
+                endIdx = i
+            }
+          }
+
+          if (startIdx === -1 || endIdx === -1) {
+            // Check frontmatter validity
+            const resolved = normalizedFrontmatterById.get(resolve(id))
+            if (resolved?.sources)
+              warnFrontmatter(`[sources] ${id}: frontmatter has "sources: true" but no <!-- sources --> block found.`)
+            return
+          }
+
+          // Extract source links
+          const sourceEntries: { title: string, url: string }[] = []
+          for (let i = startIdx + 1; i < endIdx; i++) {
+            const token = state.tokens[i]
+            if (token.type !== 'inline' || !token.children)
+              continue
+            for (let c = 0; c < token.children.length; c++) {
+              const child = token.children[c]
+              if (child.type !== 'link_open')
+                continue
+              const href = child.attrGet('href')
+              if (!href)
+                continue
+              // Collect title text
+              let title = ''
+              for (let t = c + 1; t < token.children.length; t++) {
+                if (token.children[t].type === 'link_close')
+                  break
+                if (token.children[t].type === 'text' || token.children[t].type === 'code_inline')
+                  title += token.children[t].content
+              }
+              sourceEntries.push({ title: title || href, url: href })
+            }
+          }
+
+          if (sourceEntries.length === 0)
+            return
+
+          // Warn on unreferenced sources
+          for (const entry of sourceEntries) {
+            if (!linkMap.has(entry.url))
+              warnFrontmatter(`[sources] ${id}: source URL "${entry.url}" not found in article body.`)
+          }
+
+          // Resolve localized title
+          const localeMatch = id.match(/pages[\\/]([a-z]{2})[\\/]/)
+          const locale = localeMatch?.[1] || 'en'
+          const titleText: Record<string, string> = { ru: 'Источники', en: 'Sources', es: 'Fuentes' }
+          const headerText = `${titleText[locale] || titleText.en}`
+
+          const esc = md.utils.escapeHtml
+          let html = `<details class="spoiler sources-block">\n`
+          html += `<summary class="spoiler-summary">`
+          html += `<div class="spoiler-arrow i-ri:arrow-right-s-line"></div>`
+          html += `<span>${esc(headerText)}</span>`
+          html += `</summary>\n`
+          html += `<div class="spoiler-content"><div class="sources-list">\n`
+
+          for (const entry of sourceEntries) {
+            const refIds = linkMap.get(entry.url)
+            let backrefHtml: string
+            if (refIds && refIds.length > 1) {
+              // Multi-reference back-links
+              const subscripts = '₁₂₃₄₅₆₇₈₉'
+              backrefHtml = refIds.map((id, i) => {
+                const sub = i < subscripts.length ? subscripts[i] : `₊`
+                return `<a href="#${esc(id)}" class="source-backref" aria-label="Go to reference ${i + 1}">↑${sub}</a>`
+              }).join(' ')
+            }
+            else if (refIds && refIds.length === 1) {
+              backrefHtml = `<a href="#${esc(refIds[0])}" class="source-backref" aria-label="Go to reference">↑</a>`
+            }
+            else {
+              backrefHtml = `<span class="source-backref source-backref-orphan" title="Link not found in article">↑</span>`
+            }
+
+            let domain = ''
+            try {
+              domain = new URL(entry.url).hostname.replace(/^www\./, '')
+            }
+            catch {
+              domain = entry.url
+            }
+
+            html += `<div class="source-item">`
+            html += `<span class="source-backrefs">${backrefHtml}</span> `
+            html += `<a href="${esc(entry.url)}" target="_blank" rel="noopener" class="source-title">${esc(entry.title)}</a>`
+            html += `<span class="source-domain">${esc(domain)}</span>`
+            html += `</div>\n`
+          }
+
+          html += `</div></div>\n</details>\n`
+
+          // Replace all tokens from startIdx to endIdx (inclusive) with a single html_block
+          const replacementToken = new state.Token('html_block', '', 0)
+          replacementToken.content = html
+          state.tokens.splice(startIdx, endIdx - startIdx + 1, replacementToken)
         })
 
         // Custom ==highlight== syntax (Obsidian-style mark)

@@ -56,7 +56,7 @@ page-not-translated = Not yet translated, showing { $lang } version
 post-comment-on = comment on
 post-link-telegram = Telegram
 post-link-mastodon = Mastodon
-post-referenced-by = Referenced by
+post-referenced-by = More from me on this
 post-updated = updated
 post-draft-notice = Draft
 post-copy-link = copy link
@@ -67,3 +67,5 @@ heading-copied = copied
 
 photos-view-cover = Crop to fit
 photos-view-contain = Do not crop
+
+sources-title = Sources

@@ -22,7 +22,6 @@ const route = useRoute()
 const content = ref<HTMLDivElement>()
 const marginNoteRef = ref<HTMLElement>()
 
-// ── Glossary margin-note state ──
 const activeGlossary = ref<GlossaryState | null>(null)
 const marginNoteTop = ref(0)
 const isMobileGlossary = ref(false)
@@ -40,7 +39,7 @@ function updateMarginNotePosition() {
   const termRect = activeGlossary.value.termEl.getBoundingClientRect()
   const rawTop = termRect.top
 
-  // Clamp to viewport bounds after the note renders
+  // Ensure note stays within viewport bounds
   nextTick(() => {
     const noteEl = marginNoteRef.value
     if (!noteEl)
@@ -77,8 +76,7 @@ const localizedDuration = computed(() => {
 })
 
 /**
- * Determine the content type from frontmatter.
- * Notes have type 'note', articles have no type (defaults to 'blog').
+ * 'note' requires explicit type in frontmatter, 'blog' is the default.
  */
 const postType = computed(() => {
   const type = frontmatter.type || 'blog'
@@ -87,9 +85,6 @@ const postType = computed(() => {
   return 'blog'
 })
 
-/**
- * Link back to the listing page for the current content type.
- */
 const backToAllPath = computed(() => {
   if (postType.value === 'note')
     return `/${currentLocale.value}/notes`
@@ -97,13 +92,11 @@ const backToAllPath = computed(() => {
 })
 
 /**
- * SEO: Generate <link rel="alternate" hreflang="xx"> tags for all locales.
- * Tells search engines that this page exists in multiple languages,
- * preventing duplicate content penalties and enabling proper language indexing.
+ * Generate hreflang tags to prevent duplicate content penalties and enable proper language indexing.
  */
 const hreflangLinks = computed(() => {
   const path = route.path
-  // Extract the locale-independent part: /en/articles/foo → /articles/foo
+  // Strip locale prefix to build alternate language URLs
   const match = path.match(/^\/(en|ru|es)(\/.+)$/)
   if (!match)
     return []
@@ -189,9 +182,93 @@ onMounted(() => {
   }
 
   useEventListener(window, 'hashchange', navigate)
+
+  // Intercept summary click to animate height via WAAPI. Native toggle is too abrupt.
+  function animateSpoiler(details: HTMLDetailsElement) {
+    const summary = details.querySelector<HTMLElement>('summary')
+    const body = details.querySelector<HTMLElement>('.spoiler-content')
+    if (!summary || !body)
+      return
+
+    let running: Animation | null = null
+
+    summary.addEventListener('click', (e) => {
+      e.preventDefault()
+
+      if (running) {
+        running.cancel()
+        running = null
+      }
+
+      const isOpen = details.hasAttribute('open')
+
+      if (!isOpen) {
+        details.setAttribute('open', '')
+        const h = body.scrollHeight
+        running = body.animate(
+          [
+            { height: '0px', opacity: 0 },
+            { height: `${h}px`, opacity: 1 },
+          ],
+          { duration: 280, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+        )
+        running.onfinish = () => {
+          running = null
+        }
+      }
+      else {
+        const h = body.scrollHeight
+        running = body.animate(
+          [
+            { height: `${h}px`, opacity: 1 },
+            { height: '0px', opacity: 0 },
+          ],
+          { duration: 220, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' },
+        )
+        running.onfinish = () => {
+          details.removeAttribute('open')
+          running!.cancel()
+          running = null
+        }
+      }
+    })
+  }
+
+  const spoilers = content.value?.querySelectorAll<HTMLDetailsElement>('details.spoiler')
+  spoilers?.forEach(animateSpoiler)
+
+  useEventListener(content.value!, 'click', (e: MouseEvent) => {
+    const backref = (e.target as HTMLElement).closest('a.source-backref')
+    if (!backref)
+      return
+
+    e.preventDefault()
+    const targetId = backref.getAttribute('href')?.slice(1)
+    if (!targetId)
+      return
+
+    const target = document.getElementById(targetId)
+    if (!target)
+      return
+
+    const y = target.getBoundingClientRect().top + window.scrollY - 80
+    window.scrollTo({ top: y, behavior: 'smooth' })
+
+    target.classList.remove('source-highlight', 'source-highlight-fade')
+    target.classList.add('source-highlight')
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        target.classList.add('source-highlight-fade')
+        target.addEventListener('transitionend', () => {
+          target.classList.remove('source-highlight', 'source-highlight-fade')
+        }, { once: true })
+      }, 300)
+    })
+  }, { passive: false })
+
   useEventListener(content.value!, 'click', handleAnchors, { passive: false })
 
-  // Heading copy-link feature
+  // Heading copy-link
   const tooltipDefault = fluent.format('heading-link')
   const tooltipCopied = fluent.format('heading-copied')
 
@@ -199,7 +276,6 @@ onMounted(() => {
   const headings = content.value!.querySelectorAll<HTMLElement>(headingSelector)
   headings.forEach((heading) => {
     heading.setAttribute('data-tooltip', tooltipDefault)
-    // Keyboard accessibility for copy-link
     heading.setAttribute('tabindex', '0')
     heading.setAttribute('aria-description', 'Press Enter to copy link')
   })
@@ -226,7 +302,6 @@ onMounted(() => {
     copyHeadingLink(heading)
   }, { passive: true })
 
-  // Keyboard support for copy-link
   useEventListener(content.value!, 'keydown', (event: KeyboardEvent) => {
     if (event.key !== 'Enter' && event.key !== ' ')
       return
@@ -239,7 +314,6 @@ onMounted(() => {
     copyHeadingLink(heading)
   })
 
-  // ── Glossary: close on click outside ──
   useEventListener(document, 'click', (e: MouseEvent) => {
     if (!activeGlossary.value)
       return
@@ -253,11 +327,10 @@ onMounted(() => {
     closeGlossary()
   })
 
-  // ── Glossary: mobile detection ──
   checkMobileGlossary()
   useEventListener(window, 'resize', checkMobileGlossary)
 
-  // ── Glossary: lock body scroll when mobile sheet is open ──
+  // Lock body scroll when mobile sheet is open
   watch(activeGlossary, (val) => {
     if (val && isMobileGlossary.value) {
       document.body.style.overflow = 'hidden'
@@ -396,10 +469,10 @@ const ArtComponent = computed(() => {
     <slot />
   </article>
 
-  <!-- Glossary: desktop margin note + mobile bottom sheet -->
+  <!-- Glossary -->
   <ClientOnly>
     <Teleport to="body">
-      <!-- Desktop: fixed right-margin note (mirrors ToC on left) -->
+      <!-- Margin note (mirrors ToC layout) -->
       <Transition name="margin-note">
         <div
           v-if="activeGlossary && !isMobileGlossary"
@@ -425,7 +498,7 @@ const ArtComponent = computed(() => {
         </div>
       </Transition>
 
-      <!-- Mobile: backdrop + bottom sheet -->
+      <!-- Mobile bottom sheet -->
       <Transition name="glossary-backdrop">
         <div
           v-if="activeGlossary && isMobileGlossary"
@@ -482,7 +555,7 @@ const ArtComponent = computed(() => {
       </div>
     </div>
 
-    <!-- Prev / Next chronological navigation -->
+    <!-- Chronological navigation -->
     <PostNavigation
       v-if="frontmatter.date"
       :current-path="route.path"
@@ -490,7 +563,6 @@ const ArtComponent = computed(() => {
       class="mt-9 mb-6"
     />
 
-    <!-- Back to listing -->
     <span font-mono op50>> </span>
     <RouterLink
       :to="backToAllPath"
@@ -511,12 +583,6 @@ const ArtComponent = computed(() => {
 .backlink-header {
   display: flex;
   align-items: center;
-}
-.backlink-header + .backlink-header::before {
-  content: '·';
-  opacity: 0.3;
-  margin-right: 0.6rem;
-  font-size: 0.8rem;
 }
 .backlink-link {
   display: inline-flex;
@@ -542,13 +608,13 @@ const ArtComponent = computed(() => {
 .referenced-by-label {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   font-size: 1rem;
   opacity: 0.45;
   margin-bottom: 0.6rem;
 }
 .referenced-by-label-icon {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .referenced-by-item {
   display: flex;
@@ -574,10 +640,22 @@ const ArtComponent = computed(() => {
   white-space: nowrap;
 }
 
-/* ═══════════════════════════════════════════════
-   DESKTOP MARGIN NOTE
-   Fixed to right margin, mirrors ToC on left.
-   ═══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .referenced-by-item {
+    flex-wrap: wrap;
+    gap: 0.15rem 0.5rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+  .referenced-by-date {
+    width: 100%;
+    margin-top: 0.1rem;
+    padding-left: 1.35rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Fixed margin note mirroring ToC position */
 
 .margin-note {
   display: none;
@@ -660,7 +738,6 @@ html.dark .margin-note-body {
   color: #bbb;
 }
 
-/* Inline elements inside the definition */
 .margin-note-body :deep(a) {
   color: inherit;
   border-bottom: 1px solid rgba(125, 125, 125, 0.3);
@@ -690,7 +767,6 @@ html.dark .margin-note-body :deep(mark) {
   padding: 0.2em 0.3em;
 }
 
-/* Margin note animation */
 @keyframes marginNoteFadeIn {
   from {
     opacity: 0;
@@ -709,9 +785,7 @@ html.dark .margin-note-body :deep(mark) {
   animation: marginNoteFadeIn 0.12s ease reverse;
 }
 
-/* ═══════════════════════════════════════════════
-   MOBILE GLOSSARY BOTTOM SHEET
-   ═══════════════════════════════════════════════ */
+/* Mobile glossary bottom sheet */
 
 .glossary-backdrop {
   position: fixed;
@@ -817,7 +891,6 @@ html.dark .glossary-sheet-body {
   color: var(--fg, #bbb);
 }
 
-/* Inherit inline styles in mobile sheet */
 .glossary-sheet-body :deep(a) {
   border-bottom: 1px solid rgba(125, 125, 125, 0.3);
   transition: border 0.3s ease-in-out;
@@ -841,5 +914,168 @@ html.dark .glossary-sheet-body :deep(mark) {
   background-color: #aaaaaa18;
   border-radius: 0.25rem;
   padding: 0.2em 0.3em;
+}
+
+article :deep(.sources-block) {
+  background: rgba(125, 125, 125, 0.08);
+  border-radius: 0.5rem;
+  margin: 2em 0 0;
+  overflow: hidden;
+  transition: border-radius 0.25s ease;
+}
+
+article :deep(.sources-block .spoiler-summary) {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.7em 1em;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: 500;
+  color: var(--fg-deep);
+  user-select: none;
+  list-style: none;
+  transition: background 0.2s ease;
+}
+
+article :deep(.sources-block .spoiler-summary::-webkit-details-marker) {
+  display: none;
+}
+
+article :deep(.sources-block .spoiler-summary:hover) {
+  background: rgba(125, 125, 125, 0.08);
+}
+
+article :deep(.sources-block .spoiler-arrow) {
+  font-size: 1.15em;
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+article :deep(.sources-block[open] > .spoiler-summary .spoiler-arrow) {
+  transform: rotate(90deg);
+  opacity: 0.8;
+}
+
+article :deep(.sources-block .spoiler-content) {
+  padding: 0 1em 0.8em;
+  font-size: inherit;
+  color: var(--fg);
+  overflow: hidden;
+}
+
+/* Custom list counters to override prose default styles */
+article :deep(.sources-list) {
+  margin: 0;
+  padding-left: 0;
+  list-style: none !important;
+  counter-reset: source-counter;
+}
+
+article :deep(.source-item) {
+  counter-increment: source-counter;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  padding: 0.15em 0;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+article :deep(.source-item::before) {
+  content: counter(source-counter) '.';
+  opacity: 0.35;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  min-width: 1.5em;
+  text-align: right;
+}
+
+article :deep(.source-backrefs) {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+article :deep(.source-backref) {
+  opacity: 0.3;
+  font-size: 0.85rem;
+  text-decoration: none !important;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+  color: var(--fg);
+}
+
+article :deep(.source-backref:hover) {
+  opacity: 0.7;
+}
+
+article :deep(.source-backref-orphan) {
+  opacity: 0.15;
+  cursor: default;
+}
+
+/* Match standard prose link styles */
+article :deep(.source-title) {
+  font-size: 1rem;
+  word-break: break-word;
+  color: inherit;
+  border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+  transition: border 0.3s ease-in-out;
+  text-decoration: none !important;
+}
+
+article :deep(.source-title:hover) {
+  border-bottom-color: var(--fg);
+}
+
+article :deep(.source-domain) {
+  opacity: 0.3;
+  font-size: 1rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Mobile sources adaptations */
+@media (max-width: 640px) {
+  article :deep(.source-domain) {
+    display: none;
+  }
+
+  article :deep(.source-title) {
+    border-bottom: none !important;
+    text-decoration: underline;
+    text-decoration-color: rgba(125, 125, 125, 0.3);
+    text-underline-offset: 0.15em;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color 0.3s ease-in-out;
+  }
+
+  article :deep(.source-title:hover) {
+    border-bottom: none !important;
+    text-decoration-color: var(--fg);
+  }
+
+  article :deep(.source-backrefs) {
+    display: inline-flex;
+    gap: 0.3em;
+  }
+}
+
+article :deep(.source-highlight) {
+  background: rgba(50, 130, 255, 0.35);
+  border-radius: 0.25em;
+  box-shadow: 0 0 0 3px rgba(50, 130, 255, 0.35);
+}
+
+article :deep(.source-highlight-fade) {
+  background: transparent;
+  box-shadow: 0 0 0 3px transparent;
+  transition:
+    background 3s ease-out,
+    box-shadow 3s ease-out;
 }
 </style>

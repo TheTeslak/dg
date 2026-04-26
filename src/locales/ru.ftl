@@ -56,7 +56,7 @@ page-not-translated = Ещё не переведена, показана { $lang
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон
-post-referenced-by = Ссылаются
+post-referenced-by = Моё по теме
 post-updated = обновлена
 post-draft-notice = Черновик
 post-copy-link = ссылка
@@ -67,3 +67,5 @@ heading-copied = скопировано
 
 photos-view-cover = Кадрировать
 photos-view-contain = Без обрезки
+
+sources-title = Источники

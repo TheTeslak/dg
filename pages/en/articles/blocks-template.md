@@ -11,6 +11,7 @@ mastodon: https://mastodon.social/@antfu/your_post_link
 tags:
   - template
   - markdown
+sources: true
 ---
 
 [[toc]]
@@ -35,6 +36,7 @@ duration: 8min # manual override (e.g. '8min' or '5')
 backlink: parent-slug # link to parent article above title
 type: note+draft # post type and status (combined with '+')
 originalLocale: ru # source language for non-translated posts
+sources: true # enables automatic sources generation
 ---
 ```
 
@@ -46,6 +48,7 @@ originalLocale: ru # source language for non-translated posts
 - **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.
 - **`originalLocale` (Translation)**: When an article is not yet translated, this field indicates the source language. If it differs from the current page locale, a **Translation Banner** will appear pointing users to the original version.
 - **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
+- **`sources` (References)**: When set to `true`, enables the automatic generation of a numbered sources block at the bottom of the article (requires `<!-- sources -->` markers in the body).
 
 ### Article Status & Banners
 
@@ -452,3 +455,20 @@ Use `<Tweet>` for native tweet rendering.
 ---
 
 _Use this file as a quick reference when drafting new posts._
+
+### Sources Block
+
+Add `sources: true` to the frontmatter and place `<!-- sources --> ... <!-- /sources -->` markers at the end of the article. Run `pnpm run resolve-sources` to automatically fetch titles and update the list.
+
+Here's another mention of [Example Domain](https://example.com) to test duplicate handling.
+
+And a link to [Wikipedia about REST](https://en.wikipedia.org/wiki/Representational_state_transfer) for good measure.
+
+<!-- sources -->
+
+- [Example Domain](https://example.com)
+- [Icônes — Icon Explorer](https://icones.js.org/)
+- [YouTube](https://youtu.be/dQw4w9WgXcQ)
+- [REST — Wikipedia](https://en.wikipedia.org/wiki/Representational_state_transfer)
+- [Orphan Link — Not In Article](https://orphan-test.example.org/page)
+<!-- /sources -->
