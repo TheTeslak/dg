@@ -30,6 +30,7 @@ import { isPostVisible } from './src/logics/post-visibility'
 import { siteOrigin } from './src/logics/site'
 import 'vite-ssg'
 
+const isDev = process.env.NODE_ENV !== 'production'
 const promises: Promise<any>[] = []
 const frontmatterWarnings = new Set<string>()
 const queuedOgOutputs = new Set<string>()
@@ -167,6 +168,7 @@ export default defineConfig({
       exposeExcerpt: false,
       markdownItOptions: {
         quotes: '""\'\'',
+        breaks: true,
       },
       async markdownItSetup(md) {
         md.use(await MarkdownItShiki({
@@ -177,10 +179,12 @@ export default defineConfig({
           defaultColor: false,
           cssVariablePrefix: '--s-',
           transformers: [
-            transformerTwoslash({
-              explicitTrigger: true,
-              renderer: rendererRich(),
-            }),
+            ...(isDev
+              ? []
+              : [transformerTwoslash({
+                  explicitTrigger: true,
+                  renderer: rendererRich(),
+                })]),
             transformerNotationDiff(),
             transformerNotationHighlight(),
             transformerNotationWordHighlight(),
@@ -251,8 +255,7 @@ export default defineConfig({
         md.use(GitHubAlerts)
 
         // Convert standalone ![alt](src) into <figure><img><figcaption>alt</figcaption></figure>.
-        // Only triggers when <p> contains a single <img> with non-empty alt text.
-        // Images without alt text stay as plain <img> inside <p> — no figure wrapper.
+        // Triggers when <p> contains a single <img>. If alt text exists, it adds <figcaption>.
         md.core.ruler.after('inline', 'image_figures', (state) => {
           const tokens = state.tokens
           for (let i = 0; i < tokens.length; i++) {
@@ -272,8 +275,6 @@ export default defineConfig({
 
             const imgToken = children[0]
             const alt = imgToken.content?.trim()
-            if (!alt)
-              continue
 
             // Rewrite paragraph_open → figure_open
             token.type = 'figure_open'
@@ -283,14 +284,16 @@ export default defineConfig({
             close.type = 'figure_close'
             close.tag = 'figure'
 
-            // Insert figcaption tokens after the inline (before figure_close)
-            const captionOpen = new state.Token('html_block', '', 0)
-            captionOpen.content = `<figcaption>${md.utils.escapeHtml(alt)}</figcaption>\n`
+            if (alt) {
+              // Insert figcaption tokens after the inline (before figure_close)
+              const captionOpen = new state.Token('html_block', '', 0)
+              captionOpen.content = `<figcaption>${md.utils.escapeHtml(alt)}</figcaption>\n`
 
-            // Clear the alt from the image so it doesn't duplicate as attr
-            // (keep it as the HTML alt attribute on <img> for a11y)
-            tokens.splice(i + 2, 0, captionOpen)
-            i += 1 // skip the inserted token
+              // Clear the alt from the image so it doesn't duplicate as attr
+              // (keep it as the HTML alt attribute on <img> for a11y)
+              tokens.splice(i + 2, 0, captionOpen)
+              i += 1 // skip the inserted token
+            }
           }
         })
 
@@ -565,7 +568,8 @@ export default defineConfig({
           if (queuedOgOutputs.has(path))
             return
           queuedOgOutputs.add(path)
-          promises.push(ensureOgImage(id, frontmatter, `public/${path}`))
+          if (!isDev)
+            promises.push(ensureOgImage(id, frontmatter, `public/${path}`))
         })()
         const head = defaults(frontmatter, options)
         return { head, frontmatter }
@@ -695,9 +699,9 @@ function estimateReadingMinutes(content: string): number {
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
 
-  const latinWords = noLinks.match(/[a-z0-9]+(?:['’-][a-z0-9]+)*/gi)?.length || 0
+  const words = noLinks.match(/[a-z0-9\u0400-\u04FF]+(?:['’-][a-z0-9\u0400-\u04FF]+)*/gi)?.length || 0
   const cjkChars = noLinks.match(/[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/g)?.length || 0
-  const units = latinWords + cjkChars
+  const units = words + cjkChars
   return Math.max(1, Math.ceil(units / 200))
 }
 

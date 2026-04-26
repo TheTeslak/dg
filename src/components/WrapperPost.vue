@@ -421,12 +421,12 @@ const ArtComponent = computed(() => {
         </RouterLink>
       </div>
     </div>
-    <h1 class="mb-0 slide-enter-50">
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5">
       {{ frontmatter.display ?? frontmatter.title }}
     </h1>
     <p
       v-if="frontmatter.date"
-      class="!-mt-8 slide-enter-50"
+      class="slide-enter-50 !mt-0"
     >
       <span class="opacity-50">
         <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>

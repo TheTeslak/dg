@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "static": "rimraf temp && degit antfu/static temp --force && tsx scripts/copy-sponsors",
     "redirects": "tsx scripts/redirects.ts",
+    "lint:md": "tsx scripts/lint-md.ts",
     "lint": "eslint .",
     "typecheck": "pnpm typecheck:app && pnpm typecheck:node",
     "typecheck:app": "vue-tsc --noEmit -p tsconfig.app.json",
