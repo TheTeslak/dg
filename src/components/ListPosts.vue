@@ -38,8 +38,6 @@ const routes = computed<Post[]>(() => {
       updated: r.meta.frontmatter?.updated,
       lang: r.meta.frontmatter?.lang,
       duration: r.meta.frontmatter?.duration,
-      recording: r.meta.frontmatter?.recording,
-      upcoming: r.meta.frontmatter?.upcoming,
       redirect: r.meta.frontmatter?.redirect,
       place: r.meta.frontmatter?.place,
       type: r.meta.frontmatter?.type,
@@ -149,31 +147,11 @@ function getDurationLabel(duration?: Post['duration']) {
             </div>
 
             <div flex="~ gap-2 items-center">
-              <span
-                v-if="route.inperson"
-                align-middle op50 flex-none
-                i-ri:group-2-line
-                title="In person"
-              />
-              <span
-                v-if="route.recording || route.video"
-                align-middle op50 flex-none
-                i-ri:film-line
-                title="Provided in video"
-              />
-              <span
-                v-if="route.radio"
-                align-middle op50 flex-none
-                i-ri:radio-line
-                title="Provided in radio"
-              />
-
               <span text-xl op60 ws-nowrap>
                 <span v-if="isDraftPost(route.type)" role="img" aria-label="Draft">🚧 </span>
                 <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(route.date, true) }}
               </span>
               <span v-if="getDurationLabel(route.duration)" text-xl op60 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
-              <span v-if="route.platform" text-xl op60 ws-nowrap>· {{ route.platform }}</span>
               <span v-if="route.place" text-xl op60 ws-nowrap md:hidden>· {{ route.place }}</span>
               <span
                 v-if="getPostLangTag(route)"

@@ -7,7 +7,6 @@ art: plum
 #   - title: 'Stream Title'
 #     date: '2025-01-01'
 #     path: 'https://youtube.com/watch?v=...'
-#     platform: YouTube
 #     lang: 'en'
 items: []
 ---

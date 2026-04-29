@@ -39,6 +39,7 @@ const supportedLocales = ['en', 'ru', 'es'] as const
 const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
 const frontmatterKnownKeys = new Set([
   'art',
+  'availableLocales',
   'backlink',
   'class',
   'date',
@@ -49,7 +50,6 @@ const frontmatterKnownKeys = new Set([
   'excerpt',
   'hashtags',
   'image',
-  'inperson',
   'items',
   'lang',
   'link',
@@ -57,9 +57,7 @@ const frontmatterKnownKeys = new Set([
   'originalLocale',
   'place',
   'placeLink',
-  'platform',
   'projects',
-  'radio',
   'recording',
   'redirect',
   'sources',
@@ -71,7 +69,6 @@ const frontmatterKnownKeys = new Set([
   'type',
   'upcoming',
   'updated',
-  'video',
   'wrapperClass',
 ])
 
@@ -113,6 +110,7 @@ export default defineConfig({
 
             if (slug !== 'index' && !slug.startsWith('[')) {
               frontmatter.originalLocale = sourceLocale
+              frontmatter.availableLocales = getAvailableArticleLocales(slug)
 
               const aliases: string[] = []
               for (const targetLocale of supportedLocales) {
@@ -673,6 +671,12 @@ function getArticleInfo(id: string) {
     sourceLocale: match.groups.locale,
     slug: match.groups.slug,
   }
+}
+
+function getAvailableArticleLocales(slug: string) {
+  return supportedLocales.filter(locale =>
+    fs.existsSync(resolve(__dirname, `pages/${locale}/articles/${slug}.md`)),
+  )
 }
 
 function isRealArticle(id: string) {

@@ -4,7 +4,6 @@ place: Vue Fes Japan 2023
 description: Anthony's Roads to Open Source - The Set Theory - Vue Fes Japan 2023
 date: 2023-10-28T08:00:00.000+00:00
 lang: en
-inperson: true
 type: talk
 recording: false
 duration: 30min

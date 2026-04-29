@@ -7,15 +7,9 @@ export interface Post {
   updated?: string
   lang?: string
   desc?: string
-  platform?: string
   duration?: number | string
-  recording?: string
-  radio?: boolean
-  video?: boolean
-  inperson?: boolean
   redirect?: string
   type?: string
-  upcoming?: boolean
 }
 
 export interface Talk {

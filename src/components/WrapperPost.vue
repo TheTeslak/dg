@@ -5,7 +5,7 @@ import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { glossaryKey } from '~/logics/glossary'
-import { getLocaleFromPath, supportedLocales } from '~/logics/i18n-path'
+import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
 import { artOverride } from '~/logics/keyboard-nav'
 import { siteOrigin } from '~/logics/site'
 
@@ -96,24 +96,28 @@ const backToAllPath = computed(() => {
  */
 const hreflangLinks = computed(() => {
   const path = route.path
-  // Strip locale prefix to build alternate language URLs
-  const match = path.match(/^\/(en|ru|es)(\/.+)$/)
-  if (!match)
-    return []
+  const frontmatterLocales = Array.isArray(frontmatter.availableLocales)
+    ? frontmatter.availableLocales.filter(isSupportedLocale)
+    : undefined
+  const locales = frontmatterLocales?.length
+    ? frontmatterLocales
+    : supportedLocales
 
-  const pathSuffix = match[2] // e.g. "/articles/foo"
-
-  const links: { rel: string, hreflang: string, href: string }[] = supportedLocales.map(locale => ({
+  const links: { rel: string, hreflang: string, href: string }[] = locales.map(locale => ({
     rel: 'alternate',
     hreflang: locale,
-    href: `${siteOrigin}/${locale}${pathSuffix}`,
+    href: `${siteOrigin}${setPathLocale(path, locale)}`,
   }))
 
-  // x-default: tells Google which version to show when no locale matches
+  // x-default points to a physical article locale when available.
+  const defaultLocale = isSupportedLocale(frontmatter.originalLocale)
+    ? frontmatter.originalLocale
+    : locales[0] || 'en'
+
   links.push({
     rel: 'alternate',
     hreflang: 'x-default',
-    href: `${siteOrigin}/en${pathSuffix}`,
+    href: `${siteOrigin}${setPathLocale(path, defaultLocale)}`,
   })
 
   return links
@@ -435,7 +439,7 @@ const ArtComponent = computed(() => {
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
       <span op50>at </span>
-      <a v-if="frontmatter.placeLink" :href="frontmatter.placeLink" target="_blank">
+      <a v-if="frontmatter.placeLink" :href="frontmatter.placeLink" target="_blank" rel="noopener noreferrer">
         {{ frontmatter.place }}
       </a>
       <span v-else font-bold>
@@ -528,9 +532,9 @@ const ArtComponent = computed(() => {
     <template v-if="frontmatter.telegram || frontmatter.mastodon">
       <span font-mono op50>> </span>
       <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
-      <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" op50>{{ $t('post-link-telegram') }}</a>
+      <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-telegram') }}</a>
       <span v-if="frontmatter.telegram && frontmatter.mastodon" op25> / </span>
-      <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" op50>{{ $t('post-link-mastodon') }}</a>
+      <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-mastodon') }}</a>
     </template>
 
     <!-- Referenced By (articles that backlink to this one) -->

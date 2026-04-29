@@ -29,13 +29,14 @@ async function run() {
       const htmlLines = `<template>\n${html}\n</template>`.split('\n')
 
       for (const err of parsed.errors) {
-        if (!err.loc) {
+        const loc = 'loc' in err ? err.loc : undefined
+        if (!loc) {
           console.log(ansis.red(`  ${err.message}`))
           continue
         }
 
-        const line = err.loc.start.line
-        const column = err.loc.start.column
+        const line = loc.start.line
+        const column = loc.start.column
 
         console.log(ansis.yellow(`  ${err.message} (Generated HTML line: ${line}, col: ${column})`))
         console.log(ansis.dim('  --- Context ---'))

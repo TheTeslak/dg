@@ -86,6 +86,17 @@ function toDurationMinutes(duration: unknown): number | null {
   return null
 }
 
+function toIsoDate(rawDate: unknown, filePath: string): string {
+  if (!rawDate)
+    return ''
+
+  const date = new Date(rawDate as string | number | Date)
+  if (Number.isNaN(date.getTime()))
+    throw new Error(`[Search] Invalid date in ${filePath}: ${String(rawDate)}`)
+
+  return date.toISOString()
+}
+
 async function buildSearchIndex() {
   const documents: SearchDocument[] = []
 
@@ -120,7 +131,7 @@ async function buildSearchIndex() {
         body,
         tags: normalizeTags(data.tags || data.hashtags),
         type: resolveType(data.type),
-        date: data.date ? new Date(data.date).toISOString() : '',
+        date: toIsoDate(data.date, filePath),
         lang: data.lang || locale,
         duration: toDurationMinutes(data.duration),
       })

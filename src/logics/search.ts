@@ -284,6 +284,15 @@ export function useSearch(currentLocale: Ref<string>) {
     debouncedSearch()
   })
 
+  watch(currentLocale, () => {
+    const query = searchQuery.value
+    if (!query.trim()) {
+      searchResults.value = []
+      return
+    }
+    searchResults.value = performSearch(query, currentLocale.value)
+  })
+
   // Auto-load index when search opens
   watch(isSearchOpen, async (open) => {
     if (open) {

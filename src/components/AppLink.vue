@@ -21,7 +21,7 @@ const resolvedTo = computed(() => {
 </script>
 
 <template>
-  <a v-if="isExternalLink" v-bind="$attrs" :href="to" target="_blank">
+  <a v-if="isExternalLink" v-bind="$attrs" :href="to" target="_blank" rel="noopener noreferrer">
     <slot />
   </a>
   <RouterLink v-else v-bind="$props" :to="resolvedTo">

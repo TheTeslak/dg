@@ -8,8 +8,6 @@ art: plum
 #     date: '2025-01-01'
 #     path: 'https://example.com/podcast'
 #     lang: 'en'
-#     radio: true
-#     video: false
 items: []
 ---
 

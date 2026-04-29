@@ -130,25 +130,9 @@ Event location
 
 Link to event location
 
-### platform
-
-Platform name (e.g., "YouTube", "Twitch")
-
 ### recording
 
 Recording URL
-
-### video
-
-Video available (boolean)
-
-### radio
-
-Radio/podcast (boolean)
-
-### inperson
-
-In-person event (boolean)
 
 ### upcoming
 
@@ -211,7 +195,6 @@ date: 2026-03-15T00:00:00Z
 lang: en
 duration: 30
 type: talk
-platform: YouTube
 recording: https://youtube.com/watch?v=12345
 place: Online
 ---
