@@ -1,11 +1,17 @@
+import type { AsPlainObject, Options } from 'minisearch'
 import { resolve } from 'node:path'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
+import MiniSearch from 'minisearch'
 import { isPostVisible } from '../src/logics/post-visibility'
 
 const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
 const MAX_BODY_LENGTH = 10_000
+const SEARCH_OPTIONS: Options<SearchDocument> = {
+  fields: ['title', 'description', 'tags', 'body'],
+  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description'],
+}
 
 interface SearchDocument {
   id: string
@@ -18,6 +24,12 @@ interface SearchDocument {
   date: string
   lang: string
   duration: number | null
+}
+
+interface SearchIndexPayload {
+  version: 1
+  documents: SearchDocument[]
+  index: AsPlainObject
 }
 
 /**
@@ -142,11 +154,20 @@ async function buildSearchIndex() {
   // But if a slug exists only in 'en' and is aliased to other locales, we only have the 'en' file.
   // This is correct — the aliases point to the same content.
 
-  const outputPath = resolve('public/search-index.json')
-  await fs.writeJSON(outputPath, documents)
+  const miniSearch = new MiniSearch<SearchDocument>(SEARCH_OPTIONS)
+  miniSearch.addAll(documents)
 
-  const sizeKB = (JSON.stringify(documents).length / 1024).toFixed(1)
-  console.log(`[Search] Generated index: ${documents.length} documents, ${sizeKB} KB → public/search-index.json`)
+  const payload: SearchIndexPayload = {
+    version: 1,
+    documents,
+    index: miniSearch.toJSON(),
+  }
+
+  const outputPath = resolve('public/search-index.json')
+  await fs.writeJSON(outputPath, payload)
+
+  const sizeKB = (JSON.stringify(payload).length / 1024).toFixed(1)
+  console.log(`[Search] Generated build-time index: ${documents.length} documents, ${sizeKB} KB → public/search-index.json`)
 }
 
 buildSearchIndex()

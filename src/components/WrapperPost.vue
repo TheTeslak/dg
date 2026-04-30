@@ -8,6 +8,10 @@ import { glossaryKey } from '~/logics/glossary'
 import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
 import { artOverride } from '~/logics/keyboard-nav'
 import { siteOrigin } from '~/logics/site'
+import '@shikijs/twoslash/style-rich.css'
+import 'markdown-it-github-alerts/styles/github-base.css'
+import 'markdown-it-github-alerts/styles/github-colors-dark-class.css'
+import 'markdown-it-github-alerts/styles/github-colors-light.css'
 
 const { frontmatter } = defineProps({
   frontmatter: {

@@ -2,6 +2,7 @@
 import { ShikiMagicMove } from 'shiki-magic-move/vue'
 import { useShikiStore } from '~/store/shiki'
 import { code1, code2 } from './ShikiMagicMoveDemoCode'
+import 'shiki-magic-move/style.css'
 
 const index = ref(1)
 const code = computed(() => index.value === 1 ? code1 : code2)

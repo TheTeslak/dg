@@ -1,6 +1,7 @@
+import type MiniSearch from 'minisearch'
+import type { AsPlainObject, Options } from 'minisearch'
 import type { Ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import MiniSearch from 'minisearch'
 import { computed, ref, shallowRef, watch } from 'vue'
 
 export interface SearchDocument {
@@ -28,18 +29,30 @@ export interface SearchResult {
   score: number
 }
 
+interface SerializedSearchIndex {
+  version: 1
+  documents: SearchDocument[]
+  index: AsPlainObject
+}
+
 // Shared reactive state — used by SubNav and page templates
 export const isSearchOpen = ref(false)
 
 // Internal state
 const rawDocuments = shallowRef<SearchDocument[] | null>(null)
-const miniSearchInstance = shallowRef<MiniSearch | null>(null)
+const miniSearchInstance = shallowRef<MiniSearch<SearchDocument> | null>(null)
+const bodyById = shallowRef<Map<string, string> | null>(null)
+const titleById = shallowRef<Map<string, string> | null>(null)
 export const isLoading = ref(false)
 export const searchQuery = ref('')
 export const searchResults = shallowRef<SearchResult[]>([])
 
 const MAX_SNIPPETS = 3
 const SNIPPET_WINDOW = 120
+const SEARCH_OPTIONS: Options<SearchDocument> = {
+  fields: ['title', 'description', 'tags', 'body'],
+  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description'],
+}
 
 interface SnippetRange {
   start: number
@@ -173,6 +186,14 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+function isSerializedSearchIndex(payload: unknown): payload is SerializedSearchIndex {
+  return !!payload
+    && typeof payload === 'object'
+    && (payload as SerializedSearchIndex).version === 1
+    && Array.isArray((payload as SerializedSearchIndex).documents)
+    && !!(payload as SerializedSearchIndex).index
+}
+
 async function loadIndex(): Promise<void> {
   if (rawDocuments.value || isLoading.value)
     return
@@ -180,15 +201,24 @@ async function loadIndex(): Promise<void> {
   isLoading.value = true
   try {
     const response = await fetch('/search-index.json')
-    const docs: SearchDocument[] = await response.json()
-    rawDocuments.value = docs
+    const payload: unknown = await response.json()
+    const { default: MiniSearch } = await import('minisearch')
+    const docs: SearchDocument[] = isSerializedSearchIndex(payload)
+      ? payload.documents
+      : payload as SearchDocument[]
 
-    const ms = new MiniSearch<SearchDocument>({
-      fields: ['title', 'description', 'tags', 'body'],
-      storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description'],
-    })
-    ms.addAll(docs)
-    miniSearchInstance.value = ms
+    rawDocuments.value = docs
+    bodyById.value = new Map(docs.map(d => [d.id, d.body]))
+    titleById.value = new Map(docs.map(d => [d.id, d.title]))
+
+    if (isSerializedSearchIndex(payload)) {
+      miniSearchInstance.value = MiniSearch.loadJS(payload.index, SEARCH_OPTIONS)
+    }
+    else {
+      const ms = new MiniSearch<SearchDocument>(SEARCH_OPTIONS)
+      ms.addAll(docs)
+      miniSearchInstance.value = ms
+    }
   }
   catch (err) {
     console.error('[Search] Failed to load search index:', err)
@@ -200,12 +230,10 @@ async function loadIndex(): Promise<void> {
 
 function performSearch(query: string, currentLocale: string): SearchResult[] {
   const ms = miniSearchInstance.value
-  const docs = rawDocuments.value
-  if (!ms || !docs || !query.trim())
+  const bodies = bodyById.value
+  const titles = titleById.value
+  if (!ms || !bodies || !titles || !query.trim())
     return []
-
-  // Build a lookup map for body text (not stored in MiniSearch to save memory)
-  const bodyMap = new Map(docs.map(d => [d.id, d.body]))
 
   // Cache for exact-match checks per document (avoid repeated regex)
   const exactMatchCache = new Map<string, boolean>()
@@ -220,8 +248,8 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
     boostDocument: (docId, term) => {
       const cacheKey = `${docId}:${term}`
       if (!exactMatchCache.has(cacheKey)) {
-        const body = bodyMap.get(String(docId)) || ''
-        const title = docs.find(d => d.id === String(docId))?.title || ''
+        const body = bodies.get(String(docId)) || ''
+        const title = titles.get(String(docId)) || ''
         const text = `${title} ${body}`
         try {
           const wordBoundary = new RegExp(`\\b${escapeRegex(term)}\\b`, 'i')
@@ -241,7 +269,7 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
       const uniqueTerms = Object.keys(result.match)
 
       // Get body for multi-snippet generation
-      const body = bodyMap.get(result.id) || ''
+      const body = bodies.get(result.id) || ''
       const rawSnippets = generateSnippets(body, uniqueTerms)
       const snippets = rawSnippets.map(s => highlightTerms(s, uniqueTerms))
 
