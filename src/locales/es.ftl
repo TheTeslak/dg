@@ -62,6 +62,18 @@ post-draft-notice = Borrador
 post-copy-link = copiar enlace
 post-link-copied = copiado
 
+article-audio-label = Audio del artículo
+article-audio-play = Reproducir audio
+article-audio-pause = Pausar audio
+article-audio-rewind = Retroceder 15 segundos
+article-audio-forward = Avanzar 15 segundos
+article-audio-speed = Cambiar velocidad de reproducción
+article-audio-download = Descargar audio
+article-audio-close = Cerrar mini reproductor
+article-audio-progress = Progreso del audio
+article-audio-error = No se pudo cargar el audio.
+article-audio-outdated = El texto se actualizó después de grabar este audio
+
 heading-link = enlace al título
 heading-copied = copiado
 

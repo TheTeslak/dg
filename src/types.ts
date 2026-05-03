@@ -10,6 +10,16 @@ export interface Post {
   duration?: number | string
   redirect?: string
   type?: string
+  audio?: ArticleAudio
+}
+
+export interface ArticleAudio {
+  url: string
+  sourceTextUpdatedAt?: string
+  duration?: string
+  title?: string
+  artist?: string
+  downloadUrl?: string
 }
 
 export interface Talk {

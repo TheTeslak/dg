@@ -18,6 +18,7 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
     "compress": "tsx scripts/img-compress-staged.ts",
     "photos": "tsx scripts/photos-manage.ts",
+    "process-audio": "tsx scripts/process-audio.ts",
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
@@ -84,6 +85,7 @@
     "markdown-it-link-attributes": "catalog:build",
     "markdown-it-magic-link": "catalog:build",
     "markdown-it-table-of-contents": "catalog:build",
+    "music-metadata": "catalog:dev",
     "pathe": "catalog:dev",
     "pnpm": "catalog:dev",
     "prompts": "catalog:dev",

@@ -6,12 +6,13 @@ lang: en
 duration: 5
 description: A comprehensive reference for Markdown blocks and custom Vue components used in this blog's articles.
 backlink: about-yak-shaving
-telegram: https://t.me/your_post_link
-mastodon: https://mastodon.social/@antfu/your_post_link
+telegram: https://t.me/post_link
+mastodon: https://mastodon.social/@name/post_link
 tags:
   - template
   - markdown
 sources: true
+audio: true
 ---
 
 [[toc]]
@@ -29,14 +30,31 @@ Every article begins with a YAML block. The fields here drive both SEO and on-pa
 ```yaml
 ---
 title: My Article
+display: Custom Title for Article Page # overrides title on page
 description: SEO and social preview text (max 400 chars).
+subtitle: A short catchphrase below the title
+image: /og/image.png # cover image & player artwork
 date: 2026-03-24T10:00:00Z
+updated: 2026-04-30T10:00:00Z # shows 'updated' date
 lang: en # UI locale (en, ru, es)
 duration: 8min # manual override (e.g. '8min' or '5')
 backlink: parent-slug # link to parent article above title
 type: note+draft # post type and status (combined with '+')
 originalLocale: ru # source language for non-translated posts
 sources: true # enables automatic sources generation
+art: plum # background animation: random, plum, dots, cellular, topography, interference
+tocAlwaysOn: true # keeps ToC visible on wider screens
+place: Paris # location name
+placeLink: https://maps.google.com/... # location link
+audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>.*
+# or explicit:
+# audio:
+#   url: /audio/articles/en/my-article.m4a
+#   title: "Audio Version"
+#   duration: "12:45"
+#   artist: "Teslak"
+#   sourceTextUpdatedAt: 2026-03-24T10:00:00Z
+#   downloadUrl: /audio/alt.mp3
 ---
 ```
 
@@ -45,10 +63,25 @@ sources: true # enables automatic sources generation
 - **`type` (Status & Visibility)**: This field controls where the post appears and its status.
   - `type: draft` or `draft: true`: Fully hidden from lists and RSS. Use for private WIPs.
   - `type: note+draft` (or `blog+draft`): Visible in lists with a **🚧 indicator**, but still marked as a draft internally (`noindex`).
+- **`display`**: Overrides the `title` on the page itself. Useful when the `title` needs to be optimized for lists/RSS but the page needs a different look.
+- **`subtitle`**: Secondary title shown in italics below the main header.
+- **`image`**: Primary image for the post. Used in Open Graph tags, social previews, and as the background for the audio player.
+- **`art`**: Controls the background canvas animation. Values: `random`, `plum`, `dots`, `cellular`, `topography`, `interference`.
+- **`tocAlwaysOn`**: When `true`, prevents the Table of Contents from being hidden behind a toggle on desktop viewports.
+- **`place` / `placeLink`**: Shows a "at [Location]" badge below the date.
 - **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.
 - **`originalLocale` (Translation)**: When an article is not yet translated, this field indicates the source language. If it differs from the current page locale, a **Translation Banner** will appear pointing users to the original version.
 - **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
 - **`sources` (References)**: When set to `true`, enables the automatic generation of a numbered sources block at the bottom of the article (requires `<!-- sources -->` markers in the body).
+- **`audio` (Voiceover)**: Configures the integrated audio player.
+  - **Shortcut:** `audio: true` — auto-resolves the audio file from `public/audio/articles/<locale>/<slug>.*` (priority: m4a → opus → ogg → mp3 → wav). Duration is read from `data/audio-metadata.json` (run `pnpm run process-audio` to generate).
+  - **Explicit:** `audio: { url, title?, duration?, artist?, sourceTextUpdatedAt?, downloadUrl? }`.
+  - `url`: Path to the audio file (required in explicit form).
+  - `title`: Display name in the player (defaults to article title).
+  - `duration`: Manual duration string (e.g., "12:45"). Auto-filled from cache when omitted.
+  - `artist`: Artist name for Media Session (defaults to "Teslak").
+  - `sourceTextUpdatedAt`: If the article's `updated` or `date` is newer than this timestamp, a warning will appear indicating the audio might be outdated.
+  - `downloadUrl`: Override for the download button link (defaults to `url`).
 
 ### Article Status & Banners
 
@@ -318,7 +351,62 @@ If you just want a sleek inline link, you can embed UnoCSS icon classes (powered
 
 **Result:** <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank"><span class="op75 i-simple-icons-youtube" /> Watch on YouTube</a>
 
+### Audio Player (`audio` frontmatter)
+
+The audio player is automatically injected at the top of the article when the `audio` field is present in the frontmatter. It supports:
+
+- **Sticky Mini-player:** When you scroll past the main player, a compact version sticks to the top of the viewport.
+- **Playback Persistence:** Progress is saved to `localStorage`, allowing readers to resume from where they left off.
+- **Media Session Integration:** Control playback via hardware keys or OS media controls (lock screen, notifications).
+- **Speed Control:** Adjustable playback rates (1x, 1.25x, 1.5x, 2x).
+- **Outdated Warning:** Automatically detects if the article text has been updated since the audio was recorded.
+- **Multi-format Support:** File lookup priority: `.m4a` → `.opus` → `.ogg` → `.mp3` → `.wav`.
+
+**Shortcut form** — just drop an audio file into `public/audio/articles/<locale>/<slug>.m4a` and set:
+
+```yaml
+audio: true
+```
+
+The build system resolves the URL, format, and duration automatically from `data/audio-metadata.json` (generated by `pnpm run process-audio`).
+
+**Explicit form** — for manual control over all fields:
+
+```yaml
+audio:
+  url: /audio/articles/en/my-article.m4a
+  title: Audio Version # optional, defaults to article title
+  duration: '12:45' # optional, auto-filled from cache
+  artist: Teslak # optional, defaults to "Teslak"
+  sourceTextUpdatedAt: 2026-03-24T10:00:00Z # optional, shows warning if text is newer
+  downloadUrl: /audio/alt.mp3 # optional, overrides download link
+```
+
 ---
+
+## Build Commands
+
+Scripts that process content before deployment. Run them manually when content changes, or include in CI.
+
+### `pnpm run process-audio`
+
+Scans all articles with `audio: true` (or an explicit `audio` object), locates the corresponding audio file in `public/audio/articles/<locale>/`, extracts its duration via `music-metadata`, and writes a cache to `data/audio-metadata.json`. The Vite build reads this cache to inject `duration` into the frontmatter without reparsing audio files on every dev restart.
+
+```bash
+pnpm run process-audio
+```
+
+Run this after adding or replacing an audio file.
+
+### `pnpm run resolve-sources`
+
+Scans articles with `sources: true` and `<!-- sources -->` blocks, fetches page titles for any source URLs that have placeholder titles, and updates the Markdown files in place.
+
+```bash
+pnpm run resolve-sources
+```
+
+Run this after adding new source links to an article.
 
 ## Secondary Features
 

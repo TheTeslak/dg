@@ -62,6 +62,18 @@ post-draft-notice = Черновик
 post-copy-link = ссылка
 post-link-copied = скопировано
 
+article-audio-label = Аудио статьи
+article-audio-play = Воспроизвести аудио
+article-audio-pause = Поставить аудио на паузу
+article-audio-rewind = Назад на 15 секунд
+article-audio-forward = Вперёд на 15 секунд
+article-audio-speed = Изменить скорость воспроизведения
+article-audio-download = Скачать аудио
+article-audio-close = Закрыть мини-плеер
+article-audio-progress = Прогресс аудио
+article-audio-error = Аудио не удалось загрузить.
+article-audio-outdated = Текст был обновлён после записи этого аудио
+
 heading-link = ссылка на заголовок
 heading-copied = скопировано
 

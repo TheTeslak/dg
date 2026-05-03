@@ -54,6 +54,7 @@ catalogs:
     feed: ^5.1.0
     fs-extra: ^11.3.4
     lint-staged: ^16.2.7
+    music-metadata: ^11.12.3
     pathe: ^2.0.3
     pnpm: ^10.26.1
     prompts: ^2.4.2

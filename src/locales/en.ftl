@@ -62,6 +62,18 @@ post-draft-notice = Draft
 post-copy-link = copy link
 post-link-copied = copied
 
+article-audio-label = Article audio
+article-audio-play = Play audio
+article-audio-pause = Pause audio
+article-audio-rewind = Rewind 15 seconds
+article-audio-forward = Forward 15 seconds
+article-audio-speed = Change playback speed
+article-audio-download = Download audio
+article-audio-close = Close mini player
+article-audio-progress = Audio progress
+article-audio-error = Audio could not be loaded.
+article-audio-outdated = Text has been updated since this audio was recorded
+
 heading-link = link to heading
 heading-copied = copied
 

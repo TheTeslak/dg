@@ -37,8 +37,13 @@ const queuedOgOutputs = new Set<string>()
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
 const supportedLocales = ['en', 'ru', 'es'] as const
 const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
+const supportedAudioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
+const audioMetadataPath = resolve(__dirname, 'data/audio-metadata.json')
+const audioMetadata: Record<string, { url: string, duration: string, durationSeconds: number, format: string }>
+  = fs.existsSync(audioMetadataPath) ? fs.readJSONSync(audioMetadataPath) : {}
 const frontmatterKnownKeys = new Set([
   'art',
+  'audio',
   'availableLocales',
   'backlink',
   'class',
@@ -679,6 +684,15 @@ function getAvailableArticleLocales(slug: string) {
   )
 }
 
+function resolveAudioFile(locale: string, slug: string): string | undefined {
+  for (const ext of supportedAudioExtensions) {
+    const candidate = resolve(__dirname, `public/audio/articles/${locale}/${slug}${ext}`)
+    if (fs.existsSync(candidate))
+      return `/audio/articles/${locale}/${slug}${ext}`
+  }
+  return undefined
+}
+
 function isRealArticle(id: string) {
   const article = getArticleInfo(id)
   return !!article && article.slug !== 'index' && !article.slug.startsWith('[')
@@ -793,6 +807,66 @@ function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: stri
   }
   else if (isRealArticle(id)) {
     frontmatter.duration = estimateReadingMinutes(content)
+  }
+
+  if (frontmatter.audio != null) {
+    const article = getArticleInfo(id)
+
+    // Shortcut: `audio: true` → resolve URL and metadata from cache / filesystem
+    if (frontmatter.audio === true) {
+      if (!article) {
+        warnFrontmatter(`[frontmatter] ${id}: "audio: true" is only supported for articles.`)
+        frontmatter.audio = undefined
+      }
+      else {
+        const key = `${article.sourceLocale}/${article.slug}`
+        const cached = audioMetadata[key]
+        if (cached) {
+          frontmatter.audio = {
+            url: cached.url,
+            duration: cached.duration,
+          }
+        }
+        else {
+          const audioUrl = resolveAudioFile(article.sourceLocale, article.slug)
+          if (audioUrl) {
+            frontmatter.audio = { url: audioUrl }
+          }
+          else {
+            warnFrontmatter(`[frontmatter] ${id}: "audio: true" but no audio file found. Run "pnpm run process-audio".`)
+            frontmatter.audio = undefined
+          }
+        }
+      }
+    }
+
+    const audio = frontmatter.audio
+    if (audio && typeof audio === 'object' && !Array.isArray(audio)) {
+      // Inject cached duration when not set manually
+      if (article && !audio.duration) {
+        const key = `${article.sourceLocale}/${article.slug}`
+        const cached = audioMetadata[key]
+        if (cached?.duration)
+          audio.duration = cached.duration
+      }
+
+      // Validate URL
+      if (typeof audio.url !== 'string' || !audio.url.trim()) {
+        warnFrontmatter(`[frontmatter] ${id}: "audio.url" should be a non-empty local path.`)
+      }
+      else if (/^https?:\/\//i.test(audio.url)) {
+        warnFrontmatter(`[frontmatter] ${id}: "audio.url" should be a local path under /audio/articles/.`)
+      }
+
+      // Normalize sourceTextUpdatedAt Date
+      if (audio.sourceTextUpdatedAt instanceof Date) {
+        const d = audio.sourceTextUpdatedAt
+        audio.sourceTextUpdatedAt = Number.isNaN(d.getTime()) ? undefined : d.toISOString()
+      }
+    }
+    else if (audio != null) {
+      warnFrontmatter(`[frontmatter] ${id}: "audio" should be "true" or an object with a "url" field.`)
+    }
   }
 
   // Auto-generate excerpt from article body (first ~200 chars of clean text)

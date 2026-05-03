@@ -90,6 +90,24 @@ Array of tags (replaces deprecated `hashtags`)
 
 Custom Open Graph (OG) image URL (auto-generated if missing)
 
+### audio
+
+Local article audio. The player renders only when `audio.url` exists.
+
+Recommended file location:
+`/public/audio/articles/<locale>/<slug>.<mp3|m4a|ogg>`
+
+Use the served path in frontmatter:
+`/audio/articles/<locale>/<slug>.mp3`
+
+Supported fields:
+
+- `url` - Required local audio path
+- `sourceTextUpdatedAt` - Date of the article text used for the recording
+- `duration` - Optional display duration
+- `title` - Optional audio title override
+- `downloadUrl` - Optional separate local download path
+
 ### draft
 
 Mark as draft (boolean: `true` or `false`)
@@ -171,6 +189,10 @@ title: My Awesome Article
 date: 2026-03-15T00:00:00Z
 lang: en
 duration: 10min
+audio:
+  url: /audio/articles/en/my-awesome-article.mp3
+  sourceTextUpdatedAt: 2026-03-15T00:00:00Z
+  duration: 12:34
 ---
 ```
 

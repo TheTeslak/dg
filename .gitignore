@@ -17,6 +17,7 @@ public/assets/fonts
 dirmerger.py
 dg-*.txt
 public/search-index.json
+data/audio-metadata.json
 public/sitemap.xml
 pages/ru/articles/temp.md
 .localstorage*

@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import type { GlossaryState } from '~/logics/glossary'
+import type { ArticleAudio } from '~/types'
 import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
@@ -19,6 +20,8 @@ const { frontmatter } = defineProps({
     required: true,
   },
 })
+
+const AsyncArticleAudio = defineAsyncComponent(() => import('~/components/ArticleAudio.vue'))
 
 const fluent = useFluent()
 const router = useRouter()
@@ -77,6 +80,45 @@ const currentLocale = computed(() => {
 
 const localizedDuration = computed(() => {
   return formatReadingDuration(frontmatter.duration, currentLocale.value)
+})
+
+function optionalString(value: unknown) {
+  return typeof value === 'string' && value.trim()
+    ? value.trim()
+    : undefined
+}
+
+const articleAudio = computed<ArticleAudio | undefined>(() => {
+  const audio = frontmatter.audio
+  if (!audio || typeof audio !== 'object' || Array.isArray(audio))
+    return undefined
+
+  const record = audio as Record<string, unknown>
+  const url = optionalString(record.url)
+  if (!url)
+    return undefined
+
+  return {
+    url,
+    sourceTextUpdatedAt: optionalString(record.sourceTextUpdatedAt),
+    duration: optionalString(record.duration),
+    title: optionalString(record.title),
+    artist: optionalString(record.artist),
+    downloadUrl: optionalString(record.downloadUrl),
+  }
+})
+
+const articleUpdatedAt = computed(() => {
+  return optionalString(frontmatter.updated) || optionalString(frontmatter.date) || ''
+})
+
+const articleSlug = computed(() => {
+  const parts = route.path.split('/').filter(Boolean)
+  return parts[parts.length - 1] || optionalString(frontmatter.title) || 'article'
+})
+
+const articleImage = computed(() => {
+  return optionalString(frontmatter.image)
 })
 
 /**
@@ -462,6 +504,14 @@ const ArtComponent = computed(() => {
     <PostNoticeBanner
       v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
       :original-locale="frontmatter.originalLocale"
+    />
+    <AsyncArticleAudio
+      v-if="articleAudio"
+      :audio="articleAudio"
+      :article-title="frontmatter.display ?? frontmatter.title"
+      :article-updated-at="articleUpdatedAt"
+      :article-image="articleImage"
+      :article-slug="articleSlug"
     />
   </div>
   <ScrollProgressToc
