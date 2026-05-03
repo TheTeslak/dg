@@ -110,7 +110,7 @@ const lineSegments = computed(() => {
   return segs
 })
 
-// Scroll spy: which heading is active
+// Active heading tracking
 const activeIndex = computed(() => {
   const threshold = scrollY.value + winHeight.value * 0.3
   let active = -1
@@ -121,7 +121,7 @@ const activeIndex = computed(() => {
   return active
 })
 
-// Auto-scroll the ToC so that the active item is visible
+// Scroll sync for ToC track
 watch(activeIndex, (idx) => {
   const wrapper = scrollWrapperEl.value
   if (!wrapper || idx < 0)
@@ -133,7 +133,7 @@ watch(activeIndex, (idx) => {
   wrapper.scrollTo({ top: Math.max(0, desired), behavior: 'smooth' })
 })
 
-// ── Mobile ToC logic ──
+// Mobile ToC logic
 const isMobileOpen = ref(false)
 
 function scrollToHeading(id: string) {
@@ -180,7 +180,7 @@ function closeMobileSheet() {
   isMobileOpen.value = false
 }
 
-// ── Mobile Copy Link logic ──
+// Mobile Link logic
 const mobileCopied = ref(false)
 let mobileCopiedTimeout: ReturnType<typeof setTimeout> | undefined
 
@@ -220,7 +220,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- ── Desktop ToC (unchanged) ── -->
+  <!-- Desktop Table of Contents -->
   <div
     v-if="headings.length > 1"
     class="scroll-toc"
@@ -300,7 +300,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <!-- ── Mobile Action Bar ── -->
+  <!-- Mobile Action Bar -->
   <div v-if="headings.length > 1" class="mobile-action-bar">
     <!-- Open ToC button -->
     <button
@@ -308,20 +308,26 @@ onMounted(() => {
       :title="$t('heading-link')"
       @click="isMobileOpen = true"
     >
-      <div class="i-ri-menu-2-fill" />
+      <div class="i-ri-menu-2-fill text-xl" />
     </button>
     <!-- Copy Link button -->
     <button
       class="mobile-action-btn"
-      :class="{ 'is-copied': mobileCopied }"
+      :class="mobileCopied ? 'is-copied' : ''"
       :title="mobileCopied ? $t('post-link-copied') : $t('post-copy-link')"
       @click="mobileCopyLink()"
     >
-      <div :class="mobileCopied ? 'i-ri-check-line' : 'i-ri-links-line'" />
+      <div :class="mobileCopied ? 'i-ri-check-line' : 'i-ri-links-line'" class="shrink-0 text-xl" />
+      <span
+        class="mobile-action-copied-text text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300"
+        :class="mobileCopied ? 'ml-2 max-w-40 opacity-100' : 'ml-0 max-w-0 opacity-0'"
+      >
+        {{ $t('post-link-copied') }}
+      </span>
     </button>
   </div>
 
-  <!-- ── Mobile Bottom Sheet ── -->
+  <!-- Mobile Table of Contents -->
   <Teleport to="body">
     <Transition name="mobile-toc-backdrop">
       <div
@@ -370,7 +376,7 @@ onMounted(() => {
 </template>
 
 <style>
-/* ── Desktop Container ── */
+/* Desktop layout */
 .scroll-toc {
   position: fixed;
   left: 18px;
@@ -412,7 +418,7 @@ onMounted(() => {
   }
 }
 
-/* ── Scrollable wrapper ── */
+/* Content wrapper */
 .scroll-toc-scroll-wrapper {
   flex: 1 1 auto;
   min-height: 0;
@@ -439,7 +445,7 @@ onMounted(() => {
   pointer-events: auto;
 }
 
-/* ── Track area (holds SVG + labels) ── */
+/* Visual track */
 .scroll-toc-track {
   position: relative;
   left: 0;
@@ -470,7 +476,7 @@ onMounted(() => {
   overflow: visible;
 }
 
-/* ── SVG elements ── */
+/* SVG elements */
 
 /* Thin line segments between dot gaps */
 .scroll-toc-line {
@@ -502,7 +508,7 @@ html.dark .scroll-toc-dot.is-active {
   stroke: rgba(210, 210, 210, 0.7);
 }
 
-/* ── Heading labels ── */
+/* Labels */
 .scroll-toc-item {
   position: absolute;
   left: 20px;
@@ -574,7 +580,7 @@ html.dark .scroll-toc-item:hover .scroll-toc-label {
   pointer-events: auto;
 }
 
-/* ── Title block (top, visible on hover) ── */
+/* Header block */
 .scroll-toc-title {
   flex-shrink: 0;
   padding-left: 4px;
@@ -629,9 +635,7 @@ html.dark .scroll-toc-title-duration {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   MOBILE ACTION BAR
-   ═══════════════════════════════════════════════ */
+/* Mobile action bar */
 .mobile-action-bar {
   display: none;
 }
@@ -648,60 +652,55 @@ html.dark .scroll-toc-title-duration {
     justify-content: space-between;
     padding: 0.5rem 1rem;
     padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    pointer-events: none; /* Let clicks pass through the container */
   }
 
-  html.dark .mobile-action-bar {
-    background: rgba(0, 0, 0, 0.72);
-    border-top-color: rgba(255, 255, 255, 0.06);
+  /* Make sure buttons remain clickable */
+  .mobile-action-bar > * {
+    pointer-events: auto;
   }
 }
 
 .mobile-action-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
+  min-width: 2.75rem;
   height: 2.75rem;
   border: 0;
-  border-radius: 0.75rem;
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.55);
+  border-radius: 9999px;
+  background: var(--c-bg);
+  color: inherit;
+  opacity: 1;
   cursor: pointer;
-  font-size: 1.15rem;
   transition:
-    background 0.2s ease,
-    color 0.2s ease;
+    background 0.3s ease,
+    opacity 0.3s ease,
+    padding 0.3s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 html.dark .mobile-action-btn {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.55);
+  background: var(--c-bg);
 }
 
+.mobile-action-btn:hover,
 .mobile-action-btn:active {
-  background: rgba(0, 0, 0, 0.12);
+  background: #e7e7e7;
+  opacity: 1;
 }
 
+html.dark .mobile-action-btn:hover,
 html.dark .mobile-action-btn:active {
-  background: rgba(255, 255, 255, 0.15);
+  background: #1b1b1b;
 }
 
 .mobile-action-btn.is-copied {
-  color: rgba(34, 170, 85, 0.85);
+  padding-left: 0.75rem;
+  padding-right: 1rem;
 }
 
-html.dark .mobile-action-btn.is-copied {
-  color: rgba(80, 220, 130, 0.85);
-}
-
-/* ═══════════════════════════════════════════════
-   MOBILE BOTTOM SHEET
-   ═══════════════════════════════════════════════ */
+/* Mobile sheet */
 
 /* Backdrop */
 .mobile-toc-backdrop {

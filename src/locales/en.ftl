@@ -5,14 +5,12 @@ meta-description = { -brand }'s Blog
 nav-blog = Blog
 nav-articles = Articles
 nav-projects = Projects
-nav-talks = Talks
-nav-streams = Streams
 nav-notes = Notes
-nav-podcasts = Podcasts
-nav-demos = Demos
 nav-photos = Photos
-nav-sponsors = Sponsors
+nav-now = Now
 nav-chat = Let's Chat
+nav-menu = Menu
+nav-close = Close
 
 action-toggle-theme = Toggle Color Scheme
 action-to-top = Scroll to top

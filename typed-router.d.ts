@@ -730,6 +730,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/now': RouteRecordInfo<
+      '/en/now',
+      '/en/now',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/photos': RouteRecordInfo<
       '/en/photos',
       '/en/photos',
@@ -810,6 +817,13 @@ declare module 'vue-router/auto-routes' {
     '/es/notes': RouteRecordInfo<
       '/es/notes',
       '/es/notes',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/es/now': RouteRecordInfo<
+      '/es/now',
+      '/es/now',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -901,6 +915,13 @@ declare module 'vue-router/auto-routes' {
     '/ru/notes': RouteRecordInfo<
       '/ru/notes',
       '/ru/notes',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/ru/now': RouteRecordInfo<
+      '/ru/now',
+      '/ru/now',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -1573,6 +1594,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/en/now.md': {
+      routes:
+        | '/en/now'
+      views:
+        | never
+    }
     'pages/en/photos.md': {
       routes:
         | '/en/photos'
@@ -1642,6 +1669,12 @@ declare module 'vue-router/auto-routes' {
     'pages/es/notes.md': {
       routes:
         | '/es/notes'
+      views:
+        | never
+    }
+    'pages/es/now.md': {
+      routes:
+        | '/es/now'
       views:
         | never
     }
@@ -1720,6 +1753,12 @@ declare module 'vue-router/auto-routes' {
     'pages/ru/notes.md': {
       routes:
         | '/ru/notes'
+      views:
+        | never
+    }
+    'pages/ru/now.md': {
+      routes:
+        | '/ru/now'
       views:
         | never
     }

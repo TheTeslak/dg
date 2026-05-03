@@ -5,14 +5,12 @@ meta-description = Блог { -brand }
 nav-blog = Блог
 nav-articles = Статьи
 nav-projects = Проекты
-nav-talks = Доклады
-nav-streams = Стримы
 nav-notes = Заметки
-nav-podcasts = Подкасты
-nav-demos = Демо
 nav-photos = Фото
-nav-sponsors = Спонсоры
+nav-now = Сейчас
 nav-chat = Чат
+nav-menu = Меню
+nav-close = Закрыть
 
 action-toggle-theme = Сменить тему
 action-to-top = Наверх
