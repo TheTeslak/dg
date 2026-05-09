@@ -155,6 +155,9 @@ onBeforeUnmount(() => {
         >
           <div class="mobile-menu-panel" @click.stop>
             <nav class="mobile-menu-links">
+              <RouterLink :to="localePath()" @click="closeMobileMenu">
+                Teslak.Me
+              </RouterLink>
               <RouterLink :to="localePath('/notes')" @click="closeMobileMenu">
                 {{ $t('nav-blog') }}
               </RouterLink>
@@ -303,7 +306,7 @@ onBeforeUnmount(() => {
   background: var(--c-bg);
   border-bottom: 1px solid rgba(125, 125, 125, 0.15);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  padding: 2rem 2.5rem 1.5rem;
+  padding: 1.5rem 2.5rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -339,7 +342,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding-top: 0.25rem;
+  padding-top: 1.5rem;
   border-top: 1px solid rgba(125, 125, 125, 0.12);
 }
 

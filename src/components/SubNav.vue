@@ -87,7 +87,7 @@ const modKey = computed(() => {
     <button
       v-show="!isSearchOpen"
       flex="~ gap1" items-center mb2 text-sm
-      class="op60 hover:op100 focus-visible:op100 active:op80 transition-all outline-none rounded-sm"
+      class="language-filter op60 hover:op100 focus-visible:op100 active:op80 transition-all outline-none rounded-sm"
       @click="onlyLanguage = !onlyLanguage"
     >
       <div :class="onlyLanguage ? 'i-carbon-checkbox-checked' : 'i-carbon-checkbox'" />
@@ -97,7 +97,7 @@ const modKey = computed(() => {
     <div mb-0 flex="~ items-center gap-1 sm:gap-3" text-3xl>
       <!-- Tabs (hidden when search is open) -->
       <template v-if="!isSearchOpen">
-        <div flex="~ col gap-1 sm:row sm:gap-3 wrap" class="subnav-tabs">
+        <div class="subnav-tabs">
           <RouterLink :to="`/${currentLocale}/notes`" class="!border-none" :class="route.path.includes('/notes') ? activeStyle : inactiveStyle">
             {{ $t('nav-notes') }}
           </RouterLink>
@@ -142,8 +142,22 @@ const modKey = computed(() => {
 
 <style scoped>
 .subnav-tabs {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  gap: 0.75rem;
   flex: 1;
   min-width: 0;
+}
+
+.subnav-tabs a {
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .language-filter {
+    gap: 0.5rem;
+  }
 }
 
 .search-trigger {

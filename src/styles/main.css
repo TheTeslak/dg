@@ -3,7 +3,7 @@
   --c-scrollbar: #ddd;
   --c-scrollbar-hover: #bbb;
   --photo-hover-shadow: 0 14px 30px rgb(15 23 42 / 0.09), 0 4px 12px rgb(15 23 42 / 0.05);
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 html {

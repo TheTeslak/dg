@@ -375,7 +375,7 @@ onMounted(() => {
   </Teleport>
 </template>
 
-<style>
+<style scoped>
 /* Desktop layout */
 .scroll-toc {
   position: fixed;
