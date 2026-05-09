@@ -6,7 +6,8 @@
     "vite.config.ts",
     "unocss.config.ts",
     "middleware.ts",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "build/**/*.ts"
   ],
   "exclude": [
     "dist",
