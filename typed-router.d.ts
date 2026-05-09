@@ -44,6 +44,13 @@ declare module 'vue-router/auto-routes' {
       { 404: ParamValue<false> },
       | never
     >,
+    '/en/articles/': RouteRecordInfo<
+      '/en/articles/',
+      '/en/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/animated-svg-logo': RouteRecordInfo<
       '/en/articles/animated-svg-logo',
       '/en/articles/animated-svg-logo',
@@ -275,13 +282,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/vue-3-notes': RouteRecordInfo<
-      '/en/articles/vue-3-notes',
-      '/en/articles/vue-3-notes',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/why-reproductions-are-required': RouteRecordInfo<
       '/en/articles/why-reproductions-are-required',
       '/en/articles/why-reproductions-are-required',
@@ -373,30 +373,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/es/podcasts': RouteRecordInfo<
-      '/es/podcasts',
-      '/es/podcasts',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/es/projects': RouteRecordInfo<
       '/es/projects',
       '/es/projects',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/es/streams': RouteRecordInfo<
-      '/es/streams',
-      '/es/streams',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/es/talks': RouteRecordInfo<
-      '/es/talks',
-      '/es/talks',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -492,6 +471,12 @@ declare module 'vue-router/auto-routes' {
     'pages/en/[...404].md': {
       routes:
         | '/en/[...404]'
+      views:
+        | never
+    }
+    'pages/en/articles/index.md': {
+      routes:
+        | '/en/articles/'
       views:
         | never
     }
@@ -693,12 +678,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/vue-3-notes.md': {
-      routes:
-        | '/en/articles/vue-3-notes'
-      views:
-        | never
-    }
     'pages/en/articles/why-reproductions-are-required.md': {
       routes:
         | '/en/articles/why-reproductions-are-required'
@@ -777,27 +756,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/es/podcasts.md': {
-      routes:
-        | '/es/podcasts'
-      views:
-        | never
-    }
     'pages/es/projects.md': {
       routes:
         | '/es/projects'
-      views:
-        | never
-    }
-    'pages/es/streams.md': {
-      routes:
-        | '/es/streams'
-      views:
-        | never
-    }
-    'pages/es/talks.md': {
-      routes:
-        | '/es/talks'
       views:
         | never
     }

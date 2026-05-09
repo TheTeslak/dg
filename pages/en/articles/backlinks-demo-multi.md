@@ -21,4 +21,6 @@ It points to three different articles:
 2. `about-yak-shaving`
 3. `blocks-template`
 
+---
+
 You should see all three backlinks listed at the top of this article. Also, if you visit any of those three articles, you will see this "Multi-link" article listed in their "Referenced by" sections.
