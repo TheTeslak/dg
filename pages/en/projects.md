@@ -1,5 +1,5 @@
 ---
-title: Projects - Anthony Fu
+title: Projects - Teslak
 display: From vision to reality
 description: List of projects that I am proud of
 art: dots

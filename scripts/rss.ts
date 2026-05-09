@@ -7,10 +7,10 @@ import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import { isPostVisible } from '../src/logics/post-visibility'
 
-const DOMAIN = 'https://antfu.me'
+const DOMAIN = 'https://teslak.me'
 const AUTHOR = {
-  name: 'Anthony Fu',
-  email: 'hi@antfu.me',
+  name: 'Teslak',
+  email: 'hi@teslak.me',
   link: DOMAIN,
 }
 const markdown = MarkdownIt({
@@ -20,6 +20,21 @@ const markdown = MarkdownIt({
 })
 
 const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
+
+function normalizeFeedAudio(audio: unknown) {
+  if (!audio || typeof audio !== 'object' || Array.isArray(audio))
+    return undefined
+
+  const value = audio as Record<string, unknown>
+  const url = value.url
+  if (typeof url !== 'string' || !url.trim())
+    return undefined
+
+  return {
+    ...value,
+    url: url.startsWith('/') ? DOMAIN + url : url,
+  }
+}
 
 async function run() {
   for (const locale of SUPPORTED_LOCALES) {
@@ -31,15 +46,15 @@ async function buildLocaleFeed(locale: string) {
   const files = await fg(`pages/${locale}/articles/*.md`)
 
   const localeTitles: Record<string, string> = {
-    en: 'Anthony Fu',
-    ru: 'Anthony Fu (Русский)',
-    es: 'Anthony Fu (Español)',
+    en: 'Teslak',
+    ru: 'Teslak (Русский)',
+    es: 'Teslak (Español)',
   }
 
   const localeDescriptions: Record<string, string> = {
-    en: 'Anthony Fu\'s Blog',
-    ru: 'Блог Anthony Fu',
-    es: 'Blog de Anthony Fu',
+    en: 'Teslak\'s Blog',
+    ru: 'Блог Teslak',
+    es: 'Blog de Teslak',
   }
 
   const feedName = locale === 'en' ? 'feed' : `feed-${locale}`
@@ -51,7 +66,7 @@ async function buildLocaleFeed(locale: string) {
     id: `${DOMAIN}/${locale}/`,
     link: `${DOMAIN}/${locale}/`,
     language: locale,
-    copyright: 'CC BY-NC-SA 4.0 2021 © Anthony Fu',
+    copyright: 'CC BY-NC-SA 4.0 2021 © Teslak',
     feedLinks: {
       json: `${feedUrl}.json`,
       atom: `${feedUrl}.atom`,
@@ -77,13 +92,20 @@ async function buildLocaleFeed(locale: string) {
           if (data.image?.startsWith('/'))
             data.image = DOMAIN + data.image
 
-          return {
+          const item = {
             ...data,
             date: new Date(data.date),
             content: html,
             author: [AUTHOR],
             link: DOMAIN + i.replace(/^pages(.+)\.md$/, '$1'),
-          }
+          } as Item
+          const audio = normalizeFeedAudio(data.audio)
+          if (audio)
+            item.audio = audio
+          else
+            delete item.audio
+
+          return item
         }),
     ))
     .filter(Boolean)
@@ -97,8 +119,8 @@ async function buildLocaleFeed(locale: string) {
 
 async function writeFeed(name: string, options: FeedOptions, items: Item[]) {
   options.author = AUTHOR
-  options.image = 'https://antfu.me/avatar.png'
-  options.favicon = 'https://antfu.me/logo.png'
+  options.image = 'https://teslak.me/avatar.png'
+  options.favicon = 'https://teslak.me/logo.png'
 
   const feed = new Feed(options)
 

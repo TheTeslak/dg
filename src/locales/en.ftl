@@ -38,14 +38,6 @@ projects-subtitle = Projects that I created or maintaining.
 projects-recent-releases = Recent Releases
 projects-sort-by-stars = All projects sort by Stars
 
-sponsors-desc = If you enjoy my work and find them useful, consider sponsor me and the ecosystem to help Open Source sustainable. Thank you!
-sponsors-ecosystem = Sponsor the Ecosystem
-sponsors-support-me = Sponsor to support { -brand }
-sponsors-afdian = Support on Afdian
-sponsors-circles = Sponsor Circles
-sponsors-tiers = Sponsor Tiers
-sponsors-how-works = How does this work?
-
 footer-copyright = 2026 © { -brand }
 
 intro-desc = Hey, I am { -brand }, a fanatical open sourceror.

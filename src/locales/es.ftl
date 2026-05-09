@@ -38,14 +38,6 @@ projects-subtitle = Proyectos que he creado o mantengo.
 projects-recent-releases = Lanzamientos recientes
 projects-sort-by-stars = Todos los proyectos por estrellas
 
-sponsors-desc = Si disfrutas de mi trabajo y lo encuentras útil, considera patrocinarme a mí y al ecosistema para ayudar a que el Open Source sea sostenible. ¡Gracias!
-sponsors-ecosystem = Patrocinar el ecosistema
-sponsors-support-me = Patrocinar a { -brand }
-sponsors-afdian = Apoyar en Afdian
-sponsors-circles = Círculos de patrocinadores
-sponsors-tiers = Niveles de patrocinio
-sponsors-how-works = ¿Cómo funciona esto?
-
 footer-copyright = 2026 © { -brand }
 
 intro-desc = Hola, soy { -brand }, un apasionado del código abierto.

@@ -87,7 +87,7 @@ function extractLinks(content: string): ExtractedLink[] {
   const seen = new Set<string>()
   const links: ExtractedLink[] = []
 
-  const internalDomains = ['antfu.me', 'www.antfu.me', 'teslak.com', 'www.teslak.com', 'localhost']
+  const internalDomains = ['teslak.me', 'www.teslak.me', 'localhost']
   const imageExtensions = /\.(?:png|jpe?g|gif|svg|webp|avif|ico|bmp|tiff?)(?:\?.*)?$/i
 
   let match

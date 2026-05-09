@@ -1,5 +1,5 @@
 ---
-title: Enfoque actual - Anthony Fu
+title: Enfoque actual - Teslak
 display: Enfoque actual
 description: En qué estoy enfocado ahora
 art: random

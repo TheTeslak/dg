@@ -1,5 +1,5 @@
 ---
-title: Proyectos - Anthony Fu
+title: Proyectos - Teslak
 display: De la visión a la realidad
 description: Lista de proyectos
 art: dots

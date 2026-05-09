@@ -1,6 +1,6 @@
 ---
-title: Фотографии - Anthony Fu
-description: Фото Anthony Fu
+title: Фотографии - Teslak
+description: Фото Teslak
 display: ''
 ---
 
@@ -10,6 +10,6 @@ display: ''
 
 <div class="prose mx-auto mt-10">
   <div>
-    <em op50>Спасибо за интерес к моим фотографиям. Список техники, которую я использую, можно найти <a href="https://antfu.me/ru/use" target="_blank">здесь</a>.</em>
+    <em op50>Спасибо за интерес к моим фотографиям. Список техники, которую я использую, можно найти <a href="https://teslak.me/ru/use" target="_blank">здесь</a>.</em>
   </div>
 </div>

@@ -1,4 +1,4 @@
-export const siteOrigin = 'https://antfu.me'
+export const siteOrigin = 'https://teslak.me'
 
 export function getCanonicalUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`

@@ -5,9 +5,9 @@ export * from './post-visibility'
 
 export const isDark = useDark()
 
-export const onlyLanguage = useLocalStorage('antfu-only-language', false)
+export const onlyLanguage = useLocalStorage('teslak-only-language', false)
 
-export const galleryView = useLocalStorage<'cover' | 'contain'>('antfu-gallery-view', 'cover')
+export const galleryView = useLocalStorage<'cover' | 'contain'>('teslak-gallery-view', 'cover')
 
 export const isLightboxOpen = ref(false)
 

@@ -35,13 +35,3 @@ Code transition demos built exclusively for `shiki-magic-move.md`.
 <ShikiMagicMoveDemo />
 
 <ShikiMagicMoveMatch />
-
-### `<SponsorButtonCollective>`
-
-A specialized collective button variant used only in `sponsorship-forwarding.md`.
-
-```html
-<SponsorButtonCollective />
-```
-
-<SponsorButtonCollective />

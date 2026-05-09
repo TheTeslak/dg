@@ -44,48 +44,6 @@ declare module 'vue-router/auto-routes' {
       { 404: ParamValue<false> },
       | never
     >,
-    '/en/articles/': RouteRecordInfo<
-      '/en/articles/',
-      '/en/articles',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/about-yak-shaving': RouteRecordInfo<
-      '/en/articles/about-yak-shaving',
-      '/en/articles/about-yak-shaving',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/about-yak-shaving-zh': RouteRecordInfo<
-      '/en/articles/about-yak-shaving-zh',
-      '/en/articles/about-yak-shaving-zh',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/ai-qrcode': RouteRecordInfo<
-      '/en/articles/ai-qrcode',
-      '/en/articles/ai-qrcode',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/ai-qrcode-101': RouteRecordInfo<
-      '/en/articles/ai-qrcode-101',
-      '/en/articles/ai-qrcode-101',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/ai-qrcode-refine': RouteRecordInfo<
-      '/en/articles/ai-qrcode-refine',
-      '/en/articles/ai-qrcode-refine',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/animated-svg-logo': RouteRecordInfo<
       '/en/articles/animated-svg-logo',
       '/en/articles/animated-svg-logo',
@@ -138,13 +96,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/backlinks-demo-root': RouteRecordInfo<
       '/en/articles/backlinks-demo-root',
       '/en/articles/backlinks-demo-root',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/binfe-2020-zh': RouteRecordInfo<
-      '/en/articles/binfe-2020-zh',
-      '/en/articles/binfe-2020-zh',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -212,13 +163,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/epoch-semver': RouteRecordInfo<
-      '/en/articles/epoch-semver',
-      '/en/articles/epoch-semver',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/eslint-config-inspector': RouteRecordInfo<
       '/en/articles/eslint-config-inspector',
       '/en/articles/eslint-config-inspector',
@@ -240,58 +184,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/get-package-root': RouteRecordInfo<
-      '/en/articles/get-package-root',
-      '/en/articles/get-package-root',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/github-alerts': RouteRecordInfo<
-      '/en/articles/github-alerts',
-      '/en/articles/github-alerts',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/github-co-authors': RouteRecordInfo<
-      '/en/articles/github-co-authors',
-      '/en/articles/github-co-authors',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/hello-tokyo': RouteRecordInfo<
-      '/en/articles/hello-tokyo',
-      '/en/articles/hello-tokyo',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/icons-in-pure-css': RouteRecordInfo<
-      '/en/articles/icons-in-pure-css',
-      '/en/articles/icons-in-pure-css',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/icons-in-pure-css-zh': RouteRecordInfo<
-      '/en/articles/icons-in-pure-css-zh',
-      '/en/articles/icons-in-pure-css-zh',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/introducing-nuxt-devtools': RouteRecordInfo<
       '/en/articles/introducing-nuxt-devtools',
       '/en/articles/introducing-nuxt-devtools',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/introduction-to-vitest-vue-nation-2022': RouteRecordInfo<
-      '/en/articles/introduction-to-vitest-vue-nation-2022',
-      '/en/articles/introduction-to-vitest-vue-nation-2022',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -303,65 +198,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/journey-with-icons': RouteRecordInfo<
-      '/en/articles/journey-with-icons',
-      '/en/articles/journey-with-icons',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/journey-with-icons-continues': RouteRecordInfo<
-      '/en/articles/journey-with-icons-continues',
-      '/en/articles/journey-with-icons-continues',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/make-libraries-working-with-vue-2-and-3': RouteRecordInfo<
-      '/en/articles/make-libraries-working-with-vue-2-and-3',
-      '/en/articles/make-libraries-working-with-vue-2-and-3',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/manage-github-notifications-2023': RouteRecordInfo<
-      '/en/articles/manage-github-notifications-2023',
-      '/en/articles/manage-github-notifications-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/match-chinese-characters': RouteRecordInfo<
       '/en/articles/match-chinese-characters',
       '/en/articles/match-chinese-characters',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/match-quotes-in-pairs': RouteRecordInfo<
-      '/en/articles/match-quotes-in-pairs',
-      '/en/articles/match-quotes-in-pairs',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/mental-health-oss': RouteRecordInfo<
-      '/en/articles/mental-health-oss',
-      '/en/articles/mental-health-oss',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/mental-health-oss-zh': RouteRecordInfo<
-      '/en/articles/mental-health-oss-zh',
-      '/en/articles/mental-health-oss-zh',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/move-on-to-esm-only': RouteRecordInfo<
-      '/en/articles/move-on-to-esm-only',
-      '/en/articles/move-on-to-esm-only',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -373,44 +212,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/new-house': RouteRecordInfo<
-      '/en/articles/new-house',
-      '/en/articles/new-house',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/new-ways-to-vue-london-2021': RouteRecordInfo<
-      '/en/articles/new-ways-to-vue-london-2021',
-      '/en/articles/new-ways-to-vue-london-2021',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/new-ways-to-vue-taiwan-2021': RouteRecordInfo<
-      '/en/articles/new-ways-to-vue-taiwan-2021',
-      '/en/articles/new-ways-to-vue-taiwan-2021',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/now-and-future-devtools-nuxt-nation-2023': RouteRecordInfo<
-      '/en/articles/now-and-future-devtools-nuxt-nation-2023',
-      '/en/articles/now-and-future-devtools-nuxt-nation-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/npm-binary-mirrors': RouteRecordInfo<
       '/en/articles/npm-binary-mirrors',
       '/en/articles/npm-binary-mirrors',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/nuxt-cpuprofile': RouteRecordInfo<
-      '/en/articles/nuxt-cpuprofile',
-      '/en/articles/nuxt-cpuprofile',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -422,30 +226,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/nuxt-dx-2023': RouteRecordInfo<
-      '/en/articles/nuxt-dx-2023',
-      '/en/articles/nuxt-dx-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/nuxt-dx-strasbourg-2023': RouteRecordInfo<
-      '/en/articles/nuxt-dx-strasbourg-2023',
-      '/en/articles/nuxt-dx-strasbourg-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/nuxt-icon-v1': RouteRecordInfo<
       '/en/articles/nuxt-icon-v1',
       '/en/articles/nuxt-icon-v1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/ohayo-tokyo': RouteRecordInfo<
-      '/en/articles/ohayo-tokyo',
-      '/en/articles/ohayo-tokyo',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -457,37 +240,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/optimize-await': RouteRecordInfo<
-      '/en/articles/optimize-await',
-      '/en/articles/optimize-await',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/patterns-of-vueuse-vuefes-japan-2022': RouteRecordInfo<
-      '/en/articles/patterns-of-vueuse-vuefes-japan-2022',
-      '/en/articles/patterns-of-vueuse-vuefes-japan-2022',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/photos-page': RouteRecordInfo<
-      '/en/articles/photos-page',
-      '/en/articles/photos-page',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/pnpm-external-disk': RouteRecordInfo<
       '/en/articles/pnpm-external-disk',
       '/en/articles/pnpm-external-disk',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/publish-esm-and-cjs': RouteRecordInfo<
-      '/en/articles/publish-esm-and-cjs',
-      '/en/articles/publish-esm-and-cjs',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -513,90 +268,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/reimagine-atomic-css': RouteRecordInfo<
-      '/en/articles/reimagine-atomic-css',
-      '/en/articles/reimagine-atomic-css',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/reimagine-atomic-css-zh': RouteRecordInfo<
-      '/en/articles/reimagine-atomic-css-zh',
-      '/en/articles/reimagine-atomic-css-zh',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/rewrite-in-vite': RouteRecordInfo<
-      '/en/articles/rewrite-in-vite',
-      '/en/articles/rewrite-in-vite',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/roads-to-oss-progressive-vueams-2024': RouteRecordInfo<
-      '/en/articles/roads-to-oss-progressive-vueams-2024',
-      '/en/articles/roads-to-oss-progressive-vueams-2024',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/roads-to-oss-set-theory-react-paris-2024': RouteRecordInfo<
-      '/en/articles/roads-to-oss-set-theory-react-paris-2024',
-      '/en/articles/roads-to-oss-set-theory-react-paris-2024',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/roads-to-oss-set-theory-viteconf-2023': RouteRecordInfo<
-      '/en/articles/roads-to-oss-set-theory-viteconf-2023',
-      '/en/articles/roads-to-oss-set-theory-viteconf-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/roads-to-oss-set-theory-vuefesjapan-2023': RouteRecordInfo<
-      '/en/articles/roads-to-oss-set-theory-vuefesjapan-2023',
-      '/en/articles/roads-to-oss-set-theory-vuefesjapan-2023',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/shiki-magic-move': RouteRecordInfo<
-      '/en/articles/shiki-magic-move',
-      '/en/articles/shiki-magic-move',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/shikiji-twoslash': RouteRecordInfo<
-      '/en/articles/shikiji-twoslash',
-      '/en/articles/shikiji-twoslash',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/sliding-enter-animation': RouteRecordInfo<
-      '/en/articles/sliding-enter-animation',
-      '/en/articles/sliding-enter-animation',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/sponsorship-forwarding': RouteRecordInfo<
-      '/en/articles/sponsorship-forwarding',
-      '/en/articles/sponsorship-forwarding',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/type-inferencing-in-vue': RouteRecordInfo<
-      '/en/articles/type-inferencing-in-vue',
-      '/en/articles/type-inferencing-in-vue',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/type-your-config': RouteRecordInfo<
       '/en/articles/type-your-config',
       '/en/articles/type-your-config',
@@ -604,65 +275,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/typed-provide-and-inject-in-vue': RouteRecordInfo<
-      '/en/articles/typed-provide-and-inject-in-vue',
-      '/en/articles/typed-provide-and-inject-in-vue',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/types-for-sub-modules': RouteRecordInfo<
-      '/en/articles/types-for-sub-modules',
-      '/en/articles/types-for-sub-modules',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/vite-on-demand-dx-viteconf-2022': RouteRecordInfo<
-      '/en/articles/vite-on-demand-dx-viteconf-2022',
-      '/en/articles/vite-on-demand-dx-viteconf-2022',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/vue-3-notes': RouteRecordInfo<
       '/en/articles/vue-3-notes',
       '/en/articles/vue-3-notes',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/vue-beijing-2021': RouteRecordInfo<
-      '/en/articles/vue-beijing-2021',
-      '/en/articles/vue-beijing-2021',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/vueuse-best-practice-vueconf-china-2022': RouteRecordInfo<
-      '/en/articles/vueuse-best-practice-vueconf-china-2022',
-      '/en/articles/vueuse-best-practice-vueconf-china-2022',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/watch-with-reactivity': RouteRecordInfo<
-      '/en/articles/watch-with-reactivity',
-      '/en/articles/watch-with-reactivity',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/why-not-prettier': RouteRecordInfo<
-      '/en/articles/why-not-prettier',
-      '/en/articles/why-not-prettier',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/why-not-prettier-zh': RouteRecordInfo<
-      '/en/articles/why-not-prettier-zh',
-      '/en/articles/why-not-prettier-zh',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -677,48 +292,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/why-reproductions-are-required-zh': RouteRecordInfo<
       '/en/articles/why-reproductions-are-required-zh',
       '/en/articles/why-reproductions-are-required-zh',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/windicss-and-tailwind-jit': RouteRecordInfo<
-      '/en/articles/windicss-and-tailwind-jit',
-      '/en/articles/windicss-and-tailwind-jit',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/bar': RouteRecordInfo<
-      '/en/bar',
-      '/en/bar',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/bookmarks': RouteRecordInfo<
-      '/en/bookmarks',
-      '/en/bookmarks',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/collective-sponsor-onetime': RouteRecordInfo<
-      '/en/collective-sponsor-onetime',
-      '/en/collective-sponsor-onetime',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/demos': RouteRecordInfo<
-      '/en/demos',
-      '/en/demos',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/media': RouteRecordInfo<
-      '/en/media',
-      '/en/media',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -744,44 +317,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/podcasts': RouteRecordInfo<
-      '/en/podcasts',
-      '/en/podcasts',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/projects': RouteRecordInfo<
       '/en/projects',
       '/en/projects',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/sponsors-list': RouteRecordInfo<
-      '/en/sponsors-list',
-      '/en/sponsors-list',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/streams': RouteRecordInfo<
-      '/en/streams',
-      '/en/streams',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/talks': RouteRecordInfo<
-      '/en/talks',
-      '/en/talks',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/use': RouteRecordInfo<
-      '/en/use',
-      '/en/use',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -849,13 +387,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/es/sponsors-list': RouteRecordInfo<
-      '/es/sponsors-list',
-      '/es/sponsors-list',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/es/streams': RouteRecordInfo<
       '/es/streams',
       '/es/streams',
@@ -905,13 +436,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/ru/demos': RouteRecordInfo<
-      '/ru/demos',
-      '/ru/demos',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/ru/notes': RouteRecordInfo<
       '/ru/notes',
       '/ru/notes',
@@ -933,44 +457,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/ru/podcasts': RouteRecordInfo<
-      '/ru/podcasts',
-      '/ru/podcasts',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/ru/projects': RouteRecordInfo<
       '/ru/projects',
       '/ru/projects',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/ru/sponsors-list': RouteRecordInfo<
-      '/ru/sponsors-list',
-      '/ru/sponsors-list',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/ru/streams': RouteRecordInfo<
-      '/ru/streams',
-      '/ru/streams',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/ru/talks': RouteRecordInfo<
-      '/ru/talks',
-      '/ru/talks',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/ru/use': RouteRecordInfo<
-      '/ru/use',
-      '/ru/use',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -1003,42 +492,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/[...404].md': {
       routes:
         | '/en/[...404]'
-      views:
-        | never
-    }
-    'pages/en/articles/index.md': {
-      routes:
-        | '/en/articles/'
-      views:
-        | never
-    }
-    'pages/en/articles/about-yak-shaving.md': {
-      routes:
-        | '/en/articles/about-yak-shaving'
-      views:
-        | never
-    }
-    'pages/en/articles/about-yak-shaving-zh.md': {
-      routes:
-        | '/en/articles/about-yak-shaving-zh'
-      views:
-        | never
-    }
-    'pages/en/articles/ai-qrcode.md': {
-      routes:
-        | '/en/articles/ai-qrcode'
-      views:
-        | never
-    }
-    'pages/en/articles/ai-qrcode-101.md': {
-      routes:
-        | '/en/articles/ai-qrcode-101'
-      views:
-        | never
-    }
-    'pages/en/articles/ai-qrcode-refine.md': {
-      routes:
-        | '/en/articles/ai-qrcode-refine'
       views:
         | never
     }
@@ -1087,12 +540,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/backlinks-demo-root.md': {
       routes:
         | '/en/articles/backlinks-demo-root'
-      views:
-        | never
-    }
-    'pages/en/articles/binfe-2020-zh.md': {
-      routes:
-        | '/en/articles/binfe-2020-zh'
       views:
         | never
     }
@@ -1150,12 +597,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/epoch-semver.md': {
-      routes:
-        | '/en/articles/epoch-semver'
-      views:
-        | never
-    }
     'pages/en/articles/eslint-config-inspector.md': {
       routes:
         | '/en/articles/eslint-config-inspector'
@@ -1174,51 +615,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/get-package-root.md': {
-      routes:
-        | '/en/articles/get-package-root'
-      views:
-        | never
-    }
-    'pages/en/articles/github-alerts.md': {
-      routes:
-        | '/en/articles/github-alerts'
-      views:
-        | never
-    }
-    'pages/en/articles/github-co-authors.md': {
-      routes:
-        | '/en/articles/github-co-authors'
-      views:
-        | never
-    }
-    'pages/en/articles/hello-tokyo.md': {
-      routes:
-        | '/en/articles/hello-tokyo'
-      views:
-        | never
-    }
-    'pages/en/articles/icons-in-pure-css.md': {
-      routes:
-        | '/en/articles/icons-in-pure-css'
-      views:
-        | never
-    }
-    'pages/en/articles/icons-in-pure-css-zh.md': {
-      routes:
-        | '/en/articles/icons-in-pure-css-zh'
-      views:
-        | never
-    }
     'pages/en/articles/introducing-nuxt-devtools.md': {
       routes:
         | '/en/articles/introducing-nuxt-devtools'
-      views:
-        | never
-    }
-    'pages/en/articles/introduction-to-vitest-vue-nation-2022.md': {
-      routes:
-        | '/en/articles/introduction-to-vitest-vue-nation-2022'
       views:
         | never
     }
@@ -1228,57 +627,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/journey-with-icons.md': {
-      routes:
-        | '/en/articles/journey-with-icons'
-      views:
-        | never
-    }
-    'pages/en/articles/journey-with-icons-continues.md': {
-      routes:
-        | '/en/articles/journey-with-icons-continues'
-      views:
-        | never
-    }
-    'pages/en/articles/make-libraries-working-with-vue-2-and-3.md': {
-      routes:
-        | '/en/articles/make-libraries-working-with-vue-2-and-3'
-      views:
-        | never
-    }
-    'pages/en/articles/manage-github-notifications-2023.md': {
-      routes:
-        | '/en/articles/manage-github-notifications-2023'
-      views:
-        | never
-    }
     'pages/en/articles/match-chinese-characters.md': {
       routes:
         | '/en/articles/match-chinese-characters'
-      views:
-        | never
-    }
-    'pages/en/articles/match-quotes-in-pairs.md': {
-      routes:
-        | '/en/articles/match-quotes-in-pairs'
-      views:
-        | never
-    }
-    'pages/en/articles/mental-health-oss.md': {
-      routes:
-        | '/en/articles/mental-health-oss'
-      views:
-        | never
-    }
-    'pages/en/articles/mental-health-oss-zh.md': {
-      routes:
-        | '/en/articles/mental-health-oss-zh'
-      views:
-        | never
-    }
-    'pages/en/articles/move-on-to-esm-only.md': {
-      routes:
-        | '/en/articles/move-on-to-esm-only'
       views:
         | never
     }
@@ -1288,39 +639,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/new-house.md': {
-      routes:
-        | '/en/articles/new-house'
-      views:
-        | never
-    }
-    'pages/en/articles/new-ways-to-vue-london-2021.md': {
-      routes:
-        | '/en/articles/new-ways-to-vue-london-2021'
-      views:
-        | never
-    }
-    'pages/en/articles/new-ways-to-vue-taiwan-2021.md': {
-      routes:
-        | '/en/articles/new-ways-to-vue-taiwan-2021'
-      views:
-        | never
-    }
-    'pages/en/articles/now-and-future-devtools-nuxt-nation-2023.md': {
-      routes:
-        | '/en/articles/now-and-future-devtools-nuxt-nation-2023'
-      views:
-        | never
-    }
     'pages/en/articles/npm-binary-mirrors.md': {
       routes:
         | '/en/articles/npm-binary-mirrors'
-      views:
-        | never
-    }
-    'pages/en/articles/nuxt-cpuprofile.md': {
-      routes:
-        | '/en/articles/nuxt-cpuprofile'
       views:
         | never
     }
@@ -1330,27 +651,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/nuxt-dx-2023.md': {
-      routes:
-        | '/en/articles/nuxt-dx-2023'
-      views:
-        | never
-    }
-    'pages/en/articles/nuxt-dx-strasbourg-2023.md': {
-      routes:
-        | '/en/articles/nuxt-dx-strasbourg-2023'
-      views:
-        | never
-    }
     'pages/en/articles/nuxt-icon-v1.md': {
       routes:
         | '/en/articles/nuxt-icon-v1'
-      views:
-        | never
-    }
-    'pages/en/articles/ohayo-tokyo.md': {
-      routes:
-        | '/en/articles/ohayo-tokyo'
       views:
         | never
     }
@@ -1360,33 +663,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/optimize-await.md': {
-      routes:
-        | '/en/articles/optimize-await'
-      views:
-        | never
-    }
-    'pages/en/articles/patterns-of-vueuse-vuefes-japan-2022.md': {
-      routes:
-        | '/en/articles/patterns-of-vueuse-vuefes-japan-2022'
-      views:
-        | never
-    }
-    'pages/en/articles/photos-page.md': {
-      routes:
-        | '/en/articles/photos-page'
-      views:
-        | never
-    }
     'pages/en/articles/pnpm-external-disk.md': {
       routes:
         | '/en/articles/pnpm-external-disk'
-      views:
-        | never
-    }
-    'pages/en/articles/publish-esm-and-cjs.md': {
-      routes:
-        | '/en/articles/publish-esm-and-cjs'
       views:
         | never
     }
@@ -1408,135 +687,15 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/reimagine-atomic-css.md': {
-      routes:
-        | '/en/articles/reimagine-atomic-css'
-      views:
-        | never
-    }
-    'pages/en/articles/reimagine-atomic-css-zh.md': {
-      routes:
-        | '/en/articles/reimagine-atomic-css-zh'
-      views:
-        | never
-    }
-    'pages/en/articles/rewrite-in-vite.md': {
-      routes:
-        | '/en/articles/rewrite-in-vite'
-      views:
-        | never
-    }
-    'pages/en/articles/roads-to-oss-progressive-vueams-2024.md': {
-      routes:
-        | '/en/articles/roads-to-oss-progressive-vueams-2024'
-      views:
-        | never
-    }
-    'pages/en/articles/roads-to-oss-set-theory-react-paris-2024.md': {
-      routes:
-        | '/en/articles/roads-to-oss-set-theory-react-paris-2024'
-      views:
-        | never
-    }
-    'pages/en/articles/roads-to-oss-set-theory-viteconf-2023.md': {
-      routes:
-        | '/en/articles/roads-to-oss-set-theory-viteconf-2023'
-      views:
-        | never
-    }
-    'pages/en/articles/roads-to-oss-set-theory-vuefesjapan-2023.md': {
-      routes:
-        | '/en/articles/roads-to-oss-set-theory-vuefesjapan-2023'
-      views:
-        | never
-    }
-    'pages/en/articles/shiki-magic-move.md': {
-      routes:
-        | '/en/articles/shiki-magic-move'
-      views:
-        | never
-    }
-    'pages/en/articles/shikiji-twoslash.md': {
-      routes:
-        | '/en/articles/shikiji-twoslash'
-      views:
-        | never
-    }
-    'pages/en/articles/sliding-enter-animation.md': {
-      routes:
-        | '/en/articles/sliding-enter-animation'
-      views:
-        | never
-    }
-    'pages/en/articles/sponsorship-forwarding.md': {
-      routes:
-        | '/en/articles/sponsorship-forwarding'
-      views:
-        | never
-    }
-    'pages/en/articles/type-inferencing-in-vue.md': {
-      routes:
-        | '/en/articles/type-inferencing-in-vue'
-      views:
-        | never
-    }
     'pages/en/articles/type-your-config.md': {
       routes:
         | '/en/articles/type-your-config'
       views:
         | never
     }
-    'pages/en/articles/typed-provide-and-inject-in-vue.md': {
-      routes:
-        | '/en/articles/typed-provide-and-inject-in-vue'
-      views:
-        | never
-    }
-    'pages/en/articles/types-for-sub-modules.md': {
-      routes:
-        | '/en/articles/types-for-sub-modules'
-      views:
-        | never
-    }
-    'pages/en/articles/vite-on-demand-dx-viteconf-2022.md': {
-      routes:
-        | '/en/articles/vite-on-demand-dx-viteconf-2022'
-      views:
-        | never
-    }
     'pages/en/articles/vue-3-notes.md': {
       routes:
         | '/en/articles/vue-3-notes'
-      views:
-        | never
-    }
-    'pages/en/articles/vue-beijing-2021.md': {
-      routes:
-        | '/en/articles/vue-beijing-2021'
-      views:
-        | never
-    }
-    'pages/en/articles/vueuse-best-practice-vueconf-china-2022.md': {
-      routes:
-        | '/en/articles/vueuse-best-practice-vueconf-china-2022'
-      views:
-        | never
-    }
-    'pages/en/articles/watch-with-reactivity.md': {
-      routes:
-        | '/en/articles/watch-with-reactivity'
-      views:
-        | never
-    }
-    'pages/en/articles/why-not-prettier.md': {
-      routes:
-        | '/en/articles/why-not-prettier'
-      views:
-        | never
-    }
-    'pages/en/articles/why-not-prettier-zh.md': {
-      routes:
-        | '/en/articles/why-not-prettier-zh'
       views:
         | never
     }
@@ -1549,42 +708,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/why-reproductions-are-required-zh.md': {
       routes:
         | '/en/articles/why-reproductions-are-required-zh'
-      views:
-        | never
-    }
-    'pages/en/articles/windicss-and-tailwind-jit.md': {
-      routes:
-        | '/en/articles/windicss-and-tailwind-jit'
-      views:
-        | never
-    }
-    'pages/en/bar.md': {
-      routes:
-        | '/en/bar'
-      views:
-        | never
-    }
-    'pages/en/bookmarks.md': {
-      routes:
-        | '/en/bookmarks'
-      views:
-        | never
-    }
-    'pages/en/collective-sponsor-onetime.md': {
-      routes:
-        | '/en/collective-sponsor-onetime'
-      views:
-        | never
-    }
-    'pages/en/demos.md': {
-      routes:
-        | '/en/demos'
-      views:
-        | never
-    }
-    'pages/en/media.md': {
-      routes:
-        | '/en/media'
       views:
         | never
     }
@@ -1606,39 +729,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/podcasts.md': {
-      routes:
-        | '/en/podcasts'
-      views:
-        | never
-    }
     'pages/en/projects.md': {
       routes:
         | '/en/projects'
-      views:
-        | never
-    }
-    'pages/en/sponsors-list.md': {
-      routes:
-        | '/en/sponsors-list'
-      views:
-        | never
-    }
-    'pages/en/streams.md': {
-      routes:
-        | '/en/streams'
-      views:
-        | never
-    }
-    'pages/en/talks.md': {
-      routes:
-        | '/en/talks'
-      views:
-        | never
-    }
-    'pages/en/use.md': {
-      routes:
-        | '/en/use'
       views:
         | never
     }
@@ -1696,12 +789,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/es/sponsors-list.md': {
-      routes:
-        | '/es/sponsors-list'
-      views:
-        | never
-    }
     'pages/es/streams.md': {
       routes:
         | '/es/streams'
@@ -1744,12 +831,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/ru/demos.md': {
-      routes:
-        | '/ru/demos'
-      views:
-        | never
-    }
     'pages/ru/notes.md': {
       routes:
         | '/ru/notes'
@@ -1768,39 +849,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/ru/podcasts.md': {
-      routes:
-        | '/ru/podcasts'
-      views:
-        | never
-    }
     'pages/ru/projects.md': {
       routes:
         | '/ru/projects'
-      views:
-        | never
-    }
-    'pages/ru/sponsors-list.md': {
-      routes:
-        | '/ru/sponsors-list'
-      views:
-        | never
-    }
-    'pages/ru/streams.md': {
-      routes:
-        | '/ru/streams'
-      views:
-        | never
-    }
-    'pages/ru/talks.md': {
-      routes:
-        | '/ru/talks'
-      views:
-        | never
-    }
-    'pages/ru/use.md': {
-      routes:
-        | '/ru/use'
       views:
         | never
     }

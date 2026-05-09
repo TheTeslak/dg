@@ -1,5 +1,5 @@
 ---
-title: Проекты - Anthony Fu
+title: Проекты - Teslak
 display: От замысла до воплощения
 art: dots
 ---

@@ -71,7 +71,7 @@ export const projects: ProjectSection[] = [
       },
       {
         name: 'vite-plugin-inspect',
-        link: 'https://github.com/antfu/vite-plugin-inspect',
+        link: 'https://github.com/teslak/vite-plugin-inspect',
         desc: 'Inspect the intermediate state of Vite plugins',
         desc_ru: 'Инспекция работы плагинов Vite на промежуточных этапах',
         desc_es: 'Inspecciona el estado intermedio de los plugins de Vite',
@@ -79,7 +79,7 @@ export const projects: ProjectSection[] = [
       },
       {
         name: 'vite-ssg',
-        link: 'https://github.com/antfu/vite-ssg',
+        link: 'https://github.com/teslak/vite-ssg',
         desc: 'Server-side generation for Vite',
         desc_ru: 'Генерация статических сайтов (SSG) для Vite',
         desc_es: 'Generación estática del lado del servidor para Vite',

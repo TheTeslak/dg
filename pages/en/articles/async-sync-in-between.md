@@ -129,7 +129,7 @@ Is there a better way to handle this?
 
 What if we could make our logic decoupled from the coloring problem and let the caller decide the color?
 
-Trying to make the situation a bit better, {@sxzz} and I took inspiration from [`gensync`](https://github.com/loganfsmyth/gensync) by {@loganfsmyth} and made a package called [<code important-text-purple>quansync</code>](https://github.com/antfu-collective/quansync). Taking it even further, we are dreaming of leveraging this to create a paradigm shift in the way we write libraries in the JavaScript ecosystem.
+Trying to make the situation a bit better, {@sxzz} and I took inspiration from [`gensync`](https://github.com/loganfsmyth/gensync) by {@loganfsmyth} and made a package called [<code important-text-purple>quansync</code>](https://github.com/teslak-collective/quansync). Taking it even further, we are dreaming of leveraging this to create a paradigm shift in the way we write libraries in the JavaScript ecosystem.
 
 The name <code important-text-purple>Quansync</code> is borrowed from [Quantum Mechanics](https://en.wikipedia.org/wiki/Quantum_mechanics), where particles can exist in multiple states simultaneously, known as _superposition_, and only settle into a single state when observed <span op50>(try hovering over the atom below)</span>.
 
@@ -244,7 +244,7 @@ While `quansync` doesn't completely solve the coloring problem, it provides a ne
 ## Conclusion
 
 This is a new approach to tackling the coloring problem we are still exploring. We will slowly roll out `quansync` in our libraries and see how it improves our experience and the ecosystem. We are also
-looking for feedback and contributions, so feel free to join us in the [Discord](https://chat.antfu.me) or [GitHub Discussions](https://github.com/quansync-dev/quansync/discussions) to share your thoughts.
+looking for feedback and contributions, so feel free to join us in the [Discord](https://chat.teslak.me) or [GitHub Discussions](https://github.com/quansync-dev/quansync/discussions) to share your thoughts.
 
 - <GitHubLink repo="quansync-dev/quansync" />
 - <GitHubLink repo="quansync-dev/unplugin-quansync" />

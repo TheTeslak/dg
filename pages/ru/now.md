@@ -1,5 +1,5 @@
 ---
-title: Текущие дела - Anthony Fu
+title: Текущие дела - Teslak
 display: Текущие дела
 description: Чем я сейчас занимаюсь
 art: random

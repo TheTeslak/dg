@@ -125,7 +125,7 @@ During installation and publishing, pnpm automatically resolves dependencies to 
 
 Given that catalogs are still quite new, this shift requires better tooling support. A significant pain point for me on this was losing the ability to see a dependency's version at a glance in `package.json` when using `catalog:<name>`.
 
-To address this, I created a VS Code extension, [PNPM Catalog Lens](https://marketplace.visualstudio.com/items?itemName=antfu.pnpm-catalog-lens), which displays the resolved version inline within `package.json`.
+To address this, I created a VS Code extension, [PNPM Catalog Lens](https://marketplace.visualstudio.com/items?itemName=teslak.pnpm-catalog-lens), which displays the resolved version inline within `package.json`.
 
 ![Screenshot of the extension PNPM Catalog Lens](/images/pnpm-catalogs-vscode.png)
 
@@ -133,12 +133,12 @@ It also adds distinct colors to each named category for easier identification. T
 
 Since versions move to `pnpm-workspace.yaml`, CLI tools would need to make some integrations to support this. So far, we've adapted the following tools:
 
-- [`taze`](https://github.com/antfu/taze): Checks and bumps dependency versions, now supporting reading and updating versions from catalogs.
-- [`eslint-plugin-pnpm`](https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm): Enforces using catalogs for all dependencies in `package.json`, with auto-fixes.
-  - If you use [`@antfu/eslint-config`](https://github.com/antfu/eslint-config), enable this by setting `pnpm: true`.
-- [`pnpm-workspace-yaml`](https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/pnpm-workspace-yaml): A utility library for reading and writing `pnpm-workspace.yaml` while preserving comments and formatting.
-- [`node-modules-inspector`](https://github.com/antfu/node-modules-inspector): Visualizes your `node_modules`, now labeling dependencies with their catalog name for a better overview of their origin.
-- [`nip`](https://github.com/antfu/nip): Interactive CLI to install packages to catalogs
+- [`taze`](https://github.com/teslak/taze): Checks and bumps dependency versions, now supporting reading and updating versions from catalogs.
+- [`eslint-plugin-pnpm`](https://github.com/teslak/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm): Enforces using catalogs for all dependencies in `package.json`, with auto-fixes.
+  - If you use [`@teslak/eslint-config`](https://github.com/teslak/eslint-config), enable this by setting `pnpm: true`.
+- [`pnpm-workspace-yaml`](https://github.com/teslak/pnpm-workspace-utils/tree/main/packages/pnpm-workspace-yaml): A utility library for reading and writing `pnpm-workspace.yaml` while preserving comments and formatting.
+- [`node-modules-inspector`](https://github.com/teslak/node-modules-inspector): Visualizes your `node_modules`, now labeling dependencies with their catalog name for a better overview of their origin.
+- [`nip`](https://github.com/teslak/nip): Interactive CLI to install packages to catalogs
 
 ### Looking into the Future
 
@@ -183,6 +183,6 @@ This categorization could also provide valuable context for vulnerability report
 
 ...and so on.
 
-I've already started migrating many of my projects to use named catalogs([`node-modules-inspector`](https://github.com/antfu/node-modules-inspector) for example). Even outside monorepos, the ability to categorize dependencies is a compelling reason to adopt to pnpm catalogs. I consider this an exploratory phase where we're still discovering best practices and improving tooling support.
+I've already started migrating many of my projects to use named catalogs([`node-modules-inspector`](https://github.com/teslak/node-modules-inspector) for example). Even outside monorepos, the ability to categorize dependencies is a compelling reason to adopt to pnpm catalogs. I consider this an exploratory phase where we're still discovering best practices and improving tooling support.
 
 So, that's why I'm writing this post: to invite you to consider this approach and try it out. We'd love to hear your thoughts and how you would utilize it. I look forward to seeing more patterns like this emerge, helping us build more maintainable projects with a better DX. Thanks for reading!

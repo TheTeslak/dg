@@ -453,17 +453,9 @@ Useful for commands and snippets readers need to copy.
 
 Specialized component for linking repositories.
 
-`<GitHubLink repo="antfu/vueuse" name="VueUse" />`
+`<GitHubLink repo="teslak/vueuse" name="VueUse" />`
 
-<GitHubLink repo="antfu/vueuse" name="VueUse" />
-
-### Sponsor Buttons
-
-Shows interactive project sponsorship buttons.
-
-`<SponsorButtons />`
-
-<SponsorButtons />
+<GitHubLink repo="teslak/vueuse" name="VueUse" />
 
 ### Glossary Term (Marginal Annotation) (`GlossaryTerm`)
 
