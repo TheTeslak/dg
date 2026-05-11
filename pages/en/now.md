@@ -1,5 +1,5 @@
 ---
-title: Current focus - Teslak
+title: Current focus
 display: Current focus
 description: What I am focused on now
 art: random

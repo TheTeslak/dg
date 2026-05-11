@@ -1,5 +1,5 @@
 ---
-title: Fotos - Teslak
+title: Fotos
 description: Fotos de Teslak
 display: ''
 ---

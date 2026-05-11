@@ -1,5 +1,5 @@
 ---
-title: Заметки - Teslak
+title: Заметки
 art: plum
 display: ''
 ---

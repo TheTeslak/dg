@@ -1,5 +1,5 @@
 ---
-title: Projects - Teslak
+title: Projects
 display: From vision to reality
 description: List of projects that I am proud of
 art: dots

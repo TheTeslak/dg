@@ -1,5 +1,5 @@
 ---
-title: Blog - Teslak
+title: Blog
 display: ''
 art: plum
 ---

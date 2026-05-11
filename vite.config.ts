@@ -206,6 +206,10 @@ export default defineConfig({
           if (!isDev)
             promises.push(ensureOgImage(id, frontmatter, `public/${path}`))
         })()
+        if (frontmatter.title && frontmatter.title !== 'Teslak Blog') {
+          frontmatter.title = `${frontmatter.title} · Teslak`
+        }
+
         const head = defaults(frontmatter, options)
         return { head, frontmatter }
       },

@@ -345,13 +345,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/es/demos': RouteRecordInfo<
-      '/es/demos',
-      '/es/demos',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/es/notes': RouteRecordInfo<
       '/es/notes',
       '/es/notes',
@@ -729,12 +722,6 @@ declare module 'vue-router/auto-routes' {
     'pages/es/articles/index.md': {
       routes:
         | '/es/articles/'
-      views:
-        | never
-    }
-    'pages/es/demos.md': {
-      routes:
-        | '/es/demos'
       views:
         | never
     }

@@ -101,5 +101,5 @@ export async function ensureOgImage(id: string, frontmatter: Record<string, any>
     return
   }
 
-  await generateOg(String(frontmatter.title).replace(/\s-\s.*$/, '').trim(), output)
+  await generateOg(String(frontmatter.title).trim(), output)
 }

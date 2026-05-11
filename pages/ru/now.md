@@ -1,5 +1,5 @@
 ---
-title: Текущие дела - Teslak
+title: Текущие дела
 display: Текущие дела
 description: Чем я сейчас занимаюсь
 art: random

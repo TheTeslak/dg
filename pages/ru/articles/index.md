@@ -1,5 +1,5 @@
 ---
-title: Блог - Teslak
+title: Блог
 display: ''
 art: plum
 ---

@@ -1,5 +1,5 @@
 ---
-title: Enfoque actual - Teslak
+title: Enfoque actual
 display: Enfoque actual
 description: En qué estoy enfocado ahora
 art: random
