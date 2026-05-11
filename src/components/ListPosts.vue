@@ -86,7 +86,7 @@ function getDurationLabel(duration?: Post['duration']) {
 </script>
 
 <template>
-  <ul role="list">
+  <ul role="list" style="contain: layout;">
     <template v-if="!posts.length">
       <div role="listitem" py2 op50>
         {{ $t('blog-nothing-here') }}
@@ -99,7 +99,7 @@ function getDurationLabel(duration?: Post['duration']) {
         role="listitem"
         select-none relative h20 pointer-events-none slide-enter
         :style="{
-          '--enter-stage': idx - 2,
+          '--enter-stage': Math.min(idx, 10) - 2,
           '--enter-step': '60ms',
         }"
       >
@@ -109,7 +109,7 @@ function getDurationLabel(duration?: Post['duration']) {
         role="listitem"
         class="slide-enter"
         :style="{
-          '--enter-stage': idx,
+          '--enter-stage': Math.min(idx, 10),
           '--enter-step': '60ms',
         }"
       >

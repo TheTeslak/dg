@@ -36,8 +36,7 @@
     "shiki-magic-move": "catalog:frontend",
     "simplex-noise": "catalog:frontend",
     "vue": "catalog:frontend",
-    "vue-router": "catalog:frontend",
-    "vue-router-better-scroller": "catalog:frontend"
+    "vue-router": "catalog:frontend"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:dev",

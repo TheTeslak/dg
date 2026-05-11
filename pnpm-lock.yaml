@@ -216,9 +216,6 @@ catalogs:
     vue-router:
       specifier: ^4.6.4
       version: 4.6.4
-    vue-router-better-scroller:
-      specifier: ^0.0.0
-      version: 0.0.0
   types:
     '@types/d3-shape':
       specifier: ^3.1.8
@@ -306,9 +303,6 @@ importers:
       vue-router:
         specifier: catalog:frontend
         version: 4.6.4(vue@3.5.31(typescript@5.9.3))
-      vue-router-better-scroller:
-        specifier: catalog:frontend
-        version: 0.0.0(vue-router@4.6.4(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
     devDependencies:
       '@antfu/eslint-config':
         specifier: catalog:dev
@@ -4230,12 +4224,6 @@ packages:
     resolution: {integrity: sha512-7+iqOueLU7uc9NrMfrzbG8hwMqchfVfSzpVlCMeJQe4pyibqyoifDNbKTZvwxZKDvGkB+PdFeKvnGZMoEb8esg==}
     peerDependencies:
       vue: ^3.0.0
-
-  vue-router-better-scroller@0.0.0:
-    resolution: {integrity: sha512-E+ovMBUOgr0TU6rYnc5X8h7rlu+QUkK2AMBXt2S6yMrAlW86cq6k5OExM4WnL4vfHbmJEtf+SbAtZ3H3bxYoBQ==}
-    peerDependencies:
-      vue: ^3.3.4
-      vue-router: ^4.2.2
 
   vue-router@4.6.4:
     resolution: {integrity: sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==}
@@ -8421,11 +8409,6 @@ snapshots:
   vue-resize@2.0.0-alpha.1(vue@3.5.31(typescript@5.9.3)):
     dependencies:
       vue: 3.5.31(typescript@5.9.3)
-
-  vue-router-better-scroller@0.0.0(vue-router@4.6.4(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3)):
-    dependencies:
-      vue: 3.5.31(typescript@5.9.3)
-      vue-router: 4.6.4(vue@3.5.31(typescript@5.9.3))
 
   vue-router@4.6.4(vue@3.5.31(typescript@5.9.3)):
     dependencies:

@@ -6,7 +6,6 @@ import { createFluentVue } from 'fluent-vue'
 import NProgress from 'nprogress'
 import { createPinia } from 'pinia'
 import { ViteSSG } from 'vite-ssg'
-import { setupRouterScroller } from 'vue-router-better-scroller'
 import { routes } from 'vue-router/auto-routes'
 import App from './App.vue'
 import enResources from './locales/en.ftl?raw'
@@ -32,6 +31,25 @@ export const createApp = ViteSSG(
   App,
   {
     routes,
+    scrollBehavior(to, from, savedPosition) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const html = document.querySelector('html')
+          if (html) {
+            if (savedPosition?.top || to.hash)
+              html.classList.add('no-sliding')
+            else
+              html.classList.remove('no-sliding')
+          }
+          if (savedPosition)
+            resolve(savedPosition)
+          else if (to.hash)
+            resolve({ el: to.hash, behavior: 'smooth' })
+          else
+            resolve({ top: 0 })
+        }, 50)
+      })
+    },
   },
   ({ router, app, isClient }) => {
     dayjs.extend(LocalizedFormat)
@@ -52,20 +70,6 @@ export const createApp = ViteSSG(
     app.use(fluent)
 
     if (isClient) {
-      const html = document.querySelector('html')!
-      setupRouterScroller(router, {
-        selectors: {
-          html(ctx) {
-            if (ctx.savedPosition?.top || import.meta.hot)
-              html.classList.add('no-sliding')
-            else
-              html.classList.remove('no-sliding')
-            return true
-          },
-        },
-        behavior: 'auto',
-      })
-
       router.beforeEach((to, from, next) => {
         const path = to.path
         const pathParts = path.split('/')
