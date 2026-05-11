@@ -1,6 +1,6 @@
 ---
-title: Photos
-description: Photos by Teslak
+title: Teslak Photos
+description: Photos
 display: ''
 ---
 

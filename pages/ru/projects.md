@@ -1,5 +1,5 @@
 ---
-title: Проекты
+title: Teslak Projects
 display: От замысла до воплощения
 art: dots
 ---

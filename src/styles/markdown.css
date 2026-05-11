@@ -297,9 +297,7 @@ h6:focus .header-anchor {
 }
 
 .prose em {
-  --uno: font-serif;
   color: var(--fg-deep);
-  font-size: 1.05em;
 }
 
 .table-of-contents {

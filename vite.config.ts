@@ -208,7 +208,7 @@ export default defineConfig({
         })()
         const head = defaults(frontmatter, options)
         const finalHead = { ...head }
-        if (finalHead.title && finalHead.title !== 'Teslak Blog') {
+        if (finalHead.title && !finalHead.title.includes('Teslak')) {
           finalHead.title = `${finalHead.title} · Teslak`
         }
 
