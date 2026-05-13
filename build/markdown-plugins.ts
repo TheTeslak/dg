@@ -1,7 +1,12 @@
 import type MarkdownIt from 'markdown-it'
-import { resolve } from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import sizeOf from 'image-size'
 import { isRealArticle } from './article'
 import { warnFrontmatter } from './frontmatter'
+
+const currentDir = dirname(fileURLToPath(import.meta.url))
 
 /**
  * Convert standalone ![alt](src) into <figure><img><figcaption>alt</figcaption></figure>.
@@ -51,10 +56,63 @@ export function imageFiguresPlugin(md: MarkdownIt) {
 }
 
 /**
+ * Automatically read physical image dimensions and inject width/height.
+ * Mark non-first markdown images as lazy to avoid delaying above-the-fold media.
+ */
+export function imageAttributesPlugin(md: MarkdownIt) {
+  md.core.ruler.after('image_figures', 'image_attributes', (state) => {
+    let imageIndex = 0
+
+    for (const token of state.tokens) {
+      if (token.type !== 'inline' || !token.children)
+        continue
+
+      for (const child of token.children) {
+        if (child.type !== 'image')
+          continue
+
+        imageIndex += 1
+        const src = child.attrGet('src')
+        child.attrSet('decoding', 'async')
+
+        if (!child.attrGet('loading') && imageIndex > 1)
+          child.attrSet('loading', 'lazy')
+
+        if (src && !/^(?:[a-z]+:)?\/\//i.test(src) && !src.startsWith('data:')) {
+          try {
+            const cleanSrc = src.split(/[?#]/, 1)[0]
+            let filePath = ''
+            if (cleanSrc.startsWith('/')) {
+              filePath = resolve(currentDir, '../public', cleanSrc.slice(1))
+            }
+            else {
+              const id = state.env?.id || state.env?.path || ''
+              if (id) {
+                filePath = resolve(id, '..', cleanSrc)
+              }
+            }
+            if (filePath && existsSync(filePath)) {
+              const dimensions = sizeOf(readFileSync(filePath))
+              if (dimensions.width && dimensions.height) {
+                child.attrSet('width', dimensions.width.toString())
+                child.attrSet('height', dimensions.height.toString())
+              }
+            }
+          }
+          catch {
+            // Missing dimensions should not block markdown rendering.
+          }
+        }
+      }
+    }
+  })
+}
+
+/**
  * Warn if article images lack alt text (WCAG 1.1.1).
  */
 export function imageAltCheckPlugin(md: MarkdownIt) {
-  md.core.ruler.after('image_figures', 'image_alt_check', (state) => {
+  md.core.ruler.after('image_attributes', 'image_alt_check', (state) => {
     const id = state.env?.id || state.env?.path || ''
     if (!isRealArticle(id))
       return
@@ -319,6 +377,7 @@ export function markHighlightPlugin(md: MarkdownIt) {
  */
 export function registerCustomPlugins(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   imageFiguresPlugin(md)
+  imageAttributesPlugin(md)
   imageAltCheckPlugin(md)
   sourceLinkIdsPlugin(md)
   sourcesBlockPlugin(md, normalizedFrontmatterById)

@@ -3,11 +3,13 @@ import { useHead } from '@unhead/vue'
 import { isLightboxOpen } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { useKeyboardNav } from '~/logics/keyboard-nav'
+import { useSEO } from '~/logics/seo'
 import { siteOrigin } from '~/logics/site'
 
 const route = useRoute()
 
 useKeyboardNav()
+useSEO(computed(() => (route.meta.frontmatter as Record<string, any>) || {}))
 
 const currentLocale = computed(() => getLocaleFromPath(route.path))
 const currentFeedName = computed(() => currentLocale.value === 'en' ? 'feed' : `feed-${currentLocale.value}`)

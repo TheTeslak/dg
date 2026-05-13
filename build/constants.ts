@@ -32,6 +32,7 @@ export const frontmatterKnownKeys = new Set([
   'projects',
   'recording',
   'redirect',
+  'robots',
   'sources',
   'subtitle',
   'tags',

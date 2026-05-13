@@ -10,7 +10,7 @@ import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { registerCustomPlugins } from '../build/markdown-plugins'
-import { isPostVisible } from '../src/logics/post-visibility'
+import { isPostIndexable } from '../src/logics/post-visibility'
 import { slugify } from './slugify'
 
 const DOMAIN = 'https://teslak.me'
@@ -271,8 +271,8 @@ async function buildLocaleFeed(locale: SupportedLocale) {
           const frontmatter = normalizeFrontmatter(data, content, i)
           normalizedFrontmatterById.set(resolve(i), frontmatter)
 
-          // Skip posts that are not publicly visible.
-          if (!isPostVisible(frontmatter))
+          // Skip posts that should not be indexed or distributed.
+          if (!isPostIndexable(frontmatter))
             return
 
           if (getArticleLang(frontmatter, locale) !== locale)

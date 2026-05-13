@@ -36,11 +36,10 @@ subtitle: A short catchphrase below the title
 image: /og/image.png # cover image & player artwork
 date: 2026-03-24T10:00:00Z
 updated: 2026-04-30T10:00:00Z # shows 'updated' date
-lang: en # UI locale (en, ru, es)
+lang: en # content language (for example: en, ru, es)
 duration: 8min # manual override (e.g. '8min' or '5')
 backlink: parent-slug # link to parent article above title
 type: note+draft # post type and status (combined with '+')
-originalLocale: ru # source language for non-translated posts
 sources: true # enables automatic sources generation
 art: plum # background animation: random, plum, dots, cellular, topography, interference
 tocAlwaysOn: true # keeps ToC visible on wider screens
@@ -70,7 +69,6 @@ audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>
 - **`tocAlwaysOn`**: When `true`, prevents the Table of Contents from being hidden behind a toggle on desktop viewports.
 - **`place` / `placeLink`**: Shows a "at [Location]" badge below the date.
 - **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.
-- **`originalLocale` (Translation)**: When an article is not yet translated, this field indicates the source language. If it differs from the current page locale, a **Translation Banner** will appear pointing users to the original version.
 - **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
 - **`sources` (References)**: When set to `true`, enables the automatic generation of a numbered sources block at the bottom of the article (requires `<!-- sources -->` markers in the body).
 - **`audio` (Voiceover)**: Configures the integrated audio player.
@@ -82,6 +80,10 @@ audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>
   - `artist`: Artist name for Media Session (defaults to "Teslak").
   - `sourceTextUpdatedAt`: If the article's `updated` or `date` is newer than this timestamp, a warning will appear indicating the audio might be outdated.
   - `downloadUrl`: Override for the download button link (defaults to `url`).
+
+Build-generated fields:
+
+- **`originalLocale` / `availableLocales`**: Generated automatically from physical article files. Do not set them manually in article frontmatter.
 
 ### Article Status & Banners
 

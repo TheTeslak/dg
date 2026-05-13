@@ -79,12 +79,12 @@ catalogs:
     fluent-vue:
       specifier: ^3.8.2
       version: 3.8.2
+    image-size:
+      specifier: ^2.0.2
+      version: 2.0.2
     minisearch:
       specifier: ^7.1.0
       version: 7.2.0
-    vite-ssg-sitemap:
-      specifier: ^0.10.0
-      version: 0.10.0
   dev:
     '@antfu/eslint-config':
       specifier: ^6.7.2
@@ -388,6 +388,9 @@ importers:
       gray-matter:
         specifier: catalog:build
         version: 4.0.3
+      image-size:
+        specifier: 'catalog:'
+        version: 2.0.2
       lint-staged:
         specifier: catalog:dev
         version: 16.2.7
@@ -469,9 +472,6 @@ importers:
       vite-ssg:
         specifier: catalog:build
         version: 28.3.0(canvas@3.2.0)(prettier@3.7.4)(unhead@2.1.12)(vite@8.0.10(@types/node@25.0.3)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3))
-      vite-ssg-sitemap:
-        specifier: 'catalog:'
-        version: 0.10.0
       vite-svg-loader:
         specifier: catalog:build
         version: 5.1.1(vue@3.5.31(typescript@5.9.3))
@@ -2752,6 +2752,11 @@ packages:
     resolution: {integrity: sha512-gJzzk+PQNznz8ysRrC0aOkBNVRBDtE1n53IqyqEf3PXrYwomFs5q4pGMizBMJF+ykh03insJ27hB8gSrD2Hn8A==}
     engines: {node: '>= 4'}
 
+  image-size@2.0.2:
+    resolution: {integrity: sha512-IRqXKlaXwgSMAMtpNzZa1ZAe8m+Sa1770Dhk8VkSsP9LS+iHD62Zd8FQKs8fbPiagBE7BzoFX23cxFnwshpV6w==}
+    engines: {node: '>=16.x'}
+    hasBin: true
+
   import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -4127,9 +4132,6 @@ packages:
     resolution: {integrity: sha512-vRb2u5XlvNa51bt+mz6QS+UHns2tGi1Z9CHuaAnPOWiAtQCZEjavUf/56oRFXauj/0ROl2FvOJ2YFD1k6sGJNQ==}
     peerDependencies:
       vite: ^8.0.10
-
-  vite-ssg-sitemap@0.10.0:
-    resolution: {integrity: sha512-OIja4fqUMcvWl5+bxQARe3LgzWTd8U/dWHWgrqiC7vv3AmTn0YnhMNUAimQ0M/0Aa9myEIAGLV0yKlYbKP8BJQ==}
 
   vite-ssg@28.3.0:
     resolution: {integrity: sha512-dIUjv+scfhJTfYGwf83R0KGAmr/duIo9oln5ZsQOIZZACm3voAON//7oKhtEwaOTtD4QTTab+nhvyn0QiIaFMA==}
@@ -6693,6 +6695,8 @@ snapshots:
 
   ignore@7.0.4: {}
 
+  image-size@2.0.2: {}
+
   import-fresh@3.3.0:
     dependencies:
       parent-module: 1.0.1
@@ -8339,8 +8343,6 @@ snapshots:
   vite-plugin-optimize-exclude@0.0.1(vite@8.0.10(@types/node@25.0.3)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2)):
     dependencies:
       vite: 8.0.10(@types/node@25.0.3)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2)
-
-  vite-ssg-sitemap@0.10.0: {}
 
   vite-ssg@28.3.0(canvas@3.2.0)(prettier@3.7.4)(unhead@2.1.12)(vite@8.0.10(@types/node@25.0.3)(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.31(typescript@5.9.3)))(vue@3.5.31(typescript@5.9.3)):
     dependencies:

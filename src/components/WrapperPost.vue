@@ -1,14 +1,12 @@
 <script setup lang='ts'>
 import type { GlossaryState } from '~/logics/glossary'
 import type { ArticleAudio } from '~/types'
-import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { glossaryKey } from '~/logics/glossary'
-import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 import { artOverride } from '~/logics/keyboard-nav'
-import { siteOrigin } from '~/logics/site'
 import '@shikijs/twoslash/style-rich.css'
 import 'markdown-it-github-alerts/styles/github-base.css'
 import 'markdown-it-github-alerts/styles/github-colors-dark-class.css'
@@ -135,48 +133,6 @@ const backToAllPath = computed(() => {
   if (postType.value === 'note')
     return `/${currentLocale.value}/notes`
   return `/${currentLocale.value}/articles`
-})
-
-/**
- * Generate hreflang tags to prevent duplicate content penalties and enable proper language indexing.
- */
-const hreflangLinks = computed(() => {
-  const path = route.path
-  const frontmatterLocales = Array.isArray(frontmatter.availableLocales)
-    ? frontmatter.availableLocales.filter(isSupportedLocale)
-    : undefined
-  const locales = frontmatterLocales?.length
-    ? frontmatterLocales
-    : supportedLocales
-
-  const links: { rel: string, hreflang: string, href: string }[] = locales.map(locale => ({
-    rel: 'alternate',
-    hreflang: locale,
-    href: `${siteOrigin}${setPathLocale(path, locale)}`,
-  }))
-
-  // x-default points to a physical article locale when available.
-  const defaultLocale = isSupportedLocale(frontmatter.originalLocale)
-    ? frontmatter.originalLocale
-    : locales[0] || 'en'
-
-  links.push({
-    rel: 'alternate',
-    hreflang: 'x-default',
-    href: `${siteOrigin}${setPathLocale(path, defaultLocale)}`,
-  })
-
-  return links
-})
-
-useHead({
-  link: hreflangLinks,
-  meta: [
-    {
-      name: 'robots',
-      content: (frontmatter.draft || isDraftPost(frontmatter.type)) ? 'noindex, nofollow' : 'index, follow',
-    },
-  ],
 })
 
 onMounted(() => {
@@ -451,7 +407,7 @@ const ArtComponent = computed(() => {
   <div
     v-if="frontmatter.display ?? frontmatter.title"
     class="prose m-auto mb-8"
-    :lang="frontmatter.lang"
+    :lang="currentLocale"
     :class="[frontmatter.wrapperClass]"
   >
     <div
@@ -471,7 +427,7 @@ const ArtComponent = computed(() => {
         </RouterLink>
       </div>
     </div>
-    <h1 class="slide-enter-50 !mt-0 !mb-2.5">
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5" :lang="frontmatter.lang">
       {{ frontmatter.display ?? frontmatter.title }}
     </h1>
     <p
@@ -495,6 +451,7 @@ const ArtComponent = computed(() => {
     <p
       v-if="frontmatter.subtitle"
       class="opacity-50 !-mt-6 italic slide-enter"
+      :lang="frontmatter.lang"
     >
       {{ frontmatter.subtitle }}
     </p>

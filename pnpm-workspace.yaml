@@ -9,8 +9,8 @@ packages: []
 catalog:
   '@fluent/bundle': ^0.19.1
   fluent-vue: ^3.8.2
+  image-size: ^2.0.2
   minisearch: ^7.1.0
-  vite-ssg-sitemap: ^0.10.0
 
 catalogs:
   build:
@@ -90,6 +90,7 @@ catalogs:
     '@types/node': ^25.0.3
     '@types/nprogress': ^0.2.3
     '@types/prompts': ^2.4.9
+
 onlyBuiltDependencies:
   - canvas
   - esbuild

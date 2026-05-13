@@ -67,6 +67,7 @@
     "feed": "catalog:dev",
     "fs-extra": "catalog:dev",
     "gray-matter": "catalog:build",
+    "image-size": "catalog:",
     "lint-staged": "catalog:dev",
     "markdown-it": "catalog:build",
     "markdown-it-anchor": "catalog:build",
@@ -94,7 +95,6 @@
     "vite-plugin-inspect": "catalog:build",
     "vite-plugin-optimize-exclude": "catalog:build",
     "vite-ssg": "catalog:build",
-    "vite-ssg-sitemap": "catalog:",
     "vite-svg-loader": "catalog:build",
     "vue-tsc": "catalog:dev"
   },
