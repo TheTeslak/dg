@@ -1,13 +1,53 @@
 <script setup lang="ts">
+import { useHead } from '@unhead/vue'
 import { isLightboxOpen } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { useKeyboardNav } from '~/logics/keyboard-nav'
+import { siteOrigin } from '~/logics/site'
 
 const route = useRoute()
 
 useKeyboardNav()
 
 const currentLocale = computed(() => getLocaleFromPath(route.path))
+const currentFeedName = computed(() => currentLocale.value === 'en' ? 'feed' : `feed-${currentLocale.value}`)
+const currentFeedTitle = computed(() => currentLocale.value === 'en'
+  ? 'Teslak En'
+  : currentLocale.value === 'ru'
+    ? 'Teslak Ru'
+    : 'Teslak Es',
+)
+
+function getFeedHref(extension: 'atom' | 'json' | 'xml') {
+  return `${siteOrigin}/${currentFeedName.value}.${extension}`
+}
+
+useHead(() => ({
+  htmlAttrs: {
+    lang: currentLocale.value,
+  },
+  link: [
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: `${currentFeedTitle.value} RSS`,
+      href: getFeedHref('xml'),
+    },
+    {
+      rel: 'alternate',
+      type: 'application/atom+xml',
+      title: `${currentFeedTitle.value} Atom`,
+      href: getFeedHref('atom'),
+    },
+    {
+      rel: 'alternate',
+      type: 'application/feed+json',
+      title: `${currentFeedTitle.value} JSON Feed`,
+      href: getFeedHref('json'),
+    },
+  ],
+}))
+
 watch(currentLocale, (locale) => {
   if (typeof document !== 'undefined')
     document.documentElement.lang = locale

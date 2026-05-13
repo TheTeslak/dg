@@ -142,13 +142,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/composable-vue-vueconf-china-2021': RouteRecordInfo<
-      '/en/articles/composable-vue-vueconf-china-2021',
-      '/en/articles/composable-vue-vueconf-china-2021',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/destructuring-with-object-or-array': RouteRecordInfo<
       '/en/articles/destructuring-with-object-or-array',
       '/en/articles/destructuring-with-object-or-array',
@@ -219,13 +212,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/npm-binary-mirrors': RouteRecordInfo<
-      '/en/articles/npm-binary-mirrors',
-      '/en/articles/npm-binary-mirrors',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/nuxt-devtools-v1': RouteRecordInfo<
       '/en/articles/nuxt-devtools-v1',
       '/en/articles/nuxt-devtools-v1',
@@ -285,13 +271,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/why-reproductions-are-required': RouteRecordInfo<
       '/en/articles/why-reproductions-are-required',
       '/en/articles/why-reproductions-are-required',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/why-reproductions-are-required-zh': RouteRecordInfo<
-      '/en/articles/why-reproductions-are-required-zh',
-      '/en/articles/why-reproductions-are-required-zh',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -551,12 +530,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/composable-vue-vueconf-china-2021.md': {
-      routes:
-        | '/en/articles/composable-vue-vueconf-china-2021'
-      views:
-        | never
-    }
     'pages/en/articles/destructuring-with-object-or-array.md': {
       routes:
         | '/en/articles/destructuring-with-object-or-array'
@@ -617,12 +590,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/npm-binary-mirrors.md': {
-      routes:
-        | '/en/articles/npm-binary-mirrors'
-      views:
-        | never
-    }
     'pages/en/articles/nuxt-devtools-v1.md': {
       routes:
         | '/en/articles/nuxt-devtools-v1'
@@ -674,12 +641,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/why-reproductions-are-required.md': {
       routes:
         | '/en/articles/why-reproductions-are-required'
-      views:
-        | never
-    }
-    'pages/en/articles/why-reproductions-are-required-zh.md': {
-      routes:
-        | '/en/articles/why-reproductions-are-required-zh'
       views:
         | never
     }

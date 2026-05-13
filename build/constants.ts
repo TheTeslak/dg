@@ -1,4 +1,5 @@
-import { resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
 
 export const supportedLocales = ['en', 'ru', 'es'] as const
@@ -43,6 +44,7 @@ export const frontmatterKnownKeys = new Set([
   'wrapperClass',
 ])
 
-const audioMetadataPath = resolve(__dirname, '../data/audio-metadata.json')
+const currentDir = dirname(fileURLToPath(import.meta.url))
+const audioMetadataPath = resolve(currentDir, '../data/audio-metadata.json')
 export const audioMetadata: Record<string, { url: string, duration: string, durationSeconds: number, format: string }>
   = fs.existsSync(audioMetadataPath) ? fs.readJSONSync(audioMetadataPath) : {}

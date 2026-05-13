@@ -79,7 +79,7 @@ function getDurationLabel(duration: number | null) {
           </template>
         </div>
         <div class="search-result-meta">
-          <span v-if="result.date" op45>{{ formatDate(result.date, true) }}</span>
+          <span v-if="result.date" op45>{{ formatDate(result.date, true, currentLocale) }}</span>
           <span v-if="getDurationLabel(result.duration)" op45>· {{ getDurationLabel(result.duration) }}</span>
         </div>
       </RouterLink>

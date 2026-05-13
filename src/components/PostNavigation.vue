@@ -81,7 +81,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
           <span v-if="isDraftPost(newerPost.type)">🚧 </span>
-          <span v-if="isRecentPost(newerPost.date, newerPost.updated) && !isDraftPost(newerPost.type)">🌱 </span>{{ formatDate(newerPost.date, false) }}
+          <span v-if="isRecentPost(newerPost.date, newerPost.updated) && !isDraftPost(newerPost.type)">🌱 </span>{{ formatDate(newerPost.date, false, currentLocale) }}
         </span>
       </div>
     </RouterLink>
@@ -100,7 +100,7 @@ const hasNavigation = computed(() => newerPost.value || olderPost.value)
         </span>
         <span class="post-nav-date" text-base op45 mt-0.5>
           <span v-if="isDraftPost(olderPost.type)">🚧 </span>
-          <span v-if="isRecentPost(olderPost.date, olderPost.updated) && !isDraftPost(olderPost.type)">🌱 </span>{{ formatDate(olderPost.date, false) }}
+          <span v-if="isRecentPost(olderPost.date, olderPost.updated) && !isDraftPost(olderPost.type)">🌱 </span>{{ formatDate(olderPost.date, false, currentLocale) }}
         </span>
       </div>
       <div

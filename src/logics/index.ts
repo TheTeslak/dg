@@ -60,16 +60,29 @@ export function toggleDark(event: MouseEvent) {
     })
 }
 
-export function formatDate(d: string | Date, onlyDate = true) {
-  const date = dayjs(d)
+function parseDisplayDate(d: string | Date) {
+  if (typeof d === 'string') {
+    const match = d.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/)
+    if (match)
+      return dayjs(`${match[1]}-${match[2]}-${match[3]}`)
+  }
+
+  return dayjs(d)
+}
+
+function getDisplayDateFormat(locale: string, includeYear: boolean) {
+  if (locale === 'en')
+    return includeYear ? 'MMM D, YYYY' : 'MMM D'
+  return includeYear ? 'D MMM YYYY' : 'D MMM'
+}
+
+export function formatDate(d: string | Date, onlyDate = true, locale = dayjs.locale()) {
+  const date = parseDisplayDate(d).locale(locale)
   if (!date.isValid())
     return ''
   const now = dayjs()
-  let formatted: string
-  if (onlyDate || date.year() === now.year())
-    formatted = date.format('MMM D')
-  else
-    formatted = date.format('MMM D, YYYY')
+  const includeYear = !onlyDate && date.year() !== now.year()
+  const formatted = date.format(getDisplayDateFormat(locale, includeYear))
   return formatted.replace('.', '')
 }
 

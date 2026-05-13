@@ -149,7 +149,7 @@ function getDurationLabel(duration?: Post['duration']) {
             <div flex="~ gap-2 items-center">
               <span text-xl op60 ws-nowrap>
                 <span v-if="isDraftPost(route.type)" role="img" aria-label="Draft">🚧 </span>
-                <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(route.date, true) }}
+                <span v-if="isRecentPost(route.date, route.updated) && !isDraftPost(route.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(route.date, true, locale) }}
               </span>
               <span v-if="getDurationLabel(route.duration)" text-xl op60 ws-nowrap>· {{ getDurationLabel(route.duration) }}</span>
               <span v-if="route.place" text-xl op60 ws-nowrap md:hidden>· {{ route.place }}</span>

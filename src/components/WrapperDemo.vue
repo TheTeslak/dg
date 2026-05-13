@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from '~/logics'
+import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const { frontmatter, video, date } = defineProps({
   frontmatter: {
@@ -14,6 +15,9 @@ const { frontmatter, video, date } = defineProps({
     required: true,
   },
 })
+
+const route = useRoute()
+const locale = computed(() => getLocaleFromPath(route.path))
 </script>
 
 <template>
@@ -33,7 +37,7 @@ const { frontmatter, video, date } = defineProps({
 
       <div class="prose prose-sm p4 m0 pb3">
         <slot />
-        <div op50 text-sm pt2>{{ formatDate(date, false) }}</div>
+        <div op50 text-sm pt2>{{ formatDate(date, false, locale) }}</div>
       </div>
     </a>
   </div>

@@ -11,6 +11,7 @@ import App from './App.vue'
 import enResources from './locales/en.ftl?raw'
 import esResources from './locales/es.ftl?raw'
 import ruResources from './locales/ru.ftl?raw'
+import { getLocaleFromPath } from './logics/i18n-path'
 import 'dayjs/locale/ru'
 import 'dayjs/locale/es'
 import '@unocss/reset/tailwind.css'
@@ -51,7 +52,7 @@ export const createApp = ViteSSG(
       })
     },
   },
-  ({ router, app, isClient }) => {
+  ({ router, app, isClient, routePath }) => {
     dayjs.extend(LocalizedFormat)
 
     app.use(FloatingVue)
@@ -67,26 +68,31 @@ export const createApp = ViteSSG(
       bundles,
     })
 
+    function applyRouteLocale(path: string) {
+      const targetLocale = getLocaleFromPath(path)
+
+      dayjs.locale(targetLocale)
+
+      const currentBundles = [...fluent.bundles] as FluentBundle[]
+      const currentPrimary = currentBundles.find(b => b.locales[0] === targetLocale)
+
+      if (currentPrimary && currentBundles[0].locales[0] !== targetLocale) {
+        fluent.bundles = [
+          currentPrimary,
+          ...currentBundles.filter(b => b.locales[0] !== targetLocale),
+        ]
+      }
+
+      return targetLocale
+    }
+
+    applyRouteLocale(routePath || (typeof window !== 'undefined' ? window.location.pathname : '/'))
+
     app.use(fluent)
 
     if (isClient) {
       router.beforeEach((to, from, next) => {
-        const path = to.path
-        const pathParts = path.split('/')
-        const pathLocale = pathParts.length > 1 ? pathParts[1] : 'en'
-        const targetLocale = ['en', 'ru', 'es'].includes(pathLocale) ? pathLocale : 'en'
-
-        dayjs.locale(targetLocale)
-
-        const currentBundles = [...fluent.bundles] as FluentBundle[]
-        const currentPrimary = currentBundles.find(b => b.locales[0] === targetLocale)
-
-        if (currentPrimary && currentBundles[0].locales[0] !== targetLocale) {
-          fluent.bundles = [
-            currentPrimary,
-            ...currentBundles.filter(b => b.locales[0] !== targetLocale),
-          ]
-        }
+        const targetLocale = applyRouteLocale(to.path)
 
         // Always sync <html lang> with the current route locale (WCAG 3.1.1)
         document.querySelector('html')?.setAttribute('lang', targetLocale)

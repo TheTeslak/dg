@@ -480,7 +480,7 @@ const ArtComponent = computed(() => {
     >
       <span class="opacity-50">
         <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
-        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(frontmatter.date, false) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(frontmatter.date, false, currentLocale) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
       </span>
     </p>
     <p v-if="frontmatter.place" class="mt--4!">
@@ -608,7 +608,7 @@ const ArtComponent = computed(() => {
         >{{ ref.lang.toUpperCase() }}</span>
         <span v-if="ref.date" class="referenced-by-date">
           <span v-if="isDraftPost(ref.type)" role="img" aria-label="Draft">🚧 </span>
-          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(ref.date, false) }}
+          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(ref.date, false, currentLocale) }}
         </span>
       </div>
     </div>

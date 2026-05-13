@@ -82,7 +82,6 @@ catalogs:
     simplex-noise: ^4.0.3
     vue: ^3.5.31
     vue-router: ^4.6.4
-    vue-router-better-scroller: ^0.0.0
   types:
     '@types/d3-shape': ^3.1.8
     '@types/fs-extra': ^11.0.4
