@@ -64,7 +64,7 @@ article-audio-progress = Прогресс аудио
 article-audio-error = Аудио не удалось загрузить.
 article-audio-outdated = Текст был обновлён после записи этого аудио
 
-heading-link = ссылка на заголовок
+heading-link = ссылка
 heading-copied = скопировано
 
 photos-view-cover = Кадрировать

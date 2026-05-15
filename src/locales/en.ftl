@@ -64,7 +64,7 @@ article-audio-progress = Audio progress
 article-audio-error = Audio could not be loaded.
 article-audio-outdated = Text has been updated since this audio was recorded
 
-heading-link = link to heading
+heading-link = link
 heading-copied = copied
 
 photos-view-cover = Crop to fit

@@ -268,6 +268,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/who-is-teslak': RouteRecordInfo<
+      '/en/articles/who-is-teslak',
+      '/en/articles/who-is-teslak',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/why-reproductions-are-required': RouteRecordInfo<
       '/en/articles/why-reproductions-are-required',
       '/en/articles/why-reproductions-are-required',
@@ -320,6 +327,13 @@ declare module 'vue-router/auto-routes' {
     '/es/articles/': RouteRecordInfo<
       '/es/articles/',
       '/es/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/es/articles/who-is-teslak': RouteRecordInfo<
+      '/es/articles/who-is-teslak',
+      '/es/articles/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -383,6 +397,13 @@ declare module 'vue-router/auto-routes' {
     '/ru/articles/temp': RouteRecordInfo<
       '/ru/articles/temp',
       '/ru/articles/temp',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/ru/articles/who-is-teslak': RouteRecordInfo<
+      '/ru/articles/who-is-teslak',
+      '/ru/articles/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -638,6 +659,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/en/articles/who-is-teslak.md': {
+      routes:
+        | '/en/articles/who-is-teslak'
+      views:
+        | never
+    }
     'pages/en/articles/why-reproductions-are-required.md': {
       routes:
         | '/en/articles/why-reproductions-are-required'
@@ -683,6 +710,12 @@ declare module 'vue-router/auto-routes' {
     'pages/es/articles/index.md': {
       routes:
         | '/es/articles/'
+      views:
+        | never
+    }
+    'pages/es/articles/who-is-teslak.md': {
+      routes:
+        | '/es/articles/who-is-teslak'
       views:
         | never
     }
@@ -737,6 +770,12 @@ declare module 'vue-router/auto-routes' {
     'pages/ru/articles/temp.md': {
       routes:
         | '/ru/articles/temp'
+      views:
+        | never
+    }
+    'pages/ru/articles/who-is-teslak.md': {
+      routes:
+        | '/ru/articles/who-is-teslak'
       views:
         | never
     }
