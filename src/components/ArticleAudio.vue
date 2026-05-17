@@ -411,7 +411,7 @@ onBeforeUnmount(() => {
           :aria-label="$t('article-audio-rewind')"
           @click="seekBy(-15)"
         >
-          <span i-ri-replay-15-line aria-hidden="true" />
+          <span i-fluent-skip-back-15-20-regular aria-hidden="true" />
         </button>
         <button
           class="article-audio-small-button"
@@ -419,7 +419,7 @@ onBeforeUnmount(() => {
           :aria-label="$t('article-audio-forward')"
           @click="seekBy(15)"
         >
-          <span i-ri-forward-15-line aria-hidden="true" />
+          <span i-fluent-skip-forward-15-20-regular aria-hidden="true" />
         </button>
         <button
           class="article-audio-speed-button"
@@ -495,7 +495,7 @@ onBeforeUnmount(() => {
               :aria-label="$t('article-audio-rewind')"
               @click="seekBy(-15)"
             >
-              <span i-ri-replay-15-line aria-hidden="true" />
+              <span i-fluent-skip-back-15-20-regular aria-hidden="true" />
             </button>
             <button
               class="article-audio-small-button"
@@ -503,7 +503,7 @@ onBeforeUnmount(() => {
               :aria-label="$t('article-audio-forward')"
               @click="seekBy(15)"
             >
-              <span i-ri-forward-15-line aria-hidden="true" />
+              <span i-fluent-skip-forward-15-20-regular aria-hidden="true" />
             </button>
             <button
               class="article-audio-speed-button"

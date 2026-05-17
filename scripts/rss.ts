@@ -371,7 +371,7 @@ function toJsonFeed(feed: Feed, options: FeedOptions, items: Item[], locale: Sup
 
 async function writeFeed(name: string, options: FeedOptions, items: Item[], locale: SupportedLocale) {
   options.author = AUTHOR
-  options.image = 'https://teslak.me/avatar.png'
+  options.image = 'https://teslak.me/avatar.avif'
   options.favicon = 'https://teslak.me/logo.png'
 
   const feed = new Feed(options)

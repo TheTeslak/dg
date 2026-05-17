@@ -3,6 +3,11 @@ title: Teslak Blog
 description: Blog de Teslak
 image: https://teslak.me/og.png
 art: random
+pic:
+  src: /avatar.avif
+  r: full
+  link: /es/articles/who-is-teslak
+  text: Teslak
 display: A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
 

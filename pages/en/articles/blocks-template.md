@@ -54,6 +54,11 @@ audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>
 #   artist: "Teslak"
 #   sourceTextUpdatedAt: 2026-03-24T10:00:00Z
 #   downloadUrl: /audio/alt.mp3
+pic: # optional inline image next to a title word
+  src: /avatar.avif
+  r: full # rounding (full, md, sm)
+  link: /en/articles/who-is-teslak
+  text: My Article # word in the title/display to wrap
 ---
 ```
 
@@ -65,7 +70,11 @@ audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>
 - **`display`**: Overrides the `title` on the page itself. Useful when the `title` needs to be optimized for lists/RSS but the page needs a different look.
 - **`subtitle`**: Secondary title shown in italics below the main header.
 - **`image`**: Primary image for the post. Used in Open Graph tags, social previews, and as the background for the audio player.
-- **`art`**: Controls the background canvas animation. Values: `random`, `plum`, `dots`, `cellular`, `topography`, `interference`.
+- **`pic` (Inline Avatar/Image)**: Renders a rounded image inline with the title text and turns the matching word into a link. Designed primarily for author avatars on homepages but reusable anywhere.
+  - `src`: Path to the image (e.g. `/avatar.avif`).
+  - `r`: Border-radius amount (`full` for 50% circle, `md` for 0.4em, `sm` for 0.2em defaults).
+  - `link`: The URL the image+text should link to.
+  - `text`: The exact word/phrase from the `display` (or `title`) field to wrap alongside the image (e.g. "Teslak").
 - **`tocAlwaysOn`**: When `true`, prevents the Table of Contents from being hidden behind a toggle on desktop viewports.
 - **`place` / `placeLink`**: Shows a "at [Location]" badge below the date.
 - **`duration` (Reading Time)**: By default, the build system auto-estimates reading time (~200 words/min). If you specify a value (e.g., `8min`), it will bypass the auto-calculation.

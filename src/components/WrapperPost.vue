@@ -76,6 +76,35 @@ const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
 })
 
+const pic = computed(() => {
+  const p = frontmatter.pic
+  if (!p || typeof p !== 'object' || !p.src)
+    return undefined
+  return {
+    src: p.src as string,
+    r: (p.r as string) || 'sm',
+    link: (p.link as string) || undefined,
+    text: (p.text as string) || undefined,
+  }
+})
+
+const titleParts = computed(() => {
+  const display = (frontmatter.display ?? frontmatter.title) as string
+  if (!display)
+    return null
+  const p = pic.value
+  if (!p?.text || !p.link)
+    return { before: '', linked: '', after: display }
+  const idx = display.indexOf(p.text)
+  if (idx === -1)
+    return { before: '', linked: '', after: display }
+  return {
+    before: display.slice(0, idx),
+    linked: p.text,
+    after: display.slice(idx + p.text.length),
+  }
+})
+
 const localizedDuration = computed(() => {
   return formatReadingDuration(frontmatter.duration, currentLocale.value)
 })
@@ -428,7 +457,22 @@ const ArtComponent = computed(() => {
       </div>
     </div>
     <h1 class="slide-enter-50 !mt-0 !mb-2.5" :lang="frontmatter.lang">
-      {{ frontmatter.display ?? frontmatter.title }}
+      <template v-if="pic && titleParts?.linked">
+        <span v-if="titleParts.before" class="title-rest">{{ titleParts.before }}</span><RouterLink
+          :to="pic.link!"
+          class="title-pic-link"
+        >
+          <img
+            :src="pic.src"
+            alt=""
+            class="title-pic"
+            :class="`title-pic--${pic.r}`"
+          >{{ titleParts.linked }}
+        </RouterLink><span class="title-rest">{{ titleParts.after }}</span>
+      </template>
+      <template v-else>
+        {{ frontmatter.display ?? frontmatter.title }}
+      </template>
     </h1>
     <p
       v-if="frontmatter.date"
@@ -1092,5 +1136,69 @@ article :deep(.source-highlight-fade) {
   transition:
     background 3s ease-out,
     box-shadow 3s ease-out;
+}
+
+/* Inline title pic (avatar / decorative image) */
+.title-pic-link {
+  text-decoration: none !important;
+  border-bottom: none !important;
+  color: inherit;
+  cursor: pointer;
+  --title-glint: #888;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(100deg, currentColor 40%, var(--title-glint) 50%, currentColor 60%);
+  background-size: 400% 100%;
+  background-position: -400% center;
+  animation: title-glint 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+html.dark .title-pic-link {
+  --title-glint: #aaa;
+}
+.title-pic-link:hover {
+  animation: none;
+  -webkit-text-fill-color: unset;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  background-image: none;
+}
+@keyframes title-glint {
+  0%,
+  62.5% {
+    background-position: -150% center;
+  }
+  100% {
+    background-position: 150% center;
+  }
+}
+.title-rest {
+  transition: opacity 0.2s ease;
+}
+h1:has(.title-pic-link:hover) .title-rest {
+  opacity: 0.7;
+}
+.title-pic-link:hover .title-pic {
+  transform: scale(1.05);
+}
+.title-pic {
+  display: inline;
+  height: 1.2em;
+  width: 1.2em;
+  object-fit: cover;
+  vertical-align: middle;
+  margin: 0 0.15em 0 0 !important;
+  position: relative;
+  top: -0.05em;
+  transition: transform 0.2s ease;
+}
+.title-pic--full {
+  border-radius: 50%;
+}
+.title-pic--md {
+  border-radius: 0.4em;
+}
+.title-pic--sm {
+  border-radius: 0.2em;
 }
 </style>

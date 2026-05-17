@@ -15,7 +15,7 @@ const person = {
   '@type': 'Person',
   'name': siteName,
   'url': siteOrigin,
-  'image': `${siteOrigin}/avatar.png`,
+  'image': `${siteOrigin}/avatar.avif`,
   'sameAs': [
     'https://github.com/theTeslak',
     'https://t.me/Teslak',

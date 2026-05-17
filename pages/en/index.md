@@ -3,6 +3,11 @@ title: Teslak Blog
 description: Teslak's Blog
 image: https://teslak.me/og.png
 art: random
+pic:
+  src: /avatar.avif
+  r: full
+  link: /en/articles/who-is-teslak
+  text: Teslak
 display: Teslak is passionate about IT, neural networks, UX design, philosophy, economics, biology ✦ and more
 ---
 

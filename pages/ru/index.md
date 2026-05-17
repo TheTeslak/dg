@@ -3,6 +3,11 @@ title: Teslak Blog
 description: Блог Теслака
 image: https://teslak.me/og.png
 art: random
+pic:
+  src: /avatar.avif
+  r: full
+  link: /ru/articles/who-is-teslak
+  text: Теслак
 display: Теслак увлекается IT, нейросетями, UX дизайном, философией, экономикой, биологией ✦ и не только
 ---
 
