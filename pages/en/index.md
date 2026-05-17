@@ -1,22 +1,22 @@
 ---
 title: Teslak Blog
-description: Teslak Blog
+description: Teslak's Blog
 image: https://teslak.me/og.png
 art: random
-display: Teslak is passionate about IT, neural networks, UX design, philosophy, economics, biology ✦ and much more!
+display: Teslak is passionate about IT, neural networks, UX design, philosophy, economics, biology ✦ and more
 ---
 
-Working on AI agents, RPA, and still doing design, although it has changed significantly in recent years
+Working on AI agents, automation, and still design, although it has changed significantly in recent years
 
 Striving for broad competencies, learning something new every day. Following an academic approach and a scientific worldview
 
-I write [posts,](/posts) run a [Telegram channel with interesting reposts](https://t.me/Tes404)
+I write 🪶 [notes](/en/notes) here and run a [Telegram channel with interesting reposts](https://t.me/Tes404)
 
-Building [pet projects](/projects)
+Building [pet projects](/en/projects)
 
-[Took photos](/photos) of various things, though I'm much more interested in the technical aspect of photography and art theory
+[Took photos](/en/photos) of various things
 
-[More about who Teslak is and why he is Teslak](/articles/who-is-teslak)
+[More about who Teslak is and why he is Teslak](/en/articles/who-is-teslak)
 
 ---
 

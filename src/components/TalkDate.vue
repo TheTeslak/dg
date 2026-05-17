@@ -10,7 +10,7 @@ const route = useRoute()
 const locale = computed(() => getLocaleFromPath(route.path))
 
 const daysLeft = computed(() => {
-  const diff = +new Date(props.date) - +new Date()
+  const diff = +new Date(props.date) - Date.now()
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 })
 </script>

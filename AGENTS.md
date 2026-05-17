@@ -7,7 +7,7 @@ Guidelines for coding agents in this repository. Keep changes minimal, safe, and
 ## Tech Stack
 
 - Vue 3 + Vite + Vite SSG
-- File-based routing via `unplugin-vue-router` (`pages/`)
+- File-based routing via `vue-router/vite` (`pages/`)
 - Markdown pages rendered as Vue (`.md` + `.vue`)
 - UnoCSS styling
 - TypeScript strict mode

@@ -17,8 +17,9 @@ const person = {
   'url': siteOrigin,
   'image': `${siteOrigin}/avatar.png`,
   'sameAs': [
-    'https://github.com/teslak',
-    'https://x.com/teslak',
+    'https://github.com/theTeslak',
+    'https://t.me/Teslak',
+    'https://t.me/TesNot',
     'https://t.me/Tes404',
   ],
 }
@@ -130,9 +131,10 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const hreflangLinks = computed(() => {
-    const links: { key: string, rel: string, hreflang: string, href: string }[] = hreflangLocales.value.map(locale => ({
+    const links: { key: string, rel: 'alternate', type: 'text/html', hreflang: string, href: string }[] = hreflangLocales.value.map(locale => ({
       key: `hreflang:${locale}`,
       rel: 'alternate',
+      type: 'text/html',
       hreflang: locale,
       href: `${siteOrigin}${setPathLocale(route.path, locale)}`,
     }))
@@ -146,6 +148,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     links.push({
       key: 'hreflang:x-default',
       rel: 'alternate',
+      type: 'text/html',
       hreflang: 'x-default',
       href: `${siteOrigin}${xDefaultPath}`,
     })

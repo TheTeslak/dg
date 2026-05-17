@@ -3,18 +3,18 @@ title: Teslak Blog
 description: Blog de Teslak
 image: https://teslak.me/og.png
 art: random
-display: ¡A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y mucho más!
+display: A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
 
-Trabajando en agentes de IA, automatización y aún haciendo diseño, aunque ha cambiado significativamente en los últimos años
+Trabajando en agentes de IA, automatización y aún en diseño, aunque ha cambiado significativamente en los últimos años
 
 Esforzándome por ampliar mis competencias, aprendiendo algo nuevo cada día. Siguiendo un enfoque académico y una visión científica del mundo
 
-Escribo [publicaciones,](/es/posts) y administro un [canal de Telegram con reenvíos interesantes](https://t.me/Tes404)
+Escribo 🪶 [notas](/es/notes) aquí y administro un [canal de Telegram con reenvíos interesantes](https://t.me/Tes404)
 
 Haciendo [proyectos personales](/es/projects)
 
-[Tomé fotos](/es/photos) de varias cosas, aunque me interesa mucho más el aspecto técnico de la fotografía y la teoría del arte
+[Tomé fotos](/es/photos) de varias cosas
 
 [Más sobre quién es Teslak y por qué es Teslak](/es/articles/who-is-teslak)
 

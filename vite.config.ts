@@ -15,12 +15,12 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import Components from 'unplugin-vue-components/vite'
 import Markdown from 'unplugin-vue-markdown/vite'
-import { VueRouterAutoImports } from 'unplugin-vue-router'
-import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import Exclude from 'vite-plugin-optimize-exclude'
 import SVG from 'vite-svg-loader'
+import { VueRouterAutoImports } from 'vue-router/unplugin'
+import VueRouter from 'vue-router/vite'
 import { getArticleInfo, getAvailableArticleLocales } from './build/article'
 import { supportedLocales } from './build/constants'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
@@ -35,6 +35,13 @@ const isDev = process.env.NODE_ENV !== 'production'
 const promises: Promise<any>[] = []
 const queuedOgOutputs = new Set<string>()
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
+
+function useMarkdownPlugin(md: { use: (...args: any[]) => unknown }, plugin: unknown, options?: unknown) {
+  if (options === undefined)
+    md.use(plugin)
+  else
+    md.use(plugin, options)
+}
 
 export default defineConfig({
   resolve: {
@@ -133,7 +140,7 @@ export default defineConfig({
         breaks: true,
       },
       async markdownItSetup(md) {
-        md.use(await MarkdownItShiki({
+        useMarkdownPlugin(md, await MarkdownItShiki({
           themes: {
             dark: 'vitesse-dark',
             light: 'vitesse-light',
@@ -153,7 +160,7 @@ export default defineConfig({
           ],
         }))
 
-        md.use(anchor, {
+        useMarkdownPlugin(md, anchor, {
           slugify,
           permalink: anchor.permalink.linkInsideHeader({
             symbol: '#',
@@ -161,7 +168,7 @@ export default defineConfig({
           }),
         })
 
-        md.use(LinkAttributes, {
+        useMarkdownPlugin(md, LinkAttributes, {
           matcher: (link: string) => /^https?:\/\//.test(link),
           attrs: {
             target: '_blank',
@@ -169,17 +176,17 @@ export default defineConfig({
           },
         })
 
-        md.use(TOC, {
+        useMarkdownPlugin(md, TOC, {
           includeLevel: [1, 2, 3, 4],
           slugify,
           containerHeaderHtml: '<div class="table-of-contents-anchor"><div class="i-ri-menu-2-fill" /></div>',
         })
 
-        md.use(GitHubAlerts)
+        useMarkdownPlugin(md, GitHubAlerts)
 
         // Register all custom markdown-it plugins (image figures, alt check,
         // source back-references, sources block, ==mark== highlight)
-        registerCustomPlugins(md as import('markdown-it').default, normalizedFrontmatterById)
+        registerCustomPlugins(md as unknown as import('markdown-it').default, normalizedFrontmatterById)
       },
       frontmatterPreprocess(frontmatter, options, id, defaults) {
         (() => {
