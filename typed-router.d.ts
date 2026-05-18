@@ -73,13 +73,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/async-sync-in-between': RouteRecordInfo<
-      '/en/articles/async-sync-in-between',
-      '/en/articles/async-sync-in-between',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/async-with-composition-api': RouteRecordInfo<
       '/en/articles/async-with-composition-api',
       '/en/articles/async-with-composition-api',
@@ -237,13 +230,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/nuxt-icon-v1': RouteRecordInfo<
       '/en/articles/nuxt-icon-v1',
       '/en/articles/nuxt-icon-v1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/one-off-blocks': RouteRecordInfo<
-      '/en/articles/one-off-blocks',
-      '/en/articles/one-off-blocks',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -514,12 +500,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/async-sync-in-between.md': {
-      routes:
-        | '/en/articles/async-sync-in-between'
-      views:
-        | never
-    }
     'pages/en/articles/async-with-composition-api.md': {
       routes:
         | '/en/articles/async-with-composition-api'
@@ -655,12 +635,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/nuxt-icon-v1.md': {
       routes:
         | '/en/articles/nuxt-icon-v1'
-      views:
-        | never
-    }
-    'pages/en/articles/one-off-blocks.md': {
-      routes:
-        | '/en/articles/one-off-blocks'
       views:
         | never
     }

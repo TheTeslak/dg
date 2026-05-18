@@ -625,7 +625,7 @@ const ArtComponent = computed(() => {
     <span font-mono op50>> </span>
     <RouterLink
       :to="backToAllPath"
-      class="font-mono op50 hover:op75"
+      class="font-mono op50 hover:op75 transition-opacity duration-200"
       v-text="$t('action-back-to-all')"
     />
   </div>

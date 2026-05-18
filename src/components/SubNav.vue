@@ -8,7 +8,7 @@ import { isEditableTarget } from '~/logics/keyboard-nav'
 import { useSearch } from '~/logics/search'
 import { onlyLanguage } from '../logics'
 
-const inactiveStyle = 'opacity-30 hover:opacity-60'
+const inactiveStyle = 'opacity-30 hover:opacity-60 transition-opacity duration-200'
 const activeStyle = 'opacity-100 underline'
 
 const fluent = useFluent()

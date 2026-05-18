@@ -537,7 +537,8 @@ html.dark .scroll-toc-dot.is-active {
   transform: translateX(-4px);
   transition:
     opacity 0.3s ease,
-    transform 0.3s ease;
+    transform 0.3s ease,
+    color 0.25s ease;
   pointer-events: none;
 }
 

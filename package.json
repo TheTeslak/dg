@@ -22,7 +22,6 @@
     "@unhead/vue": "catalog:frontend",
     "@unocss/reset": "catalog:frontend",
     "@vueuse/core": "catalog:frontend",
-    "d3-shape": "catalog:frontend",
     "dayjs": "catalog:frontend",
     "floating-vue": "catalog:frontend",
     "fluent-vue": "catalog:",
@@ -33,7 +32,6 @@
     "pinia": "catalog:frontend",
     "pixi.js": "catalog:frontend",
     "shiki": "catalog:frontend",
-    "shiki-magic-move": "catalog:frontend",
     "simplex-noise": "catalog:frontend",
     "vue": "catalog:frontend",
     "vue-router": "catalog:frontend"
@@ -47,7 +45,6 @@
     "@shikijs/markdown-it": "catalog:build",
     "@shikijs/transformers": "catalog:build",
     "@shikijs/twoslash": "catalog:build",
-    "@types/d3-shape": "catalog:types",
     "@types/fs-extra": "catalog:types",
     "@types/markdown-it": "catalog:types",
     "@types/markdown-it-link-attributes": "catalog:types",

@@ -1,6 +1,6 @@
 ---
 title: Teslak Blog
-description: Blog de Teslak
+description: Consejos, analítica, redes neuronales y valor
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -21,7 +21,7 @@ Haciendo [proyectos personales](/es/projects)
 
 [Tomé fotos](/es/photos) de varias cosas
 
-[Más sobre quién es Teslak y por qué es Teslak](/es/articles/who-is-teslak)
+⚡️ [Quién es Teslak y por qué es Teslak](/es/articles/who-is-teslak)
 
 ---
 
@@ -32,4 +32,4 @@ Haciendo [proyectos personales](/es/projects)
   <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank"><span op75 i-ph-matrix-logo-fill /> Matrix</a>
 </p>
 
-O escríbeme al correo: <span font-mono>hi<span i-carbon-at/>teslak.me</span>
+O correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span>

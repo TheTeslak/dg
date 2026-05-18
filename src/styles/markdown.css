@@ -96,7 +96,9 @@ html:not(.dark) .shiki span {
   font-weight: inherit;
   text-decoration: none;
   border-bottom: 1px solid rgba(125, 125, 125, 0.45);
-  transition: border 0.3s ease-in-out;
+  transition:
+    border-color 0.3s ease-in-out,
+    color 0.25s ease;
 }
 
 .prose a:hover {
@@ -147,6 +149,7 @@ a.header-anchor {
   opacity: 0;
   text-decoration: none;
   border: 0 !important;
+  transition: opacity 0.2s ease;
 }
 
 a.header-anchor:hover,

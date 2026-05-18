@@ -1,6 +1,6 @@
 ---
 title: Teslak Blog
-description: Блог Теслака
+description: Советы, аналитика, нейросети и польза
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -21,7 +21,7 @@ display: Теслак увлекается IT, нейросетями, UX диз
 
 [Нафотографировал](/ru/photos) всякого
 
-[Подробнее о том, кто такой Теслак и почему он Теслак](/ru/articles/who-is-teslak)
+⚡️ [Кто такой Теслак и почему он Теслак](/ru/articles/who-is-teslak)
 
 ---
 
@@ -32,4 +32,4 @@ display: Теслак увлекается IT, нейросетями, UX диз
   <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank"><span op75 i-ph-matrix-logo-fill /> Matrix</a>
 </p>
 
-Или пишите на почту: <span font-mono>hi<span i-carbon-at/>teslak.me</span>
+Или почта <span font-mono>Teslak<span i-carbon-at/>proton.me</span>
