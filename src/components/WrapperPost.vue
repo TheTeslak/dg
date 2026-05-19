@@ -433,201 +433,207 @@ const ArtComponent = computed(() => {
       <component :is="ArtComponent" />
     </div>
   </ClientOnly>
-  <div
-    v-if="frontmatter.display ?? frontmatter.title"
-    class="prose m-auto mb-8"
-    :lang="currentLocale"
-    :class="[frontmatter.wrapperClass]"
-  >
+  <div :class="{ 'h-entry': frontmatter.date }">
     <div
-      v-if="backlinks.length > 0"
-      class="backlinks-container slide-enter-50"
+      v-if="frontmatter.display ?? frontmatter.title"
+      class="prose m-auto mb-8"
+      :lang="currentLocale"
+      :class="[frontmatter.wrapperClass, !frontmatter.date && pic ? 'h-card' : '']"
     >
-      <div v-for="backlink in backlinks" :key="backlink.path" class="backlink-header">
-        <RouterLink :to="backlink.path" class="backlink-link">
-          <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
-          <span>
-            <span v-if="isDraftPost(backlink.type)" role="img" aria-label="Draft">🚧 </span>{{ backlink.title }}
-          </span>
-          <span
-            v-if="backlink.lang && backlink.lang !== currentLocale"
-            class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
-          >{{ backlink.lang.toUpperCase() }}</span>
-        </RouterLink>
-      </div>
-    </div>
-    <h1 class="slide-enter-50 !mt-0 !mb-2.5" :lang="frontmatter.lang">
-      <template v-if="pic && titleParts?.linked">
-        <span v-if="titleParts.before" class="title-rest">{{ titleParts.before }}</span><RouterLink
-          :to="pic.link!"
-          class="title-pic-link"
-        >
-          <img
-            :src="pic.src"
-            alt=""
-            class="title-pic"
-            :class="`title-pic--${pic.r}`"
-          >{{ titleParts.linked }}
-        </RouterLink><span class="title-rest">{{ titleParts.after }}</span>
-      </template>
-      <template v-else>
-        {{ frontmatter.display ?? frontmatter.title }}
-      </template>
-    </h1>
-    <p
-      v-if="frontmatter.date"
-      class="slide-enter-50 !mt-0"
-    >
-      <span class="opacity-50">
-        <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
-        <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(frontmatter.date, false, currentLocale) }}<span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
-      </span>
-    </p>
-    <p v-if="frontmatter.place" class="mt--4!">
-      <span op50>at </span>
-      <a v-if="frontmatter.placeLink" :href="frontmatter.placeLink" target="_blank" rel="noopener noreferrer">
-        {{ frontmatter.place }}
-      </a>
-      <span v-else font-bold>
-        {{ frontmatter.place }}
-      </span>
-    </p>
-    <p
-      v-if="frontmatter.subtitle"
-      class="opacity-50 !-mt-6 italic slide-enter"
-      :lang="frontmatter.lang"
-    >
-      {{ frontmatter.subtitle }}
-    </p>
-    <PostDraftBanner
-      v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
-    />
-    <PostNoticeBanner
-      v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
-      :original-locale="frontmatter.originalLocale"
-    />
-    <AsyncArticleAudio
-      v-if="articleAudio"
-      :audio="articleAudio"
-      :article-title="frontmatter.display ?? frontmatter.title"
-      :article-updated-at="articleUpdatedAt"
-      :article-image="articleImage"
-      :article-slug="articleSlug"
-    />
-  </div>
-  <ScrollProgressToc
-    v-if="frontmatter.title"
-    :title="frontmatter.display ?? frontmatter.title"
-    :duration="localizedDuration"
-  />
-  <article
-    ref="content"
-    :lang="frontmatter.lang"
-    :class="[frontmatter.tocAlwaysOn ? 'toc-always-on' : '', frontmatter.class]"
-  >
-    <slot />
-  </article>
-
-  <!-- Glossary -->
-  <ClientOnly>
-    <Teleport to="body">
-      <!-- Margin note (mirrors ToC layout) -->
-      <Transition name="margin-note">
-        <div
-          v-if="activeGlossary && !isMobileGlossary"
-          ref="marginNoteRef"
-          class="margin-note"
-          :style="{ top: `${marginNoteTop}px` }"
-        >
-          <div class="margin-note-header">
-            <div class="margin-note-term">
-              {{ activeGlossary.term }}
-            </div>
-            <div
-              v-if="activeGlossary.pinned"
-              i-solar:pin-bold
-              class="margin-note-pin"
-              role="button"
-              tabindex="0"
-              title="Unpin"
-              @click="closeGlossary"
-            />
-          </div>
-          <div class="margin-note-body" v-html="activeGlossary.definition" />
+      <div
+        v-if="backlinks.length > 0"
+        class="backlinks-container slide-enter-50"
+      >
+        <div v-for="backlink in backlinks" :key="backlink.path" class="backlink-header">
+          <RouterLink :to="backlink.path" class="backlink-link">
+            <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
+            <span>
+              <span v-if="isDraftPost(backlink.type)" role="img" aria-label="Draft">🚧 </span>{{ backlink.title }}
+            </span>
+            <span
+              v-if="backlink.lang && backlink.lang !== currentLocale"
+              class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
+            >{{ backlink.lang.toUpperCase() }}</span>
+          </RouterLink>
         </div>
-      </Transition>
-
-      <!-- Mobile bottom sheet -->
-      <Transition name="glossary-backdrop">
-        <div
-          v-if="activeGlossary && isMobileGlossary"
-          class="glossary-backdrop"
-          @click="closeGlossary"
-        />
-      </Transition>
-      <Transition name="glossary-sheet">
-        <div
-          v-if="activeGlossary && isMobileGlossary"
-          class="glossary-sheet"
-        >
-          <div class="glossary-sheet-header">
-            <div class="glossary-sheet-term">
-              {{ activeGlossary.term }}
-            </div>
-            <button class="glossary-sheet-close" @click="closeGlossary">
-              <div i-ri-close-line />
-            </button>
-          </div>
-          <div class="glossary-sheet-body" v-html="activeGlossary.definition" />
-        </div>
-      </Transition>
-    </Teleport>
-  </ClientOnly>
-  <div v-if="route.path !== '/' && frontmatter.date" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
-    <template v-if="frontmatter.telegram || frontmatter.mastodon">
-      <span font-mono op50>> </span>
-      <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
-      <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-telegram') }}</a>
-      <span v-if="frontmatter.telegram && frontmatter.mastodon" op25> / </span>
-      <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-mastodon') }}</a>
-    </template>
-
-    <!-- Referenced By (articles that backlink to this one) -->
-    <div v-if="referencedBy.length" class="referenced-by mt-9">
-      <div class="referenced-by-label">
-        <div i-ri:links-line class="referenced-by-label-icon" aria-hidden="true" />
-        <span>{{ $t('post-referenced-by') }}</span>
       </div>
-      <div v-for="ref in referencedBy" :key="ref.path" class="referenced-by-item">
-        <RouterLink :to="ref.path" class="referenced-by-link">
-          <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
-          <span>{{ ref.title }}</span>
-        </RouterLink>
-        <span
-          v-if="ref.lang && ref.lang !== currentLocale"
-          class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
-        >{{ ref.lang.toUpperCase() }}</span>
-        <span v-if="ref.date" class="referenced-by-date">
-          <span v-if="isDraftPost(ref.type)" role="img" aria-label="Draft">🚧 </span>
-          <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(ref.date, false, currentLocale) }}
+      <h1 class="slide-enter-50 !mt-0 !mb-2.5 p-name" :lang="frontmatter.lang">
+        <template v-if="pic && titleParts?.linked">
+          <span v-if="titleParts.before" class="title-rest p-note">{{ titleParts.before }}</span><RouterLink
+            :to="pic.link!"
+            class="title-pic-link u-url"
+          >
+            <img
+              :src="pic.src"
+              alt=""
+              class="title-pic u-photo"
+              :class="`title-pic--${pic.r}`"
+            ><span class="p-name">{{ titleParts.linked }}</span>
+          </RouterLink><span class="title-rest p-note">{{ titleParts.after }}</span>
+        </template>
+        <template v-else>
+          {{ frontmatter.display ?? frontmatter.title }}
+        </template>
+      </h1>
+      <p
+        v-if="frontmatter.date"
+        class="slide-enter-50 !mt-0"
+      >
+        <span class="opacity-50">
+          <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
+          <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
         </span>
+      </p>
+      <div v-if="frontmatter.date" class="p-author h-card" style="display: none;">
+        <a class="u-url p-name" href="https://teslak.me">Teslak</a>
+        <img class="u-photo" src="/avatar.avif" alt="Teslak">
       </div>
+      <p v-if="frontmatter.place" class="mt--4!">
+        <span op50>at </span>
+        <a v-if="frontmatter.placeLink" :href="frontmatter.placeLink" target="_blank" rel="noopener noreferrer">
+          {{ frontmatter.place }}
+        </a>
+        <span v-else font-bold>
+          {{ frontmatter.place }}
+        </span>
+      </p>
+      <p
+        v-if="frontmatter.subtitle"
+        class="opacity-50 !-mt-6 italic slide-enter"
+        :lang="frontmatter.lang"
+      >
+        {{ frontmatter.subtitle }}
+      </p>
+      <PostDraftBanner
+        v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
+      />
+      <PostNoticeBanner
+        v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
+        :original-locale="frontmatter.originalLocale"
+      />
+      <AsyncArticleAudio
+        v-if="articleAudio"
+        :audio="articleAudio"
+        :article-title="frontmatter.display ?? frontmatter.title"
+        :article-updated-at="articleUpdatedAt"
+        :article-image="articleImage"
+        :article-slug="articleSlug"
+      />
     </div>
-
-    <!-- Chronological navigation -->
-    <PostNavigation
-      v-if="frontmatter.date"
-      :current-path="route.path"
-      :type="postType"
-      class="mt-9 mb-6"
+    <ScrollProgressToc
+      v-if="frontmatter.title"
+      :title="frontmatter.display ?? frontmatter.title"
+      :duration="localizedDuration"
     />
+    <article
+      ref="content"
+      :lang="frontmatter.lang"
+      :class="[frontmatter.tocAlwaysOn ? 'toc-always-on' : '', frontmatter.class, frontmatter.date ? 'e-content' : '']"
+    >
+      <slot />
+    </article>
 
-    <span font-mono op50>> </span>
-    <RouterLink
-      :to="backToAllPath"
-      class="font-mono op50 hover:op75 transition-opacity duration-200"
-      v-text="$t('action-back-to-all')"
-    />
+    <!-- Glossary -->
+    <ClientOnly>
+      <Teleport to="body">
+        <!-- Margin note (mirrors ToC layout) -->
+        <Transition name="margin-note">
+          <div
+            v-if="activeGlossary && !isMobileGlossary"
+            ref="marginNoteRef"
+            class="margin-note"
+            :style="{ top: `${marginNoteTop}px` }"
+          >
+            <div class="margin-note-header">
+              <div class="margin-note-term">
+                {{ activeGlossary.term }}
+              </div>
+              <div
+                v-if="activeGlossary.pinned"
+                i-solar:pin-bold
+                class="margin-note-pin"
+                role="button"
+                tabindex="0"
+                title="Unpin"
+                @click="closeGlossary"
+              />
+            </div>
+            <div class="margin-note-body" v-html="activeGlossary.definition" />
+          </div>
+        </Transition>
+
+        <!-- Mobile bottom sheet -->
+        <Transition name="glossary-backdrop">
+          <div
+            v-if="activeGlossary && isMobileGlossary"
+            class="glossary-backdrop"
+            @click="closeGlossary"
+          />
+        </Transition>
+        <Transition name="glossary-sheet">
+          <div
+            v-if="activeGlossary && isMobileGlossary"
+            class="glossary-sheet"
+          >
+            <div class="glossary-sheet-header">
+              <div class="glossary-sheet-term">
+                {{ activeGlossary.term }}
+              </div>
+              <button class="glossary-sheet-close" @click="closeGlossary">
+                <div i-ri-close-line />
+              </button>
+            </div>
+            <div class="glossary-sheet-body" v-html="activeGlossary.definition" />
+          </div>
+        </Transition>
+      </Teleport>
+    </ClientOnly>
+    <div v-if="route.path !== '/' && frontmatter.date" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
+      <template v-if="frontmatter.telegram || frontmatter.mastodon">
+        <span font-mono op50>> </span>
+        <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
+        <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-telegram') }}</a>
+        <span v-if="frontmatter.telegram && frontmatter.mastodon" op25> / </span>
+        <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-mastodon') }}</a>
+      </template>
+
+      <!-- Referenced By (articles that backlink to this one) -->
+      <div v-if="referencedBy.length" class="referenced-by mt-9">
+        <div class="referenced-by-label">
+          <div i-ri:links-line class="referenced-by-label-icon" aria-hidden="true" />
+          <span>{{ $t('post-referenced-by') }}</span>
+        </div>
+        <div v-for="ref in referencedBy" :key="ref.path" class="referenced-by-item">
+          <RouterLink :to="ref.path" class="referenced-by-link">
+            <div i-ri:corner-left-up-line class="backlink-icon" aria-hidden="true" />
+            <span>{{ ref.title }}</span>
+          </RouterLink>
+          <span
+            v-if="ref.lang && ref.lang !== currentLocale"
+            class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none"
+          >{{ ref.lang.toUpperCase() }}</span>
+          <span v-if="ref.date" class="referenced-by-date">
+            <span v-if="isDraftPost(ref.type)" role="img" aria-label="Draft">🚧 </span>
+            <span v-if="isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type)" role="img" aria-label="Recent">🌱 </span>{{ formatDate(ref.date, false, currentLocale) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Chronological navigation -->
+      <PostNavigation
+        v-if="frontmatter.date"
+        :current-path="route.path"
+        :type="postType"
+        class="mt-9 mb-6"
+      />
+
+      <span font-mono op50>> </span>
+      <RouterLink
+        :to="backToAllPath"
+        class="font-mono op50 hover:op75 transition-opacity duration-200"
+        v-text="$t('action-back-to-all')"
+      />
+    </div>
   </div>
 </template>
 
