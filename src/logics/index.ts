@@ -89,7 +89,9 @@ export function formatDate(d: string | Date, onlyDate = true, locale = dayjs.loc
 export function isRecentPost(date: string | Date, updated?: string | Date): boolean {
   const effectiveDate = updated ? dayjs(updated) : dayjs(date)
   const now = dayjs()
-  return now.diff(effectiveDate, 'day') < 15 && effectiveDate.isBefore(now)
+  // 1-day grace period: show 🌱 even if the date is slightly in the future
+  // (handles timezone mismatches and minor scheduling errors)
+  return now.diff(effectiveDate, 'day') < 15 && effectiveDate.isBefore(now.add(1, 'day'))
 }
 
 export function parseReadingMinutes(duration: unknown): number | undefined {

@@ -409,6 +409,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/ru/articles/robophobia': RouteRecordInfo<
+      '/ru/articles/robophobia',
+      '/ru/articles/robophobia',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/ru/articles/temp': RouteRecordInfo<
       '/ru/articles/temp',
       '/ru/articles/temp',
@@ -785,6 +792,12 @@ declare module 'vue-router/auto-routes' {
     'pages/ru/articles/colophon.md': {
       routes:
         | '/ru/articles/colophon'
+      views:
+        | never
+    }
+    'pages/ru/articles/robophobia.md': {
+      routes:
+        | '/ru/articles/robophobia'
       views:
         | never
     }

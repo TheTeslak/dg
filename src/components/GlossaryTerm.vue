@@ -82,7 +82,7 @@ function handleMouseLeave() {
       if (glossary.active.value?.termEl === termRef.value && !glossary.active.value?.pinned) {
         glossary.setActive(null)
       }
-    }, 400) // 400ms grace period
+    }, 300) // 300ms grace period
   }
 }
 </script>
@@ -106,7 +106,7 @@ function handleMouseLeave() {
 
 <style scoped>
 .glossary-term {
-  border-bottom: 1.5px dashed rgba(125, 125, 125, 0.4);
+  border-bottom: 1.5px dashed rgba(125, 125, 125, 0.45);
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -117,7 +117,7 @@ function handleMouseLeave() {
 }
 
 html.dark .glossary-term {
-  border-bottom-color: rgba(125, 125, 125, 0.35);
+  border-bottom-color: rgba(125, 125, 125, 0.6);
 }
 
 html.dark .glossary-term:hover,

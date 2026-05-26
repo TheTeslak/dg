@@ -171,6 +171,17 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     return explicitRobots
   })
 
+  const isProfilePage = computed(() => {
+    if (!isArticle.value)
+      return false
+    const slug = getRouteSlug(canonicalPath.value)
+    return (
+      slug === 'who-is-teslak'
+      || frontmatter.value.type === 'profile'
+      || frontmatter.value.profile === true
+    )
+  })
+
   const schemaOrg = computed(() => {
     if (route.path === '/' || /^\/(?:en|ru|es)\/?$/.test(route.path)) {
       return [
@@ -194,6 +205,20 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
 
     const datePublished = toIsoDate(frontmatter.value.date)
     const dateModified = toIsoDate(frontmatter.value.updated) || datePublished
+
+    if (isProfilePage.value) {
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        'mainEntity': {
+          ...person,
+          description: description.value,
+        },
+        'inLanguage': optionalString(frontmatter.value.lang) || currentLocale.value,
+        'datePublished': datePublished,
+        'dateModified': dateModified,
+      }
+    }
 
     return {
       '@context': 'https://schema.org',
