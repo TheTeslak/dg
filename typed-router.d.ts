@@ -59,13 +59,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/animated-svg-logo': RouteRecordInfo<
-      '/en/articles/animated-svg-logo',
-      '/en/articles/animated-svg-logo',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/article-frontmatter-params': RouteRecordInfo<
       '/en/articles/article-frontmatter-params',
       '/en/articles/article-frontmatter-params',
@@ -129,13 +122,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/categorize-deps': RouteRecordInfo<
-      '/en/articles/categorize-deps',
-      '/en/articles/categorize-deps',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/en/articles/colophon': RouteRecordInfo<
       '/en/articles/colophon',
       '/en/articles/colophon',
@@ -146,20 +132,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/color-scheme-for-vscode-ext': RouteRecordInfo<
       '/en/articles/color-scheme-for-vscode-ext',
       '/en/articles/color-scheme-for-vscode-ext',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/destructuring-with-object-or-array': RouteRecordInfo<
-      '/en/articles/destructuring-with-object-or-array',
-      '/en/articles/destructuring-with-object-or-array',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/dev-ssr-on-nuxt': RouteRecordInfo<
-      '/en/articles/dev-ssr-on-nuxt',
-      '/en/articles/dev-ssr-on-nuxt',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -272,13 +244,6 @@ declare module 'vue-router/auto-routes' {
     '/en/articles/who-is-teslak': RouteRecordInfo<
       '/en/articles/who-is-teslak',
       '/en/articles/who-is-teslak',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/why-reproductions-are-required': RouteRecordInfo<
-      '/en/articles/why-reproductions-are-required',
-      '/en/articles/why-reproductions-are-required',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -495,12 +460,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/animated-svg-logo.md': {
-      routes:
-        | '/en/articles/animated-svg-logo'
-      views:
-        | never
-    }
     'pages/en/articles/article-frontmatter-params.md': {
       routes:
         | '/en/articles/article-frontmatter-params'
@@ -555,12 +514,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/categorize-deps.md': {
-      routes:
-        | '/en/articles/categorize-deps'
-      views:
-        | never
-    }
     'pages/en/articles/colophon.md': {
       routes:
         | '/en/articles/colophon'
@@ -570,18 +523,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/color-scheme-for-vscode-ext.md': {
       routes:
         | '/en/articles/color-scheme-for-vscode-ext'
-      views:
-        | never
-    }
-    'pages/en/articles/destructuring-with-object-or-array.md': {
-      routes:
-        | '/en/articles/destructuring-with-object-or-array'
-      views:
-        | never
-    }
-    'pages/en/articles/dev-ssr-on-nuxt.md': {
-      routes:
-        | '/en/articles/dev-ssr-on-nuxt'
       views:
         | never
     }
@@ -678,12 +619,6 @@ declare module 'vue-router/auto-routes' {
     'pages/en/articles/who-is-teslak.md': {
       routes:
         | '/en/articles/who-is-teslak'
-      views:
-        | never
-    }
-    'pages/en/articles/why-reproductions-are-required.md': {
-      routes:
-        | '/en/articles/why-reproductions-are-required'
       views:
         | never
     }

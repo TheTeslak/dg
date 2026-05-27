@@ -1,6 +1,7 @@
 import type { ComputedRef } from 'vue'
 import type { SupportedLocale } from './i18n-path'
 import { useHead } from '@unhead/vue'
+import { useFluent } from 'fluent-vue'
 import { computed, toValue } from 'vue'
 import { useRoute } from 'vue-router'
 import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from './i18n-path'
@@ -24,10 +25,10 @@ const person = {
   ],
 }
 
-const localeMeta: Record<SupportedLocale, { description: string, ogLocale: string }> = {
-  en: { description: `${siteName}'s Blog`, ogLocale: 'en_US' },
-  ru: { description: `Блог ${siteName}`, ogLocale: 'ru_RU' },
-  es: { description: `Blog de ${siteName}`, ogLocale: 'es_ES' },
+const localeMeta: Record<SupportedLocale, { ogLocale: string }> = {
+  en: { ogLocale: 'en_US' },
+  ru: { ogLocale: 'ru_RU' },
+  es: { ogLocale: 'es_ES' },
 }
 
 function optionalString(value: unknown) {
@@ -60,6 +61,7 @@ function getDefaultXDefaultPath(path: string) {
 }
 
 export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = {}) {
+  const { $t } = useFluent()
   const route = useRoute()
   const frontmatter = computed(() => toValue(frontmatterRef) || {})
   const currentLocale = computed(() => getLocaleFromPath(route.path))
@@ -79,7 +81,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   const description = computed(() => {
     return optionalString(frontmatter.value.description)
       || optionalString(frontmatter.value.excerpt)
-      || localeMeta[currentLocale.value].description
+      || $t('meta-description')
   })
 
   const isArticle = computed(() => {

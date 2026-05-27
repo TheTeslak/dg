@@ -5,14 +5,13 @@ updated: 2026-03-13T00:00:00+00:00
 lang: en
 duration: 5
 description: A comprehensive reference for Markdown blocks and custom Vue components used in this blog's articles.
-backlink: about-yak-shaving
+type: draft
 telegram: https://t.me/post_link
 mastodon: https://mastodon.social/@name/post_link
 tags:
   - template
   - markdown
 sources: true
-audio: true
 ---
 
 [[toc]]
@@ -230,43 +229,43 @@ You can embed photos directly inside an article. They do not have to be limited 
 
 ### Standard Images
 
-Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`. Images without `alt` text render without a caption wrapper.
+Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`. If you need an image without a caption wrapper, use a standard HTML `<img>` tag with an `alt` attribute.
 
-**Without caption** (no alt text → no `<figure>` wrapper):
+**Without caption** (using standard HTML `<img>`):
 
-```markdown
-![](/images/ai-qrcode-final.jpg)
+```html
+<img src="/images/a-paris-2.jpg" alt="A metro sign in Paris" />
 ```
 
-![](/images/ai-qrcode-final.jpg)
+<img src="/images/a-paris-2.jpg" alt="A metro sign in Paris" />
 
 **With caption** (alt text → auto `<figure>` + `<figcaption>`):
 
 ```markdown
-![AI-generated QR code with artistic styling](/images/ai-qrcode-final.jpg)
+![A metro sign in Paris](/images/a-paris-2.jpg)
 ```
 
-![AI-generated QR code with artistic styling](/images/ai-qrcode-final.jpg)
+![A metro sign in Paris](/images/a-paris-2.jpg)
 
 ### Wide Images (`img-wide`)
 
 If you want a single large image that breaks out of the content container on desktop (like YouTube embeds do) but perfectly fits the screen on mobile, simply apply the `img-wide` class to your image tags.
 
 ```html
-<img src="/images/ai-qrcode-final.jpg" class="img-wide" />
+<img src="/images/a-paris-2.jpg" class="img-wide" alt="A metro sign in Paris" />
 ```
 
-<img src="/images/ai-qrcode-final.jpg" class="img-wide" />
+<img src="/images/a-paris-2.jpg" class="img-wide" alt="A metro sign in Paris" />
 
 ### Dark Mode Inversion (`dark:filter-invert`)
 
 For SVG diagrams or charts designed for a light background, apply `dark:filter-invert` so colors automatically invert in dark mode. This attribute is preserved in the lightbox overlay.
 
 ```html
-<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert />
+<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
 ```
 
-<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert />
+<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
 
 ### Media Card (`MediaCard`)
 

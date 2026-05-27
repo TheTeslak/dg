@@ -8,19 +8,17 @@ nav-projects = Проекты
 nav-notes = Заметки
 nav-photos = Фото
 nav-now = Сейчас
-nav-chat = Чат
 nav-menu = Меню
 nav-close = Закрыть
 
 action-toggle-theme = Сменить тему
 action-to-top = Наверх
 action-back-to-all = Ко всему
+page-not-translated = Ещё не переведена, показана { $lang } версия
 
 blog-only-lang = Только { $lang }
 blog-nothing-here = { "{" } пока пусто { "}" }
 blog-upcoming = Скоро
-blog-draft = Черновик! Загляни позже.
-blog-read-more = Читать
 
 search-placeholder = Поиск по статьям и заметкам
 search-start-typing = Введите запрос
@@ -28,21 +26,6 @@ search-no-results = Ничего не найдено
 search-close = Закрыть поиск
 search-loading = Загрузка индекса...
 
-talks-watch = Смотреть
-talks-transcript = Транскрипт
-talks-slides = Слайды
-talks-pdf = PDF
-talks-days-left = через { $days } дн.
-
-projects-subtitle = Проекты, которые я создал или поддерживаю.
-projects-recent-releases = Недавние релизы
-projects-sort-by-stars = Все проекты по звёздам
-
-footer-copyright = 2026 © { -brand }
-
-intro-desc = Привет, я { -brand }, фанатичный open-source разработчик.
-
-page-not-translated = Ещё не переведена, показана { $lang } версия
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
 post-link-mastodon = Мастодон
@@ -67,7 +50,12 @@ article-audio-outdated = Текст был обновлён после запи�
 heading-link = ссылка
 heading-copied = скопировано
 
-photos-view-cover = Кадрировать
-photos-view-contain = Без обрезки
+photos-view-cover = Обрезать
+photos-view-contain = Не обрезать
 
-sources-title = Источники
+days-left =
+    { $days ->
+        [one] через { $days } день
+        [few] через { $days } дня
+       *[other] через { $days } дней
+    }
