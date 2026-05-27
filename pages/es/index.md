@@ -1,5 +1,5 @@
 ---
-title: Teslak Blog
+title: Blog de Teslak
 description: Consejos, analítica, redes neuronales y valor
 image: https://teslak.me/og.png
 art: random
@@ -11,15 +11,15 @@ pic:
 display: A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
 
-Trabajando en agentes de IA, automatización y aún en diseño, aunque ha cambiado significativamente en los últimos años
+Trabajo en agentes de IA, automatización y todavía en diseño, aunque ha cambiado significativamente en los últimos años
 
-Esforzándome por ampliar mis competencias, aprendiendo algo nuevo cada día. Siguiendo un enfoque académico y una visión científica del mundo
+Aspiro a competencias amplias, aprendiendo algo nuevo cada día. Sigo un enfoque académico y una visión científica del mundo
 
-Escribo 🪶 [notas](/es/notes) aquí y administro un [canal de Telegram con reenvíos interesantes](https://t.me/Tes404)
+Escribo 🪶 [notas](/es/notes) aquí y mantengo un [canal de Telegram con reposts de contenido interesante](https://t.me/Tes404)
 
-Haciendo [proyectos personales](/es/projects)
+Creo [pet projects](/es/projects)
 
-[Tomé fotos](/es/photos) de varias cosas
+[He fotografiado](/es/photos) todo tipo de cosas
 
 ⚡️ [Quién es Teslak y por qué es Teslak](/es/articles/who-is-teslak)
 
@@ -32,4 +32,4 @@ Haciendo [proyectos personales](/es/projects)
   <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank"><span op75 i-ph-matrix-logo-fill /> Matrix</a>
 </p>
 
-O correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span>
+O por correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span>

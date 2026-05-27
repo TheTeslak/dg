@@ -3,9 +3,9 @@ const el = ref<HTMLCanvasElement | null>(null)
 const size = reactive(useWindowSize())
 
 const CELL_SIZE = 12
-const TICK_INTERVAL = 200 // ms between generations
+const TICK_INTERVAL = 1400
 const INITIAL_DENSITY = 0.15
-const FADE_SPEED = 0.06
+const FADE_SPEED = 0.007
 
 function initCanvas(canvas: HTMLCanvasElement, width = 400, height = 400) {
   const ctx = canvas.getContext('2d')!

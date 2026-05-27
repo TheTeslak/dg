@@ -1,3 +1,4 @@
+import type { PostVisibilityFrontmatter } from '../src/logics/post-visibility'
 import type { SupportedLocale } from './constants'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -7,11 +8,21 @@ import matter from 'gray-matter'
 import { hasNoindexRobots, isDraftPost, isPostIndexable } from '../src/logics/post-visibility'
 import { supportedLocales } from './constants'
 
+interface SeoFrontmatter extends PostVisibilityFrontmatter {
+  updated?: string | Date
+  open?: boolean
+}
+
 interface SitemapEntry {
   path: string
   groupKey: string
   locale?: SupportedLocale
   lastmod: string
+}
+
+interface SitemapCollectResult {
+  entries: SitemapEntry[]
+  trainingAllowedPaths: string[]
 }
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
@@ -27,6 +38,8 @@ function slash(path: string) {
 
 function escapeXml(value: string) {
   return value
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\x00-\x08\v\f\x0E-\x1F]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -38,14 +51,16 @@ function absoluteUrl(siteOrigin: string, path: string) {
   return new URL(path, siteOrigin).toString()
 }
 
-function toIsoDate(value: unknown) {
-  if (!value)
+function toIsoDate(value: unknown): string | undefined {
+  if (value == null)
     return undefined
-  const date = new Date(value as string | Date)
+  if (typeof value !== 'string' && !(value instanceof Date))
+    return undefined
+  const date = new Date(value)
   return Number.isNaN(date.getTime()) ? undefined : date.toISOString()
 }
 
-function getFileLastmod(file: string, frontmatter: Record<string, any>) {
+function getFileLastmod(file: string, frontmatter: SeoFrontmatter) {
   return toIsoDate(frontmatter.updated)
     || toIsoDate(frontmatter.date)
     || fs.statSync(file).mtime.toISOString()
@@ -67,8 +82,9 @@ function getGroupKey(path: string) {
   return getLocalizedRoute(path)?.rest || path
 }
 
-function getMarkdownRoute(file: string) {
-  let route = slash(relative(pagesDir, file)).replace(/\.md$/, '')
+function getPageRoute(file: string) {
+  const ext = file.endsWith('.md') ? '.md' : '.vue'
+  let route = slash(relative(pagesDir, file)).replace(new RegExp(`\\${ext}$`), '')
   if (route.includes('['))
     return undefined
   if (route === 'index')
@@ -78,16 +94,16 @@ function getMarkdownRoute(file: string) {
   return `/${route}`
 }
 
-function isRouteIndexable(path: string, frontmatter: Record<string, any>) {
-  if (frontmatter.draft || isDraftPost(frontmatter.type))
-    return false
-
-  if (hasNoindexRobots(frontmatter.robots))
-    return false
-
+function isRouteIndexable(path: string, frontmatter: SeoFrontmatter) {
   const article = path.match(articleRouteRE)
-  if (!article)
+  if (!article) {
+    // Non-article pages: filter by explicit draft or noindex
+    if (frontmatter.draft || isDraftPost(frontmatter.type))
+      return false
+    if (hasNoindexRobots(frontmatter.robots))
+      return false
     return true
+  }
 
   const slug = article[2]
   if (slug === 'index')
@@ -96,32 +112,34 @@ function isRouteIndexable(path: string, frontmatter: Record<string, any>) {
   return isPostIndexable(frontmatter)
 }
 
-async function collectSitemapEntries() {
+async function collectSitemapEntries(): Promise<SitemapCollectResult> {
   const entries: SitemapEntry[] = []
+  const trainingAllowedPaths: string[] = []
 
-  const rootFile = resolve(pagesDir, 'index.vue')
-  if (fs.existsSync(rootFile)) {
-    entries.push({
-      path: '/',
-      groupKey: '/',
-      lastmod: fs.statSync(rootFile).mtime.toISOString(),
-    })
-  }
-
-  const files = await fg('**/*.md', {
+  const files = await fg('**/*.{md,vue}', {
     cwd: pagesDir,
     absolute: true,
     onlyFiles: true,
   })
 
   for (const file of files) {
-    const path = getMarkdownRoute(file)
+    const path = getPageRoute(file)
     if (!path)
       continue
 
-    const { data } = matter(await fs.readFile(file, 'utf-8'))
+    const ext = file.endsWith('.vue') ? 'vue' : 'md'
+    let data: SeoFrontmatter = {}
+
+    if (ext === 'md') {
+      const parsed = matter(await fs.readFile(file, 'utf-8'))
+      data = parsed.data as SeoFrontmatter
+    }
+
     if (!isRouteIndexable(path, data))
       continue
+
+    if (data.open)
+      trainingAllowedPaths.push(path)
 
     const localized = getLocalizedRoute(path)
     entries.push({
@@ -132,7 +150,10 @@ async function collectSitemapEntries() {
     })
   }
 
-  return entries.sort((a, b) => a.path.localeCompare(b.path))
+  return {
+    entries: entries.sort((a, b) => a.path.localeCompare(b.path)),
+    trainingAllowedPaths: trainingAllowedPaths.sort(),
+  }
 }
 
 function buildAlternateLinks(entry: SitemapEntry, groups: Map<string, SitemapEntry[]>, siteOrigin: string) {
@@ -160,6 +181,14 @@ function buildAlternateLinks(entry: SitemapEntry, groups: Map<string, SitemapEnt
   return links
 }
 
+function getUrlMeta(path: string) {
+  if (path === '/')
+    return { changefreq: 'weekly', priority: '1.0' }
+  if (articleRouteRE.test(path))
+    return { changefreq: 'monthly', priority: '0.7' }
+  return { changefreq: 'monthly', priority: '0.5' }
+}
+
 function buildSitemapXml(entries: SitemapEntry[], siteOrigin: string) {
   const groups = new Map<string, SitemapEntry[]>()
   for (const entry of entries) {
@@ -174,13 +203,17 @@ function buildSitemapXml(entries: SitemapEntry[], siteOrigin: string) {
       .map(link => `    <xhtml:link rel="alternate" hreflang="${escapeXml(link.hreflang)}" href="${escapeXml(link.href)}" />`)
       .join('\n')
 
+    const meta = getUrlMeta(entry.path)
+
     return [
       '  <url>',
       `    <loc>${escapeXml(absoluteUrl(siteOrigin, entry.path))}</loc>`,
       `    <lastmod>${escapeXml(entry.lastmod)}</lastmod>`,
+      `    <changefreq>${meta.changefreq}</changefreq>`,
+      `    <priority>${meta.priority}</priority>`,
       alternateXml,
       '  </url>',
-    ].filter(Boolean).join('\n')
+    ].filter(line => line.trim().length > 0).join('\n')
   }).join('\n')
 
   return [
@@ -192,22 +225,12 @@ function buildSitemapXml(entries: SitemapEntry[], siteOrigin: string) {
   ].join('\n')
 }
 
-function buildRobotsTxt(siteOrigin: string) {
+function buildRobotsTxt(siteOrigin: string, allowedArticles: string[]) {
   // Content paths that training/scraping crawlers should not access
-  const blogPaths = [
-    '/en/articles/',
-    '/ru/articles/',
-    '/es/articles/',
-    '/en/notes',
-    '/ru/notes',
-    '/es/notes',
-    '/en/photos',
-    '/ru/photos',
-    '/es/photos',
-    '/en/now',
-    '/ru/now',
-    '/es/now',
-  ]
+  const contentSections = ['articles/', 'notes', 'photos', 'now']
+  const blogPaths = supportedLocales.flatMap(
+    locale => contentSections.map(section => `/${locale}/${section}`),
+  )
 
   // Training & scraping crawlers — blocked from blog content only
   const trainingBots = [
@@ -259,6 +282,7 @@ function buildRobotsTxt(siteOrigin: string) {
   function trainingGroup(userAgent: string) {
     return [
       `User-agent: ${userAgent}`,
+      ...allowedArticles.map(path => `Allow: ${path}`),
       ...blogPaths.map(path => `Disallow: ${path}`),
     ].join('\n')
   }
@@ -275,8 +299,13 @@ function buildRobotsTxt(siteOrigin: string) {
     ...searchBots.map(allowGroup),
     ...answerBots.map(allowGroup),
     ...socialBots.map(allowGroup),
-    // Block all unknown crawlers by default
-    'User-agent: *\nDisallow: /',
+    // Block all unknown crawlers by default, except the homepage and allowed articles
+    [
+      'User-agent: *',
+      'Allow: /$',
+      ...allowedArticles.map(path => `Allow: ${path}`),
+      'Disallow: /',
+    ].join('\n'),
     `Sitemap: ${absoluteUrl(siteOrigin, '/sitemap.xml')}`,
     '# I\'m fond of robots; after all, I too am one.',
     '',
@@ -285,9 +314,9 @@ function buildRobotsTxt(siteOrigin: string) {
 
 export async function generateSeoFiles(options: { outDir?: string, siteOrigin: string }) {
   const outDir = resolve(repoRoot, options.outDir || 'dist')
-  const entries = await collectSitemapEntries()
+  const { entries, trainingAllowedPaths } = await collectSitemapEntries()
 
   await fs.ensureDir(outDir)
   await fs.writeFile(resolve(outDir, 'sitemap.xml'), buildSitemapXml(entries, options.siteOrigin), 'utf-8')
-  await fs.writeFile(resolve(outDir, 'robots.txt'), buildRobotsTxt(options.siteOrigin), 'utf-8')
+  await fs.writeFile(resolve(outDir, 'robots.txt'), buildRobotsTxt(options.siteOrigin, trainingAllowedPaths), 'utf-8')
 }

@@ -983,6 +983,8 @@ html.dark .glossary-sheet-body :deep(mark) {
 
 article :deep(.sources-block) {
   background: rgba(125, 125, 125, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 0.5rem;
   margin: 2em 0 0;
   overflow: hidden;

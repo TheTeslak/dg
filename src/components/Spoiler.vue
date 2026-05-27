@@ -19,6 +19,8 @@ defineProps<{
 <style scoped>
 .spoiler {
   background: rgba(125, 125, 125, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 0.5rem;
   margin: 1.25em 0;
   overflow: hidden;

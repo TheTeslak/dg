@@ -234,38 +234,38 @@ Standard markdown images fit within the content column. When `alt` text is provi
 **Without caption** (using standard HTML `<img>`):
 
 ```html
-<img src="/images/a-paris-2.jpg" alt="A metro sign in Paris" />
+<img src="/images/avatars.avif" alt="Avatars showcase" />
 ```
 
-<img src="/images/a-paris-2.jpg" alt="A metro sign in Paris" />
+<img src="/images/avatars.avif" alt="Avatars showcase" />
 
 **With caption** (alt text → auto `<figure>` + `<figcaption>`):
 
 ```markdown
-![A metro sign in Paris](/images/a-paris-2.jpg)
+![Avatars showcase](/images/avatars.avif)
 ```
 
-![A metro sign in Paris](/images/a-paris-2.jpg)
+![Avatars showcase](/images/avatars.avif)
 
 ### Wide Images (`img-wide`)
 
 If you want a single large image that breaks out of the content container on desktop (like YouTube embeds do) but perfectly fits the screen on mobile, simply apply the `img-wide` class to your image tags.
 
 ```html
-<img src="/images/a-paris-2.jpg" class="img-wide" alt="A metro sign in Paris" />
+<img src="/images/avatars.avif" class="img-wide" alt="Avatars showcase" />
 ```
 
-<img src="/images/a-paris-2.jpg" class="img-wide" alt="A metro sign in Paris" />
+<img src="/images/avatars.avif" class="img-wide" alt="Avatars showcase" />
 
 ### Dark Mode Inversion (`dark:filter-invert`)
 
 For SVG diagrams or charts designed for a light background, apply `dark:filter-invert` so colors automatically invert in dark mode. This attribute is preserved in the lightbox overlay.
 
 ```html
-<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
+<img src="/images/npm-esm-vs-cjs-sample.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
 ```
 
-<img src="/images/npm-esm-vs-cjs-2024.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
+<img src="/images/npm-esm-vs-cjs-sample.svg" dark:filter-invert alt="npm ESM vs CJS chart" />
 
 ### Media Card (`MediaCard`)
 

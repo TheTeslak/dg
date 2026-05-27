@@ -27,6 +27,7 @@ export const frontmatterKnownKeys = new Set([
   'link',
   'mastodon',
   'originalLocale',
+  'open',
   'place',
   'placeLink',
   'projects',

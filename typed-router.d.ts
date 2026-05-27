@@ -59,191 +59,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/en/articles/article-frontmatter-params': RouteRecordInfo<
-      '/en/articles/article-frontmatter-params',
-      '/en/articles/article-frontmatter-params',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/async-with-composition-api': RouteRecordInfo<
-      '/en/articles/async-with-composition-api',
-      '/en/articles/async-with-composition-api',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/backlinks-demo-child-1': RouteRecordInfo<
-      '/en/articles/backlinks-demo-child-1',
-      '/en/articles/backlinks-demo-child-1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/backlinks-demo-child-2': RouteRecordInfo<
-      '/en/articles/backlinks-demo-child-2',
-      '/en/articles/backlinks-demo-child-2',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/backlinks-demo-multi': RouteRecordInfo<
-      '/en/articles/backlinks-demo-multi',
-      '/en/articles/backlinks-demo-multi',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/backlinks-demo-root': RouteRecordInfo<
-      '/en/articles/backlinks-demo-root',
-      '/en/articles/backlinks-demo-root',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/blocks-template': RouteRecordInfo<
-      '/en/articles/blocks-template',
-      '/en/articles/blocks-template',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/bonjour-paris': RouteRecordInfo<
-      '/en/articles/bonjour-paris',
-      '/en/articles/bonjour-paris',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/break-lines-in-js': RouteRecordInfo<
-      '/en/articles/break-lines-in-js',
-      '/en/articles/break-lines-in-js',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/colophon': RouteRecordInfo<
-      '/en/articles/colophon',
-      '/en/articles/colophon',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/color-scheme-for-vscode-ext': RouteRecordInfo<
-      '/en/articles/color-scheme-for-vscode-ext',
-      '/en/articles/color-scheme-for-vscode-ext',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/domain-email': RouteRecordInfo<
-      '/en/articles/domain-email',
-      '/en/articles/domain-email',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/eslint-config-inspector': RouteRecordInfo<
-      '/en/articles/eslint-config-inspector',
-      '/en/articles/eslint-config-inspector',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/evolution-of-shiki-v1': RouteRecordInfo<
-      '/en/articles/evolution-of-shiki-v1',
-      '/en/articles/evolution-of-shiki-v1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/exploring-frontend': RouteRecordInfo<
-      '/en/articles/exploring-frontend',
-      '/en/articles/exploring-frontend',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/introducing-nuxt-devtools': RouteRecordInfo<
-      '/en/articles/introducing-nuxt-devtools',
-      '/en/articles/introducing-nuxt-devtools',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/isomorphic-dirname': RouteRecordInfo<
-      '/en/articles/isomorphic-dirname',
-      '/en/articles/isomorphic-dirname',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/match-chinese-characters': RouteRecordInfo<
-      '/en/articles/match-chinese-characters',
-      '/en/articles/match-chinese-characters',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/netlify-redirects': RouteRecordInfo<
-      '/en/articles/netlify-redirects',
-      '/en/articles/netlify-redirects',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/nuxt-devtools-v1': RouteRecordInfo<
-      '/en/articles/nuxt-devtools-v1',
-      '/en/articles/nuxt-devtools-v1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/nuxt-icon-v1': RouteRecordInfo<
-      '/en/articles/nuxt-icon-v1',
-      '/en/articles/nuxt-icon-v1',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/pnpm-external-disk': RouteRecordInfo<
-      '/en/articles/pnpm-external-disk',
-      '/en/articles/pnpm-external-disk',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/range-in-javascript': RouteRecordInfo<
-      '/en/articles/range-in-javascript',
-      '/en/articles/range-in-javascript',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/reflection-of-speaking-in-public': RouteRecordInfo<
-      '/en/articles/reflection-of-speaking-in-public',
-      '/en/articles/reflection-of-speaking-in-public',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/refreshed-nuxt-eslint': RouteRecordInfo<
-      '/en/articles/refreshed-nuxt-eslint',
-      '/en/articles/refreshed-nuxt-eslint',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/type-your-config': RouteRecordInfo<
-      '/en/articles/type-your-config',
-      '/en/articles/type-your-config',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/en/articles/who-is-teslak': RouteRecordInfo<
-      '/en/articles/who-is-teslak',
-      '/en/articles/who-is-teslak',
+    '/en/articles/template': RouteRecordInfo<
+      '/en/articles/template',
+      '/en/articles/template',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -293,20 +111,6 @@ declare module 'vue-router/auto-routes' {
     '/es/articles/': RouteRecordInfo<
       '/es/articles/',
       '/es/articles',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/es/articles/colophon': RouteRecordInfo<
-      '/es/articles/colophon',
-      '/es/articles/colophon',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/es/articles/who-is-teslak': RouteRecordInfo<
-      '/es/articles/who-is-teslak',
-      '/es/articles/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -377,13 +181,6 @@ declare module 'vue-router/auto-routes' {
     '/ru/articles/robophobia': RouteRecordInfo<
       '/ru/articles/robophobia',
       '/ru/articles/robophobia',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/ru/articles/temp': RouteRecordInfo<
-      '/ru/articles/temp',
-      '/ru/articles/temp',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -460,165 +257,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/en/articles/article-frontmatter-params.md': {
+    'pages/en/articles/template.md': {
       routes:
-        | '/en/articles/article-frontmatter-params'
-      views:
-        | never
-    }
-    'pages/en/articles/async-with-composition-api.md': {
-      routes:
-        | '/en/articles/async-with-composition-api'
-      views:
-        | never
-    }
-    'pages/en/articles/backlinks-demo-child-1.md': {
-      routes:
-        | '/en/articles/backlinks-demo-child-1'
-      views:
-        | never
-    }
-    'pages/en/articles/backlinks-demo-child-2.md': {
-      routes:
-        | '/en/articles/backlinks-demo-child-2'
-      views:
-        | never
-    }
-    'pages/en/articles/backlinks-demo-multi.md': {
-      routes:
-        | '/en/articles/backlinks-demo-multi'
-      views:
-        | never
-    }
-    'pages/en/articles/backlinks-demo-root.md': {
-      routes:
-        | '/en/articles/backlinks-demo-root'
-      views:
-        | never
-    }
-    'pages/en/articles/blocks-template.md': {
-      routes:
-        | '/en/articles/blocks-template'
-      views:
-        | never
-    }
-    'pages/en/articles/bonjour-paris.md': {
-      routes:
-        | '/en/articles/bonjour-paris'
-      views:
-        | never
-    }
-    'pages/en/articles/break-lines-in-js.md': {
-      routes:
-        | '/en/articles/break-lines-in-js'
-      views:
-        | never
-    }
-    'pages/en/articles/colophon.md': {
-      routes:
-        | '/en/articles/colophon'
-      views:
-        | never
-    }
-    'pages/en/articles/color-scheme-for-vscode-ext.md': {
-      routes:
-        | '/en/articles/color-scheme-for-vscode-ext'
-      views:
-        | never
-    }
-    'pages/en/articles/domain-email.md': {
-      routes:
-        | '/en/articles/domain-email'
-      views:
-        | never
-    }
-    'pages/en/articles/eslint-config-inspector.md': {
-      routes:
-        | '/en/articles/eslint-config-inspector'
-      views:
-        | never
-    }
-    'pages/en/articles/evolution-of-shiki-v1.md': {
-      routes:
-        | '/en/articles/evolution-of-shiki-v1'
-      views:
-        | never
-    }
-    'pages/en/articles/exploring-frontend.md': {
-      routes:
-        | '/en/articles/exploring-frontend'
-      views:
-        | never
-    }
-    'pages/en/articles/introducing-nuxt-devtools.md': {
-      routes:
-        | '/en/articles/introducing-nuxt-devtools'
-      views:
-        | never
-    }
-    'pages/en/articles/isomorphic-dirname.md': {
-      routes:
-        | '/en/articles/isomorphic-dirname'
-      views:
-        | never
-    }
-    'pages/en/articles/match-chinese-characters.md': {
-      routes:
-        | '/en/articles/match-chinese-characters'
-      views:
-        | never
-    }
-    'pages/en/articles/netlify-redirects.md': {
-      routes:
-        | '/en/articles/netlify-redirects'
-      views:
-        | never
-    }
-    'pages/en/articles/nuxt-devtools-v1.md': {
-      routes:
-        | '/en/articles/nuxt-devtools-v1'
-      views:
-        | never
-    }
-    'pages/en/articles/nuxt-icon-v1.md': {
-      routes:
-        | '/en/articles/nuxt-icon-v1'
-      views:
-        | never
-    }
-    'pages/en/articles/pnpm-external-disk.md': {
-      routes:
-        | '/en/articles/pnpm-external-disk'
-      views:
-        | never
-    }
-    'pages/en/articles/range-in-javascript.md': {
-      routes:
-        | '/en/articles/range-in-javascript'
-      views:
-        | never
-    }
-    'pages/en/articles/reflection-of-speaking-in-public.md': {
-      routes:
-        | '/en/articles/reflection-of-speaking-in-public'
-      views:
-        | never
-    }
-    'pages/en/articles/refreshed-nuxt-eslint.md': {
-      routes:
-        | '/en/articles/refreshed-nuxt-eslint'
-      views:
-        | never
-    }
-    'pages/en/articles/type-your-config.md': {
-      routes:
-        | '/en/articles/type-your-config'
-      views:
-        | never
-    }
-    'pages/en/articles/who-is-teslak.md': {
-      routes:
-        | '/en/articles/who-is-teslak'
+        | '/en/articles/template'
       views:
         | never
     }
@@ -661,18 +302,6 @@ declare module 'vue-router/auto-routes' {
     'pages/es/articles/index.md': {
       routes:
         | '/es/articles/'
-      views:
-        | never
-    }
-    'pages/es/articles/colophon.md': {
-      routes:
-        | '/es/articles/colophon'
-      views:
-        | never
-    }
-    'pages/es/articles/who-is-teslak.md': {
-      routes:
-        | '/es/articles/who-is-teslak'
       views:
         | never
     }
@@ -733,12 +362,6 @@ declare module 'vue-router/auto-routes' {
     'pages/ru/articles/robophobia.md': {
       routes:
         | '/ru/articles/robophobia'
-      views:
-        | never
-    }
-    'pages/ru/articles/temp.md': {
-      routes:
-        | '/ru/articles/temp'
       views:
         | never
     }
