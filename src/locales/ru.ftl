@@ -18,6 +18,7 @@ page-not-translated = Ещё не переведена, показана { $lang
 
 blog-only-lang = Только { $lang }
 blog-nothing-here = { "{" } пока пусто { "}" }
+projects-nothing-here = { "{" } проекты в работе { "}" }
 blog-upcoming = Скоро
 
 search-placeholder = Поиск по статьям и заметкам
@@ -28,7 +29,7 @@ search-loading = Загрузка индекса...
 
 post-comment-on = комментировать в
 post-link-telegram = Телеграм
-post-link-mastodon = Мастодон
+post-link-twitter = X
 post-referenced-by = Моё по теме
 post-updated = обновлена
 post-draft-notice = Черновик

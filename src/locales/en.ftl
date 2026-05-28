@@ -18,6 +18,7 @@ page-not-translated = Not yet translated, showing { $lang } version
 
 blog-only-lang = { $lang } only
 blog-nothing-here = { "{" } nothing here yet { "}" }
+projects-nothing-here = { "{" } projects are brewing { "}" }
 blog-upcoming = Upcoming
 
 search-placeholder = Search articles and notes
@@ -28,7 +29,7 @@ search-loading = Loading search index...
 
 post-comment-on = comment on
 post-link-telegram = Telegram
-post-link-mastodon = Mastodon
+post-link-twitter = X
 post-referenced-by = More from me on this
 post-updated = updated
 post-draft-notice = Draft

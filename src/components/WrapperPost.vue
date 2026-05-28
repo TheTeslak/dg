@@ -589,12 +589,12 @@ const ArtComponent = computed(() => {
       </Teleport>
     </ClientOnly>
     <div v-if="route.path !== '/' && frontmatter.date" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
-      <template v-if="frontmatter.telegram || frontmatter.mastodon">
+      <template v-if="frontmatter.telegram || frontmatter.twitter">
         <span font-mono op50>> </span>
         <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
         <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-telegram') }}</a>
-        <span v-if="frontmatter.telegram && frontmatter.mastodon" op25> / </span>
-        <a v-if="frontmatter.mastodon" :href="frontmatter.mastodon" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-mastodon') }}</a>
+        <span v-if="frontmatter.telegram && frontmatter.twitter" op25> / </span>
+        <a v-if="frontmatter.twitter" :href="frontmatter.twitter" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-twitter') }}</a>
       </template>
 
       <!-- Referenced By (articles that backlink to this one) -->

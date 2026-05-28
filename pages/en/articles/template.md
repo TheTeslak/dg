@@ -7,7 +7,7 @@ duration: 5
 description: A comprehensive reference for Markdown blocks and custom Vue components used in this blog's articles.
 type: draft
 telegram: https://t.me/post_link
-mastodon: https://mastodon.social/@name/post_link
+twitter: https://x.com/username/status/1234567890
 tags:
   - template
   - markdown
