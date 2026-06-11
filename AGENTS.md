@@ -34,8 +34,10 @@ Guidelines for coding agents in this repository. Keep changes minimal, safe, and
 - Frontmatter defines metadata (`title`, `date`, `lang`).
 - Use `tags` (string array without `#`), not `hashtags`.
 - `duration` defines reading time in minutes. If omitted, it's auto-estimated.
-- Place shared custom OG images at `public/og/articles/<slug>.<ext>` (`avif`, `webp`, `png`, `jpg`, `jpeg`).
-- Frontmatter `image` overrides the auto-generated OG image.
+- Pages use `public/og.png` as the universal OG image by default.
+- Place custom OG images at `public/og/articles/<slug>.png` and set `image: /og/articles/<slug>.png` in frontmatter.
+- Keep OG images at `1200x630`; PNG is the preferred format for social crawler compatibility.
+- The legacy generator in `build/og.ts` is intentionally disconnected from the build.
 - Treat build warnings regarding frontmatter as content quality checks.
 - Maintain parity across locales when editing content.
 - Use `src/logics/i18n-path.ts` helpers for locale paths instead of custom regex.

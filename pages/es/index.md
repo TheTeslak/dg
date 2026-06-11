@@ -6,7 +6,7 @@ art: random
 pic:
   src: /avatar.avif
   r: full
-  link: /es/articles/who-is-teslak
+  link: /es/who-is-teslak
   text: Teslak
 display: A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
@@ -21,7 +21,7 @@ Creo [pet projects](/es/projects)
 
 [He fotografiado](/es/photos) todo tipo de cosas
 
-⚡️ [Quién es Teslak y por qué es Teslak](/es/articles/who-is-teslak)
+⚡️ [Quién es Teslak y por qué es Teslak](/es/who-is-teslak)
 
 ---
 

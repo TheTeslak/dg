@@ -32,7 +32,7 @@ title: My Article
 display: Custom Title for Article Page # overrides title on page
 description: SEO and social preview text (max 400 chars).
 subtitle: A short catchphrase below the title
-image: /og/image.png # cover image & player artwork
+image: /og/articles/my-article.png # optional 1200x630 custom OG image
 date: 2026-03-24T10:00:00Z
 updated: 2026-04-30T10:00:00Z # shows 'updated' date
 lang: en # content language (for example: en, ru, es)
@@ -56,7 +56,7 @@ audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>
 pic: # optional inline image next to a title word
   src: /avatar.avif
   r: full # rounding (full, md, sm)
-  link: /en/articles/who-is-teslak
+  link: /en/who-is-teslak
   text: My Article # word in the title/display to wrap
 ---
 ```
@@ -68,7 +68,7 @@ pic: # optional inline image next to a title word
   - `type: note+draft` (or `blog+draft`): Visible in lists with a **🚧 indicator**, but still marked as a draft internally (`noindex`).
 - **`display`**: Overrides the `title` on the page itself. Useful when the `title` needs to be optimized for lists/RSS but the page needs a different look.
 - **`subtitle`**: Secondary title shown in italics below the main header.
-- **`image`**: Primary image for the post. Used in Open Graph tags, social previews, and as the background for the audio player.
+- **`image`**: Optional custom `1200x630` PNG for Open Graph, social previews, and audio player artwork. Omit it to use the universal `/og.png`.
 - **`pic` (Inline Avatar/Image)**: Renders a rounded image inline with the title text and turns the matching word into a link. Designed primarily for author avatars on homepages but reusable anywhere.
   - `src`: Path to the image (e.g. `/avatar.avif`).
   - `r`: Border-radius amount (`full` for 50% circle, `md` for 0.4em, `sm` for 0.2em defaults).
@@ -491,13 +491,13 @@ The `definition` prop accepts HTML, so you can include links, `<mark>`, `<code>`
 ```html
 <GlossaryTerm
   term="Vite"
-  definition="A frontend build tool that improves the <a href='/en/articles/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."
+  definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."
 >
   Vite
 </GlossaryTerm>
 ```
 
-Many modern frameworks are now powered by <GlossaryTerm term="Vite" definition="A frontend build tool that improves the <a href='/en/articles/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR.">Vite</GlossaryTerm> under the hood.
+Many modern frameworks are now powered by <GlossaryTerm term="Vite" definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR.">Vite</GlossaryTerm> under the hood.
 
 ### Spoiler / Collapsible Block (`Spoiler`)
 

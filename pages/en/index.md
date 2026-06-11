@@ -6,7 +6,7 @@ art: random
 pic:
   src: /avatar.avif
   r: full
-  link: /en/articles/who-is-teslak
+  link: /en/who-is-teslak
   text: Teslak
 display: Teslak is interested in IT, neural networks, UX design, philosophy, economics, biology ✦ and more
 ---
@@ -21,7 +21,7 @@ Building [pet projects](/en/projects)
 
 [Photographed](/en/photos) all sorts of things
 
-⚡️ [Who is Teslak and why is he Teslak](/en/articles/who-is-teslak)
+⚡️ [Who is Teslak and why is he Teslak](/en/who-is-teslak)
 
 ---
 

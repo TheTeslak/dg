@@ -10,6 +10,7 @@ import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { registerCustomPlugins } from '../build/markdown-plugins'
+import { getArticlePath } from '../src/logics/article-path'
 import { isPostIndexable } from '../src/logics/post-visibility'
 import { slugify } from './slugify'
 
@@ -279,7 +280,7 @@ async function buildLocaleFeed(locale: SupportedLocale) {
             return
 
           const slug = basename(i, '.md')
-          const link = `${DOMAIN}/${locale}/articles/${slug}`
+          const link = `${DOMAIN}${getArticlePath(locale, slug)}`
           const html = getFeedContent(content, locale, link, i)
           const image = getFeedImage(frontmatter, slug)
           const description = getFeedDescription(frontmatter)

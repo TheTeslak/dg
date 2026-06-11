@@ -4,6 +4,8 @@ import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MiniSearch from 'minisearch'
+import { normalizeFrontmatter } from '../build/frontmatter'
+import { getArticlePath } from '../src/logics/article-path'
 import { isPostVisible } from '../src/logics/post-visibility'
 
 const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
@@ -124,28 +126,29 @@ async function buildSearchIndex() {
 
       const raw = await fs.readFile(filePath, 'utf-8')
       const { data, content } = matter(raw)
+      const frontmatter = normalizeFrontmatter(data, content, filePath)
 
       // Skip invisible posts
-      if (!isPostVisible(data))
+      if (!isPostVisible(frontmatter))
         continue
 
       const slug = filename.replace(/\.md$/, '')
-      const id = `${locale}/articles/${slug}`
-      const path = `/${locale}/articles/${slug}`
+      const path = getArticlePath(locale, slug)
+      const id = path.slice(1)
 
       const body = stripMarkdown(content).slice(0, MAX_BODY_LENGTH)
 
       documents.push({
         id,
         path,
-        title: data.title || slug,
-        description: data.description || data.excerpt || '',
+        title: frontmatter.title || slug,
+        description: frontmatter.description || frontmatter.excerpt || '',
         body,
-        tags: normalizeTags(data.tags || data.hashtags),
-        type: resolveType(data.type),
-        date: toIsoDate(data.date, filePath),
-        lang: data.lang || locale,
-        duration: toDurationMinutes(data.duration),
+        tags: normalizeTags(frontmatter.tags || frontmatter.hashtags),
+        type: resolveType(frontmatter.type),
+        date: toIsoDate(frontmatter.date, filePath),
+        lang: frontmatter.lang || locale,
+        duration: toDurationMinutes(frontmatter.duration),
       })
     }
   }

@@ -186,6 +186,23 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
+function getQueryTerms(query: string): string[] {
+  return query.match(/[\p{L}\p{N}_]+/gu) || []
+}
+
+function hasExactWholeTerm(text: string, term: string): boolean {
+  if (!term)
+    return false
+
+  try {
+    const pattern = `(^|[^\\p{L}\\p{N}_])${escapeRegex(term)}(?=$|[^\\p{L}\\p{N}_])`
+    return new RegExp(pattern, 'iu').test(text)
+  }
+  catch {
+    return new RegExp(`\\b${escapeRegex(term)}\\b`, 'i').test(text)
+  }
+}
+
 function isSerializedSearchIndex(payload: unknown): payload is SerializedSearchIndex {
   return !!payload
     && typeof payload === 'object'
@@ -237,6 +254,7 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
 
   // Cache for exact-match checks per document (avoid repeated regex)
   const exactMatchCache = new Map<string, boolean>()
+  const queryTerms = new Set(getQueryTerms(query).map(term => term.toLowerCase()))
 
   const results = ms.search(query, {
     boost: { title: 10, description: 5, tags: 3, body: 1 },
@@ -251,13 +269,8 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
         const body = bodies.get(String(docId)) || ''
         const title = titles.get(String(docId)) || ''
         const text = `${title} ${body}`
-        try {
-          const wordBoundary = new RegExp(`\\b${escapeRegex(term)}\\b`, 'i')
-          exactMatchCache.set(cacheKey, wordBoundary.test(text))
-        }
-        catch {
-          exactMatchCache.set(cacheKey, false)
-        }
+        const isExactQueryTerm = queryTerms.has(term.toLowerCase())
+        exactMatchCache.set(cacheKey, isExactQueryTerm && hasExactWholeTerm(text, term))
       }
       return exactMatchCache.get(cacheKey) ? 1.0 : 0.6
     },
@@ -294,7 +307,7 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
       }
     })
     .sort((a, b) => b.score - a.score)
-    .slice(0, 20) // Limit to 20 results
+    .slice(0, 20)
 }
 
 export function useSearch(currentLocale: Ref<string>) {
@@ -307,7 +320,6 @@ export function useSearch(currentLocale: Ref<string>) {
     searchResults.value = performSearch(query, currentLocale.value)
   }, 200)
 
-  // Watch query changes
   watch(searchQuery, () => {
     debouncedSearch()
   })

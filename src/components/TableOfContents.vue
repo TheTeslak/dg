@@ -63,7 +63,8 @@ function collectHeadings() {
   winHeight.value = window.innerHeight
 }
 
-// Dot positions: dynamic stepping based on hierarchy rules
+// Spacing out dots proportionally so H3 items sit slightly closer to their parent H2s,
+// creating a visual hierarchy directly inside the scroll indicator.
 const dotPositions = computed(() => {
   const pos: number[] = []
   let currentY = PADDING_TOP
@@ -91,7 +92,8 @@ const trackHeight = computed(() => {
   return dotPositions.value[dotPositions.value.length - 1] + DOT_HEIGHT + PADDING_BOTTOM
 })
 
-// Line segments: the thin lines strictly BETWEEN dots
+// Leaving visual gaps around dots prevents overlap and maintains a clean,
+// disconnected "stepper" aesthetic on high-resolution screens.
 const lineSegments = computed(() => {
   const segs: { y1: number, y2: number }[] = []
   const dots = dotPositions.value
@@ -110,7 +112,6 @@ const lineSegments = computed(() => {
   return segs
 })
 
-// Active heading tracking
 const activeIndex = computed(() => {
   const threshold = scrollY.value + winHeight.value * 0.3
   let active = -1
@@ -121,7 +122,6 @@ const activeIndex = computed(() => {
   return active
 })
 
-// Scroll sync for ToC track
 watch(activeIndex, (idx) => {
   const wrapper = scrollWrapperEl.value
   if (!wrapper || idx < 0)
@@ -133,14 +133,14 @@ watch(activeIndex, (idx) => {
   wrapper.scrollTo({ top: Math.max(0, desired), behavior: 'smooth' })
 })
 
-// Mobile ToC logic
 const isMobileOpen = ref(false)
 
 function scrollToHeading(id: string) {
   const el = document.getElementById(id)
   if (el) {
     const y = el.getBoundingClientRect().top + window.scrollY - 40
-    // If mobile ToC is open, close it first then scroll after animation
+    // Delaying scroll execution until the bottom sheet slide-out transition completes
+    // to prevent the browser from scrolling erratically while animating layouts.
     if (isMobileOpen.value) {
       isMobileOpen.value = false
       setTimeout(() => {
@@ -180,7 +180,6 @@ function closeMobileSheet() {
   isMobileOpen.value = false
 }
 
-// Mobile Link logic
 const mobileCopied = ref(false)
 let mobileCopiedTimeout: ReturnType<typeof setTimeout> | undefined
 
@@ -220,7 +219,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Desktop Table of Contents -->
   <div
     v-if="headings.length > 1"
     class="scroll-toc"
@@ -234,7 +232,6 @@ onMounted(() => {
       <div class="i-ri-menu-2-fill" />
     </div>
 
-    <!-- Title (appears on hover) -->
     <div class="scroll-toc-title">
       <div class="scroll-toc-title-text">
         {{ title }}
@@ -244,18 +241,14 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Scrollable wrapper for the track area -->
     <div ref="scrollWrapperEl" class="scroll-toc-scroll-wrapper">
-      <!-- Track area -->
       <div ref="trackEl" class="scroll-toc-track" :style="{ height: `${trackHeight}px` }">
-        <!-- SVG draws: line segments + dot segments -->
         <svg
           class="scroll-toc-svg"
           :width="8"
           :height="trackHeight"
           :viewBox="`0 0 8 ${trackHeight}`"
         >
-          <!-- Thin line segments (between dot gaps) -->
           <line
             v-for="(seg, i) in lineSegments"
             :key="`seg-${i}`"
@@ -266,7 +259,6 @@ onMounted(() => {
             class="scroll-toc-line"
           />
 
-          <!-- Dot segments: tiny line pieces that look like dots -->
           <line
             v-for="(pos, i) in dotPositions"
             :key="`dot-${i}`"
@@ -280,7 +272,6 @@ onMounted(() => {
           />
         </svg>
 
-        <!-- Heading labels (positioned over the SVG, appear on focus/hover) -->
         <button
           v-for="(heading, i) in headings"
           :key="heading.id"
@@ -300,9 +291,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <!-- Mobile Action Bar -->
   <div v-if="headings.length > 1" class="mobile-action-bar">
-    <!-- Open ToC button -->
     <button
       class="mobile-action-btn"
       :title="$t('heading-link')"
@@ -310,7 +299,6 @@ onMounted(() => {
     >
       <div class="i-ri-menu-2-fill text-xl" />
     </button>
-    <!-- Copy Link button -->
     <button
       class="mobile-action-btn"
       :class="mobileCopied ? 'is-copied' : ''"
@@ -327,7 +315,6 @@ onMounted(() => {
     </button>
   </div>
 
-  <!-- Mobile Table of Contents -->
   <Teleport to="body">
     <Transition name="mobile-toc-backdrop">
       <div
@@ -341,7 +328,6 @@ onMounted(() => {
         v-if="isMobileOpen"
         class="mobile-toc-sheet"
       >
-        <!-- Sheet header -->
         <div class="mobile-toc-sheet-header">
           <div class="mobile-toc-sheet-title">
             {{ title }}
@@ -353,7 +339,6 @@ onMounted(() => {
         <div v-if="duration" class="mobile-toc-sheet-duration">
           {{ duration }}
         </div>
-        <!-- Sheet content: heading list -->
         <div class="mobile-toc-sheet-list">
           <button
             v-for="(heading, i) in headings"

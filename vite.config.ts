@@ -1,4 +1,4 @@
-import { basename, resolve } from 'node:path'
+import { resolve } from 'node:path'
 import MarkdownItShiki from '@shikijs/markdown-it'
 import { transformerNotationDiff, transformerNotationHighlight, transformerNotationWordHighlight } from '@shikijs/transformers'
 import { rendererRich, transformerTwoslash } from '@shikijs/twoslash'
@@ -25,15 +25,13 @@ import { getArticleInfo, getAvailableArticleLocales } from './build/article'
 import { supportedLocales } from './build/constants'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
 import { registerCustomPlugins } from './build/markdown-plugins'
-import { ensureOgImage } from './build/og'
 import { generateSeoFiles } from './build/seo'
 import { slugify } from './scripts/slugify'
+import { getArticlePath } from './src/logics/article-path'
 import { siteOrigin } from './src/logics/site'
 import 'vite-ssg'
 
 const isDev = process.env.NODE_ENV !== 'production'
-const promises: Promise<any>[] = []
-const queuedOgOutputs = new Set<string>()
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
 
 function useMarkdownPlugin(md: { use: (...args: any[]) => unknown }, plugin: unknown, options?: unknown) {
@@ -41,6 +39,17 @@ function useMarkdownPlugin(md: { use: (...args: any[]) => unknown }, plugin: unk
     md.use(plugin)
   else
     md.use(plugin, options)
+}
+
+function getArticleRouteConflict(locale: string, slug: string) {
+  const candidates = [
+    `pages/${locale}/${slug}.md`,
+    `pages/${locale}/${slug}.vue`,
+    `pages/${locale}/${slug}/index.md`,
+    `pages/${locale}/${slug}/index.vue`,
+  ]
+
+  return candidates.find(candidate => fs.existsSync(resolve(__dirname, candidate)))
 }
 
 export default defineConfig({
@@ -73,6 +82,7 @@ export default defineConfig({
           const { data, content } = matter(fs.readFileSync(path, 'utf-8'))
           const frontmatter = normalizeFrontmatter(data, content, path)
           normalizedFrontmatterById.set(resolve(path), frontmatter)
+          const routeMeta: Record<string, any> = { frontmatter }
 
           // Cross-locale aliases for articles
           const articleMatch = getArticleInfo(path)
@@ -80,8 +90,17 @@ export default defineConfig({
             const { sourceLocale, slug } = articleMatch
 
             if (slug !== 'index' && !slug.startsWith('[')) {
+              const articlePath = getArticlePath(sourceLocale, slug)
+              const conflict = getArticleRouteConflict(sourceLocale, slug)
+              if (conflict)
+                warnFrontmatter(`[routes] ${path}: article route "${articlePath}" conflicts with ${conflict}.`)
+
+              route.path = articlePath
               frontmatter.originalLocale = sourceLocale
               frontmatter.availableLocales = getAvailableArticleLocales(slug)
+              routeMeta.isArticle = true
+              routeMeta.articleSlug = slug
+              routeMeta.articleLocale = sourceLocale
 
               const aliases: string[] = []
               for (const targetLocale of supportedLocales) {
@@ -89,7 +108,7 @@ export default defineConfig({
                   continue
                 const targetFile = resolve(__dirname, `pages/${targetLocale}/articles/${slug}.md`)
                 if (!fs.existsSync(targetFile)) {
-                  aliases.push(`/${targetLocale}/articles/${slug}`)
+                  aliases.push(getArticlePath(targetLocale, slug))
                 }
               }
               if (aliases.length > 0) {
@@ -111,7 +130,7 @@ export default defineConfig({
           }
 
           route.addToMeta({
-            frontmatter,
+            ...routeMeta,
           })
         }
       },
@@ -189,29 +208,13 @@ export default defineConfig({
         registerCustomPlugins(md as unknown as import('markdown-it').default, normalizedFrontmatterById)
       },
       frontmatterPreprocess(frontmatter, options, id, defaults) {
-        (() => {
-          if (!id.endsWith('.md'))
-            return
+        if (id.endsWith('.md')) {
           const normalizedFrontmatter = normalizedFrontmatterById.get(resolve(id))
           if (normalizedFrontmatter)
             Object.assign(frontmatter, normalizedFrontmatter)
           else
             Object.assign(frontmatter, normalizeFrontmatter(frontmatter, '', id))
-
-          const route = basename(id, '.md')
-          if (route === 'index' || frontmatter.image || !frontmatter.title)
-            return
-          const article = getArticleInfo(id)
-          const slug = article?.slug || route
-          const path = `og/${slug}.png`
-          frontmatter.image = `${siteOrigin}/${path}`
-
-          if (queuedOgOutputs.has(path))
-            return
-          queuedOgOutputs.add(path)
-          if (!isDev)
-            promises.push(ensureOgImage(id, frontmatter, `public/${path}`))
-        })()
+        }
         const head = defaults(frontmatter, options)
         const finalHead = { ...head }
         if (finalHead.title && !finalHead.title.includes('Teslak')) {
@@ -254,13 +257,6 @@ export default defineConfig({
     }),
 
     Exclude(),
-
-    {
-      name: 'await',
-      async closeBundle() {
-        await Promise.all(promises)
-      },
-    },
   ],
 
   build: {

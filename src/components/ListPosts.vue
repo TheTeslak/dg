@@ -24,7 +24,8 @@ const locale = computed(() => {
 const routes = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
-      r.path.startsWith(`/${locale.value}/articles`)
+      r.meta.isArticle === true
+      && getLocaleFromPath(r.path) === locale.value
       && isPostVisible(r.meta.frontmatter || {}),
     )
     .filter((r: RouteRecordNormalized) =>

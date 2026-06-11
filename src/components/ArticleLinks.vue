@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteRecordNormalized } from 'vue-router'
+import { getArticlePath } from '~/logics/article-path'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -21,17 +22,13 @@ interface LinkedArticle {
 
 const articles = computed<LinkedArticle[]>(() => {
   const allRoutes = router.getRoutes()
-  const localePrefix = `/${currentLocale.value}/articles/`
 
   return props.links
     .map((slug) => {
-      // Find route by matching the slug at the end of the path,
-      // within the current locale's articles. This handles aliases.
+      // Match the current locale first. This also handles fallback aliases.
+      const articlePath = getArticlePath(currentLocale.value, slug)
       const matched = allRoutes.find((r: RouteRecordNormalized) => {
-        if (!r.path.startsWith(localePrefix))
-          return false
-        const routeSlug = r.path.slice(localePrefix.length).replace(/\/$/, '')
-        return routeSlug === slug
+        return r.meta.isArticle === true && r.path === articlePath
       })
 
       if (!matched?.meta?.frontmatter?.title)

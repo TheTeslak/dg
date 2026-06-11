@@ -12,6 +12,8 @@ type Frontmatter = Record<string, any>
 
 const siteName = 'Teslak'
 const defaultImage = `${siteOrigin}/og.png`
+const socialImageHeight = 630
+const socialImageWidth = 1200
 const person = {
   '@type': 'Person',
   'name': siteName,
@@ -85,7 +87,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const isArticle = computed(() => {
-    return /^\/(?:en|ru|es)\/articles\/[^/]+\/?$/.test(route.path) && !!frontmatter.value.date
+    return route.meta.isArticle === true && !!frontmatter.value.date
   })
 
   const originalLocale = computed<SupportedLocale | undefined>(() => {
@@ -116,14 +118,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
 
   const image = computed(() => {
     const frontmatterImage = absoluteUrl(optionalString(frontmatter.value.image))
-    if (frontmatterImage)
-      return frontmatterImage
-
-    if (!isArticle.value)
-      return defaultImage
-
-    const slug = getRouteSlug(canonicalPath.value)
-    return slug ? `${siteOrigin}/og/${slug}.png` : defaultImage
+    return frontmatterImage || defaultImage
   })
 
   const hreflangLocales = computed<SupportedLocale[]>(() => {
@@ -249,11 +244,16 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
       { key: 'og:url', property: 'og:url', content: canonicalUrl.value },
       { key: 'og:type', property: 'og:type', content: isArticle.value ? 'article' : 'website' },
       { key: 'og:image', property: 'og:image', content: image.value },
+      { key: 'og:image:type', property: 'og:image:type', content: 'image/png' },
+      { key: 'og:image:width', property: 'og:image:width', content: String(socialImageWidth) },
+      { key: 'og:image:height', property: 'og:image:height', content: String(socialImageHeight) },
+      { key: 'og:image:alt', property: 'og:image:alt', content: title.value },
       { key: 'og:locale', property: 'og:locale', content: localeMeta[isArticle.value ? contentLocale.value : currentLocale.value].ogLocale },
       { key: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
       { key: 'twitter:title', name: 'twitter:title', content: title.value },
       { key: 'twitter:description', name: 'twitter:description', content: description.value },
       { key: 'twitter:image', name: 'twitter:image', content: image.value },
+      { key: 'twitter:image:alt', name: 'twitter:image:alt', content: title.value },
     ]
 
     for (const locale of hreflangLocales.value) {

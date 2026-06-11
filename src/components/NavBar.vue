@@ -30,7 +30,7 @@ const copied = ref(false)
 let copiedTimeout: ReturnType<typeof setTimeout> | undefined
 
 const isPostPage = computed(() => {
-  return /\/(?:articles|notes)\//.test(route.path)
+  return route.meta.isArticle === true || /\/notes\//.test(route.path)
 })
 
 async function copyLink() {

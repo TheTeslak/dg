@@ -64,7 +64,7 @@ catalogs:
     vue-tsc: ^3.2.9
   frontend:
     '@antfu/utils': ^9.3.0
-    '@unhead/vue': ^3.0.5
+    '@unhead/vue': ^2.1.12
     '@unocss/reset': ^66.6.8
     '@unpic/placeholder': ^0.1.2
     '@vueuse/core': ^14.2.1

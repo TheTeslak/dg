@@ -3,6 +3,7 @@ import type { GlossaryState } from '~/logics/glossary'
 import type { ArticleAudio } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
+import { getArticleArchivePath } from '~/logics/article-path'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { glossaryKey } from '~/logics/glossary'
 import { getLocaleFromPath } from '~/logics/i18n-path'
@@ -161,7 +162,7 @@ const postType = computed(() => {
 const backToAllPath = computed(() => {
   if (postType.value === 'note')
     return `/${currentLocale.value}/notes`
-  return `/${currentLocale.value}/articles`
+  return getArticleArchivePath(currentLocale.value)
 })
 
 onMounted(() => {
@@ -269,8 +270,10 @@ onMounted(() => {
     })
   }
 
-  const spoilers = content.value?.querySelectorAll<HTMLDetailsElement>('details.spoiler')
-  spoilers?.forEach(animateSpoiler)
+  nextTick(() => {
+    const spoilers = content.value?.querySelectorAll<HTMLDetailsElement>('details.spoiler')
+    spoilers?.forEach(animateSpoiler)
+  })
 
   useEventListener(content.value!, 'click', (e: MouseEvent) => {
     const backref = (e.target as HTMLElement).closest('a.source-backref')
@@ -303,7 +306,6 @@ onMounted(() => {
 
   useEventListener(content.value!, 'click', handleAnchors, { passive: false })
 
-  // Heading copy-link
   const tooltipDefault = fluent.format('heading-link')
   const tooltipCopied = fluent.format('heading-copied')
 
@@ -365,7 +367,6 @@ onMounted(() => {
   checkMobileGlossary()
   useEventListener(window, 'resize', checkMobileGlossary)
 
-  // Lock body scroll when mobile sheet is open
   watch(activeGlossary, (val) => {
     if (val && isMobileGlossary.value) {
       document.body.style.overflow = 'hidden'
@@ -375,6 +376,8 @@ onMounted(() => {
     }
   })
 
+  // Delayed hash navigation fallback to ensure dynamic elements or images
+  // have loaded and layout offsets have stabilized.
   setTimeout(() => {
     if (!navigate())
       setTimeout(navigate, 1000)
@@ -520,7 +523,7 @@ const ArtComponent = computed(() => {
         :article-slug="articleSlug"
       />
     </div>
-    <ScrollProgressToc
+    <TableOfContents
       v-if="frontmatter.title"
       :title="frontmatter.display ?? frontmatter.title"
       :duration="localizedDuration"
@@ -597,7 +600,6 @@ const ArtComponent = computed(() => {
         <a v-if="frontmatter.twitter" :href="frontmatter.twitter" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-twitter') }}</a>
       </template>
 
-      <!-- Referenced By (articles that backlink to this one) -->
       <div v-if="referencedBy.length" class="referenced-by mt-9">
         <div class="referenced-by-label">
           <div i-ri:links-line class="referenced-by-label-icon" aria-hidden="true" />
@@ -619,7 +621,6 @@ const ArtComponent = computed(() => {
         </div>
       </div>
 
-      <!-- Chronological navigation -->
       <PostNavigation
         v-if="frontmatter.date"
         :current-path="route.path"
@@ -979,59 +980,6 @@ html.dark .glossary-sheet-body :deep(mark) {
   background-color: #aaaaaa18;
   border-radius: 0.25rem;
   padding: 0.2em 0.3em;
-}
-
-article :deep(.sources-block) {
-  background: rgba(125, 125, 125, 0.08);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 0.5rem;
-  margin: 2em 0 0;
-  overflow: hidden;
-  transition: border-radius 0.25s ease;
-}
-
-article :deep(.sources-block .spoiler-summary) {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.7em 1em;
-  cursor: pointer;
-  font-size: inherit;
-  font-weight: 500;
-  color: var(--fg-deep);
-  user-select: none;
-  list-style: none;
-  transition: background 0.2s ease;
-}
-
-article :deep(.sources-block .spoiler-summary::-webkit-details-marker) {
-  display: none;
-}
-
-article :deep(.sources-block .spoiler-summary:hover) {
-  background: rgba(125, 125, 125, 0.08);
-}
-
-article :deep(.sources-block .spoiler-arrow) {
-  font-size: 1.15em;
-  opacity: 0.5;
-  flex-shrink: 0;
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
-}
-
-article :deep(.sources-block[open] > .spoiler-summary .spoiler-arrow) {
-  transform: rotate(90deg);
-  opacity: 0.8;
-}
-
-article :deep(.sources-block .spoiler-content) {
-  padding: 0 1em 0.8em;
-  font-size: inherit;
-  color: var(--fg);
-  overflow: hidden;
 }
 
 /* Custom list counters to override prose default styles */

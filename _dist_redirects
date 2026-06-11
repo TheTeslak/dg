@@ -18,11 +18,8 @@ http://teslak.me/* https://teslak.me/:splat 301!
 /es/feed /feed-es.xml 301
 
 /articles /en/articles 301
-/articles/* /en/articles/:splat 301
 /blog /en/articles 301
-/blog/* /en/articles/:splat 301
 /posts /en/articles 301
-/posts/* /en/articles/:splat 301
 
 /notes /en/notes 301
 /now /en/now 301

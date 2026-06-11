@@ -6,7 +6,7 @@ art: random
 pic:
   src: /avatar.avif
   r: full
-  link: /ru/articles/who-is-teslak
+  link: /ru/who-is-teslak
   text: Теслак
 display: Теслак увлекается IT, нейросетями, UX-дизайном, философией, экономикой, биологией ✦ и не только
 ---
@@ -21,7 +21,7 @@ display: Теслак увлекается IT, нейросетями, UX-диз
 
 [Нафотографировал](/ru/photos) всякого
 
-⚡️ [Кто такой Теслак и почему он Теслак](/ru/articles/who-is-teslak)
+⚡️ [Кто такой Теслак и почему он Теслак](/ru/who-is-teslak)
 
 ---
 

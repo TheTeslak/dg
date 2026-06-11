@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
+import { getArticlePath } from '../src/logics/article-path'
 import { hasNoindexRobots, isDraftPost, isPostIndexable } from '../src/logics/post-visibility'
+import { getArticleInfo } from './article'
 import { supportedLocales } from './constants'
 
 interface SeoFrontmatter extends PostVisibilityFrontmatter {
@@ -17,12 +19,14 @@ interface SitemapEntry {
   path: string
   groupKey: string
   locale?: SupportedLocale
+  isArticle?: boolean
   lastmod: string
 }
 
 interface SitemapCollectResult {
   entries: SitemapEntry[]
   trainingAllowedPaths: string[]
+  trainingBlockedPaths: string[]
 }
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
@@ -30,7 +34,6 @@ const repoRoot = resolve(currentDir, '..')
 const pagesDir = resolve(repoRoot, 'pages')
 
 const localePrefixRE = /^\/(en|ru|es)(\/.*)?$/
-const articleRouteRE = /^\/(en|ru|es)\/articles\/([^/]+)$/
 
 function slash(path: string) {
   return path.replace(/\\/g, '/')
@@ -84,6 +87,13 @@ function getGroupKey(path: string) {
 
 function getPageRoute(file: string) {
   const ext = file.endsWith('.md') ? '.md' : '.vue'
+
+  if (ext === '.md') {
+    const article = getArticleInfo(file)
+    if (article && article.slug !== 'index' && !article.slug.startsWith('['))
+      return getArticlePath(article.sourceLocale, article.slug)
+  }
+
   let route = slash(relative(pagesDir, file)).replace(new RegExp(`\\${ext}$`), '')
   if (route.includes('['))
     return undefined
@@ -94,9 +104,8 @@ function getPageRoute(file: string) {
   return `/${route}`
 }
 
-function isRouteIndexable(path: string, frontmatter: SeoFrontmatter) {
-  const article = path.match(articleRouteRE)
-  if (!article) {
+function isRouteIndexable(frontmatter: SeoFrontmatter, isArticle: boolean) {
+  if (!isArticle) {
     // Non-article pages: filter by explicit draft or noindex
     if (frontmatter.draft || isDraftPost(frontmatter.type))
       return false
@@ -105,16 +114,13 @@ function isRouteIndexable(path: string, frontmatter: SeoFrontmatter) {
     return true
   }
 
-  const slug = article[2]
-  if (slug === 'index')
-    return true
-
   return isPostIndexable(frontmatter)
 }
 
 async function collectSitemapEntries(): Promise<SitemapCollectResult> {
   const entries: SitemapEntry[] = []
   const trainingAllowedPaths: string[] = []
+  const trainingBlockedPaths: string[] = []
 
   const files = await fg('**/*.{md,vue}', {
     cwd: pagesDir,
@@ -127,6 +133,9 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
     if (!path)
       continue
 
+    const article = getArticleInfo(file)
+    const isArticle = !!article && article.slug !== 'index' && !article.slug.startsWith('[')
+
     const ext = file.endsWith('.vue') ? 'vue' : 'md'
     let data: SeoFrontmatter = {}
 
@@ -135,17 +144,20 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
       data = parsed.data as SeoFrontmatter
     }
 
-    if (!isRouteIndexable(path, data))
+    if (!isRouteIndexable(data, isArticle))
       continue
 
     if (data.open)
       trainingAllowedPaths.push(path)
+    if (isArticle)
+      trainingBlockedPaths.push(path)
 
     const localized = getLocalizedRoute(path)
     entries.push({
       path,
       groupKey: getGroupKey(path),
       locale: localized?.locale,
+      isArticle,
       lastmod: getFileLastmod(file, data),
     })
   }
@@ -153,6 +165,7 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
   return {
     entries: entries.sort((a, b) => a.path.localeCompare(b.path)),
     trainingAllowedPaths: trainingAllowedPaths.sort(),
+    trainingBlockedPaths: trainingBlockedPaths.sort(),
   }
 }
 
@@ -181,10 +194,11 @@ function buildAlternateLinks(entry: SitemapEntry, groups: Map<string, SitemapEnt
   return links
 }
 
-function getUrlMeta(path: string) {
+function getUrlMeta(entry: SitemapEntry) {
+  const { path } = entry
   if (path === '/')
     return { changefreq: 'weekly', priority: '1.0' }
-  if (articleRouteRE.test(path))
+  if (entry.isArticle)
     return { changefreq: 'monthly', priority: '0.7' }
   return { changefreq: 'monthly', priority: '0.5' }
 }
@@ -203,7 +217,7 @@ function buildSitemapXml(entries: SitemapEntry[], siteOrigin: string) {
       .map(link => `    <xhtml:link rel="alternate" hreflang="${escapeXml(link.hreflang)}" href="${escapeXml(link.href)}" />`)
       .join('\n')
 
-    const meta = getUrlMeta(entry.path)
+    const meta = getUrlMeta(entry)
 
     return [
       '  <url>',
@@ -225,12 +239,13 @@ function buildSitemapXml(entries: SitemapEntry[], siteOrigin: string) {
   ].join('\n')
 }
 
-function buildRobotsTxt(siteOrigin: string, allowedArticles: string[]) {
+function buildRobotsTxt(siteOrigin: string, allowedArticles: string[], blockedArticles: string[]) {
   // Content paths that training/scraping crawlers should not access
-  const contentSections = ['articles/', 'notes', 'photos', 'now']
-  const blogPaths = supportedLocales.flatMap(
+  const contentSections = ['articles', 'notes', 'photos', 'now']
+  const sectionPaths = supportedLocales.flatMap(
     locale => contentSections.map(section => `/${locale}/${section}`),
   )
+  const contentPaths = [...sectionPaths, ...blockedArticles]
 
   // Training & scraping crawlers — blocked from blog content only
   const trainingBots = [
@@ -283,7 +298,7 @@ function buildRobotsTxt(siteOrigin: string, allowedArticles: string[]) {
     return [
       `User-agent: ${userAgent}`,
       ...allowedArticles.map(path => `Allow: ${path}`),
-      ...blogPaths.map(path => `Disallow: ${path}`),
+      ...contentPaths.map(path => `Disallow: ${path}`),
     ].join('\n')
   }
 
@@ -314,9 +329,9 @@ function buildRobotsTxt(siteOrigin: string, allowedArticles: string[]) {
 
 export async function generateSeoFiles(options: { outDir?: string, siteOrigin: string }) {
   const outDir = resolve(repoRoot, options.outDir || 'dist')
-  const { entries, trainingAllowedPaths } = await collectSitemapEntries()
+  const { entries, trainingAllowedPaths, trainingBlockedPaths } = await collectSitemapEntries()
 
   await fs.ensureDir(outDir)
   await fs.writeFile(resolve(outDir, 'sitemap.xml'), buildSitemapXml(entries, options.siteOrigin), 'utf-8')
-  await fs.writeFile(resolve(outDir, 'robots.txt'), buildRobotsTxt(options.siteOrigin, trainingAllowedPaths), 'utf-8')
+  await fs.writeFile(resolve(outDir, 'robots.txt'), buildRobotsTxt(options.siteOrigin, trainingAllowedPaths, trainingBlockedPaths), 'utf-8')
 }

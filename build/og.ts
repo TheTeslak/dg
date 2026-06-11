@@ -6,7 +6,10 @@ import { getArticleInfo } from './article'
 import { supportedLocales, supportedOgSourceExtensions } from './constants'
 import { warnFrontmatter } from './frontmatter'
 
+// Legacy/manual generator. The build intentionally does not import this module:
+// pages use /og.png unless frontmatter.image explicitly selects a custom card.
 const ogSvg = fs.readFileSync(resolve(__dirname, '../scripts/og-template.svg'), 'utf-8')
+const ogBackground = `data:image/png;base64,${fs.readFileSync(resolve(__dirname, '../public/og.png')).toString('base64')}`
 
 function escapeSvgText(value: string) {
   return value
@@ -66,15 +69,21 @@ export async function copyOrConvertOg(source: string, output: string) {
     .toFile(output)
 }
 
+/** @deprecated Kept for manual experiments; production builds use static OG files. */
 export async function generateOg(title: string, output: string) {
-  if (fs.existsSync(output))
-    return
-
   await fs.mkdir(dirname(output), { recursive: true })
 
-  const lines = title.trim().split(/(.{0,30})(?:\s|$)/g).filter(Boolean)
+  const lines: string[] = []
+  for (const word of title.trim().split(/\s+/)) {
+    const current = lines.at(-1)
+    if (!current || current.length + word.length + 1 > 30)
+      lines.push(word)
+    else
+      lines[lines.length - 1] = `${current} ${word}`
+  }
 
   const data: Record<string, string> = {
+    background: ogBackground,
     line1: escapeSvgText(lines[0] || ''),
     line2: escapeSvgText(lines[1] || ''),
     line3: escapeSvgText(lines[2] || ''),
@@ -85,7 +94,6 @@ export async function generateOg(title: string, output: string) {
   console.log(`Generating ${output}`)
   try {
     await sharp(Buffer.from(svg))
-      .resize(1200 * 1.1, 630 * 1.1)
       .png()
       .toFile(output)
   }
@@ -94,6 +102,7 @@ export async function generateOg(title: string, output: string) {
   }
 }
 
+/** @deprecated The production build no longer calls the OG generator. */
 export async function ensureOgImage(id: string, frontmatter: Record<string, any>, output: string) {
   const source = resolveOgSource(id)
   if (source) {

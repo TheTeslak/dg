@@ -18,6 +18,20 @@ const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
 })
 
+const routePostTypes = computed(() => {
+  return String(route.meta.frontmatter?.type || 'blog').split('+')
+})
+
+const isNotesActive = computed(() => {
+  return route.path.includes('/notes')
+    || (route.meta.isArticle === true && routePostTypes.value.includes('note'))
+})
+
+const isArticlesActive = computed(() => {
+  return route.path.includes('/articles')
+    || (route.meta.isArticle === true && !routePostTypes.value.includes('note'))
+})
+
 const { isSearchOpen, searchQuery, openSearch, closeSearch } = useSearch(currentLocale)
 
 const searchInputRef = ref<HTMLInputElement>()
@@ -98,10 +112,10 @@ const modKey = computed(() => {
       <!-- Tabs (hidden when search is open) -->
       <template v-if="!isSearchOpen">
         <div class="subnav-tabs">
-          <RouterLink :to="`/${currentLocale}/notes`" class="!border-none" :class="route.path.includes('/notes') ? activeStyle : inactiveStyle">
+          <RouterLink :to="`/${currentLocale}/notes`" class="!border-none" :class="isNotesActive ? activeStyle : inactiveStyle">
             {{ $t('nav-notes') }}
           </RouterLink>
-          <RouterLink :to="`/${currentLocale}/articles`" class="!border-none" :class="route.path.includes('/articles') ? activeStyle : inactiveStyle">
+          <RouterLink :to="`/${currentLocale}/articles`" class="!border-none" :class="isArticlesActive ? activeStyle : inactiveStyle">
             {{ $t('nav-articles') }}
           </RouterLink>
         </div>

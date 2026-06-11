@@ -2,6 +2,7 @@ import type { RouteRecordNormalized } from 'vue-router'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { isPostVisible } from '~/logics'
+import { getArticlePath, getArticleRouteInfo } from '~/logics/article-path'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 interface BacklinkInfo {
@@ -22,11 +23,10 @@ interface ReferencedByInfo {
 
 /**
  * Extract the article slug from a route path.
- * E.g. `/en/articles/about-yak-shaving` → `about-yak-shaving`
+ * E.g. `/en/about-yak-shaving` -> `about-yak-shaving`
  */
 function slugFromPath(path: string): string | undefined {
-  const match = path.match(/\/articles\/([^/]+)$/)
-  return match?.[1]
+  return getArticleRouteInfo(path)?.slug
 }
 
 /**
@@ -55,10 +55,11 @@ export function useBacklink() {
     const results: BacklinkInfo[] = []
 
     for (const slug of slugs) {
-      const targetPath = `/${currentLocale.value}/articles/${slug}`
+      const targetPath = getArticlePath(currentLocale.value, slug)
       const found = router.getRoutes().find(
         (r: RouteRecordNormalized) =>
           r.path === targetPath
+          && r.meta.isArticle === true
           && r.meta.frontmatter?.title
           && isPostVisible(r.meta.frontmatter || {}),
       )
@@ -88,7 +89,11 @@ export function useReferencedBy() {
   const route = useRoute()
 
   const currentLocale = computed(() => getLocaleFromPath(route.path))
-  const currentSlug = computed(() => slugFromPath(route.path))
+  const currentSlug = computed(() => {
+    return typeof route.meta.articleSlug === 'string'
+      ? route.meta.articleSlug
+      : slugFromPath(route.path)
+  })
 
   const referencedBy = computed<ReferencedByInfo[]>(() => {
     const slug = currentSlug.value
@@ -97,7 +102,7 @@ export function useReferencedBy() {
 
     return router.getRoutes()
       .filter((r: RouteRecordNormalized) => {
-        if (!r.path.startsWith(`/${currentLocale.value}/articles/`))
+        if (r.meta.isArticle !== true || getLocaleFromPath(r.path) !== currentLocale.value)
           return false
         if (!r.meta.frontmatter?.title || !isPostVisible(r.meta.frontmatter || {}))
           return false

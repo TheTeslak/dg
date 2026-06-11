@@ -61,7 +61,7 @@ declare module 'vue-router/auto-routes' {
     >,
     '/en/articles/template': RouteRecordInfo<
       '/en/articles/template',
-      '/en/articles/template',
+      '/en/template',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -173,21 +173,21 @@ declare module 'vue-router/auto-routes' {
     >,
     '/ru/articles/colophon': RouteRecordInfo<
       '/ru/articles/colophon',
-      '/ru/articles/colophon',
+      '/ru/colophon',
       Record<never, never>,
       Record<never, never>,
       | never
     >,
     '/ru/articles/robophobia': RouteRecordInfo<
       '/ru/articles/robophobia',
-      '/ru/articles/robophobia',
+      '/ru/robophobia',
       Record<never, never>,
       Record<never, never>,
       | never
     >,
     '/ru/articles/who-is-teslak': RouteRecordInfo<
       '/ru/articles/who-is-teslak',
-      '/ru/articles/who-is-teslak',
+      '/ru/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never

@@ -385,6 +385,86 @@ h6:focus .header-anchor {
   border-radius: 50%;
 }
 
+/* Spoiler / collapsible blocks (shared by <Spoiler> component and sources-block) */
+.spoiler {
+  background: rgba(125, 125, 125, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  margin: 1.25em 0;
+  overflow: hidden;
+  transition:
+    border-radius 0.25s ease,
+    background 0.2s ease;
+}
+
+.spoiler-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.7em 1em;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: 500;
+  color: var(--fg-deep);
+  user-select: none;
+  list-style: none;
+  transition: background 0.2s ease;
+}
+
+.spoiler-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* When closed, only the summary gets the hover background */
+.spoiler-summary:hover {
+  background: rgba(125, 125, 125, 0.08);
+}
+
+/* When open and hovering on the summary, highlight the entire spoiler */
+.spoiler[open]:has(> .spoiler-summary:hover) {
+  background: rgba(125, 125, 125, 0.14);
+}
+
+/* Suppress the summary's own hover background when open to avoid double layer */
+.spoiler[open] > .spoiler-summary:hover {
+  background: transparent;
+}
+
+.spoiler-arrow {
+  font-size: 1.15em;
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.spoiler[open] > .spoiler-summary .spoiler-arrow {
+  transform: rotate(90deg);
+  opacity: 0.8;
+}
+
+.spoiler-content {
+  padding: 0 1em 0.8em;
+  font-size: inherit;
+  color: var(--fg);
+  overflow: hidden;
+}
+
+.spoiler-content > *:first-child {
+  margin-top: 0;
+}
+
+.spoiler-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Sources block — only overrides that differ from the base spoiler */
+.sources-block {
+  margin: 2em 0 0;
+}
+
 /* Shiki Transformers */
 .prose code .highlighted {
   background-color: #8881;

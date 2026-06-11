@@ -3,7 +3,8 @@
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "scripts": {
-    "build": "tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects",
+    "build": "tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects && pnpm check:seo",
+    "check:seo": "tsx scripts/check-seo.ts",
     "dev": "NODE_OPTIONS='--localstorage-file=.localstorage' vite --port 1111 --open",
     "preview": "vite preview",
     "redirects": "tsx scripts/redirects.ts",

@@ -21,7 +21,8 @@ const postType = computed(() => props.type || 'blog')
 const siblings = computed<Post[]>(() => {
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
-      r.path.startsWith(`/${currentLocale.value}/articles`)
+      r.meta.isArticle === true
+      && getLocaleFromPath(r.path) === currentLocale.value
       && isPostVisible(r.meta.frontmatter || {}),
     )
     .filter((r: RouteRecordNormalized) =>
