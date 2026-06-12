@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useHead } from '@unhead/vue'
+import { getFeedName, getLanguageTag, localeConfig } from '~/locales/config'
 import { isLightboxOpen } from '~/logics'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { useKeyboardNav } from '~/logics/keyboard-nav'
@@ -12,13 +13,10 @@ useKeyboardNav()
 useSEO(computed(() => (route.meta.frontmatter as Record<string, any>) || {}))
 
 const currentLocale = computed(() => getLocaleFromPath(route.path))
-const currentFeedName = computed(() => currentLocale.value === 'en' ? 'feed' : `feed-${currentLocale.value}`)
-const currentFeedTitle = computed(() => currentLocale.value === 'en'
-  ? 'Teslak En'
-  : currentLocale.value === 'ru'
-    ? 'Teslak Ru'
-    : 'Teslak Es',
-)
+// The document shell follows the URL; fallback article content declares its own language.
+const currentLanguageTag = computed(() => getLanguageTag(currentLocale.value))
+const currentFeedName = computed(() => getFeedName(currentLocale.value))
+const currentFeedTitle = computed(() => localeConfig[currentLocale.value].feedTitle)
 
 function getFeedHref(extension: 'atom' | 'json' | 'xml') {
   return `${siteOrigin}/${currentFeedName.value}.${extension}`
@@ -26,7 +24,7 @@ function getFeedHref(extension: 'atom' | 'json' | 'xml') {
 
 useHead(() => ({
   htmlAttrs: {
-    lang: currentLocale.value,
+    lang: currentLanguageTag.value,
   },
   link: [
     {
@@ -52,7 +50,7 @@ useHead(() => ({
 
 watch(currentLocale, (locale) => {
   if (typeof document !== 'undefined')
-    document.documentElement.lang = locale
+    document.documentElement.lang = getLanguageTag(locale)
 }, { immediate: true })
 
 const imageModel = ref<HTMLImageElement>()
@@ -219,7 +217,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <a href="#main-content" class="skip-link">Skip to content</a>
+  <a href="#main-content" class="skip-link">{{ $t('a11y-skip-to-content') }}</a>
   <NavBar />
   <main id="main-content" class="px-7 py-10 of-x-hidden" tabindex="-1" role="main">
     <RouterView />

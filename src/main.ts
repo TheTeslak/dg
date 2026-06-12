@@ -1,3 +1,4 @@
+import type { SupportedLocale } from './locales/config'
 import { FluentBundle, FluentResource } from '@fluent/bundle'
 import dayjs from 'dayjs'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js'
@@ -8,12 +9,14 @@ import { createPinia } from 'pinia'
 import { ViteSSG } from 'vite-ssg'
 import { routes } from 'vue-router/auto-routes'
 import App from './App.vue'
-import enResources from './locales/en.ftl?raw'
-import esResources from './locales/es.ftl?raw'
-import ruResources from './locales/ru.ftl?raw'
+import { getDateLocale, getLanguageTag, getMessageFallbackOrder, supportedLocales } from './locales/config'
 import { getLocaleFromPath } from './logics/i18n-path'
+import { migrateLegacyLocalePreference } from './logics/locale-cookie'
 import 'dayjs/locale/ru'
 import 'dayjs/locale/es'
+import 'dayjs/locale/pt-br'
+import 'dayjs/locale/de'
+import 'dayjs/locale/fr'
 import '@unocss/reset/tailwind.css'
 import 'floating-vue/dist/style.css'
 import './styles/main.css'
@@ -22,11 +25,20 @@ import './styles/prose.css'
 import './styles/markdown.css'
 import 'uno.css'
 
-const localesMap = {
-  en: enResources,
-  ru: ruResources,
-  es: esResources,
-}
+const localeResources = import.meta.glob('./locales/*.ftl', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>
+
+const localesMap = Object.fromEntries(
+  supportedLocales.map((locale) => {
+    const resources = localeResources[`./locales/${locale}.ftl`]
+    if (!resources)
+      throw new Error(`Missing Fluent resources for locale "${locale}".`)
+    return [locale, resources]
+  }),
+) as Record<SupportedLocale, string>
 
 export const createApp = ViteSSG(
   App,
@@ -58,6 +70,9 @@ export const createApp = ViteSSG(
     app.use(FloatingVue)
     app.use(createPinia())
 
+    if (isClient)
+      migrateLegacyLocalePreference()
+
     const bundles: FluentBundle[] = Object.entries(localesMap).map(([locale, resources]) => {
       const bundle = new FluentBundle(locale)
       bundle.addResource(new FluentResource(resources))
@@ -71,17 +86,14 @@ export const createApp = ViteSSG(
     function applyRouteLocale(path: string) {
       const targetLocale = getLocaleFromPath(path)
 
-      dayjs.locale(targetLocale)
+      dayjs.locale(getDateLocale(targetLocale))
 
       const currentBundles = [...fluent.bundles] as FluentBundle[]
-      const currentPrimary = currentBundles.find(b => b.locales[0] === targetLocale)
-
-      if (currentPrimary && currentBundles[0].locales[0] !== targetLocale) {
-        fluent.bundles = [
-          currentPrimary,
-          ...currentBundles.filter(b => b.locales[0] !== targetLocale),
-        ]
-      }
+      const bundlesByLocale = new Map(currentBundles.map(bundle => [bundle.locales[0], bundle]))
+      // Fluent fallback is intentionally independent from article fallback policy.
+      fluent.bundles = getMessageFallbackOrder(targetLocale)
+        .map(locale => bundlesByLocale.get(locale))
+        .filter((bundle): bundle is FluentBundle => !!bundle)
 
       return targetLocale
     }
@@ -94,8 +106,8 @@ export const createApp = ViteSSG(
       router.beforeEach((to, from, next) => {
         const targetLocale = applyRouteLocale(to.path)
 
-        // Always sync <html lang> with the current route locale (WCAG 3.1.1)
-        document.querySelector('html')?.setAttribute('lang', targetLocale)
+        // The route locale remains the document language for accessibility on fallback pages.
+        document.querySelector('html')?.setAttribute('lang', getLanguageTag(targetLocale))
 
         NProgress.start()
         next()

@@ -11,16 +11,26 @@ nav-now = Ahora
 nav-menu = Menú
 nav-close = Cerrar
 
+a11y-skip-to-content = Ir al contenido
+a11y-home = Inicio
+a11y-main-navigation = Navegación principal
+a11y-site-logo = Logotipo del sitio
+
 action-toggle-theme = Alternar tema
 action-to-top = Ir arriba
 action-back-to-all = Volver
-page-not-translated = Aún no traducida, mostrando la versión en { $lang }
+action-change-language = Cambiar idioma
+action-go-home = Ir al inicio
+page-not-translated =
+    { $type ->
+        [note] Aún no traducida, mostrando la versión en { $lang }
+       *[blog] Aún no traducido, mostrando la versión en { $lang }
+    }
+page-not-found = Página no encontrada
 
 blog-only-lang = Solo { $lang }
 blog-nothing-here = { "{" } nada por aquí aún { "}" }
 projects-nothing-here = { "{" } proyectos en camino { "}" }
-blog-upcoming = Próximamente
-
 search-placeholder = Buscar artículos y notas
 search-start-typing = Introduzca su búsqueda
 search-no-results = No se encontraron resultados
@@ -35,6 +45,8 @@ post-updated = actualizado
 post-draft-notice = Borrador
 post-copy-link = enlace
 post-link-copied = copiado
+post-place-at = en
+label-external = Enlace externo
 
 article-audio-label = Audio del artículo
 article-audio-play = Reproducir audio
@@ -54,5 +66,8 @@ heading-copied = copiado
 photos-view-cover = Recortar
 photos-view-contain = No recortar
 
-days-left = en { $days } días
-
+days-left =
+    { $days ->
+        [one] en { $days } día
+       *[other] en { $days } días
+    }

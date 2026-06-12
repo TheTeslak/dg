@@ -1,6 +1,6 @@
 ---
 title: Teslak Blog
-description: Advice, analytics, neural networks, and value
+description: Advice, analytics, AI, and value
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -8,7 +8,7 @@ pic:
   r: full
   link: /en/who-is-teslak
   text: Teslak
-display: Teslak is interested in IT, neural networks, UX design, philosophy, economics, biology ✦ and more
+display: Teslak is interested in IT, AI, UX design, philosophy, economics, biology ✦ and more
 ---
 
 Working on AI agents, automation, and still on design, although it has changed significantly in recent years

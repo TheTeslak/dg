@@ -1,36 +1,42 @@
+import type { SupportedLocale } from '~/locales/config'
+
+export type LocalizedText = string | Partial<Record<SupportedLocale, string>>
+
 export interface ProjectItem {
-  name: string
-  name_ru?: string
-  name_es?: string
+  name: LocalizedText
   link: string
-  desc: string
-  desc_ru?: string
-  desc_es?: string
+  desc: LocalizedText
   icon?: string
 }
 
 export interface ProjectSection {
-  title: string
-  title_ru?: string
-  title_es?: string
+  id: string
+  title: LocalizedText
   projects: ProjectItem[]
 }
 
 export const projects: ProjectSection[] = [
   /*
   {
-    title: 'Development Tools',
-    title_ru: 'Инструменты разработки',
-    title_es: 'Herramientas de desarrollo',
+    id: 'development-tools',
+    title: {
+      en: 'Development Tools',
+      ru: 'Инструменты разработки',
+      es: 'Herramientas de desarrollo',
+    },
     projects: [
       {
-        name: 'Project Name',
-        name_ru: 'Название проекта',
-        name_es: 'Nombre del proyecto',
+        name: {
+          en: 'Project Name',
+          ru: 'Название проекта',
+          es: 'Nombre del proyecto',
+        },
         link: 'https://github.com/example/project',
-        desc: 'A brief English description of the project and its goals.',
-        desc_ru: 'Краткое описание проекта и его целей на русском языке.',
-        desc_es: 'Una breve descripción del proyecto y sus objetivos en español.',
+        desc: {
+          en: 'A brief English description of the project and its goals.',
+          ru: 'Краткое описание проекта и его целей на русском языке.',
+          es: 'Una breve descripción del proyecto y sus objetivos en español.',
+        },
         icon: 'i-carbon-star',
       },
     ],

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { nextTick } from 'vue'
+import { defaultLocale, getDateLocale, isSupportedLocale, localeConfig } from '../locales/config'
 
 export * from './post-visibility'
 
@@ -77,12 +78,13 @@ function getDisplayDateFormat(locale: string, includeYear: boolean) {
 }
 
 export function formatDate(d: string | Date, onlyDate = true, locale = dayjs.locale()) {
-  const date = parseDisplayDate(d).locale(locale)
+  const resolvedLocale = isSupportedLocale(locale) ? locale : defaultLocale
+  const date = parseDisplayDate(d).locale(getDateLocale(resolvedLocale))
   if (!date.isValid())
     return ''
   const now = dayjs()
   const includeYear = !onlyDate && date.year() !== now.year()
-  const formatted = date.format(getDisplayDateFormat(locale, includeYear))
+  const formatted = date.format(getDisplayDateFormat(resolvedLocale, includeYear))
   return formatted.replace('.', '')
 }
 
@@ -112,10 +114,8 @@ export function formatReadingDuration(duration: unknown, locale = 'en') {
   if (minutes == null)
     return undefined
 
-  if (locale === 'ru')
-    return `${minutes} мин`
-
-  return `${minutes} min`
+  const resolvedLocale = isSupportedLocale(locale) ? locale : defaultLocale
+  return `${minutes} ${localeConfig[resolvedLocale].minuteAbbreviation}`
 }
 
 export function resolvePath(path: string, currentRoutePath: string) {
@@ -123,11 +123,12 @@ export function resolvePath(path: string, currentRoutePath: string) {
     return path
 
   const parts = currentRoutePath.split('/')
-  const locale = ['en', 'ru', 'es'].includes(parts[1]) ? parts[1] : 'en'
+  const locale = isSupportedLocale(parts[1]) ? parts[1] : defaultLocale
 
   const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  const explicitLocale = cleanPath.split('/', 1)[0]
 
-  if (cleanPath.startsWith('en/') || cleanPath.startsWith('ru/') || cleanPath.startsWith('es/'))
+  if (isSupportedLocale(explicitLocale))
     return `/${cleanPath}`
 
   return `/${locale}/${cleanPath}`

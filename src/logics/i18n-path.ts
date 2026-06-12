@@ -1,18 +1,28 @@
-export const supportedLocales = ['en', 'ru', 'es'] as const
+import type { SupportedLocale } from '../locales/config'
+import {
+  defaultLocale,
+  isSupportedLocale,
+  localeSegmentPattern,
+  supportedLocales,
+} from '../locales/config'
 
-export type SupportedLocale = typeof supportedLocales[number]
-
-export const userLocalePref = useLocalStorage<string>('site-locale-pref', '')
-
-const localePrefixRE = /^\/(en|ru|es)(?=\/|$)/
-
-export function isSupportedLocale(locale: string): locale is SupportedLocale {
-  return supportedLocales.includes(locale as SupportedLocale)
+export {
+  defaultLocale,
+  isSupportedLocale,
+  supportedLocales,
 }
+export type { SupportedLocale } from '../locales/config'
+
+const localePrefixRE = new RegExp(`^/(${localeSegmentPattern})(?=/|$)`)
 
 export function getLocaleFromPath(path: string): SupportedLocale {
   const match = path.match(localePrefixRE)
-  return (match?.[1] as SupportedLocale) || 'en'
+  return match && isSupportedLocale(match[1]) ? match[1] : defaultLocale
+}
+
+export function isLocaleRootPath(path: string) {
+  const normalizedPath = path.replace(/\/+$/, '') || '/'
+  return normalizedPath === '/' || supportedLocales.some(locale => normalizedPath === `/${locale}`)
 }
 
 export function setPathLocale(path: string, locale: SupportedLocale): string {

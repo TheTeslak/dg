@@ -1,8 +1,11 @@
 import type MiniSearch from 'minisearch'
 import type { AsPlainObject, Options } from 'minisearch'
 import type { Ref } from 'vue'
+import type { SupportedLocale } from '~/locales/config'
 import { useDebounceFn } from '@vueuse/core'
 import { computed, ref, shallowRef, watch } from 'vue'
+import { getArticleSearchPath } from '~/logics/article-path'
+import { isSupportedLocale } from '~/logics/i18n-path'
 
 export interface SearchDocument {
   id: string
@@ -15,6 +18,7 @@ export interface SearchDocument {
   date: string
   lang: string
   duration: number | null
+  servedLocales: SupportedLocale[]
 }
 
 export interface SearchResult {
@@ -51,7 +55,7 @@ const MAX_SNIPPETS = 3
 const SNIPPET_WINDOW = 120
 const SEARCH_OPTIONS: Options<SearchDocument> = {
   fields: ['title', 'description', 'tags', 'body'],
-  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description'],
+  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description', 'servedLocales'],
 }
 
 interface SnippetRange {
@@ -294,8 +298,16 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
       const localBoost = result.lang === currentLocale ? 2 : 1
       const score = result.score * localBoost
 
+      const physicalPath = result.path as string
+      const servedLocales = Array.isArray(result.servedLocales)
+        ? result.servedLocales.filter(isSupportedLocale)
+        : []
+      const path = isSupportedLocale(currentLocale)
+        ? getArticleSearchPath(physicalPath, servedLocales, currentLocale)
+        : physicalPath
+
       return {
-        path: result.path as string,
+        path,
         title,
         highlightedTitle,
         date: result.date as string,

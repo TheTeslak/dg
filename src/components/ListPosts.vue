@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { RouteRecordNormalized } from 'vue-router'
 import type { Post } from '~/types'
-import { useFluent } from 'fluent-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { formatDate, formatReadingDuration, isDraftPost, isPostVisible, isRecentPost, onlyLanguage } from '~/logics'
@@ -13,7 +12,6 @@ const props = defineProps<{
   extra?: Post[]
 }>()
 
-const fluent = useFluent()
 const router = useRouter()
 const route = useRoute()
 
@@ -22,6 +20,7 @@ const locale = computed(() => {
 })
 
 const routes = computed<Post[]>(() => {
+  // Locale aliases keep untranslated articles discoverable without switching the site language.
   return router.getRoutes()
     .filter((r: RouteRecordNormalized) =>
       r.meta.isArticle === true
@@ -61,15 +60,12 @@ const posts = computed(() => {
 })
 
 const getYear = (a: Date | string | number) => new Date(a).getFullYear()
-const isFuture = (a?: Date | string | number) => a && new Date(a) > new Date()
 const isSameYear = (a?: Date | string | number, b?: Date | string | number) => a && b && getYear(a) === getYear(b)
 function isSameGroup(a: Post, b?: Post) {
-  return (isFuture(a.date) === isFuture(b?.date)) && isSameYear(a.date, b?.date)
+  return isSameYear(a.date, b?.date)
 }
 
 function getGroupName(p: Post) {
-  if (isFuture(p.date))
-    return fluent.format('blog-upcoming')
   return getYear(p.date)
 }
 
@@ -142,7 +138,7 @@ function getDurationLabel(duration?: Post['duration']) {
                 v-if="route.redirect"
                 align-middle op50 flex-none text-xs ml--1.5
                 i-carbon-arrow-up-right
-                title="External"
+                :title="$t('label-external')"
                 aria-hidden="true"
               />
             </div>

@@ -1,18 +1,20 @@
 import type { AsPlainObject, Options } from 'minisearch'
+import type { SupportedLocale } from '../src/locales/config'
 import { resolve } from 'node:path'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MiniSearch from 'minisearch'
+import { getArticleServedLocales } from '../build/article'
 import { normalizeFrontmatter } from '../build/frontmatter'
+import { supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { isPostVisible } from '../src/logics/post-visibility'
 
-const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
 const MAX_BODY_LENGTH = 10_000
 const SEARCH_OPTIONS: Options<SearchDocument> = {
   fields: ['title', 'description', 'tags', 'body'],
-  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description'],
+  storeFields: ['path', 'title', 'date', 'type', 'lang', 'duration', 'description', 'servedLocales'],
 }
 
 interface SearchDocument {
@@ -26,6 +28,7 @@ interface SearchDocument {
   date: string
   lang: string
   duration: number | null
+  servedLocales: SupportedLocale[]
 }
 
 interface SearchIndexPayload {
@@ -114,7 +117,7 @@ function toIsoDate(rawDate: unknown, filePath: string): string {
 async function buildSearchIndex() {
   const documents: SearchDocument[] = []
 
-  for (const locale of SUPPORTED_LOCALES) {
+  for (const locale of supportedLocales) {
     const pattern = `pages/${locale}/articles/*.md`
     const files = await fg(pattern)
 
@@ -149,13 +152,12 @@ async function buildSearchIndex() {
         date: toIsoDate(frontmatter.date, filePath),
         lang: frontmatter.lang || locale,
         duration: toDurationMinutes(frontmatter.duration),
+        servedLocales: getArticleServedLocales(locale, slug),
       })
     }
   }
 
-  // Deduplicate: if a slug exists in multiple locales, keep all (they are separate documents).
-  // But if a slug exists only in 'en' and is aliased to other locales, we only have the 'en' file.
-  // This is correct — the aliases point to the same content.
+  // Each physical translation remains searchable; aliases only affect its destination URL.
 
   const miniSearch = new MiniSearch<SearchDocument>(SEARCH_OPTIONS)
   miniSearch.addAll(documents)

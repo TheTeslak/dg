@@ -2,12 +2,14 @@
 import { useScrollLock, useWindowScroll } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { getFeedName } from '~/locales/config'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { getCanonicalUrl } from '~/logics/site'
 
 const route = useRoute()
 
 const currentLocale = computed(() => getLocaleFromPath(route.path))
+const currentFeedHref = computed(() => `/${getFeedName(currentLocale.value)}.xml`)
 
 function localePath(path = '') {
   return {
@@ -73,9 +75,9 @@ onBeforeUnmount(() => {
 <template>
   <header class="header z-40">
     <RouterLink
-      class="w-12 h-12 absolute lg:fixed m-5 select-none outline-none"
+      class="logo-link w-12 h-12 absolute lg:fixed m-5 select-none outline-none"
       :to="localePath()"
-      aria-label="Home"
+      :aria-label="$t('a11y-home')"
     >
       <Logo />
     </RouterLink>
@@ -118,7 +120,7 @@ onBeforeUnmount(() => {
         <div i-ri-arrow-up-line />
       </button>
     </div>
-    <nav class="nav" role="navigation" aria-label="Main Navigation">
+    <nav class="nav" role="navigation" :aria-label="$t('a11y-main-navigation')">
       <div class="spacer" />
       <div class="right" print:op0>
         <RouterLink :to="localePath('/notes')" :title="$t('nav-blog')" class="lt-md:hidden">
@@ -137,7 +139,7 @@ onBeforeUnmount(() => {
         <a href="https://t.me/" target="_blank" title="Telegram" class="lt-md:hidden">
           <div i-ri-telegram-2-line class="scale-110" />
         </a>
-        <a :href="currentLocale === 'en' ? '/feed.xml' : `/feed-${currentLocale}.xml`" target="_blank" title="RSS" class="lt-md:hidden">
+        <a :href="currentFeedHref" target="_blank" title="RSS" class="lt-md:hidden">
           <div i-ri-rss-line />
         </a>
 
@@ -175,7 +177,7 @@ onBeforeUnmount(() => {
               <a href="https://t.me/" target="_blank" title="Telegram">
                 <div i-ri-telegram-2-line class="scale-110" />
               </a>
-              <a :href="currentLocale === 'en' ? '/feed.xml' : `/feed-${currentLocale}.xml`" target="_blank" title="RSS">
+              <a :href="currentFeedHref" target="_blank" title="RSS">
                 <div i-ri-rss-line />
               </a>
               <ToggleTheme />
@@ -193,10 +195,21 @@ onBeforeUnmount(() => {
   margin-bottom: 0;
 }
 
-.logo {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
+.logo-link {
+  transition: transform 0.2s ease-in-out;
+}
+
+.logo-link:hover {
+  transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-link {
+    transition: none;
+  }
+  .logo-link:hover {
+    transform: none;
+  }
 }
 
 .nav {

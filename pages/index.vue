@@ -1,45 +1,33 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { isSupportedLocale, userLocalePref } from '~/logics/i18n-path'
+import { useRoute, useRouter } from 'vue-router'
+import { defaultLocale } from '~/locales/config'
+import { getPreferredLocale } from '~/locales/negotiation'
+import { getLocaleCookie } from '~/logics/locale-cookie'
 
 const router = useRouter()
+const route = useRoute()
 
-function getRedirectPath() {
+function getRedirectLocale() {
   if (typeof window === 'undefined')
-    return '/en'
+    return defaultLocale
 
-  // Priority 1: Explicit user choice saved in localStorage
-  const saved = userLocalePref.value
-  if (saved && isSupportedLocale(saved))
-    return `/${saved}`
-
-  // Priority 2: Browser / OS language
-  const languages = navigator.languages || [navigator.language]
-  for (const lang of languages) {
-    const short = lang.split('-')[0]
-    if (short === 'ru')
-      return '/ru'
-    if (short === 'es')
-      return '/es'
-    if (short === 'en')
-      return '/en'
-  }
-
-  // Priority 3: Fallback
-  return '/en'
+  const languages = navigator.languages.length
+    ? navigator.languages
+    : [navigator.language]
+  return getLocaleCookie() ?? getPreferredLocale(languages.join(','))
 }
 
 if (typeof window !== 'undefined') {
   const path = window.location.pathname
   if (path === '/' || path === '/index.html') {
-    router.replace(getRedirectPath())
+    // This fallback keeps local and static hosting usable when Netlify Edge is absent.
+    router.replace({
+      path: `/${getRedirectLocale()}`,
+      query: route.query,
+      hash: route.hash,
+    })
   }
 }
-
-onMounted(() => {
-  router.replace(getRedirectPath())
-})
 </script>
 
 <template>

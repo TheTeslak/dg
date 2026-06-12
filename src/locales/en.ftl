@@ -11,16 +11,22 @@ nav-now = Now
 nav-menu = Menu
 nav-close = Close
 
+a11y-skip-to-content = Skip to content
+a11y-home = Home
+a11y-main-navigation = Main navigation
+a11y-site-logo = Website logo
+
 action-toggle-theme = Toggle Color Scheme
 action-to-top = Scroll to top
 action-back-to-all = Back to all
+action-change-language = Change language
+action-go-home = Go home
 page-not-translated = Not yet translated, showing { $lang } version
+page-not-found = Page not found
 
 blog-only-lang = { $lang } only
 blog-nothing-here = { "{" } nothing here yet { "}" }
 projects-nothing-here = { "{" } projects are brewing { "}" }
-blog-upcoming = Upcoming
-
 search-placeholder = Search articles and notes
 search-start-typing = Enter search query
 search-no-results = No results found
@@ -35,6 +41,8 @@ post-updated = updated
 post-draft-notice = Draft
 post-copy-link = link
 post-link-copied = copied
+post-place-at = at
+label-external = External
 
 article-audio-label = Article audio
 article-audio-play = Play audio
@@ -54,5 +62,8 @@ heading-copied = copied
 photos-view-cover = Crop to fit
 photos-view-contain = Do not crop
 
-days-left = in { $days } days
-
+days-left =
+    { $days ->
+        [one] in { $days } day
+       *[other] in { $days } days
+    }

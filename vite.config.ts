@@ -21,7 +21,7 @@ import Exclude from 'vite-plugin-optimize-exclude'
 import SVG from 'vite-svg-loader'
 import { VueRouterAutoImports } from 'vue-router/unplugin'
 import VueRouter from 'vue-router/vite'
-import { getArticleInfo, getAvailableArticleLocales } from './build/article'
+import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getArticleLocaleStates } from './build/article'
 import { supportedLocales } from './build/constants'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
 import { registerCustomPlugins } from './build/markdown-plugins'
@@ -83,8 +83,12 @@ export default defineConfig({
           const frontmatter = normalizeFrontmatter(data, content, path)
           normalizedFrontmatterById.set(resolve(path), frontmatter)
           const routeMeta: Record<string, any> = { frontmatter }
+          const normalizedPath = path.replace(/\\/g, '/')
 
-          // Cross-locale aliases for articles
+          if (normalizedPath.endsWith('/[...404].md') || normalizedPath.endsWith('/404.md'))
+            routeMeta.isNotFound = true
+
+          // The URL keeps the site locale while untranslated content keeps its source language.
           const articleMatch = getArticleInfo(path)
           if (articleMatch) {
             const { sourceLocale, slug } = articleMatch
@@ -97,7 +101,15 @@ export default defineConfig({
 
               route.path = articlePath
               frontmatter.originalLocale = sourceLocale
-              frontmatter.availableLocales = getAvailableArticleLocales(slug)
+              const localeStates = getArticleLocaleStates(slug)
+              const physicalLocales = localeStates.map(state => state.locale)
+              const routableLocales = localeStates
+                .filter(state => state.routable)
+                .map(state => state.locale)
+              const availableLocales = localeStates
+                .filter(state => state.indexable)
+                .map(state => state.locale)
+              frontmatter.availableLocales = availableLocales
               routeMeta.isArticle = true
               routeMeta.articleSlug = slug
               routeMeta.articleLocale = sourceLocale
@@ -106,8 +118,8 @@ export default defineConfig({
               for (const targetLocale of supportedLocales) {
                 if (targetLocale === sourceLocale)
                   continue
-                const targetFile = resolve(__dirname, `pages/${targetLocale}/articles/${slug}.md`)
-                if (!fs.existsSync(targetFile)) {
+                if (!physicalLocales.includes(targetLocale)
+                  && getArticleFallbackSource(targetLocale, routableLocales) === sourceLocale) {
                   aliases.push(getArticlePath(targetLocale, slug))
                 }
               }
@@ -270,6 +282,10 @@ export default defineConfig({
 
   ssgOptions: {
     formatting: 'minify',
+    includedRoutes(paths) {
+      const staticPaths = paths.filter(path => !path.includes(':'))
+      return [...new Set([...staticPaths, ...getArticleFallbackPaths()])]
+    },
     async onFinished() {
       await generateSeoFiles({ siteOrigin })
     },

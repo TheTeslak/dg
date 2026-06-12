@@ -1,6 +1,6 @@
 <template>
   <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-    <title>Website Logo</title>
+    <title>{{ $t('a11y-site-logo') }}</title>
     <mask id="mask0_1167_476" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="12" y="11" width="52" height="78">
       <path
         d="M29.3093 85L35.1004 52.4419H15L46.6907 15L40.8996 47.5581H61L29.3093 85Z"

@@ -1,4 +1,5 @@
 import type { FeedOptions, Item } from 'feed'
+import type { SupportedLocale } from '../src/locales/config'
 import { basename, dirname, resolve } from 'node:path'
 import fg from 'fast-glob'
 import { Feed } from 'feed'
@@ -10,6 +11,7 @@ import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { registerCustomPlugins } from '../build/markdown-plugins'
+import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { isPostIndexable } from '../src/logics/post-visibility'
 import { slugify } from './slugify'
@@ -20,27 +22,6 @@ const AUTHOR = {
   email: 'hi@teslak.me',
   link: DOMAIN,
 }
-const SUPPORTED_LOCALES = ['en', 'ru', 'es'] as const
-type SupportedLocale = typeof SUPPORTED_LOCALES[number]
-
-const localeTitles: Record<SupportedLocale, string> = {
-  en: 'Teslak En',
-  ru: 'Teslak Ru',
-  es: 'Teslak Es',
-}
-
-const localeDescriptions: Record<SupportedLocale, string> = {
-  en: 'Teslak\'s Blog',
-  ru: 'Блог Teslak',
-  es: 'Blog de Teslak',
-}
-
-const feedReaderNotes: Record<SupportedLocale, string> = {
-  en: 'Reading on the site offers a better experience than in a feed reader.',
-  ru: 'На сайте читать удобнее, чем в фид-ридере.',
-  es: 'Leer en el sitio ofrece una mejor experiencia que en un lector de feeds.',
-}
-
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
 const markdown = MarkdownIt({
   html: true,
@@ -107,7 +88,7 @@ function stripVueOnlyHtml(html: string) {
 function getFeedContent(content: string, locale: SupportedLocale, link: string, filePath: string) {
   const feedMarkdown = content.replace(/^\s*\[\[toc\]\]\s*$/gim, '')
   const html = normalizeFeedHtml(markdown.render(feedMarkdown, { id: filePath, path: filePath }))
-  const note = markdown.utils.escapeHtml(feedReaderNotes[locale])
+  const note = markdown.utils.escapeHtml(localeConfig[locale].feedReaderNote)
   const href = markdown.utils.escapeHtml(link)
 
   return `${html.trim()}\n\n<p><a href="${href}">${note}</a></p>\n`
@@ -229,12 +210,12 @@ function getMimeType(url: string, fallbackType: string) {
 function withAtomLanguage(xml: string, locale: SupportedLocale) {
   return xml.replace(
     '<feed xmlns="http://www.w3.org/2005/Atom">',
-    `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="${locale}">`,
+    `<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="${getLanguageTag(locale)}">`,
   )
 }
 
 async function run() {
-  for (const locale of SUPPORTED_LOCALES) {
+  for (const locale of supportedLocales) {
     await buildLocaleFeed(locale)
   }
 }
@@ -242,15 +223,15 @@ async function run() {
 async function buildLocaleFeed(locale: SupportedLocale) {
   const files = await fg(`pages/${locale}/articles/*.md`)
 
-  const feedName = locale === 'en' ? 'feed' : `feed-${locale}`
+  const feedName = getFeedName(locale)
   const feedUrl = `${DOMAIN}/${feedName}`
 
   const options: FeedOptions = {
-    title: localeTitles[locale] || localeTitles.en,
-    description: localeDescriptions[locale] || localeDescriptions.en,
+    title: localeConfig[locale].feedTitle,
+    description: localeConfig[locale].feedDescription,
     id: `${DOMAIN}/${locale}/`,
     link: `${DOMAIN}/${locale}/`,
-    language: locale,
+    language: getLanguageTag(locale),
     copyright: 'CC BY-NC-SA 4.0 2021 © Teslak',
     feedLinks: {
       json: `${feedUrl}.json`,
@@ -344,7 +325,7 @@ function toJsonFeed(feed: Feed, options: FeedOptions, items: Item[], locale: Sup
   const author = toJsonFeedAuthor()
 
   jsonFeed.version = 'https://jsonfeed.org/version/1.1'
-  jsonFeed.language = locale
+  jsonFeed.language = getLanguageTag(locale)
   jsonFeed.favicon = options.favicon
   jsonFeed.authors = [author]
   // Keep the deprecated JSON Feed 1.0 field for older readers.
@@ -360,7 +341,7 @@ function toJsonFeed(feed: Feed, options: FeedOptions, items: Item[], locale: Sup
     return {
       ...jsonItem,
       id: item.id || item.link,
-      language: locale,
+      language: getLanguageTag(locale),
       authors: [author],
       ...(tags?.length ? { tags } : {}),
       ...(attachment ? { attachments: [attachment] } : {}),

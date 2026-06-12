@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { ProjectItem, ProjectSection } from '~/data/projects'
+import type { LocalizedText, ProjectItem, ProjectSection } from '~/data/projects'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { defaultLocale } from '~/locales/config'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 defineProps<{ projects: ProjectSection[] }>()
@@ -9,32 +10,22 @@ defineProps<{ projects: ProjectSection[] }>()
 const route = useRoute()
 const currentLocale = computed(() => getLocaleFromPath(route.path))
 
-function slug(name: string) {
-  return name.toLowerCase().replace(/[\s\\/]+/g, '-')
+function getLocalizedText(value: LocalizedText) {
+  if (typeof value === 'string')
+    return value
+  return value[currentLocale.value] || value[defaultLocale] || Object.values(value)[0] || ''
 }
 
 function getTitle(section: ProjectSection) {
-  if (currentLocale.value === 'ru')
-    return section.title_ru || section.title
-  if (currentLocale.value === 'es')
-    return section.title_es || section.title
-  return section.title
+  return getLocalizedText(section.title)
 }
 
 function getName(item: ProjectItem) {
-  if (currentLocale.value === 'ru')
-    return item.name_ru || item.name
-  if (currentLocale.value === 'es')
-    return item.name_es || item.name
-  return item.name
+  return getLocalizedText(item.name)
 }
 
 function getDesc(item: ProjectItem) {
-  if (currentLocale.value === 'ru')
-    return item.desc_ru || item.desc
-  if (currentLocale.value === 'es')
-    return item.desc_es || item.desc
-  return item.desc
+  return getLocalizedText(item.desc)
 }
 </script>
 
@@ -46,11 +37,11 @@ function getDesc(item: ProjectItem) {
 
     <template v-else>
       <div
-        v-for="section, cidx in projects" :key="section.title" slide-enter
+        v-for="section, cidx in projects" :key="section.id" slide-enter
         :style="{ '--enter-stage': cidx + 1 }"
       >
         <div
-          :id="slug(section.title)"
+          :id="section.id"
           select-none relative h18 mt5 pointer-events-none slide-enter
           :style="{
             '--enter-stage': cidx - 2,
@@ -83,8 +74,8 @@ function getDesc(item: ProjectItem) {
         <div class="i-ri-menu-2-fill" />
       </div>
       <ul>
-        <li v-for="section in projects" :key="section.title">
-          <a :href="`#${slug(section.title)}`">{{ getTitle(section) }}</a>
+        <li v-for="section in projects" :key="section.id">
+          <a :href="`#${section.id}`">{{ getTitle(section) }}</a>
         </li>
       </ul>
     </div>

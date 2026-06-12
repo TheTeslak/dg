@@ -64,8 +64,8 @@ pic: # optional inline image next to a title word
 #### Field Logic & Behavior
 
 - **`type` (Status & Visibility)**: This field controls where the post appears and its status.
-  - `type: draft` or `draft: true`: Fully hidden from lists and RSS. Use for private WIPs.
-  - `type: note+draft` (or `blog+draft`): Visible in lists with a **🚧 indicator**, but still marked as a draft internally (`noindex`).
+  - `type: draft` or `draft: true`: Hidden from lists, aliases, RSS, and indexing, but still available at its physical locale URL.
+  - `type: note+draft` (or `blog+draft`): Visible in lists and locale aliases with a **🚧 indicator**, but excluded from RSS, sitemap, and indexing.
 - **`display`**: Overrides the `title` on the page itself. Useful when the `title` needs to be optimized for lists/RSS but the page needs a different look.
 - **`subtitle`**: Secondary title shown in italics below the main header.
 - **`image`**: Optional custom `1200x630` PNG for Open Graph, social previews, and audio player artwork. Omit it to use the universal `/og.png`.
@@ -91,7 +91,7 @@ pic: # optional inline image next to a title word
 
 Build-generated fields:
 
-- **`originalLocale` / `availableLocales`**: Generated automatically from physical article files. Do not set them manually in article frontmatter.
+- **`originalLocale` / `availableLocales`**: Generated automatically. `availableLocales` contains only indexable translations; drafts and `noindex` files are excluded. Future dates remain valid publication dates and produce a build warning only when more than 24 hours ahead. Do not set these fields manually.
 
 ### Article Status & Banners
 

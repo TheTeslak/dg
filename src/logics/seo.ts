@@ -4,7 +4,8 @@ import { useHead } from '@unhead/vue'
 import { useFluent } from 'fluent-vue'
 import { computed, toValue } from 'vue'
 import { useRoute } from 'vue-router'
-import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from './i18n-path'
+import { defaultLocale, getLanguageTag, localeConfig } from '../locales/config'
+import { getLocaleFromPath, isLocaleRootPath, isSupportedLocale, setPathLocale, supportedLocales } from './i18n-path'
 import { isDraftPost, isPostIndexable } from './post-visibility'
 import { getCanonicalUrl, siteOrigin } from './site'
 
@@ -25,12 +26,6 @@ const person = {
     'https://t.me/TesNot',
     'https://t.me/Tes404',
   ],
-}
-
-const localeMeta: Record<SupportedLocale, { ogLocale: string }> = {
-  en: { ogLocale: 'en_US' },
-  ru: { ogLocale: 'ru_RU' },
-  es: { ogLocale: 'es_ES' },
 }
 
 function optionalString(value: unknown) {
@@ -57,9 +52,9 @@ function getRouteSlug(path: string) {
 }
 
 function getDefaultXDefaultPath(path: string) {
-  return path === '/' || /^\/(?:en|ru|es)\/?$/.test(path)
+  return isLocaleRootPath(path)
     ? '/'
-    : setPathLocale(path, 'en')
+    : setPathLocale(path, defaultLocale)
 }
 
 export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = {}) {
@@ -89,6 +84,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   const isArticle = computed(() => {
     return route.meta.isArticle === true && !!frontmatter.value.date
   })
+  const isNotFound = computed(() => route.meta.isNotFound === true)
 
   const originalLocale = computed<SupportedLocale | undefined>(() => {
     return isSupportedLocale(frontmatter.value.originalLocale)
@@ -103,8 +99,10 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const isFallbackArticleAlias = computed(() => {
+    // Alias URLs serve readers but must not masquerade as translated SEO pages.
     return isArticle.value
       && !!originalLocale.value
+      && originalLocale.value !== currentLocale.value
       && !articleLocales.value.includes(currentLocale.value)
   })
 
@@ -122,7 +120,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const hreflangLocales = computed<SupportedLocale[]>(() => {
-    if (isArticle.value && articleLocales.value.length > 0)
+    if (isArticle.value)
       return articleLocales.value
     return [...supportedLocales]
   })
@@ -132,13 +130,15 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
       key: `hreflang:${locale}`,
       rel: 'alternate',
       type: 'text/html',
-      hreflang: locale,
+      hreflang: getLanguageTag(locale),
       href: `${siteOrigin}${setPathLocale(route.path, locale)}`,
     }))
 
     let xDefaultPath = getDefaultXDefaultPath(route.path)
-    if (isArticle.value && articleLocales.value.includes('en'))
-      xDefaultPath = setPathLocale(route.path, 'en')
+    if (isArticle.value && articleLocales.value.includes(defaultLocale))
+      xDefaultPath = setPathLocale(route.path, defaultLocale)
+    else if (isArticle.value && articleLocales.value.length > 0)
+      xDefaultPath = setPathLocale(route.path, articleLocales.value[0])
     else if (originalLocale.value)
       xDefaultPath = setPathLocale(route.path, originalLocale.value)
 
@@ -155,6 +155,9 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
 
   const robots = computed(() => {
     const explicitRobots = optionalString(frontmatter.value.robots)
+
+    if (isNotFound.value)
+      return 'noindex, follow'
 
     if (frontmatter.value.draft || isDraftPost(frontmatter.value.type))
       return 'noindex, nofollow'
@@ -180,14 +183,17 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const schemaOrg = computed(() => {
-    if (route.path === '/' || /^\/(?:en|ru|es)\/?$/.test(route.path)) {
+    if (isNotFound.value)
+      return undefined
+
+    if (isLocaleRootPath(route.path)) {
       return [
         {
           '@context': 'https://schema.org',
           '@type': 'WebSite',
           'url': siteOrigin,
           'name': siteName,
-          'inLanguage': currentLocale.value,
+          'inLanguage': getLanguageTag(currentLocale.value),
           'publisher': person,
         },
         {
@@ -211,7 +217,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
           ...person,
           description: description.value,
         },
-        'inLanguage': optionalString(frontmatter.value.lang) || currentLocale.value,
+        'inLanguage': getLanguageTag(contentLocale.value),
         'datePublished': datePublished,
         'dateModified': dateModified,
       }
@@ -231,7 +237,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
       'dateModified': dateModified,
       'author': person,
       'publisher': person,
-      'inLanguage': optionalString(frontmatter.value.lang) || currentLocale.value,
+      'inLanguage': getLanguageTag(contentLocale.value),
     }
   })
 
@@ -248,7 +254,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
       { key: 'og:image:width', property: 'og:image:width', content: String(socialImageWidth) },
       { key: 'og:image:height', property: 'og:image:height', content: String(socialImageHeight) },
       { key: 'og:image:alt', property: 'og:image:alt', content: title.value },
-      { key: 'og:locale', property: 'og:locale', content: localeMeta[isArticle.value ? contentLocale.value : currentLocale.value].ogLocale },
+      { key: 'og:locale', property: 'og:locale', content: localeConfig[isArticle.value ? contentLocale.value : currentLocale.value].ogLocale },
       { key: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
       { key: 'twitter:title', name: 'twitter:title', content: title.value },
       { key: 'twitter:description', name: 'twitter:description', content: description.value },
@@ -261,7 +267,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
         meta.push({
           key: `og:locale:alternate:${locale}`,
           property: 'og:locale:alternate',
-          content: localeMeta[locale].ogLocale,
+          content: localeConfig[locale].ogLocale,
         })
       }
     }
@@ -296,10 +302,12 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     return {
       title: title.value,
       meta,
-      link: [
-        { key: 'canonical', rel: 'canonical', href: canonicalUrl.value },
-        ...hreflangLinks.value,
-      ],
+      link: isNotFound.value
+        ? []
+        : [
+            { key: 'canonical', rel: 'canonical', href: canonicalUrl.value },
+            ...hreflangLinks.value,
+          ],
       script: schemaOrg.value
         ? [{
             key: 'schema-org',

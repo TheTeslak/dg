@@ -1,6 +1,6 @@
 ---
 title: Blog de Teslak
-description: Consejos, analítica, redes neuronales y valor
+description: Consejos, analítica, IA y valor
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -8,7 +8,7 @@ pic:
   r: full
   link: /es/who-is-teslak
   text: Teslak
-display: A Teslak le apasiona la TI, las redes neuronales, el diseño UX, la filosofía, la economía, la biología ✦ y más
+display: A Teslak le apasiona la TI, la IA, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
 
 Trabajo en agentes de IA, automatización y todavía en diseño, aunque ha cambiado significativamente en los últimos años

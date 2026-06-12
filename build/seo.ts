@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
+import { defaultLocale, getLanguageTag, localeSegmentPattern } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { hasNoindexRobots, isDraftPost, isPostIndexable } from '../src/logics/post-visibility'
 import { getArticleInfo } from './article'
@@ -33,7 +34,7 @@ const currentDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(currentDir, '..')
 const pagesDir = resolve(repoRoot, 'pages')
 
-const localePrefixRE = /^\/(en|ru|es)(\/.*)?$/
+const localePrefixRE = new RegExp(`^/(${localeSegmentPattern})(/.*)?$`)
 
 function slash(path: string) {
   return path.replace(/\\/g, '/')
@@ -132,6 +133,8 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
     const path = getPageRoute(file)
     if (!path)
       continue
+    if (path === '/')
+      continue
 
     const article = getArticleInfo(file)
     const isArticle = !!article && article.slug !== 'index' && !article.slug.startsWith('[')
@@ -170,24 +173,29 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
 }
 
 function buildAlternateLinks(entry: SitemapEntry, groups: Map<string, SitemapEntry[]>, siteOrigin: string) {
+  // hreflang describes real indexable translations, never convenience alias URLs.
   const group = groups.get(entry.groupKey) || []
   const localizedEntries = group
     .filter((item): item is SitemapEntry & { locale: SupportedLocale } => !!item.locale)
     .sort((a, b) => supportedLocales.indexOf(a.locale) - supportedLocales.indexOf(b.locale))
 
   const links: { hreflang: string, href: string }[] = localizedEntries.map(item => ({
-    hreflang: item.locale,
+    hreflang: getLanguageTag(item.locale),
     href: absoluteUrl(siteOrigin, item.path),
   }))
 
-  const xDefault = group.find(item => item.path === '/')
-    || localizedEntries.find(item => item.locale === 'en')
-    || localizedEntries[0]
+  const xDefaultPath = entry.groupKey === '/'
+    ? '/'
+    : (
+        group.find(item => item.path === '/')?.path
+        || localizedEntries.find(item => item.locale === defaultLocale)?.path
+        || localizedEntries[0]?.path
+      )
 
-  if (xDefault) {
+  if (xDefaultPath) {
     links.push({
       hreflang: 'x-default',
-      href: absoluteUrl(siteOrigin, xDefault.path),
+      href: absoluteUrl(siteOrigin, xDefaultPath),
     })
   }
 

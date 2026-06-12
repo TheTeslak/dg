@@ -33,9 +33,14 @@ export function isPostVisible(frontmatter: PostVisibilityFrontmatter): boolean {
   return true
 }
 
+export function isPostRoutable(frontmatter: PostVisibilityFrontmatter): boolean {
+  // Hidden drafts keep their physical preview URL but must not spread to every site locale.
+  return isPostVisible(frontmatter)
+}
+
 /**
  * Returns true if the post is eligible for search indexing, sitemap and feeds.
- * Combined draft types remain visible in the UI, but should not be indexed.
+ * Draft status protects work from distribution without removing its public URL.
  */
 export function isPostIndexable(frontmatter: PostVisibilityFrontmatter): boolean {
   return isPostVisible(frontmatter)

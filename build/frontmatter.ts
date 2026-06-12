@@ -2,6 +2,7 @@ import { getArticleInfo, isRealArticle, resolveAudioFile } from './article'
 import { audioMetadata, frontmatterKnownKeys } from './constants'
 
 const frontmatterWarnings = new Set<string>()
+const futureDateWarningGraceMs = 24 * 60 * 60 * 1000
 
 export function warnFrontmatter(message: string) {
   if (frontmatterWarnings.has(message))
@@ -90,6 +91,19 @@ export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, conten
     if (frontmatter[key] instanceof Date) {
       const d = frontmatter[key] as Date
       frontmatter[key] = Number.isNaN(d.getTime()) ? undefined : d.toISOString()
+    }
+  }
+
+  if (isRealArticle(id) && frontmatter.date) {
+    const publishedAt = new Date(frontmatter.date)
+    if (Number.isNaN(publishedAt.getTime())) {
+      warnFrontmatter(`[frontmatter] ${id}: "date" is invalid.`)
+    }
+    // A full-day grace period avoids false alarms from author and build-server time zones.
+    else if (publishedAt.getTime() > Date.now() + futureDateWarningGraceMs) {
+      warnFrontmatter(
+        `[frontmatter] ${id}: "date" is more than 24 hours in the future (${publishedAt.toISOString()}).`,
+      )
     }
   }
 

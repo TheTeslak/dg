@@ -12,14 +12,13 @@ import { performance } from 'node:perf_hooks'
 import process from 'node:process'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
+import { supportedLocales } from '../src/locales/config'
 
 // ── Configuration ──
 
 const PROJECT_ROOT = resolve(import.meta.dirname, '..')
 const CACHE_PATH = resolve(PROJECT_ROOT, 'data/sources-cache.json')
 const PAGES_DIR = resolve(PROJECT_ROOT, 'pages')
-const SUPPORTED_LOCALES = ['en', 'ru', 'es']
-
 const REQUEST_DELAY_MS = 1200 // Rate limit delay
 const REQUEST_TIMEOUT_MS = 10_000 // HTTP timeout
 const CACHE_MAX_AGE_DAYS = 30 // TTL
@@ -331,7 +330,7 @@ function findArticles(specificPath?: string): string[] {
 
   // Scan enabled articles
   const articles: string[] = []
-  for (const locale of SUPPORTED_LOCALES) {
+  for (const locale of supportedLocales) {
     const dir = resolve(PAGES_DIR, locale, 'articles')
     if (!fs.existsSync(dir))
       continue

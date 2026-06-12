@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { getLanguageTag } from '~/locales/config'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
 const props = defineProps<{
@@ -25,7 +26,7 @@ const formattedDate = computed(() => {
     return props.date
 
   const includeYear = date.getFullYear() !== new Date().getFullYear()
-  const formatted = new Intl.DateTimeFormat(locale.value, {
+  const formatted = new Intl.DateTimeFormat(getLanguageTag(locale.value), {
     day: 'numeric',
     month: 'long',
     ...(includeYear ? { year: 'numeric' } : {}),

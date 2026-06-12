@@ -2,6 +2,7 @@
 import type { GlossaryState } from '~/logics/glossary'
 import type { ArticleAudio } from '~/types'
 import { useFluent } from 'fluent-vue'
+import { getLanguageTag, isSupportedLocale } from '~/locales/config'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { getArticleArchivePath } from '~/logics/article-path'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
@@ -75,6 +76,12 @@ const { referencedBy } = useReferencedBy()
 
 const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
+})
+const currentLanguageTag = computed(() => getLanguageTag(currentLocale.value))
+const contentLanguageTag = computed(() => {
+  return isSupportedLocale(frontmatter.lang)
+    ? getLanguageTag(frontmatter.lang)
+    : currentLanguageTag.value
 })
 
 const pic = computed(() => {
@@ -440,7 +447,7 @@ const ArtComponent = computed(() => {
     <div
       v-if="frontmatter.display ?? frontmatter.title"
       class="prose m-auto mb-8"
-      :lang="currentLocale"
+      :lang="currentLanguageTag"
       :class="[frontmatter.wrapperClass, !frontmatter.date && pic ? 'h-card' : '']"
     >
       <div
@@ -460,7 +467,7 @@ const ArtComponent = computed(() => {
           </RouterLink>
         </div>
       </div>
-      <h1 class="slide-enter-50 !mt-0 !mb-2.5 p-name" :lang="frontmatter.lang">
+      <h1 class="slide-enter-50 !mt-0 !mb-2.5 p-name" :lang="contentLanguageTag">
         <template v-if="pic && titleParts?.linked">
           <span v-if="titleParts.before" class="title-rest p-note">{{ titleParts.before }}</span><RouterLink
             :to="pic.link!"
@@ -492,7 +499,7 @@ const ArtComponent = computed(() => {
         <img class="u-photo" src="/avatar.avif" alt="Teslak">
       </div>
       <p v-if="frontmatter.place" class="mt--4!">
-        <span op50>at </span>
+        <span op50>{{ $t('post-place-at') }} </span>
         <a v-if="frontmatter.placeLink" :href="frontmatter.placeLink" target="_blank" rel="noopener noreferrer">
           {{ frontmatter.place }}
         </a>
@@ -503,7 +510,7 @@ const ArtComponent = computed(() => {
       <p
         v-if="frontmatter.subtitle"
         class="opacity-50 !-mt-6 italic slide-enter"
-        :lang="frontmatter.lang"
+        :lang="contentLanguageTag"
       >
         {{ frontmatter.subtitle }}
       </p>
@@ -513,6 +520,7 @@ const ArtComponent = computed(() => {
       <PostNoticeBanner
         v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
         :original-locale="frontmatter.originalLocale"
+        :post-type="postType"
       />
       <AsyncArticleAudio
         v-if="articleAudio"
@@ -530,7 +538,7 @@ const ArtComponent = computed(() => {
     />
     <article
       ref="content"
-      :lang="frontmatter.lang"
+      :lang="contentLanguageTag"
       :class="[frontmatter.tocAlwaysOn ? 'toc-always-on' : '', frontmatter.class, frontmatter.date ? 'e-content' : '']"
     >
       <slot />

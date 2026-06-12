@@ -38,6 +38,69 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/[...404]': RouteRecordInfo<
+      '/[...404]',
+      '/:404(.*)',
+      { 404: ParamValue<true> },
+      { 404: ParamValue<false> },
+      | never
+    >,
+    '/404': RouteRecordInfo<
+      '/404',
+      '/404',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/': RouteRecordInfo<
+      '/de/',
+      '/de',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/[...404]': RouteRecordInfo<
+      '/de/[...404]',
+      '/de/:404(.*)',
+      { 404: ParamValue<true> },
+      { 404: ParamValue<false> },
+      | never
+    >,
+    '/de/articles/': RouteRecordInfo<
+      '/de/articles/',
+      '/de/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/notes': RouteRecordInfo<
+      '/de/notes',
+      '/de/notes',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/now': RouteRecordInfo<
+      '/de/now',
+      '/de/now',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/photos': RouteRecordInfo<
+      '/de/photos',
+      '/de/photos',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/de/projects': RouteRecordInfo<
+      '/de/projects',
+      '/de/projects',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/': RouteRecordInfo<
       '/en/',
       '/en',
@@ -143,6 +206,104 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/fr/': RouteRecordInfo<
+      '/fr/',
+      '/fr',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/[...404]': RouteRecordInfo<
+      '/fr/[...404]',
+      '/fr/:404(.*)',
+      { 404: ParamValue<true> },
+      { 404: ParamValue<false> },
+      | never
+    >,
+    '/fr/articles/': RouteRecordInfo<
+      '/fr/articles/',
+      '/fr/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/notes': RouteRecordInfo<
+      '/fr/notes',
+      '/fr/notes',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/now': RouteRecordInfo<
+      '/fr/now',
+      '/fr/now',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/photos': RouteRecordInfo<
+      '/fr/photos',
+      '/fr/photos',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/projects': RouteRecordInfo<
+      '/fr/projects',
+      '/fr/projects',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/': RouteRecordInfo<
+      '/pt/',
+      '/pt',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/[...404]': RouteRecordInfo<
+      '/pt/[...404]',
+      '/pt/:404(.*)',
+      { 404: ParamValue<true> },
+      { 404: ParamValue<false> },
+      | never
+    >,
+    '/pt/articles/': RouteRecordInfo<
+      '/pt/articles/',
+      '/pt/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/notes': RouteRecordInfo<
+      '/pt/notes',
+      '/pt/notes',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/now': RouteRecordInfo<
+      '/pt/now',
+      '/pt/now',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/photos': RouteRecordInfo<
+      '/pt/photos',
+      '/pt/photos',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/projects': RouteRecordInfo<
+      '/pt/projects',
+      '/pt/projects',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/ru/': RouteRecordInfo<
       '/ru/',
       '/ru',
@@ -239,6 +400,60 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/[...404].md': {
+      routes:
+        | '/[...404]'
+      views:
+        | never
+    }
+    'pages/404.md': {
+      routes:
+        | '/404'
+      views:
+        | never
+    }
+    'pages/de/index.md': {
+      routes:
+        | '/de/'
+      views:
+        | never
+    }
+    'pages/de/[...404].md': {
+      routes:
+        | '/de/[...404]'
+      views:
+        | never
+    }
+    'pages/de/articles/index.md': {
+      routes:
+        | '/de/articles/'
+      views:
+        | never
+    }
+    'pages/de/notes.md': {
+      routes:
+        | '/de/notes'
+      views:
+        | never
+    }
+    'pages/de/now.md': {
+      routes:
+        | '/de/now'
+      views:
+        | never
+    }
+    'pages/de/photos.md': {
+      routes:
+        | '/de/photos'
+      views:
+        | never
+    }
+    'pages/de/projects.md': {
+      routes:
+        | '/de/projects'
+      views:
+        | never
+    }
     'pages/en/index.md': {
       routes:
         | '/en/'
@@ -326,6 +541,90 @@ declare module 'vue-router/auto-routes' {
     'pages/es/projects.md': {
       routes:
         | '/es/projects'
+      views:
+        | never
+    }
+    'pages/fr/index.md': {
+      routes:
+        | '/fr/'
+      views:
+        | never
+    }
+    'pages/fr/[...404].md': {
+      routes:
+        | '/fr/[...404]'
+      views:
+        | never
+    }
+    'pages/fr/articles/index.md': {
+      routes:
+        | '/fr/articles/'
+      views:
+        | never
+    }
+    'pages/fr/notes.md': {
+      routes:
+        | '/fr/notes'
+      views:
+        | never
+    }
+    'pages/fr/now.md': {
+      routes:
+        | '/fr/now'
+      views:
+        | never
+    }
+    'pages/fr/photos.md': {
+      routes:
+        | '/fr/photos'
+      views:
+        | never
+    }
+    'pages/fr/projects.md': {
+      routes:
+        | '/fr/projects'
+      views:
+        | never
+    }
+    'pages/pt/index.md': {
+      routes:
+        | '/pt/'
+      views:
+        | never
+    }
+    'pages/pt/[...404].md': {
+      routes:
+        | '/pt/[...404]'
+      views:
+        | never
+    }
+    'pages/pt/articles/index.md': {
+      routes:
+        | '/pt/articles/'
+      views:
+        | never
+    }
+    'pages/pt/notes.md': {
+      routes:
+        | '/pt/notes'
+      views:
+        | never
+    }
+    'pages/pt/now.md': {
+      routes:
+        | '/pt/now'
+      views:
+        | never
+    }
+    'pages/pt/photos.md': {
+      routes:
+        | '/pt/photos'
+      views:
+        | never
+    }
+    'pages/pt/projects.md': {
+      routes:
+        | '/pt/projects'
       views:
         | never
     }

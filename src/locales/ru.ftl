@@ -11,16 +11,22 @@ nav-now = Сейчас
 nav-menu = Меню
 nav-close = Закрыть
 
+a11y-skip-to-content = Перейти к содержимому
+a11y-home = Главная
+a11y-main-navigation = Основная навигация
+a11y-site-logo = Логотип сайта
+
 action-toggle-theme = Сменить тему
 action-to-top = Наверх
 action-back-to-all = Ко всему
+action-change-language = Сменить язык
+action-go-home = На главную
 page-not-translated = Ещё не переведена, показана { $lang } версия
+page-not-found = Страница не найдена
 
 blog-only-lang = Только { $lang }
 blog-nothing-here = { "{" } пока пусто { "}" }
 projects-nothing-here = { "{" } проекты в работе { "}" }
-blog-upcoming = Скоро
-
 search-placeholder = Поиск по статьям и заметкам
 search-start-typing = Введите запрос
 search-no-results = Ничего не найдено
@@ -35,6 +41,8 @@ post-updated = обновлена
 post-draft-notice = Черновик
 post-copy-link = ссылка
 post-link-copied = скопировано
+post-place-at = в
+label-external = Внешняя ссылка
 
 article-audio-label = Аудио статьи
 article-audio-play = Воспроизвести аудио

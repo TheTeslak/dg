@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sizeOf from 'image-size'
+import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config'
 import { isRealArticle } from './article'
 import { warnFrontmatter } from './frontmatter'
 
@@ -284,10 +285,11 @@ export function sourcesBlockPlugin(md: MarkdownIt, normalizedFrontmatterById: Ma
     }
 
     // Resolve localized title
-    const localeMatch = id.match(/pages[\\/]([a-z]{2})[\\/]/)
-    const locale = localeMatch?.[1] || 'en'
-    const titleText: Record<string, string> = { ru: 'Источники', en: 'Sources', es: 'Fuentes' }
-    const headerText = `${titleText[locale] || titleText.en}`
+    const localeMatch = id.match(/pages[\\/]([^/\\]+)[\\/]/)
+    const locale = localeMatch?.[1] && isSupportedLocale(localeMatch[1])
+      ? localeMatch[1]
+      : defaultLocale
+    const headerText = localeConfig[locale].sourcesLabel
 
     const esc = md.utils.escapeHtml
     let html = `<details class="spoiler sources-block">\n`

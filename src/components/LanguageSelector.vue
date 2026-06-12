@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales, userLocalePref } from '~/logics/i18n-path'
+import { localeConfig } from '~/locales/config'
+import { getLocaleFromPath, isSupportedLocale, setPathLocale, supportedLocales } from '~/logics/i18n-path'
+import { setLocaleCookie } from '~/logics/locale-cookie'
 
 const router = useRouter()
 const route = useRoute()
@@ -13,7 +15,7 @@ async function changeLang(lang: string) {
   if (!isSupportedLocale(lang))
     return
 
-  userLocalePref.value = lang
+  setLocaleCookie(lang)
 
   const newPath = setPathLocale(route.path, lang)
   const target = {
@@ -27,8 +29,7 @@ async function changeLang(lang: string) {
 
   await router.push(target)
 
-  // Alias routes for untranslated articles can be treated as duplicated navigation.
-  // In that case, fallback to hard navigation to ensure URL and locale switch.
+  // Alias route identity must not prevent the user's explicit site-locale choice.
   if (route.path !== newPath && typeof window !== 'undefined') {
     const href = router.resolve(target).href
     window.location.assign(href)
@@ -40,8 +41,8 @@ async function changeLang(lang: string) {
   <VDropdown :distance="6" placement="bottom-end">
     <template #default="{ shown }">
       <button
-        title="Change Language"
-        aria-label="Change Language"
+        :title="$t('action-change-language')"
+        :aria-label="$t('action-change-language')"
         class="nav-item select-none op75 hover:op100 transition outline-none"
         aria-haspopup="menu"
         :aria-expanded="shown"
@@ -51,7 +52,7 @@ async function changeLang(lang: string) {
     </template>
 
     <template #popper="{ hide }">
-      <div class="bg-base border border-base rounded py-2 min-w-35 shadow-lg flex flex-col">
+      <div class="bg-base border border-base rounded py-2 min-w-42 shadow-lg flex flex-col">
         <button
           v-for="lang in availableLocales"
           :key="lang"
@@ -62,7 +63,8 @@ async function changeLang(lang: string) {
           <div class="w-4 flex items-center justify-center">
             <div v-if="currentLocale === lang" i-carbon-checkmark text-sm />
           </div>
-          <span class="uppercase">{{ lang }}</span>
+          <span>{{ localeConfig[lang].nativeName }}</span>
+          <span class="uppercase op50 text-xs">{{ lang }}</span>
         </button>
       </div>
     </template>

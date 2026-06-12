@@ -5,7 +5,7 @@
     "externals.d.ts",
     "vite.config.ts",
     "unocss.config.ts",
-    "middleware.ts",
+    "netlify/**/*.ts",
     "scripts/**/*.ts",
     "build/**/*.ts"
   ],

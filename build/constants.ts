@@ -2,8 +2,8 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
 
-export const supportedLocales = ['en', 'ru', 'es'] as const
-export type SupportedLocale = typeof supportedLocales[number]
+export { supportedLocales } from '../src/locales/config'
+export type { SupportedLocale } from '../src/locales/config'
 
 export const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
 export const supportedAudioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
@@ -28,6 +28,7 @@ export const frontmatterKnownKeys = new Set([
   'twitter',
   'originalLocale',
   'open',
+  'pic',
   'place',
   'placeLink',
   'projects',
@@ -41,7 +42,6 @@ export const frontmatterKnownKeys = new Set([
   'title',
   'tocAlwaysOn',
   'type',
-  'upcoming',
   'updated',
   'wrapperClass',
 ])

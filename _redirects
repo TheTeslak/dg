@@ -16,6 +16,12 @@ http://teslak.me/* https://teslak.me/:splat 301!
 /ru/feed /feed-ru.xml 301
 /es/rss /feed-es.xml 301
 /es/feed /feed-es.xml 301
+/pt/rss /feed-pt.xml 301
+/pt/feed /feed-pt.xml 301
+/de/rss /feed-de.xml 301
+/de/feed /feed-de.xml 301
+/fr/rss /feed-fr.xml 301
+/fr/feed /feed-fr.xml 301
 
 /articles /en/articles 301
 /blog /en/articles 301
@@ -42,5 +48,3 @@ http://teslak.me/* https://teslak.me/:splat 301!
 
 /sitemap /sitemap.xml 301
 /sitemap/ /sitemap.xml 301
-
-/* /index.html 200

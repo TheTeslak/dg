@@ -17,8 +17,8 @@ import { resolve } from 'node:path'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import * as mm from 'music-metadata'
+import { supportedLocales } from '../src/locales/config'
 
-const supportedLocales = ['en', 'ru', 'es'] as const
 const audioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
 
 interface AudioMeta {
