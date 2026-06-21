@@ -227,19 +227,18 @@ You can embed photos directly inside an article. They do not have to be limited 
 
 <PhotoShowcase mode="grid" :limit="8" />
 
-### Standard Images
+### Standard & Wide Images
 
-Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`. If you need an image without a caption wrapper, use a standard HTML `<img>` tag with an `alt` attribute.
+Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`.
 
-**Without caption** (using standard HTML `<img>`):
+If you want to hide the caption visually (for design reasons) while keeping it fully accessible to screen readers, or if you want the image to span wider on desktop, you can use the native markdown modifier syntax by appending options separated by a pipe (`|`) character inside the alt text brackets:
 
-```html
-<img src="/images/avatars.avif" alt="Avatars showcase" />
-```
+- `![Alt text](/path/to/image)` — Standard width layout with a visible caption.
+- `![Alt text|no-caption](/path/to/image)` — Standard width layout, caption is hidden visually (no `<figcaption>` is rendered, but the `alt` tag is kept for a11y).
+- `![Alt text|wide](/path/to/image)` — Wide layout (breaks out of the content container on desktop) with a visible caption.
+- `![Alt text|wide|no-caption](/path/to/image)` — Wide layout, caption is hidden visually.
 
-<img src="/images/avatars.avif" alt="Avatars showcase" />
-
-**With caption** (alt text → auto `<figure>` + `<figcaption>`):
+**Standard (with caption):**
 
 ```markdown
 ![Avatars showcase](/images/avatars.avif)
@@ -247,15 +246,31 @@ Standard markdown images fit within the content column. When `alt` text is provi
 
 ![Avatars showcase](/images/avatars.avif)
 
-### Wide Images (`img-wide`)
+**Standard (without caption, screen-reader accessible):**
 
-If you want a single large image that breaks out of the content container on desktop (like YouTube embeds do) but perfectly fits the screen on mobile, simply apply the `img-wide` class to your image tags.
-
-```html
-<img src="/images/avatars.avif" class="img-wide" alt="Avatars showcase" />
+```markdown
+![Avatars showcase|no-caption](/images/avatars.avif)
 ```
 
-<img src="/images/avatars.avif" class="img-wide" alt="Avatars showcase" />
+![Avatars showcase|no-caption](/images/avatars.avif)
+
+**Wide layout (with caption):**
+
+```markdown
+![Avatars showcase|wide](/images/avatars.avif)
+```
+
+![Avatars showcase|wide](/images/avatars.avif)
+
+**Wide layout (without caption, screen-reader accessible):**
+
+```markdown
+![Avatars showcase|wide|no-caption](/images/avatars.avif)
+```
+
+![Avatars showcase|wide|no-caption](/images/avatars.avif)
+
+_(Note: Raw HTML fallback tags are still supported: use `<img src="/images/avatars.avif" alt="..." />` for standard or `<img src="/images/avatars.avif" class="img-wide" alt="..." />` for wide.)_
 
 ### Dark Mode Inversion (`dark:filter-invert`)
 

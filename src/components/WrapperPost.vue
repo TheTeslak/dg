@@ -30,35 +30,81 @@ const content = ref<HTMLDivElement>()
 const marginNoteRef = ref<HTMLElement>()
 
 const activeGlossary = ref<GlossaryState | null>(null)
-const marginNoteTop = ref(0)
+const marginNoteTop = ref(16)
+const marginNotePreferredTop = ref(16)
 const isMobileGlossary = ref(false)
+let resizeObserver: ResizeObserver | null = null
+let positionFrame: number | null = null
+let positionRequest = 0
+let closeGlossaryTimeout: ReturnType<typeof setTimeout> | null = null
 
 function setGlossaryActive(state: GlossaryState | null) {
-  activeGlossary.value = state
-  if (state) {
-    nextTick(() => updateMarginNotePosition())
+  const termChanged = !!state && activeGlossary.value?.termEl !== state.termEl
+
+  if (state && termChanged && typeof window !== 'undefined') {
+    const termTop = state.termEl.getBoundingClientRect().top
+    marginNotePreferredTop.value = termTop
+    marginNoteTop.value = Math.max(16, Math.min(termTop, window.innerHeight - 16))
   }
+
+  activeGlossary.value = state
+
+  if (state && termChanged)
+    scheduleMarginNotePosition()
 }
 
-function updateMarginNotePosition() {
-  if (!activeGlossary.value?.termEl)
+function clampMarginNotePosition() {
+  if (typeof window === 'undefined')
     return
-  const termRect = activeGlossary.value.termEl.getBoundingClientRect()
-  const rawTop = termRect.top
 
-  // Ensure note stays within viewport bounds
+  const noteEl = marginNoteRef.value
+  if (!noteEl)
+    return
+
+  const maxTop = Math.max(16, window.innerHeight - noteEl.offsetHeight - 16)
+  marginNoteTop.value = Math.max(16, Math.min(marginNotePreferredTop.value, maxTop))
+}
+
+function scheduleMarginNotePosition() {
+  if (typeof window === 'undefined')
+    return
+
+  const request = ++positionRequest
+
+  if (positionFrame !== null)
+    cancelAnimationFrame(positionFrame)
+
   nextTick(() => {
-    const noteEl = marginNoteRef.value
-    if (!noteEl)
+    if (request !== positionRequest)
       return
-    const noteHeight = noteEl.offsetHeight
-    const maxTop = window.innerHeight - noteHeight - 16
-    marginNoteTop.value = Math.max(16, Math.min(rawTop, maxTop))
+
+    positionFrame = requestAnimationFrame(() => {
+      positionFrame = null
+      clampMarginNotePosition()
+    })
   })
 }
 
 function closeGlossary() {
   activeGlossary.value = null
+}
+
+function unpinGlossary() {
+  const state = activeGlossary.value
+  if (!state)
+    return
+
+  const termEl = state.termEl
+  setGlossaryActive({ ...state, pinned: false })
+
+  if (closeGlossaryTimeout)
+    clearTimeout(closeGlossaryTimeout)
+
+  closeGlossaryTimeout = setTimeout(() => {
+    closeGlossaryTimeout = null
+    if (activeGlossary.value?.termEl === termEl && !activeGlossary.value.pinned)
+      setGlossaryActive(null)
+  }, 150)
 }
 
 function checkMobileGlossary() {
@@ -359,7 +405,7 @@ onMounted(() => {
   })
 
   useEventListener(document, 'click', (e: MouseEvent) => {
-    if (!activeGlossary.value)
+    if (!activeGlossary.value || activeGlossary.value.pinned)
       return
     const target = e.target as HTMLElement
     // Don't close if clicking on the term itself (GlossaryTerm handles that with .stop)
@@ -372,14 +418,32 @@ onMounted(() => {
   })
 
   checkMobileGlossary()
-  useEventListener(window, 'resize', checkMobileGlossary)
+  useEventListener(window, 'resize', () => {
+    checkMobileGlossary()
+    if (activeGlossary.value && !isMobileGlossary.value)
+      scheduleMarginNotePosition()
+  })
 
-  watch(activeGlossary, (val) => {
-    if (val && isMobileGlossary.value) {
+  if (typeof window !== 'undefined' && typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(() => {
+      clampMarginNotePosition()
+    })
+  }
+
+  watch([activeGlossary, isMobileGlossary], ([val, isMobile]) => {
+    if (val && isMobile) {
       document.body.style.overflow = 'hidden'
     }
     else {
       document.body.style.overflow = ''
+    }
+
+    resizeObserver?.disconnect()
+    if (val && !isMobile && resizeObserver) {
+      nextTick(() => {
+        if (marginNoteRef.value)
+          resizeObserver?.observe(marginNoteRef.value)
+      })
     }
   })
 
@@ -389,6 +453,24 @@ onMounted(() => {
     if (!navigate())
       setTimeout(navigate, 1000)
   }, 1)
+})
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = ''
+  positionRequest++
+
+  if (positionFrame !== null) {
+    cancelAnimationFrame(positionFrame)
+    positionFrame = null
+  }
+  if (closeGlossaryTimeout) {
+    clearTimeout(closeGlossaryTimeout)
+    closeGlossaryTimeout = null
+  }
+  if (resizeObserver) {
+    resizeObserver.disconnect()
+    resizeObserver = null
+  }
 })
 
 const artComponentMap: Record<string, () => Promise<any>> = {
@@ -548,7 +630,7 @@ const ArtComponent = computed(() => {
     <ClientOnly>
       <Teleport to="body">
         <!-- Margin note (mirrors ToC layout) -->
-        <Transition name="margin-note">
+        <Transition name="margin-note" type="animation">
           <div
             v-if="activeGlossary && !isMobileGlossary"
             ref="marginNoteRef"
@@ -559,15 +641,18 @@ const ArtComponent = computed(() => {
               <div class="margin-note-term">
                 {{ activeGlossary.term }}
               </div>
-              <div
-                v-if="activeGlossary.pinned"
-                i-solar:pin-bold
-                class="margin-note-pin"
-                role="button"
-                tabindex="0"
-                title="Unpin"
-                @click="closeGlossary"
-              />
+              <Transition name="pin-icon" type="transition">
+                <div
+                  v-if="activeGlossary.pinned"
+                  i-solar:pin-bold
+                  class="margin-note-pin"
+                  role="button"
+                  tabindex="0"
+                  title="Unpin"
+                  @pointerdown.stop.prevent="unpinGlossary"
+                  @keydown.enter.space.stop.prevent="unpinGlossary"
+                />
+              </Transition>
             </div>
             <div class="margin-note-body" v-html="activeGlossary.definition" />
           </div>
@@ -665,10 +750,15 @@ const ArtComponent = computed(() => {
   font-size: 1rem;
   opacity: 0.4;
   text-decoration: none !important;
-  transition: opacity 0.2s ease;
+  transition:
+    border-color 0.3s ease-in-out,
+    color 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
 }
-.backlink-link:hover {
+.backlink-link:hover,
+.backlink-link:focus-visible {
   opacity: 0.75;
+  border-bottom-color: var(--fg);
 }
 .backlink-icon {
   font-size: 0.85rem;
@@ -702,11 +792,16 @@ const ArtComponent = computed(() => {
   gap: 0.3rem;
   font-size: 1rem;
   opacity: 0.6;
-  transition: opacity 0.2s ease;
   text-decoration: none !important;
+  transition:
+    border-color 0.3s ease-in-out,
+    color 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
 }
-.referenced-by-link:hover {
+.referenced-by-link:hover,
+.referenced-by-link:focus-visible {
   opacity: 1;
+  border-bottom-color: var(--fg);
 }
 .referenced-by-date {
   font-size: 1rem;
@@ -742,6 +837,7 @@ const ArtComponent = computed(() => {
   font-size: 1em;
   line-height: 1.5;
   z-index: 200;
+  transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (min-width: 1024px) {
@@ -759,7 +855,7 @@ const ArtComponent = computed(() => {
 
 .margin-note-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 0.5em;
   margin-bottom: 0.3em;
@@ -783,15 +879,23 @@ html.dark .margin-note-term {
   flex-shrink: 0;
   margin-top: 0.05rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  padding: 6px;
+  margin: -6px;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
 }
 
 .margin-note-pin:hover {
+  animation: pinWiggle 0.3s ease-in-out infinite;
   opacity: 1;
   color: #e35454;
 }
 
 .margin-note-pin:active {
+  animation: none;
+  transform: translateY(-4px) scale(0.9);
+  transition: transform 0.1s ease-out;
   color: #222;
 }
 
@@ -841,10 +945,23 @@ html.dark .margin-note-body :deep(mark) {
   padding: 0.2em 0.3em;
 }
 
+@keyframes pinWiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
 @keyframes marginNoteFadeIn {
   from {
     opacity: 0;
-    transform: translateX(6px);
+    transform: translateX(12px);
   }
   to {
     opacity: 1;
@@ -852,11 +969,36 @@ html.dark .margin-note-body :deep(mark) {
   }
 }
 
+.pin-icon-enter-from {
+  opacity: 0;
+  transform: translate(12px, -12px) rotate(45deg) scale(0.6);
+}
+.pin-icon-enter-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pin-icon-enter-to {
+  opacity: 0.3;
+  transform: translate(0, 0) rotate(0) scale(1);
+}
+
+.pin-icon-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s cubic-bezier(0.4, 0, 1, 1) !important;
+  pointer-events: none;
+}
+.pin-icon-leave-to {
+  opacity: 0 !important;
+  transform: translate(16px, -16px) rotate(45deg) scale(0.6) !important;
+}
+
 .margin-note-enter-active {
-  animation: marginNoteFadeIn 0.15s ease;
+  animation: marginNoteFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .margin-note-leave-active {
-  animation: marginNoteFadeIn 0.12s ease reverse;
+  animation: marginNoteFadeIn 0.18s cubic-bezier(0.4, 0, 1, 1) reverse forwards;
 }
 
 /* Mobile glossary bottom sheet */

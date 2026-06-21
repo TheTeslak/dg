@@ -69,7 +69,6 @@ catalogs:
     '@unpic/placeholder': ^0.1.2
     '@vueuse/core': ^14.2.1
     dayjs: ^1.11.20
-    floating-vue: ^5.2.2
     matter-attractors: ^0.1.6
     matter-js: ^0.20.0
     nprogress: ^0.2.0

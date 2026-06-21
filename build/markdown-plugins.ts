@@ -32,7 +32,19 @@ export function imageFiguresPlugin(md: MarkdownIt) {
         continue
 
       const imgToken = children[0]
-      const alt = imgToken.content?.trim()
+      const rawAlt = imgToken.content?.trim() || ''
+      const parts = rawAlt.split('|').map(s => s.trim())
+      const cleanAlt = parts[0] || ''
+      const options = parts.slice(1)
+
+      // Set clean content and alt attribute on the image token
+      imgToken.content = cleanAlt
+      imgToken.attrSet('alt', cleanAlt)
+      if (imgToken.children) {
+        for (const child of imgToken.children) {
+          child.content = cleanAlt
+        }
+      }
 
       // Rewrite paragraph_open → figure_open
       token.type = 'figure_open'
@@ -42,10 +54,16 @@ export function imageFiguresPlugin(md: MarkdownIt) {
       close.type = 'figure_close'
       close.tag = 'figure'
 
-      if (alt) {
+      if (options.includes('wide')) {
+        token.attrSet('class', 'img-wide')
+      }
+
+      const showCaption = cleanAlt && !options.includes('no-caption')
+
+      if (showCaption) {
         // Insert figcaption tokens after the inline (before figure_close)
         const captionOpen = new state.Token('html_block', '', 0)
-        captionOpen.content = `<figcaption>${md.utils.escapeHtml(alt)}</figcaption>\n`
+        captionOpen.content = `<figcaption>${md.utils.escapeHtml(cleanAlt)}</figcaption>\n`
 
         // Clear the alt from the image so it doesn't duplicate as attr
         // (keep it as the HTML alt attribute on <img> for a11y)

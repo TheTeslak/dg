@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, inject, onBeforeUnmount, ref } from 'vue'
 import { glossaryKey } from '~/logics/glossary'
 
 const props = defineProps<{
@@ -19,6 +20,12 @@ const isPinned = computed(() => {
 
 let hoverTimeout: ReturnType<typeof setTimeout> | null = null
 
+onBeforeUnmount(() => {
+  if (hoverTimeout) {
+    clearTimeout(hoverTimeout)
+  }
+})
+
 function handleClick() {
   if (!glossary || !termRef.value)
     return
@@ -30,7 +37,19 @@ function handleClick() {
 
   // Toggle off if clicking the same term and it's already pinned
   if (isPinned.value) {
-    glossary.setActive(null)
+    // 1. Instantly set pinned to false so the pin flies away
+    glossary.setActive({
+      term: props.term,
+      definition: props.definition,
+      termEl: termRef.value,
+      pinned: false,
+    })
+    // 2. Schedule the complete close after 150ms to let the animation start
+    hoverTimeout = setTimeout(() => {
+      if (glossary.active.value?.termEl === termRef.value && !glossary.active.value?.pinned) {
+        glossary.setActive(null)
+      }
+    }, 150)
     return
   }
 
@@ -56,8 +75,9 @@ function handleMouseEnter() {
     hoverTimeout = null
   }
 
-  // If another term is currently pinned, don't override it with hover
-  if (glossary.active.value?.pinned && glossary.active.value.termEl !== termRef.value)
+  // Hovering the already pinned term should not unpin it. Hovering another
+  // term replaces the pinned state with a regular hover preview.
+  if (glossary.active.value?.pinned && glossary.active.value.termEl === termRef.value)
     return
 
   glossary.setActive({
@@ -82,7 +102,7 @@ function handleMouseLeave() {
       if (glossary.active.value?.termEl === termRef.value && !glossary.active.value?.pinned) {
         glossary.setActive(null)
       }
-    }, 300) // 300ms grace period
+    }, 300)
   }
 }
 </script>
@@ -91,12 +111,14 @@ function handleMouseLeave() {
   <span
     ref="termRef"
     class="glossary-term"
-    :class="{ 'is-active': isActive }"
+    :class="{ 'is-active': isActive, 'is-pinned': isPinned }"
     role="button"
     tabindex="0"
     :aria-label="term"
+    :aria-expanded="isActive"
     @click.stop="handleClick"
-    @keydown.enter.prevent="handleClick"
+    @keydown.enter.stop.prevent="handleClick"
+    @keydown.space.stop.prevent="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
@@ -106,14 +128,16 @@ function handleMouseLeave() {
 
 <style scoped>
 .glossary-term {
-  border-bottom: 1.5px dashed rgba(125, 125, 125, 0.45);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  border-bottom: 1.5px dashed rgba(125, 125, 125, 0.45);
+  transition: border-bottom-color 0.3s ease-in-out;
 }
 
 .glossary-term:hover,
-.glossary-term.is-active {
+.glossary-term.is-active,
+.glossary-term.is-pinned {
   border-bottom-color: var(--fg, #555);
+  animation: none !important;
 }
 
 html.dark .glossary-term {
@@ -121,7 +145,16 @@ html.dark .glossary-term {
 }
 
 html.dark .glossary-term:hover,
-html.dark .glossary-term.is-active {
+html.dark .glossary-term.is-active,
+html.dark .glossary-term.is-pinned {
   border-bottom-color: var(--fg, #bbb);
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glossary-term {
+    animation: none !important;
+    transition: none;
+  }
 }
 </style>
