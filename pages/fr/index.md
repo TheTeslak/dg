@@ -1,6 +1,6 @@
 ---
 title: Blog de Teslak
-description: Conseils, analyses, IA et contenu utile
+description: Conseils, analyses, IA et contenu utile
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -8,20 +8,20 @@ pic:
   r: full
   link: /fr/who-is-teslak
   text: Teslak
-display: Teslak s’intéresse à l’informatique, à l’IA, au design UX, à la philosophie, à l’économie, à la biologie ✦ et à bien d’autres sujets
+display: Teslak s’intéresse à l’informatique, à l’IA, au design UX, à la philosophie, à l’économie, à la biologie ✦ et à bien d’autres sujets
 ---
 
-Je travaille sur des agents d’IA, l’automatisation et toujours sur le design, même si celui-ci a beaucoup évolué ces dernières années
+Je travaille sur des agents d’IA, l’automatisation et toujours sur le design, même si celui-ci a beaucoup évolué ces dernières années
 
-Je cherche à développer des compétences variées et j’apprends quelque chose de nouveau chaque jour. Je suis une démarche académique et une vision scientifique du monde
+Je cherche à développer des compétences variées et j’apprends quelque chose de nouveau chaque jour. Je suis une démarche académique et une vision scientifique du monde
 
-J’écris ici des 🪶 [notes](/fr/notes) et je tiens une [chaîne Telegram où je partage du contenu intéressant](https://t.me/Tes404)
+J’écris ici des 🪶 [notes](/fr/notes) et je tiens une [chaîne Telegram où je partage du contenu intéressant](https://t.me/Tes404)
 
 Je développe des [projets personnels](/fr/projects)
 
 J’ai [photographié](/fr/photos) toutes sortes de choses
 
-⚡️ [Qui est Teslak et pourquoi s’appelle-t-il Teslak](/fr/who-is-teslak)
+⚡️ [Qui est Teslak et pourquoi s’appelle-t-il Teslak](/fr/who-is-teslak)
 
 ---
 

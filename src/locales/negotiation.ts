@@ -1,3 +1,7 @@
+/**
+ * Locale negotiation is only for neutral entry routes (`/` and `/index.html`).
+ * Explicit locale URLs stay stable; cookie choice outranks the browser hint.
+ */
 import type { SupportedLocale } from './config'
 import { defaultLocale, isSupportedLocale, resolveSupportedLocale } from './config'
 

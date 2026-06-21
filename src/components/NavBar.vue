@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useScrollLock, useWindowScroll } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { getFeedName } from '~/locales/config'
-import { getLocaleFromPath } from '~/logics/i18n-path'
+import { useRoute, useRouter } from 'vue-router'
+import { getFeedName, supportedLocales } from '~/locales/config'
+import { getLocaleFromPath, isSupportedLocale, setPathLocale } from '~/logics/i18n-path'
+import { setLocaleCookie } from '~/logics/locale-cookie'
 import { getCanonicalUrl } from '~/logics/site'
+
+const router = useRouter()
 
 const route = useRoute()
 
@@ -63,6 +66,31 @@ function toggleMobileMenu() {
 
 function closeMobileMenu() {
   mobileMenuOpen.value = false
+}
+
+async function changeMobileLang(lang: string) {
+  if (!isSupportedLocale(lang))
+    return
+
+  setLocaleCookie(lang)
+  closeMobileMenu()
+
+  const newPath = setPathLocale(route.path, lang)
+  const target = {
+    path: newPath,
+    query: route.query,
+    hash: route.hash,
+  }
+
+  if (newPath === route.path)
+    return
+
+  await router.push(target)
+
+  if (route.path !== newPath && typeof window !== 'undefined') {
+    const href = router.resolve(target).href
+    window.location.assign(href)
+  }
 }
 
 onBeforeUnmount(() => {
@@ -173,6 +201,17 @@ onBeforeUnmount(() => {
                 {{ $t('nav-photos') }}
               </RouterLink>
             </nav>
+            <div class="mobile-lang-row">
+              <button
+                v-for="lang in supportedLocales"
+                :key="lang"
+                class="mobile-lang-btn"
+                :class="{ 'mobile-lang-btn-active': currentLocale === lang }"
+                @click="changeMobileLang(lang)"
+              >
+                {{ lang.toUpperCase() }}
+              </button>
+            </div>
             <div class="mobile-menu-icons">
               <a href="https://t.me/" target="_blank" title="Telegram">
                 <div i-ri-telegram-2-line class="scale-110" />
@@ -181,7 +220,6 @@ onBeforeUnmount(() => {
                 <div i-ri-rss-line />
               </a>
               <ToggleTheme />
-              <LanguageSelector />
             </div>
           </div>
         </div>
@@ -284,6 +322,8 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   background: rgba(125, 125, 125, 0.11);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition:
     background 200ms ease,
     transform 180ms ease;
@@ -351,12 +391,53 @@ onBeforeUnmount(() => {
   opacity: 1;
 }
 
+.mobile-lang-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(125, 125, 125, 0.12);
+}
+
+.mobile-lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(125, 125, 125, 0.15);
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  opacity: 0.55;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mobile-lang-btn:hover {
+  opacity: 0.85;
+  background: rgba(125, 125, 125, 0.06);
+}
+
+.mobile-lang-btn-active {
+  opacity: 1;
+  font-weight: 700;
+  border-color: rgba(125, 125, 125, 0.3);
+  background: rgba(125, 125, 125, 0.08);
+}
+
 .mobile-menu-icons {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(125, 125, 125, 0.12);
+  padding-top: 1rem;
 }
 
 .mobile-menu-icons a,

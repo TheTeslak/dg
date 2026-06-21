@@ -1,6 +1,6 @@
 ---
 title: Teslaks Blog
-description: Ratschläge, Analysen, KI und nützliche Inhalte
+description: Ratschläge, Analysen, KI und nützliche Inhalte
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -8,20 +8,20 @@ pic:
   r: full
   link: /de/who-is-teslak
   text: Teslak
-display: Teslak interessiert sich für IT, KI, UX-Design, Philosophie, Wirtschaft, Biologie ✦ und mehr
+display: Teslak interessiert sich für IT, KI, UX-Design, Philosophie, Wirtschaft, Biologie ✦ und mehr
 ---
 
-Ich arbeite an KI-Agenten, Automatisierung und weiterhin an Design, auch wenn es sich in den letzten Jahren stark verändert hat
+Arbeite an KI-Agenten, Automatisierung und weiterhin an Design, auch wenn es sich in den letzten Jahren stark verändert hat
 
-Ich strebe ein breites Wissen an und lerne jeden Tag etwas Neues. Dabei folge ich einem akademischen Ansatz und einem wissenschaftlichen Weltbild
+Strebe ein breites Wissen an und lerne jeden Tag etwas Neues. Folge dabei einem akademischen Ansatz und einem wissenschaftlichen Weltbild
 
-Hier schreibe ich 🪶 [Notizen](/de/notes) und betreibe einen [Telegram-Kanal mit interessanten Fundstücken](https://t.me/Tes404)
+Schreibe hier 🪶 [Notizen](/de/notes) und betreibe einen [Telegram-Kanal mit interessanten Fundstücken](https://t.me/Tes404)
 
-Ich entwickle [eigene Projekte](/de/projects)
+Entwickle [eigene Projekte](/de/projects)
 
-Ich habe [alles Mögliche fotografiert](/de/photos)
+Habe [alles Mögliche fotografiert](/de/photos)
 
-⚡️ [Wer Teslak ist und warum er Teslak heißt](/de/who-is-teslak)
+⚡️ [Wer Teslak ist und warum er Teslak heißt](/de/who-is-teslak)
 
 ---
 

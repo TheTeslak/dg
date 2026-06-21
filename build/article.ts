@@ -1,3 +1,7 @@
+/**
+ * Article localization is based on physical files with matching slugs.
+ * This module selects fallback sources; `vite.config.ts` turns them into route aliases.
+ */
 import type { SupportedLocale } from '../src/locales/config'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'

@@ -1,3 +1,19 @@
+/**
+ * Localization architecture:
+ *
+ * - The URL locale controls UI messages, dates, navigation, and document language.
+ * - Article content locale comes from its physical `pages/<locale>/articles` file.
+ * - UI-message fallback and article-content fallback are independent.
+ * - Matching article slugs across locale folders identify translations.
+ * - Missing translations use route aliases while keeping the requested URL locale.
+ * - Only `/` and `/index.html` negotiate a locale from the cookie or Accept-Language.
+ *
+ * Related implementation:
+ * - `negotiation.ts`: initial locale selection
+ * - `../logics/i18n-path.ts`: locale-aware paths
+ * - `../../build/article.ts`: article translation and fallback selection
+ * - `../../vite.config.ts`: public article routes and fallback aliases
+ */
 export const defaultLocale = 'en' as const
 // Article fallback stays English even if the neutral site's default locale changes later.
 export const articleFallbackLocale = 'en' as const

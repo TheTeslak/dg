@@ -10,6 +10,7 @@ nav-photos = Fotos
 nav-now = Agora
 nav-menu = Menu
 nav-close = Fechar
+nav-methodology = Metodologia
 
 a11y-skip-to-content = Ir para o conteúdo
 a11y-home = Início

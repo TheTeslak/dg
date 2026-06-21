@@ -10,6 +10,7 @@ nav-photos = Фото
 nav-now = Сейчас
 nav-menu = Меню
 nav-close = Закрыть
+nav-methodology = Методология
 
 a11y-skip-to-content = Перейти к содержимому
 a11y-home = Главная

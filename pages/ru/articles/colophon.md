@@ -10,7 +10,7 @@ open: true
 
 Сайт сделан на **Vue + SSG,** хостится на **Netlify**
 
-Форкнул [antfu](https://github.com/antfu/antfu.me) и внёс сотни изменений: новые компоненты, мультиязычность, подсказки по мотивам [ЛессВронга](https://www.lesswrong.com/posts/bJ2haLkcGeLtTWaD5/welcome-to-lesswrong), <GlossaryTerm term="a11y" definition="Подход к созданию сайтов, удобных людей с ограничениями зрения, слуха или движения">a11y</GlossaryTerm>, <GlossaryTerm term="microformats2" definition="Способ разметки HTML-кода с помощью специальных классов. Помогает поисковикам и ИндиВеб-инфраструктуре распознавать на странице данные: статьи, контакты, события, отзывы или адреса">microformats2</GlossaryTerm>, ✨ визуал, другое оглавление, мобильная версия и багфиксы
+Форкнул [antfu](https://github.com/antfu/antfu.me) и внёс сотни изменений: новые компоненты, мультиязычность, подсказки по мотивам [ЛессВронга](https://www.lesswrong.com/posts/bJ2haLkcGeLtTWaD5/welcome-to-lesswrong), <GlossaryTerm term="a11y" definition="Подход к созданию сайтов, удобных людям с ограничениями зрения, слуха или движения">a11y</GlossaryTerm>, <GlossaryTerm term="json-ld" definition="Невидимая разметка для поисковиков — Google показывает расширенные карточки вместо обычных ссылок">JSON-LD</GlossaryTerm>, <GlossaryTerm term="microformats2" definition="HTML-классы, помогающие другим сервисам понимать структуру сайта: где автор, дата и текст статьи">microformats2</GlossaryTerm>, ✨ визуал, другое оглавление, мобильная версия и багфиксы
 
 ⚰️ Если [teslak.me](https://teslak.me/) перестанет открываться, смотрите [teslak.netlify.app](https://teslak.netlify.app/) или [GitHub](https://github.com/TheTeslak/dg/tree/main/pages)
 

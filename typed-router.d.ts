@@ -52,6 +52,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/AGENTS': RouteRecordInfo<
+      '/AGENTS',
+      '/AGENTS',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/de/': RouteRecordInfo<
       '/de/',
       '/de',
@@ -339,6 +346,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/ru/articles/not-single-language': RouteRecordInfo<
+      '/ru/articles/not-single-language',
+      '/ru/not-single-language',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/ru/articles/robophobia': RouteRecordInfo<
       '/ru/articles/robophobia',
       '/ru/robophobia',
@@ -409,6 +423,12 @@ declare module 'vue-router/auto-routes' {
     'pages/404.md': {
       routes:
         | '/404'
+      views:
+        | never
+    }
+    'pages/AGENTS.md': {
+      routes:
+        | '/AGENTS'
       views:
         | never
     }
@@ -655,6 +675,12 @@ declare module 'vue-router/auto-routes' {
     'pages/ru/articles/colophon.md': {
       routes:
         | '/ru/articles/colophon'
+      views:
+        | never
+    }
+    'pages/ru/articles/not-single-language.md': {
+      routes:
+        | '/ru/articles/not-single-language'
       views:
         | never
     }

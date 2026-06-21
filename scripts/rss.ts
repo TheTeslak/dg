@@ -232,7 +232,7 @@ async function buildLocaleFeed(locale: SupportedLocale) {
     id: `${DOMAIN}/${locale}/`,
     link: `${DOMAIN}/${locale}/`,
     language: getLanguageTag(locale),
-    copyright: 'CC BY-NC-SA 4.0 2021 © Teslak',
+    copyright: 'CC BY-NC-SA 4.0 2026 © Teslak',
     feedLinks: {
       json: `${feedUrl}.json`,
       atom: `${feedUrl}.atom`,

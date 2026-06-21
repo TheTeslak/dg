@@ -2,7 +2,6 @@ import type { SupportedLocale } from './locales/config'
 import { FluentBundle, FluentResource } from '@fluent/bundle'
 import dayjs from 'dayjs'
 import LocalizedFormat from 'dayjs/plugin/localizedFormat.js'
-import FloatingVue from 'floating-vue'
 import { createFluentVue } from 'fluent-vue'
 import NProgress from 'nprogress'
 import { createPinia } from 'pinia'
@@ -18,7 +17,6 @@ import 'dayjs/locale/pt-br'
 import 'dayjs/locale/de'
 import 'dayjs/locale/fr'
 import '@unocss/reset/tailwind.css'
-import 'floating-vue/dist/style.css'
 import './styles/main.css'
 
 import './styles/prose.css'
@@ -67,7 +65,6 @@ export const createApp = ViteSSG(
   ({ router, app, isClient, routePath }) => {
     dayjs.extend(LocalizedFormat)
 
-    app.use(FloatingVue)
     app.use(createPinia())
 
     if (isClient)

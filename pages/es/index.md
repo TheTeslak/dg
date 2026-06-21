@@ -1,6 +1,6 @@
 ---
 title: Blog de Teslak
-description: Consejos, analítica, IA y valor
+description: Consejos, analítica, IA y valor
 image: https://teslak.me/og.png
 art: random
 pic:
@@ -8,20 +8,20 @@ pic:
   r: full
   link: /es/who-is-teslak
   text: Teslak
-display: A Teslak le apasiona la TI, la IA, el diseño UX, la filosofía, la economía, la biología ✦ y más
+display: A Teslak le apasiona la TI, la IA, el diseño UX, la filosofía, la economía, la biología ✦ y más
 ---
 
-Trabajo en agentes de IA, automatización y todavía en diseño, aunque ha cambiado significativamente en los últimos años
+Trabajo en agentes de IA, automatización y todavía en diseño, aunque ha cambiado significativamente en los últimos años
 
-Aspiro a competencias amplias, aprendiendo algo nuevo cada día. Sigo un enfoque académico y una visión científica del mundo
+Aspiro a competencias amplias, aprendiendo algo nuevo cada día. Sigo un enfoque académico y una visión científica del mundo
 
-Escribo 🪶 [notas](/es/notes) aquí y mantengo un [canal de Telegram con reposts de contenido interesante](https://t.me/Tes404)
+Escribo 🪶 [notas](/es/notes) aquí y mantengo un [canal de Telegram con reposts de contenido interesante](https://t.me/Tes404)
 
-Creo [pet projects](/es/projects)
+Creo [proyectos personales](/es/projects)
 
 [He fotografiado](/es/photos) todo tipo de cosas
 
-⚡️ [Quién es Teslak y por qué es Teslak](/es/who-is-teslak)
+⚡️ [Quién es Teslak y por qué es Teslak](/es/who-is-teslak)
 
 ---
 

@@ -25,7 +25,6 @@
     "@unocss/reset": "catalog:frontend",
     "@vueuse/core": "catalog:frontend",
     "dayjs": "catalog:frontend",
-    "floating-vue": "catalog:frontend",
     "fluent-vue": "catalog:",
     "matter-attractors": "catalog:frontend",
     "matter-js": "catalog:frontend",
