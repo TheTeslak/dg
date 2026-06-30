@@ -1,5 +1,5 @@
 ---
-title: Teslak Blog
+title: Teslak Realm · personal blog
 description: Advice, analytics, AI, and value
 image: https://teslak.me/og.png
 art: random

@@ -1,5 +1,5 @@
 ---
-title: Teslaks Blog
+title: Teslak Refugium · persönlicher Blog
 description: Ratschläge, Analysen, KI und nützliche Inhalte
 image: https://teslak.me/og.png
 art: random

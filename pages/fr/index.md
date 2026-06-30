@@ -1,5 +1,5 @@
 ---
-title: Blog de Teslak
+title: L'Antre Teslak · blog d'auteur
 description: Conseils, analyses, IA et contenu utile
 image: https://teslak.me/og.png
 art: random

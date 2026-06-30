@@ -1,5 +1,5 @@
 ---
-title: Blog de Teslak
+title: Guarida Teslak · blog de autor
 description: Consejos, analítica, IA y valor
 image: https://teslak.me/og.png
 art: random

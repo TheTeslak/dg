@@ -149,7 +149,7 @@ a.header-anchor {
   opacity: 0;
   text-decoration: none;
   border: 0 !important;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease-in-out;
 }
 
 a.header-anchor:hover,
@@ -181,7 +181,7 @@ h6:focus .header-anchor {
 .prose h6[id] {
   cursor: pointer;
   position: relative;
-  transition: color 0.2s ease;
+  transition: color 0.3s ease-in-out;
   width: fit-content;
   max-width: 100%;
 }
@@ -234,7 +234,7 @@ h6:focus .header-anchor {
   padding: 0.25em 0.5em;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.3s ease-in-out;
   white-space: nowrap;
 }
 

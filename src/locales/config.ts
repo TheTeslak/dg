@@ -22,6 +22,7 @@ export const LOCALE_COOKIE_NAME = 'site-locale'
 export const localeConfig = {
   en: {
     nativeName: 'English',
+    siteName: 'Teslak Realm',
     languageTag: 'en',
     dateLocale: 'en',
     ogLocale: 'en_US',
@@ -34,6 +35,7 @@ export const localeConfig = {
   },
   ru: {
     nativeName: 'Русский',
+    siteName: 'Обитель Теслака',
     languageTag: 'ru',
     dateLocale: 'ru',
     ogLocale: 'ru_RU',
@@ -46,6 +48,7 @@ export const localeConfig = {
   },
   es: {
     nativeName: 'Español',
+    siteName: 'Guarida Teslak',
     languageTag: 'es',
     dateLocale: 'es',
     ogLocale: 'es_ES',
@@ -58,6 +61,7 @@ export const localeConfig = {
   },
   pt: {
     nativeName: 'Português',
+    siteName: 'Reduto Teslak',
     // The public route stays short while metadata identifies the Brazilian variant.
     languageTag: 'pt-BR',
     dateLocale: 'pt-br',
@@ -71,6 +75,7 @@ export const localeConfig = {
   },
   de: {
     nativeName: 'Deutsch',
+    siteName: 'Teslak Refugium',
     languageTag: 'de',
     dateLocale: 'de',
     ogLocale: 'de_DE',
@@ -83,6 +88,7 @@ export const localeConfig = {
   },
   fr: {
     nativeName: 'Français',
+    siteName: 'L\'Antre Teslak',
     languageTag: 'fr',
     dateLocale: 'fr',
     ogLocale: 'fr_FR',

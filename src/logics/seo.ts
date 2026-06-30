@@ -69,10 +69,11 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const title = computed(() => {
-    const rawTitle = optionalString(frontmatter.value.title) || siteName
-    return rawTitle === siteName || rawTitle.includes(siteName)
+    const locSiteName = localeConfig[currentLocale.value].siteName
+    const rawTitle = optionalString(frontmatter.value.title) || locSiteName
+    return rawTitle === locSiteName || rawTitle.includes(locSiteName) || rawTitle.includes(siteName)
       ? rawTitle
-      : `${rawTitle} · ${siteName}`
+      : `${rawTitle} · ${locSiteName}`
   })
 
   const description = computed(() => {

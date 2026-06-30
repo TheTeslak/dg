@@ -29,15 +29,15 @@ useHead(() => ({
   link: [
     {
       rel: 'alternate',
-      type: 'application/rss+xml',
-      title: `${currentFeedTitle.value} RSS`,
-      href: getFeedHref('xml'),
-    },
-    {
-      rel: 'alternate',
       type: 'application/atom+xml',
       title: `${currentFeedTitle.value} Atom`,
       href: getFeedHref('atom'),
+    },
+    {
+      rel: 'alternate',
+      type: 'application/rss+xml',
+      title: `${currentFeedTitle.value} RSS`,
+      href: getFeedHref('xml'),
     },
     {
       rel: 'alternate',

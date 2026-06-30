@@ -517,11 +517,29 @@ const ArtComponent = computed(() => {
 
   return undefined
 })
+
+// Defer art mount until the browser is idle after hydration to avoid
+// competing with page rendering for CPU time.
+const artReady = ref(false)
+
+onMounted(() => {
+  if (!frontmatter.art)
+    return
+  const enable = () => {
+    artReady.value = true
+  }
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(enable, { timeout: 2000 })
+  }
+  else {
+    setTimeout(enable, 500)
+  }
+})
 </script>
 
 <template>
-  <ClientOnly v-if="ArtComponent">
-    <div data-art>
+  <ClientOnly v-if="ArtComponent && artReady">
+    <div data-art class="art-enter">
       <component :is="ArtComponent" />
     </div>
   </ClientOnly>
@@ -1306,5 +1324,23 @@ h1:has(.title-pic-link:hover) .title-rest {
 }
 .title-pic--sm {
   border-radius: 0.2em;
+}
+
+/* Deferred art fade-in */
+.art-enter {
+  animation: art-fade-in 0.8s ease forwards;
+}
+@keyframes art-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .art-enter {
+    animation: none;
+  }
 }
 </style>

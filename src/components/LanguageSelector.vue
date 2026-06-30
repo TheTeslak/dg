@@ -124,7 +124,7 @@ async function changeLang(lang: string) {
         <hr class="lang-divider">
 
         <RouterLink
-          :to="{ path: `/${currentLocale}/not-single-language`, hash: '#методология-перевода', query: route.query }"
+          :to="{ path: `/${currentLocale}/no-single-language`, hash: '#методология-перевода', query: route.query }"
           role="menuitem"
           class="lang-option"
           @mouseenter="setHighlight(availableLocales.length, $event)"

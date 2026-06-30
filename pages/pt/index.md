@@ -1,5 +1,5 @@
 ---
-title: Blog do Teslak
+title: Reduto Teslak · blog autoral
 description: Conselhos, análises, IA e conteúdo útil
 image: https://teslak.me/og.png
 art: random

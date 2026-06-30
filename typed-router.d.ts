@@ -129,6 +129,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/no-single-language': RouteRecordInfo<
+      '/en/articles/no-single-language',
+      '/en/no-single-language',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/articles/template': RouteRecordInfo<
       '/en/articles/template',
       '/en/template',
@@ -181,6 +188,13 @@ declare module 'vue-router/auto-routes' {
     '/es/articles/': RouteRecordInfo<
       '/es/articles/',
       '/es/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/es/articles/no-single-language': RouteRecordInfo<
+      '/es/articles/no-single-language',
+      '/es/no-single-language',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -283,6 +297,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/pt/articles/no-single-language': RouteRecordInfo<
+      '/pt/articles/no-single-language',
+      '/pt/no-single-language',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/pt/notes': RouteRecordInfo<
       '/pt/notes',
       '/pt/notes',
@@ -346,9 +367,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/ru/articles/not-single-language': RouteRecordInfo<
-      '/ru/articles/not-single-language',
-      '/ru/not-single-language',
+    '/ru/articles/no-single-language': RouteRecordInfo<
+      '/ru/articles/no-single-language',
+      '/ru/no-single-language',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -492,6 +513,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/en/articles/no-single-language.md': {
+      routes:
+        | '/en/articles/no-single-language'
+      views:
+        | never
+    }
     'pages/en/articles/template.md': {
       routes:
         | '/en/articles/template'
@@ -537,6 +564,12 @@ declare module 'vue-router/auto-routes' {
     'pages/es/articles/index.md': {
       routes:
         | '/es/articles/'
+      views:
+        | never
+    }
+    'pages/es/articles/no-single-language.md': {
+      routes:
+        | '/es/articles/no-single-language'
       views:
         | never
     }
@@ -624,6 +657,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/pt/articles/no-single-language.md': {
+      routes:
+        | '/pt/articles/no-single-language'
+      views:
+        | never
+    }
     'pages/pt/notes.md': {
       routes:
         | '/pt/notes'
@@ -678,9 +717,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/ru/articles/not-single-language.md': {
+    'pages/ru/articles/no-single-language.md': {
       routes:
-        | '/ru/articles/not-single-language'
+        | '/ru/articles/no-single-language'
       views:
         | never
     }
