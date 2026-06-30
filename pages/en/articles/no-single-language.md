@@ -24,7 +24,7 @@ Translating into every language is hard. I picked the popular ones and those whe
 
 + it's just interesting to see the differences
 
-<span op70>I want to be understood in major languages, but I do not understand Asian languages at all. After studying the nuances of CJK, I decided not to risk translating without an editor.</span>
+[I want to be understood in major languages, but I do not understand Asian languages at all. After studying the nuances of CJK, I decided not to risk translating without an editor.]{.muted}
 
 Built-in browser translators are weak
 
@@ -38,7 +38,7 @@ If an article is not translated into the selected language, the site offers an a
 
 A long prompt translates the text in chunks and explains the differences between phrasing options. I read closely and choose, then pass it to another AI — and so on in a loop, weeding out inaccuracies one by one
 
-Facts and names are localized [for articles not yet published]
+Facts and names are localized [in not-yet-published articles]
 
 Drafts are mostly in Russian, so I translate them. Though I am writing a new article on design in English
 

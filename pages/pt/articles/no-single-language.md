@@ -24,7 +24,7 @@ Traduzir para todos os idiomas é difícil. Escolhi os mais populares e aqueles 
 
 + é simplesmente interessante ver as diferenças
 
-<span op70>Gostaria de ser compreensível nos principais idiomas, mas não entendo nada de línguas asiáticas. Após estudar as particularidades de CJK, decidi não me arriscar a traduzir sem um editor</span>
+[Gostaria de ser compreensível nos principais idiomas, mas não entendo nada de línguas asiáticas. Após estudar as particularidades de CJK, decidi não me arriscar a traduzir sem um editor]{.muted}
 
 Os tradutores embutidos nos navegadores são limitados
 
@@ -38,7 +38,7 @@ Se uma publicação não estiver traduzida para o idioma selecionado, o site ofe
 
 Um prompt extenso traduz o texto por partes e explica as diferenças entre as opções de redação. Leio com atenção e escolho, envio para outra IA — e assim em loop, eliminando imprecisões a cada rodada
 
-Fatos e nomes próprios são localizados [para artigos que ainda não foram publicados]
+Fatos e nomes próprios são localizados [em artigos que ainda não foram publicados]
 
 A maioria dos rascunhos está em russo, então traduzo. Mas agora estou escrevendo um novo artigo sobre design em inglês
 

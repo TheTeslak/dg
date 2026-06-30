@@ -24,7 +24,7 @@ Traducir a todos los idiomas es difícil. Elegí los más populares y aquellos e
 
 + es simplemente interesante ver las diferencias
 
-<span op70>Me gustaría que me entendieran en los principales idiomas, pero no comprendo los idiomas asiáticos en absoluto. Tras estudiar las particularidades de CJK, decidí no arriesgarme a traducir sin un editor</span>
+[Me gustaría que me entendieran en los principales idiomas, pero no comprendo los idiomas asiáticos en absoluto. Tras estudiar las particularidades de CJK, decidí no arriesgarme a traducir sin un editor]{.muted}
 
 Los traductores integrados en el navegador son limitados
 
@@ -38,7 +38,7 @@ Si una publicación no está traducida al idioma seleccionado, el sitio ofrece u
 
 Un prompt extenso traduce el texto por partes y explica las diferencias entre las opciones de redacción. Leo con detenimiento y elijo, luego paso el resultado a otra IA; y así en bucle, detectando imprecisiones una y otra vez
 
-Los hechos y los nombres propios se localizan [para artículos aún no publicados]
+Los hechos y los nombres propios se localizan [en artículos aún no publicados]
 
 La mayoría de los borradores están en ruso, así que los traduzco. Aunque ahora estoy escribiendo un nuevo artículo sobre diseño en inglés
 

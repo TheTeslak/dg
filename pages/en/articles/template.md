@@ -143,14 +143,14 @@ Beyond simple bolding, you can use technical-style badges for categorization or 
 
 You can apply UnoCSS utility classes directly to HTML tags to style text inline without writing custom CSS.
 
-```html
+```markdown
 <b important-text-hex-E3B65E>Velocity</b>
 <b important-text-hex-D777B1>Scope</b>
 <b important-text-hex-80BEDF>Quality</b>
-<span op75>(faded text)</span>
+[(muted text)]{.muted}
 ```
 
-**Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, <b important-text-hex-80BEDF>Quality</b>, and an opacity badge <span op75>(faded text)</span>.
+**Result:** <b important-text-hex-E3B65E>Velocity</b>, <b important-text-hex-D777B1>Scope</b>, <b important-text-hex-80BEDF>Quality</b>, and a muted fragment [(muted text)]{.muted}.
 
 ### Alternative Translations (Ruby Text)
 
@@ -514,17 +514,21 @@ The `definition` prop accepts HTML, so you can include links, `<mark>`, `<code>`
 
 Many modern frameworks are now powered by <GlossaryTerm term="Vite" definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR.">Vite</GlossaryTerm> under the hood.
 
-### Spoiler / Collapsible Block (`Spoiler`)
+### Spoiler / Collapsible Block
 
 Collapsed by default. Useful for optional details, long lists, or plot spoilers.
 
-`<Spoiler title="Click to expand">`
-
-<Spoiler title="Click to expand">
+```markdown
+::: spoiler Click to expand
 
 This content is hidden until the reader clicks the summary. You can put any Markdown here: **bold**, `code`, lists, images, etc.
 
-</Spoiler>
+:::
+```
+
+::: spoiler Click to expand
+This content is hidden until the reader clicks the summary. You can put any Markdown here: **bold**, `code`, lists, images, etc.
+:::
 
 ---
 
@@ -575,5 +579,4 @@ And a link to [Wikipedia about REST](https://en.wikipedia.org/wiki/Representatio
 - [Icônes — Icon Explorer](https://icones.js.org/)
 - [YouTube](https://youtu.be/dQw4w9WgXcQ)
 - [REST — Wikipedia](https://en.wikipedia.org/wiki/Representational_state_transfer)
-- [Orphan Link — Not In Article](https://orphan-test.example.org/page)
 <!-- /sources -->

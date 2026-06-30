@@ -5,9 +5,175 @@ import { fileURLToPath } from 'node:url'
 import sizeOf from 'image-size'
 import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config'
 import { isRealArticle } from './article'
+import { parseSpoilerOpeningTitle } from './content-cleanup'
 import { warnFrontmatter } from './frontmatter'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
+const mutedSpanSyntax = '{.muted}'
+const suspiciousInlineAttributeRE = /\[[^\]\n]{0,120}(?:\]\{[^}\n]{0,80}(?:\}|$)|\[\{[^}\n]{0,80}(?:\}|$)|\{[.#][^}\n]{0,80}(?:\}|$))/g
+
+export interface MarkdownDiagnostic {
+  line?: number
+  message: string
+  severity: 'error'
+}
+
+export interface MarkdownRenderEnv {
+  id?: string
+  markdownDiagnostics?: MarkdownDiagnostic[]
+  path?: string
+  reportMarkdownDiagnostics?: boolean
+}
+
+export function formatMarkdownDiagnostic(diagnostic: MarkdownDiagnostic, id = '(unknown markdown)') {
+  const line = diagnostic.line == null ? '' : `:${diagnostic.line}`
+  return `[markdown] ${id}${line}: ${diagnostic.message}`
+}
+
+function addMarkdownDiagnostic(env: MarkdownRenderEnv | undefined, diagnostic: MarkdownDiagnostic) {
+  const target = env || {}
+  target.markdownDiagnostics ||= []
+  target.markdownDiagnostics.push(diagnostic)
+
+  if (target.reportMarkdownDiagnostics !== false) {
+    const id = target.id || target.path || '(unknown markdown)'
+    warnFrontmatter(formatMarkdownDiagnostic(diagnostic, id))
+  }
+}
+
+function renderSpoilerOpen(title: string, escapeHtml: (value: string) => string) {
+  const safeTitle = title.trim() || 'Spoiler'
+  return [
+    '<details class="spoiler">',
+    '<summary class="spoiler-summary">',
+    '<div class="spoiler-arrow i-ri:arrow-right-s-line"></div>',
+    `<span>${escapeHtml(safeTitle)}</span>`,
+    '</summary>',
+    '<div class="spoiler-content">',
+    '',
+  ].join('\n')
+}
+
+/**
+ * Djot-inspired spoiler block:
+ *
+ * ::: spoiler Optional title
+ * Markdown content
+ * :::
+ */
+export function spoilerBlockPlugin(md: MarkdownIt) {
+  md.block.ruler.before('fence', 'spoiler', (state, startLine, endLine, silent) => {
+    const start = state.bMarks[startLine] + state.tShift[startLine]
+    const max = state.eMarks[startLine]
+    const line = state.src.slice(start, max).trimEnd()
+    const title = parseSpoilerOpeningTitle(line)
+
+    if (title == null)
+      return false
+    if (state.sCount[startLine] - state.blkIndent >= 4)
+      return false
+    if (silent)
+      return true
+
+    let nextLine = startLine + 1
+    while (nextLine < endLine) {
+      const lineStart = state.bMarks[nextLine] + state.tShift[nextLine]
+      const lineMax = state.eMarks[nextLine]
+      if (state.src.slice(lineStart, lineMax).trim() === ':::')
+        break
+      nextLine += 1
+    }
+
+    if (nextLine >= endLine) {
+      addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+        line: startLine + 1,
+        message: 'unclosed spoiler block.',
+        severity: 'error',
+      })
+      return false
+    }
+
+    const open = state.push('html_block', '', 0)
+    open.content = renderSpoilerOpen(title, md.utils.escapeHtml)
+    open.map = [startLine, startLine + 1]
+
+    state.md.block.tokenize(state, startLine + 1, nextLine)
+
+    const close = state.push('html_block', '', 0)
+    close.content = '</div>\n</details>\n'
+    close.map = [nextLine, nextLine + 1]
+
+    state.line = nextLine + 1
+    return true
+  }, {
+    alt: ['paragraph', 'reference', 'blockquote', 'list'],
+  })
+}
+
+/**
+ * Djot-inspired inline muted span: [text]{.muted}
+ *
+ * Only `.muted` is supported intentionally; this is not a general attributes parser.
+ */
+export function mutedSpanPlugin(md: MarkdownIt) {
+  md.inline.ruler.before('link', 'muted_span', (state, silent) => {
+    const start = state.pos
+    if (state.src.charCodeAt(start) !== 0x5B /* [ */)
+      return false
+
+    const labelEnd = state.md.helpers.parseLinkLabel(state, start, false)
+    if (labelEnd < 0)
+      return false
+
+    const syntaxStart = labelEnd + 1
+    if (state.src.slice(syntaxStart, syntaxStart + mutedSpanSyntax.length) !== mutedSpanSyntax)
+      return false
+
+    const content = state.src.slice(start + 1, labelEnd)
+    if (!content)
+      return false
+
+    if (!silent) {
+      const open = state.push('span_open', 'span', 1)
+      open.attrSet('class', 'muted')
+      state.md.inline.parse(content, state.md, state.env, state.tokens)
+      state.push('span_close', 'span', -1)
+    }
+
+    state.pos = syntaxStart + mutedSpanSyntax.length
+    return true
+  })
+}
+
+/**
+ * Warn when Djot-style attributes were probably mistyped and leaked into text.
+ */
+export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
+  md.core.ruler.after('inline', 'inline_attribute_leak_warning', (state) => {
+    for (const token of state.tokens) {
+      if (token.type !== 'inline' || !token.children)
+        continue
+
+      const line = token.map?.[0] == null ? undefined : token.map[0] + 1
+      for (const child of token.children) {
+        if (child.type !== 'text')
+          continue
+
+        const matches = child.content.match(suspiciousInlineAttributeRE)
+        if (!matches)
+          continue
+
+        for (const match of matches) {
+          addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+            line,
+            message: `possible malformed inline attribute syntax "${match}". Use [text]{.muted}.`,
+            severity: 'error',
+          })
+        }
+      }
+    }
+  })
+}
 
 /**
  * Convert standalone ![alt](src) into <figure><img><figcaption>alt</figcaption></figure>.
@@ -396,10 +562,13 @@ export function markHighlightPlugin(md: MarkdownIt) {
  * Register all custom markdown-it plugins.
  */
 export function registerCustomPlugins(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
+  spoilerBlockPlugin(md)
+  mutedSpanPlugin(md)
   imageFiguresPlugin(md)
   imageAttributesPlugin(md)
   imageAltCheckPlugin(md)
   sourceLinkIdsPlugin(md)
   sourcesBlockPlugin(md, normalizedFrontmatterById)
   markHighlightPlugin(md)
+  inlineAttributeLeakWarningPlugin(md)
 }

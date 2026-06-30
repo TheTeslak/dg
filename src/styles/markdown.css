@@ -385,6 +385,10 @@ h6:focus .header-anchor {
   border-radius: 50%;
 }
 
+.prose .muted {
+  opacity: 0.7;
+}
+
 /* Spoiler / collapsible blocks (shared by <Spoiler> component and sources-block) */
 .spoiler {
   background: rgba(125, 125, 125, 0.08);

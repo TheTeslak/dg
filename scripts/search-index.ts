@@ -6,6 +6,7 @@ import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MiniSearch from 'minisearch'
 import { getArticleServedLocales } from '../build/article'
+import { stripMarkdownForSearch } from '../build/content-cleanup'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
@@ -35,41 +36,6 @@ interface SearchIndexPayload {
   version: 1
   documents: SearchDocument[]
   index: AsPlainObject
-}
-
-/**
- * Strip markdown / HTML to plain text for search indexing.
- * Reuses the same cleanup logic as `extractExcerpt` in vite.config.ts
- * but without the length cap.
- */
-function stripMarkdown(content: string): string {
-  return content
-    // Remove [[toc]] directives
-    .replace(/\[\[toc\]\]/gi, '')
-    // Remove code fences
-    .replace(/```[\s\S]*?```/g, ' ')
-    // Remove inline code
-    .replace(/`[^`]*`/g, ' ')
-    // Remove HTML tags and Vue components
-    .replace(/<[^>]+>/g, ' ')
-    // Remove images
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    // Convert links to just text
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    // Remove headings markers
-    .replace(/^#{1,6}\s+/gm, '')
-    // Remove blockquote markers
-    .replace(/^>\s?/gm, '')
-    // Remove horizontal rules
-    .replace(/^-{3,}$/gm, '')
-    // Remove bold/italic markers
-    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
-    .replace(/_{1,3}([^_]+)_{1,3}/g, '$1')
-    // Remove strikethrough
-    .replace(/~~([^~]+)~~/g, '$1')
-    // Collapse whitespace
-    .replace(/\s+/g, ' ')
-    .trim()
 }
 
 function normalizeTags(rawTags: unknown): string {
@@ -139,7 +105,7 @@ async function buildSearchIndex() {
       const path = getArticlePath(locale, slug)
       const id = path.slice(1)
 
-      const body = stripMarkdown(content).slice(0, MAX_BODY_LENGTH)
+      const body = stripMarkdownForSearch(content).slice(0, MAX_BODY_LENGTH)
 
       documents.push({
         id,

@@ -1,15 +1,18 @@
+import type { MarkdownRenderEnv } from '../build/markdown-plugins'
 import fs from 'node:fs/promises'
 import ansis from 'ansis'
 import fg from 'fast-glob'
 import matter from 'gray-matter'
 import MarkdownIt from 'markdown-it'
 import { parse } from 'vue/compiler-sfc'
+import { formatMarkdownDiagnostic, registerCustomPlugins } from '../build/markdown-plugins'
 
 async function run() {
   const files = await fg('pages/**/*.md')
   let hasErrors = false
 
   const md = new MarkdownIt({ html: true })
+  registerCustomPlugins(md, new Map())
 
   console.log(ansis.blue(`Checking ${files.length} markdown files for HTML validity...`))
 
@@ -19,8 +22,21 @@ async function run() {
     // Strip frontmatter to prevent vue/compiler-sfc syntax errors
     const { content } = matter(rawContent)
 
-    const html = md.render(content)
+    const env: MarkdownRenderEnv = {
+      id: file,
+      markdownDiagnostics: [],
+      path: file,
+      reportMarkdownDiagnostics: false,
+    }
+    const html = md.render(content, env)
     const parsed = parse(`<template>\n${html}\n</template>`, { filename: file })
+
+    if (env.markdownDiagnostics && env.markdownDiagnostics.length > 0) {
+      hasErrors = true
+      console.log(ansis.red(`\n❌ Markdown syntax issue in: ${file}`))
+      for (const diagnostic of env.markdownDiagnostics)
+        console.log(ansis.yellow(`  ${formatMarkdownDiagnostic(diagnostic, file)}`))
+    }
 
     if (parsed.errors && parsed.errors.length > 0) {
       hasErrors = true

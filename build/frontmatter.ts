@@ -1,5 +1,8 @@
 import { getArticleInfo, isRealArticle, resolveAudioFile } from './article'
 import { audioMetadata, frontmatterKnownKeys } from './constants'
+import { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
+
+export { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
 
 const frontmatterWarnings = new Set<string>()
 const futureDateWarningGraceMs = 24 * 60 * 60 * 1000
@@ -20,65 +23,6 @@ export function toDurationMinutes(duration: unknown): number | undefined {
       return Math.max(1, Number.parseInt(match[1], 10))
   }
   return undefined
-}
-
-export function estimateReadingMinutes(content: string): number {
-  const noCodeFences = content.replace(/```[\s\S]*?```/g, ' ')
-  const noInlineCode = noCodeFences.replace(/`[^`]*`/g, ' ')
-  const noHtml = noInlineCode.replace(/<[^>]+>/g, ' ')
-  const noLinks = noHtml
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-
-  const words = noLinks.match(/[a-z0-9\u0400-\u04FF]+(?:['\-][a-z0-9\u0400-\u04FF]+)*/gi)?.length || 0
-  const cjkChars = noLinks.match(/[\u3040-\u30FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]/g)?.length || 0
-  const units = words + cjkChars
-  return Math.max(1, Math.ceil(units / 200))
-}
-
-export function extractExcerpt(content: string, maxLength: number): string {
-  let text = content
-    // Remove [[toc]] directives
-    .replace(/\[\[toc\]\]/gi, '')
-    // Remove code fences
-    .replace(/```[\s\S]*?```/g, '')
-    // Remove inline code
-    .replace(/`[^`]*`/g, '')
-    // Remove HTML tags and Vue components
-    .replace(/<[^>]+>/g, '')
-    // Remove images
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-    // Convert links to just text
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    // Remove headings markers
-    .replace(/^#{1,6}\s+/gm, '')
-    // Remove blockquote markers
-    .replace(/^>\s?/gm, '')
-    // Remove horizontal rules
-    .replace(/^-{3,}$/gm, '')
-    // Remove bold/italic markers
-    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
-    .replace(/_{1,3}([^_]+)_{1,3}/g, '$1')
-    // Remove strikethrough
-    .replace(/~~([^~]+)~~/g, '$1')
-    // Collapse whitespace
-    .replace(/\n{2,}/g, '\n')
-    .trim()
-
-  // Take first meaningful lines (skip empty)
-  const lines = text.split('\n').filter(l => l.trim().length > 0)
-  text = lines.join(' ').trim()
-
-  if (text.length > maxLength) {
-    // Cut at last word boundary
-    text = text.slice(0, maxLength)
-    const lastSpace = text.lastIndexOf(' ')
-    if (lastSpace > maxLength * 0.6)
-      text = text.slice(0, lastSpace)
-    text += '…'
-  }
-
-  return text
 }
 
 export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: string, id: string) {
