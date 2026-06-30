@@ -20,9 +20,9 @@ import type {
 
 declare module 'vue-router' {
   interface TypesConfig {
-    ParamParsers:
-      | never
+    _ParamParsers: {}
     RouteNamedMap: import('vue-router/auto-routes').RouteNamedMap
+    _RouteFileInfoMap: import('vue-router/auto-routes')._RouteFileInfoMap
   }
 }
 
@@ -48,13 +48,6 @@ declare module 'vue-router/auto-routes' {
     '/404': RouteRecordInfo<
       '/404',
       '/404',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/AGENTS': RouteRecordInfo<
-      '/AGENTS',
-      '/AGENTS',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -434,23 +427,23 @@ declare module 'vue-router/auto-routes' {
         | '/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/[...404].md': {
       routes:
         | '/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/404.md': {
       routes:
         | '/404'
       views:
         | never
-    }
-    'pages/AGENTS.md': {
-      routes:
-        | '/AGENTS'
-      views:
+      pathParamNames:
         | never
     }
     'pages/de/index.md': {
@@ -458,17 +451,23 @@ declare module 'vue-router/auto-routes' {
         | '/de/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/de/[...404].md': {
       routes:
         | '/de/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/de/articles/index.md': {
       routes:
         | '/de/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/de/notes.md': {
@@ -476,11 +475,15 @@ declare module 'vue-router/auto-routes' {
         | '/de/notes'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/de/now.md': {
       routes:
         | '/de/now'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/de/photos.md': {
@@ -488,11 +491,15 @@ declare module 'vue-router/auto-routes' {
         | '/de/photos'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/de/projects.md': {
       routes:
         | '/de/projects'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/en/index.md': {
@@ -500,17 +507,23 @@ declare module 'vue-router/auto-routes' {
         | '/en/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/en/[...404].md': {
       routes:
         | '/en/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/en/articles/index.md': {
       routes:
         | '/en/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/en/articles/no-single-language.md': {
@@ -518,11 +531,15 @@ declare module 'vue-router/auto-routes' {
         | '/en/articles/no-single-language'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/en/articles/template.md': {
       routes:
         | '/en/articles/template'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/en/notes.md': {
@@ -530,11 +547,15 @@ declare module 'vue-router/auto-routes' {
         | '/en/notes'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/en/now.md': {
       routes:
         | '/en/now'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/en/photos.md': {
@@ -542,11 +563,15 @@ declare module 'vue-router/auto-routes' {
         | '/en/photos'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/en/projects.md': {
       routes:
         | '/en/projects'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/es/index.md': {
@@ -554,17 +579,23 @@ declare module 'vue-router/auto-routes' {
         | '/es/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/es/[...404].md': {
       routes:
         | '/es/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/es/articles/index.md': {
       routes:
         | '/es/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/es/articles/no-single-language.md': {
@@ -572,11 +603,15 @@ declare module 'vue-router/auto-routes' {
         | '/es/articles/no-single-language'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/es/notes.md': {
       routes:
         | '/es/notes'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/es/now.md': {
@@ -584,11 +619,15 @@ declare module 'vue-router/auto-routes' {
         | '/es/now'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/es/photos.md': {
       routes:
         | '/es/photos'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/es/projects.md': {
@@ -596,11 +635,15 @@ declare module 'vue-router/auto-routes' {
         | '/es/projects'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/fr/index.md': {
       routes:
         | '/fr/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/fr/[...404].md': {
@@ -608,11 +651,15 @@ declare module 'vue-router/auto-routes' {
         | '/fr/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/fr/articles/index.md': {
       routes:
         | '/fr/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/fr/notes.md': {
@@ -620,11 +667,15 @@ declare module 'vue-router/auto-routes' {
         | '/fr/notes'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/fr/now.md': {
       routes:
         | '/fr/now'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/fr/photos.md': {
@@ -632,11 +683,15 @@ declare module 'vue-router/auto-routes' {
         | '/fr/photos'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/fr/projects.md': {
       routes:
         | '/fr/projects'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/pt/index.md': {
@@ -644,17 +699,23 @@ declare module 'vue-router/auto-routes' {
         | '/pt/'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/pt/[...404].md': {
       routes:
         | '/pt/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/pt/articles/index.md': {
       routes:
         | '/pt/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/pt/articles/no-single-language.md': {
@@ -662,11 +723,15 @@ declare module 'vue-router/auto-routes' {
         | '/pt/articles/no-single-language'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/pt/notes.md': {
       routes:
         | '/pt/notes'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/pt/now.md': {
@@ -674,11 +739,15 @@ declare module 'vue-router/auto-routes' {
         | '/pt/now'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/pt/photos.md': {
       routes:
         | '/pt/photos'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/pt/projects.md': {
@@ -686,11 +755,15 @@ declare module 'vue-router/auto-routes' {
         | '/pt/projects'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/ru/index.md': {
       routes:
         | '/ru/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/ru/[...404].md': {
@@ -698,11 +771,15 @@ declare module 'vue-router/auto-routes' {
         | '/ru/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/ru/articles/index.md': {
       routes:
         | '/ru/articles/'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/ru/articles/[...404].md': {
@@ -710,11 +787,15 @@ declare module 'vue-router/auto-routes' {
         | '/ru/articles/[...404]'
       views:
         | never
+      pathParamNames:
+        | '404'
     }
     'pages/ru/articles/colophon.md': {
       routes:
         | '/ru/articles/colophon'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/ru/articles/no-single-language.md': {
@@ -722,11 +803,15 @@ declare module 'vue-router/auto-routes' {
         | '/ru/articles/no-single-language'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/ru/articles/robophobia.md': {
       routes:
         | '/ru/articles/robophobia'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/ru/articles/who-is-teslak.md': {
@@ -734,11 +819,15 @@ declare module 'vue-router/auto-routes' {
         | '/ru/articles/who-is-teslak'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/ru/notes.md': {
       routes:
         | '/ru/notes'
       views:
+        | never
+      pathParamNames:
         | never
     }
     'pages/ru/now.md': {
@@ -746,17 +835,23 @@ declare module 'vue-router/auto-routes' {
         | '/ru/now'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/ru/photos.md': {
       routes:
         | '/ru/photos'
       views:
         | never
+      pathParamNames:
+        | never
     }
     'pages/ru/projects.md': {
       routes:
         | '/ru/projects'
       views:
+        | never
+      pathParamNames:
         | never
     }
   }

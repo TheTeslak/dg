@@ -73,6 +73,7 @@ export default defineConfig({
     VueRouter({
       extensions: ['.vue', '.md'],
       routesFolder: 'pages',
+      exclude: ['pages/AGENTS.md', 'pages/**/AGENTS.md'],
       extendRoute(route) {
         const path = route.components.get('default')
         if (!path)
@@ -166,11 +167,11 @@ export default defineConfig({
       exportFrontmatter: false,
       exposeFrontmatter: false,
       exposeExcerpt: false,
-      markdownItOptions: {
+      markdownOptions: {
         quotes: '""\'\'',
         breaks: true,
       },
-      async markdownItSetup(md) {
+      async markdownSetup(md) {
         useMarkdownPlugin(md, await MarkdownItShiki({
           themes: {
             dark: 'vitesse-dark',

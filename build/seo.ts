@@ -127,6 +127,7 @@ async function collectSitemapEntries(): Promise<SitemapCollectResult> {
     cwd: pagesDir,
     absolute: true,
     onlyFiles: true,
+    ignore: ['**/AGENTS.md'],
   })
 
   for (const file of files) {

@@ -1,7 +1,7 @@
 {
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@10.34.4",
   "scripts": {
     "build": "pnpm lint:md && pnpm check:i18n && tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects && pnpm check:seo",
     "check:i18n": "tsx scripts/check-i18n.ts",
@@ -75,7 +75,6 @@
     "markdown-it-table-of-contents": "catalog:build",
     "music-metadata": "catalog:dev",
     "pathe": "catalog:dev",
-    "pnpm": "catalog:dev",
     "prompts": "catalog:dev",
     "rimraf": "catalog:dev",
     "sharp": "catalog:dev",
