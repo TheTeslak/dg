@@ -46,6 +46,7 @@ registerCustomPlugins(markdown, normalizedFrontmatterById)
 const vueComponentBlockRE = /<([A-Z][\w.-]*)(?:\s[^>]*)?>[\s\S]*?<\/\1>/g
 const vueComponentSelfClosingRE = /<[A-Z][\w.-]*(?:\s[^>]*)?\/?>/g
 const vueDirectiveAttributeRE = /\s(?:[:@]|v-)[^\s=>]+(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?/g
+const glossaryTermBlockRE = /<GlossaryTerm(?:\s[^>]*)?>([\s\S]*?)<\/GlossaryTerm>/g
 
 function normalizeFeedUrl(value: unknown) {
   if (typeof value !== 'string' || !value.trim())
@@ -72,7 +73,7 @@ function normalizeFeedHtml(html: string) {
 }
 
 function stripVueOnlyHtml(html: string) {
-  let current = html
+  let current = html.replace(glossaryTermBlockRE, '$1')
   let previous = ''
 
   while (current !== previous) {

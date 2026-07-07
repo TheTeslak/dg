@@ -100,14 +100,13 @@ export const createApp = ViteSSG(
     app.use(fluent)
 
     if (isClient) {
-      router.beforeEach((to, from, next) => {
+      router.beforeEach((to) => {
         const targetLocale = applyRouteLocale(to.path)
 
         // The route locale remains the document language for accessibility on fallback pages.
         document.querySelector('html')?.setAttribute('lang', getLanguageTag(targetLocale))
 
         NProgress.start()
-        next()
       })
 
       router.afterEach(() => {

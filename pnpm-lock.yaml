@@ -224,6 +224,11 @@ catalogs:
 overrides:
   vite: ^8.1.1
 
+patchedDependencies:
+  vite-ssg@28.3.0:
+    hash: 2c7dbea92b654ad6e2bb1700bb4d07589f96f5bcf32f5ecac4eaf58ccd7ac95c
+    path: patches/vite-ssg@28.3.0.patch
+
 importers:
 
   .:
@@ -435,7 +440,7 @@ importers:
         version: 0.0.1(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))
       vite-ssg:
         specifier: catalog:build
-        version: 28.3.0(canvas@3.2.0)(prettier@3.8.3)(unhead@2.1.15)(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3)))(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3))
+        version: 28.3.0(patch_hash=2c7dbea92b654ad6e2bb1700bb4d07589f96f5bcf32f5ecac4eaf58ccd7ac95c)(canvas@3.2.0)(prettier@3.8.3)(unhead@2.1.15)(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3)))(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3))
       vite-svg-loader:
         specifier: catalog:build
         version: 5.1.1(vue@3.5.39(typescript@6.0.3))
@@ -8545,7 +8550,7 @@ snapshots:
     dependencies:
       vite: 8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0)
 
-  vite-ssg@28.3.0(canvas@3.2.0)(prettier@3.8.3)(unhead@2.1.15)(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3)))(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3)):
+  vite-ssg@28.3.0(patch_hash=2c7dbea92b654ad6e2bb1700bb4d07589f96f5bcf32f5ecac4eaf58ccd7ac95c)(canvas@3.2.0)(prettier@3.8.3)(unhead@2.1.15)(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.39)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.39(typescript@6.0.3)))(vite@8.1.1(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.6.1)(terser@5.46.1)(tsx@4.22.4)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3)):
     dependencies:
       '@unhead/dom': 2.1.15(unhead@2.1.15)
       '@unhead/vue': 2.1.15(vue@3.5.39(typescript@6.0.3))

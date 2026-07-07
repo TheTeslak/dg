@@ -1,6 +1,6 @@
 ---
 title: Main Big Template
-date: 2026-03-03T00:00:00+00:00
+date: 2026-02-28T00:00:00+00:00
 updated: 2026-03-13T00:00:00+00:00
 lang: en
 duration: 5
@@ -44,10 +44,10 @@ art: plum # background animation: random, plum, dots, cellular, topography, inte
 tocAlwaysOn: true # keeps ToC visible on wider screens
 place: Paris # location name
 placeLink: https://maps.google.com/... # location link
-audio: true # shortcut: auto-resolves from public/audio/articles/<locale>/<slug>.*
+audio: true # shortcut: auto-resolves from public/audio/<locale>/<slug>.*
 # or explicit:
 # audio:
-#   url: /audio/articles/en/my-article.m4a
+#   url: /audio/en/my-article.m4a
 #   title: "Audio Version"
 #   duration: "12:45"
 #   artist: "Teslak"
@@ -80,7 +80,7 @@ pic: # optional inline image next to a title word
 - **`backlink` (Hierarchy)**: Pass the slug of the "parent" article. A link will appear at the top (`⬑ Parent Title`), and this article will be listed under "Referenced by" at the bottom of the parent article.
 - **`sources` (References)**: When set to `true`, enables the automatic generation of a numbered sources block at the bottom of the article (requires `<!-- sources -->` markers in the body).
 - **`audio` (Voiceover)**: Configures the integrated audio player.
-  - **Shortcut:** `audio: true` — auto-resolves the audio file from `public/audio/articles/<locale>/<slug>.*` (priority: m4a → opus → ogg → mp3 → wav). Duration is read from `data/audio-metadata.json` (run `pnpm run process-audio` to generate).
+  - **Shortcut:** `audio: true` — auto-resolves the audio file from `public/audio/<locale>/<slug>.*` (priority: m4a → opus → ogg → mp3 → wav). Duration is read from `data/audio-metadata.json` (run `pnpm run process-audio` to generate).
   - **Explicit:** `audio: { url, title?, duration?, artist?, sourceTextUpdatedAt?, downloadUrl? }`.
   - `url`: Path to the audio file (required in explicit form).
   - `title`: Display name in the player (defaults to article title).
@@ -387,7 +387,7 @@ The audio player is automatically injected at the top of the article when the `a
 - **Outdated Warning:** Automatically detects if the article text has been updated since the audio was recorded.
 - **Multi-format Support:** File lookup priority: `.m4a` → `.opus` → `.ogg` → `.mp3` → `.wav`.
 
-**Shortcut form** — just drop an audio file into `public/audio/articles/<locale>/<slug>.m4a` and set:
+**Shortcut form** — just drop an audio file into `public/audio/<locale>/<slug>.m4a` and set:
 
 ```yaml
 audio: true
@@ -399,7 +399,7 @@ The build system resolves the URL, format, and duration automatically from `data
 
 ```yaml
 audio:
-  url: /audio/articles/en/my-article.m4a
+  url: /audio/en/my-article.m4a
   title: Audio Version # optional, defaults to article title
   duration: '12:45' # optional, auto-filled from cache
   artist: Teslak # optional, defaults to "Teslak"
@@ -415,7 +415,7 @@ Scripts that process content before deployment. Run them manually when content c
 
 ### `pnpm run process-audio`
 
-Scans all articles with `audio: true` (or an explicit `audio` object), locates the corresponding audio file in `public/audio/articles/<locale>/`, extracts its duration via `music-metadata`, and writes a cache to `data/audio-metadata.json`. The Vite build reads this cache to inject `duration` into the frontmatter without reparsing audio files on every dev restart.
+Scans all articles with `audio: true` (or an explicit `audio` object), locates the corresponding audio file in `public/audio/<locale>/`, extracts its duration via `music-metadata`, and writes a cache to `data/audio-metadata.json`. The Vite build reads this cache to inject `duration` into the frontmatter without reparsing audio files on every dev restart.
 
 ```bash
 pnpm run process-audio
@@ -482,37 +482,29 @@ Specialized component for linking repositories.
 
 <GitHubLink repo="teslak/vueuse" name="VueUse" />
 
-### Glossary Term (Marginal Annotation) (`GlossaryTerm`)
+### Glossary Term (Marginal Annotation)
 
 Adds a dashed underline to a term and displays its definition in a margin note on desktop or a bottom sheet on mobile when clicked.
 
-**1. Simple Definition via Props**
+Use `[visible text]{term="Term" definition="Definition"}`. `term` may differ from the visible text.
 
-```html
-<GlossaryTerm
-  term="Gradient Descent"
-  definition="An iterative optimization algorithm for finding a local minimum of a differentiable function."
->
-  gradient descent
-</GlossaryTerm>
+**1. Simple Definition**
+
+```markdown
+[gradient descent]{term="Gradient Descent" definition="An iterative optimization algorithm for finding a local minimum of a differentiable function."}
 ```
 
-In machine learning, <GlossaryTerm term="Gradient Descent" definition="An iterative optimization algorithm for finding a local minimum of a differentiable function.">gradient descent</GlossaryTerm> is used to minimize the loss function.
+In machine learning, [gradient descent]{term="Gradient Descent" definition="An iterative optimization algorithm for finding a local minimum of a differentiable function."} is used to minimize the loss function.
 
 **2. Rich Definition with HTML**
 
-The `definition` prop accepts HTML, so you can include links, `<mark>`, `<code>`, etc.:
+The `definition` attribute accepts HTML, so you can include links, `<mark>`, `<code>`, etc.:
 
-```html
-<GlossaryTerm
-  term="Vite"
-  definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."
->
-  Vite
-</GlossaryTerm>
+```markdown
+[Vite]{term="Vite" definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."}
 ```
 
-Many modern frameworks are now powered by <GlossaryTerm term="Vite" definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR.">Vite</GlossaryTerm> under the hood.
+Many modern frameworks are now powered by [Vite]{term="Vite" definition="A frontend build tool that improves the <a href='/en/rewrite-in-vite'>developer experience</a> using native ES modules and <mark>lightning fast</mark> HMR."} under the hood.
 
 ### Spoiler / Collapsible Block
 

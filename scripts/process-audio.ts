@@ -3,7 +3,7 @@
  *
  * Scans articles in `pages/<locale>/articles/` that have `audio: true`
  * (or an explicit `audio` object), locates the corresponding audio file
- * under `public/audio/articles/<locale>/`, reads its duration with
+ * under `public/audio/<locale>/`, reads its duration with
  * `music-metadata`, and writes a small JSON cache to `data/audio-metadata.json`.
  *
  * The Vite build then reads this cache to expand `audio: true` shortcuts
@@ -66,7 +66,7 @@ async function main() {
         continue
 
       // Find audio file in priority order: m4a → opus → ogg → mp3 → wav
-      const audioDir = resolve(root, `public/audio/articles/${locale}`)
+      const audioDir = resolve(root, `public/audio/${locale}`)
       let audioFile: string | undefined
       let audioExt: string | undefined
 
@@ -80,7 +80,7 @@ async function main() {
       }
 
       if (!audioFile) {
-        console.warn(`⚠ ${locale}/${slug}: audio enabled but no file found in public/audio/articles/${locale}/`)
+        console.warn(`⚠ ${locale}/${slug}: audio enabled but no file found in public/audio/${locale}/`)
         warnings++
         continue
       }
@@ -92,7 +92,7 @@ async function main() {
         const key = `${locale}/${slug}`
 
         metadata[key] = {
-          url: `/audio/articles/${locale}/${slug}${audioExt}`,
+          url: `/audio/${locale}/${slug}${audioExt}`,
           duration: formatDuration(durationSeconds),
           durationSeconds: Math.round(durationSeconds * 10) / 10,
           format: audioExt!.slice(1),

@@ -11,11 +11,11 @@ pic:
 display: Teslak interessiert sich für IT, KI, UX-Design, Philosophie, Wirtschaft, Biologie ✦ und mehr
 ---
 
-Arbeite an KI-Agenten, Automatisierung und weiterhin an Design, auch wenn es sich in den letzten Jahren stark verändert hat
+Arbeite an KI-Agenten, Automatisierung und weiterhin an Design, auch wenn es sich in den letzten Jahren stark verändert hat
 
-Strebe ein breites Wissen an und lerne jeden Tag etwas Neues. Folge dabei einem akademischen Ansatz und einem wissenschaftlichen Weltbild
+Strebe ein breites Wissen an und lerne jeden Tag etwas Neues. Folge dabei einem akademischen Ansatz und einem wissenschaftlichen Weltbild
 
-Schreibe hier 🪶 [Notizen](/de/notes) und betreibe einen [Telegram-Kanal mit interessanten Fundstücken](https://t.me/Tes404)
+Schreibe hier 🪶 [Notizen](/de/notes) und betreibe einen [Telegram-Kanal mit interessanten Fundstücken](https://t.me/Tes404)
 
 Entwickle [eigene Projekte](/de/projects)
 
@@ -32,4 +32,4 @@ Habe [alles Mögliche fotografiert](/de/photos)
   <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank"><span op75 i-ph-matrix-logo-fill /> Matrix</a>
 </p>
 
-Oder per E-Mail an <span font-mono>Teslak<span i-carbon-at/>proton.me</span>
+Oder per E-Mail an <span font-mono>Teslak<span i-carbon-at/>proton.me</span>

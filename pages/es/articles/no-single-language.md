@@ -1,6 +1,6 @@
 ---
 title: Sin un solo idioma en internet
-date: 2026-06-13T09:41:00Z
+date: 2026-02-28T09:41:00Z
 lang: es
 type: note
 description: Accesibilidad y metodología de traducción
@@ -18,7 +18,7 @@ Traducir a todos los idiomas es difícil. Elegí los más populares y aquellos e
 
 - ruso como lengua materna
 - inglés como idioma internacional
-- <GlossaryTerm term="español" definition="Español neutro — una variante sin marca regional, comprensible desde España hasta Argentina">español</GlossaryTerm> y portugués, que voy aprendiendo poco a poco
+- [español]{term="español" definition="Español neutro — una variante sin marca regional, comprensible desde España hasta Argentina"} y portugués, que voy aprendiendo poco a poco
 - francés, que tuve en la escuela
 - ¡y alemán!
 
@@ -32,9 +32,11 @@ Y con un solo idioma es difícil entrar en una burbuja lingüística ajena
 
 Si una publicación no está traducida al idioma seleccionado, el sitio ofrece una de las versiones disponibles
 
-![Teslaks multilingües|no-caption](/images/multilang.avif)
+![Personajes originales (Teslaks) vistiendo trajes típicos de distintos países|no-caption](/images/multilang.avif)
 
 ## Metodología de traducción
+
+Invierto bastante tiempo en el original y me esfuerzo por lograr una traducción de calidad similar
 
 Un prompt extenso traduce el texto por partes y explica las diferencias entre las opciones de redacción. Leo con detenimiento y elijo, luego paso el resultado a otra IA; y así en bucle, detectando imprecisiones una y otra vez
 

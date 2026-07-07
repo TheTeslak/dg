@@ -10,7 +10,7 @@ import { warnFrontmatter } from './frontmatter'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const mutedSpanSyntax = '{.muted}'
-const suspiciousInlineAttributeRE = /\[[^\]\n]{0,120}(?:\]\{[^}\n]{0,80}(?:\}|$)|\[\{[^}\n]{0,80}(?:\}|$)|\{[.#][^}\n]{0,80}(?:\}|$))/g
+const suspiciousInlineAttributeRE = /\[[^\]\n]{0,120}(?:\]\{[^}\n]{0,160}(?:\}|$)|\[\{[^}\n]{0,160}(?:\}|$)|\{[.#][^}\n]{0,80}(?:\}|$))/g
 
 export interface MarkdownDiagnostic {
   line?: number
@@ -52,6 +52,76 @@ function renderSpoilerOpen(title: string, escapeHtml: (value: string) => string)
     '<div class="spoiler-content">',
     '',
   ].join('\n')
+}
+
+function skipInlineAttributeWhitespace(src: string, pos: number) {
+  while (pos < src.length) {
+    const code = src.charCodeAt(pos)
+    if (code !== 0x20 /* space */ && code !== 0x09 /* tab */)
+      break
+    pos += 1
+  }
+  return pos
+}
+
+function parseQuotedAttributeValue(src: string, pos: number) {
+  const quote = src.charCodeAt(pos)
+  if (quote !== 0x22 /* " */ && quote !== 0x27 /* ' */)
+    return
+
+  let value = ''
+  let next = pos + 1
+  while (next < src.length) {
+    const code = src.charCodeAt(next)
+    if (code === quote)
+      return { value, pos: next + 1 }
+    if (code === 0x0A /* \n */ || code === 0x0D /* \r */)
+      return
+    if (code === 0x5C /* \ */ && next + 1 < src.length) {
+      value += src[next + 1]
+      next += 2
+      continue
+    }
+    value += src[next]
+    next += 1
+  }
+}
+
+function parseGlossaryAttributes(src: string, pos: number) {
+  if (src.charCodeAt(pos) !== 0x7B /* { */)
+    return
+
+  let next = pos + 1
+  const attrs: Partial<Record<'term' | 'definition', string>> = {}
+
+  while (next < src.length) {
+    next = skipInlineAttributeWhitespace(src, next)
+
+    if (src.charCodeAt(next) === 0x7D /* } */) {
+      const term = attrs.term?.trim()
+      const definition = attrs.definition?.trim()
+      if (!term || !definition)
+        return
+      return { term, definition, pos: next + 1 }
+    }
+
+    const name = src.slice(next).match(/^[a-z][\w:-]*/i)?.[0]
+    if (!name || (name !== 'term' && name !== 'definition'))
+      return
+
+    next += name.length
+    next = skipInlineAttributeWhitespace(src, next)
+    if (src.charCodeAt(next) !== 0x3D /* = */)
+      return
+
+    next = skipInlineAttributeWhitespace(src, next + 1)
+    const parsed = parseQuotedAttributeValue(src, next)
+    if (!parsed)
+      return
+
+    attrs[name] = parsed.value
+    next = parsed.pos
+  }
 }
 
 /**
@@ -146,6 +216,42 @@ export function mutedSpanPlugin(md: MarkdownIt) {
 }
 
 /**
+ * Inline glossary term: [visible text]{term="Term" definition="Definition"}
+ *
+ * Keeps authoring concise while preserving the existing GlossaryTerm runtime UI.
+ */
+export function glossaryTermPlugin(md: MarkdownIt) {
+  md.inline.ruler.before('link', 'glossary_term', (state, silent) => {
+    const start = state.pos
+    if (state.src.charCodeAt(start) !== 0x5B /* [ */)
+      return false
+
+    const labelEnd = state.md.helpers.parseLinkLabel(state, start, false)
+    if (labelEnd < 0)
+      return false
+
+    const attrs = parseGlossaryAttributes(state.src, labelEnd + 1)
+    if (!attrs)
+      return false
+
+    const content = state.src.slice(start + 1, labelEnd)
+    if (!content)
+      return false
+
+    if (!silent) {
+      const open = state.push('glossary_term_open', 'GlossaryTerm', 1)
+      open.attrSet('term', attrs.term)
+      open.attrSet('definition', attrs.definition)
+      state.md.inline.parse(content, state.md, state.env, state.tokens)
+      state.push('glossary_term_close', 'GlossaryTerm', -1)
+    }
+
+    state.pos = attrs.pos
+    return true
+  })
+}
+
+/**
  * Warn when Djot-style attributes were probably mistyped and leaked into text.
  */
 export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
@@ -166,7 +272,7 @@ export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
         for (const match of matches) {
           addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
             line,
-            message: `possible malformed inline attribute syntax "${match}". Use [text]{.muted}.`,
+            message: `possible malformed inline attribute syntax "${match}". Use [text]{.muted} or [text]{term="Term" definition="Definition"}.`,
             severity: 'error',
           })
         }
@@ -564,6 +670,7 @@ export function markHighlightPlugin(md: MarkdownIt) {
 export function registerCustomPlugins(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   spoilerBlockPlugin(md)
   mutedSpanPlugin(md)
+  glossaryTermPlugin(md)
   imageFiguresPlugin(md)
   imageAttributesPlugin(md)
   imageAltCheckPlugin(md)

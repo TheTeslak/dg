@@ -73,6 +73,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/de/articles/who-is-teslak': RouteRecordInfo<
+      '/de/articles/who-is-teslak',
+      '/de/who-is-teslak',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/de/notes': RouteRecordInfo<
       '/de/notes',
       '/de/notes',
@@ -136,6 +143,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/en/articles/who-is-teslak': RouteRecordInfo<
+      '/en/articles/who-is-teslak',
+      '/en/who-is-teslak',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/en/notes': RouteRecordInfo<
       '/en/notes',
       '/en/notes',
@@ -192,6 +206,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/es/articles/who-is-teslak': RouteRecordInfo<
+      '/es/articles/who-is-teslak',
+      '/es/who-is-teslak',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/es/notes': RouteRecordInfo<
       '/es/notes',
       '/es/notes',
@@ -237,6 +258,13 @@ declare module 'vue-router/auto-routes' {
     '/fr/articles/': RouteRecordInfo<
       '/fr/articles/',
       '/fr/articles',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/fr/articles/who-is-teslak': RouteRecordInfo<
+      '/fr/articles/who-is-teslak',
+      '/fr/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -293,6 +321,13 @@ declare module 'vue-router/auto-routes' {
     '/pt/articles/no-single-language': RouteRecordInfo<
       '/pt/articles/no-single-language',
       '/pt/no-single-language',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/pt/articles/who-is-teslak': RouteRecordInfo<
+      '/pt/articles/who-is-teslak',
+      '/pt/who-is-teslak',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -470,6 +505,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'pages/de/articles/who-is-teslak.md': {
+      routes:
+        | '/de/articles/who-is-teslak'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'pages/de/notes.md': {
       routes:
         | '/de/notes'
@@ -542,6 +585,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'pages/en/articles/who-is-teslak.md': {
+      routes:
+        | '/en/articles/who-is-teslak'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'pages/en/notes.md': {
       routes:
         | '/en/notes'
@@ -606,6 +657,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'pages/es/articles/who-is-teslak.md': {
+      routes:
+        | '/es/articles/who-is-teslak'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'pages/es/notes.md': {
       routes:
         | '/es/notes'
@@ -657,6 +716,14 @@ declare module 'vue-router/auto-routes' {
     'pages/fr/articles/index.md': {
       routes:
         | '/fr/articles/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'pages/fr/articles/who-is-teslak.md': {
+      routes:
+        | '/fr/articles/who-is-teslak'
       views:
         | never
       pathParamNames:
@@ -721,6 +788,14 @@ declare module 'vue-router/auto-routes' {
     'pages/pt/articles/no-single-language.md': {
       routes:
         | '/pt/articles/no-single-language'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'pages/pt/articles/who-is-teslak.md': {
+      routes:
+        | '/pt/articles/who-is-teslak'
       views:
         | never
       pathParamNames:

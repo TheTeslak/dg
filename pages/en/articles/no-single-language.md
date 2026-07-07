@@ -1,6 +1,6 @@
 ---
 title: No single language of the internet
-date: 2026-06-13T09:41:00Z
+date: 2026-02-28T09:41:00Z
 lang: en
 type: note
 description: Accessibility and translation methodology
@@ -18,7 +18,7 @@ Translating into every language is hard. I picked the popular ones and those whe
 
 - Russian as my native language
 - English as the international language
-- <GlossaryTerm term="Spanish" definition="Español neutro — a version without regional bias, understood from Spain to Argentina">Spanish</GlossaryTerm> and Portuguese, which I am picking up little by little
+- [Spanish]{term="Spanish" definition="Español neutro — a version without regional bias, understood from Spain to Argentina"} and Portuguese, which I am picking up little by little
 - French, which I had in school
 - and German!
 
@@ -32,9 +32,11 @@ And with just one language it is hard to get into someone else’s language bubb
 
 If an article is not translated into the selected language, the site offers an available version
 
-![Multilingual Teslaks|no-caption](/images/multilang.avif)
+![Original characters (Teslaks) wearing traditional costumes from different countries|no-caption](/images/multilang.avif)
 
 ## Translation methodology
+
+I put a lot of time into the original and aim for comparable quality in translation
 
 A long prompt translates the text in chunks and explains the differences between phrasing options. I read closely and choose, then pass it to another AI — and so on in a loop, weeding out inaccuracies one by one
 

@@ -124,9 +124,9 @@ export function getArticleFallbackPaths() {
 
 export function resolveAudioFile(locale: string, slug: string): string | undefined {
   for (const ext of supportedAudioExtensions) {
-    const candidate = resolve(currentDir, `../public/audio/articles/${locale}/${slug}${ext}`)
+    const candidate = resolve(currentDir, `../public/audio/${locale}/${slug}${ext}`)
     if (fs.existsSync(candidate))
-      return `/audio/articles/${locale}/${slug}${ext}`
+      return `/audio/${locale}/${slug}${ext}`
   }
   return undefined
 }

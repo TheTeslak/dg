@@ -125,7 +125,7 @@ export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, conten
         warnFrontmatter(`[frontmatter] ${id}: "audio.url" should be a non-empty local path.`)
       }
       else if (/^https?:\/\//i.test(audio.url)) {
-        warnFrontmatter(`[frontmatter] ${id}: "audio.url" should be a local path under /audio/articles/.`)
+        warnFrontmatter(`[frontmatter] ${id}: "audio.url" should be a local path under /audio/.`)
       }
 
       // Normalize sourceTextUpdatedAt Date

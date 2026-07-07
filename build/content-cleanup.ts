@@ -1,4 +1,5 @@
 const mutedSpanRE = /\[([^\]\n]+)\]\{\.muted\}/g
+const glossaryTermRE = /\[([^\]\n]+)\]\{([^}\n]+)\}/g
 
 export function parseSpoilerOpeningTitle(line: string) {
   const trimmed = line.trim()
@@ -35,6 +36,14 @@ export function stripMutedSpans(content: string) {
   return content.replace(mutedSpanRE, '$1')
 }
 
+export function stripGlossaryTerms(content: string) {
+  return content.replace(glossaryTermRE, (match, text: string, attrs: string) => {
+    return /\bterm\s*=/.test(attrs) && /\bdefinition\s*=/.test(attrs)
+      ? text
+      : match
+  })
+}
+
 interface MarkdownPlainTextOptions {
   closeMarkerReplacement?: string
   codeReplacement?: string
@@ -51,7 +60,7 @@ export function markdownToPlainText(content: string, options: MarkdownPlainTextO
 
   text = stripSpoilerMarkers(text, options.closeMarkerReplacement ?? replacement)
 
-  text = stripMutedSpans(text)
+  text = stripMutedSpans(stripGlossaryTerms(text))
     // Remove inline code.
     .replace(/`[^`]*`/g, replacement)
     // Remove HTML tags and Vue components.

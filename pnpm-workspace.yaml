@@ -18,6 +18,10 @@ overrides:
   picomatch@^2.3.1: 2.3.2
   undici@^7.21.0: 7.28.0
   yaml@^2.8.0: 2.9.0
+
+patchedDependencies:
+  vite-ssg@28.3.0: patches/vite-ssg@28.3.0.patch
+
 catalog:
   '@fluent/bundle': ^0.19.1
   fluent-vue: ^3.8.2
