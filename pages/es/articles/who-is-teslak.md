@@ -36,13 +36,13 @@ Mi acercamiento a las redes neuronales comenzó con un artículo [sobre Artbreed
 
 El lanzamiento de [Midjourney](https://t.me/TesNot/314) en 2022 me impresionó mucho: pasaba días enteros generando, aunque estaba infinitamente lejos de las actuales
 
-Usaba GPT antes del lanzamiento de ChatGPT ([mi obra cumbre](https://t.me/Tes404/1058) + una publicación previa), y escribí sobre el lanzamiento de la versión 3.5 el mismo día en que salió
+Usaba GPT antes del lanzamiento de ChatGPT ([mi pico](https://t.me/Tes404/1058) + una publicación previa), incluyendo [ru](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
 
-Desarrollé un agente con LangGraph y LlamaIndex. Más tarde, con el lanzamiento del potente y exigente en cuanto a mantenimiento OpenClaw, analicé su arquitectura. Actualmente, estoy explorando Hermes Agent y OpenHuman
+Desarrollé agentes con LangGraph y LlamaIndex, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Más tarde, pasé a OpenClaw, exigente en mantenimiento, y analicé su arquitectura. Actualmente, estoy explorando Hermes Agent y OpenHuman
 
 Al experimentar con modelos locales, soy escéptico ante cualquier modelo de menos de [al menos]{.muted} 30B para tareas generales
 
-Sigo activamente todos los LLM: los uso, leo artículos de investigación, entiendo a grandes rasgos los transformers, la atención, las etapas de entrenamiento y la inferencia
+Sigo activamente todos los LLM: los uso, leo papers, entiendo a grandes rasgos los transformers, la atención, las etapas de entrenamiento y la inferencia
 
 :::
 

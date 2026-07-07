@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onKeyStroke, useEventListener } from '@vueuse/core'
 import { useFluent } from 'fluent-vue'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { isEditableTarget } from '~/logics/keyboard-nav'
@@ -32,14 +32,50 @@ const isArticlesActive = computed(() => {
     || (route.meta.isArticle === true && !routePostTypes.value.includes('note'))
 })
 
+const isFindsActive = computed(() => {
+  return route.path.includes('/finds')
+})
+
+const showLanguageFilter = computed(() => !isFindsActive.value)
+
 const { isSearchOpen, searchQuery, openSearch, closeSearch } = useSearch(currentLocale)
+const isLanguageFilterInteractive = computed(() => showLanguageFilter.value && !isSearchOpen.value)
 
 const searchInputRef = ref<HTMLInputElement>()
+const tabsScrollRef = ref<HTMLElement>()
+const isTabsScrolledStart = ref(true)
+const isTabsScrolledEnd = ref(true)
+
+function onTabsScroll(e: Event) {
+  const el = e.target as HTMLElement
+  isTabsScrolledStart.value = el.scrollLeft <= 1
+  isTabsScrolledEnd.value = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
+}
+
+function checkTabsOverflow() {
+  const el = tabsScrollRef.value
+  if (!el)
+    return
+  isTabsScrolledStart.value = el.scrollLeft <= 1
+  // No gradient needed when content fits without scrolling
+  isTabsScrolledEnd.value = el.scrollWidth <= el.clientWidth
+    || el.scrollLeft + el.clientWidth >= el.scrollWidth - 1
+}
+
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', checkTabsOverflow)
+}
+
+onMounted(() => nextTick(checkTabsOverflow))
 
 watch(isSearchOpen, async (open) => {
   if (open) {
     await nextTick()
     searchInputRef.value?.focus()
+  }
+  else {
+    await nextTick()
+    checkTabsOverflow()
   }
 })
 
@@ -99,27 +135,34 @@ const modKey = computed(() => {
 <template>
   <div class="prose m-auto mb-8 select-none animate-none! op100!">
     <button
-      v-show="!isSearchOpen"
       flex="~ gap1" items-center mb2 text-sm
-      class="language-filter op60 hover:op100 focus-visible:op100 active:op80 transition-all outline-none rounded-sm"
+      class="language-filter op60 hover:op100 focus-visible:op100 active:op80 transition-opacity outline-none rounded-sm"
+      :class="{ 'invisible pointer-events-none': !isLanguageFilterInteractive }"
+      :disabled="!isLanguageFilterInteractive"
+      :aria-hidden="!isLanguageFilterInteractive"
+      :tabindex="isLanguageFilterInteractive ? 0 : -1"
       @click="onlyLanguage = !onlyLanguage"
     >
       <div :class="onlyLanguage ? 'i-carbon-checkbox-checked' : 'i-carbon-checkbox'" />
       {{ $t('blog-only-lang', { lang: currentLocale.toUpperCase() }) }}
     </button>
 
-    <div mb-0 flex="~ items-center gap-1 sm:gap-3" text-3xl>
+    <div mb-0 flex="~ items-center gap-4 sm:gap-6" text-3xl>
       <!-- Tabs (hidden when search is open) -->
       <template v-if="!isSearchOpen">
-        <div class="subnav-tabs">
-          <RouterLink :to="`/${currentLocale}/notes`" class="!border-none" :class="isNotesActive ? activeStyle : inactiveStyle">
-            {{ $t('nav-notes') }}
-          </RouterLink>
-          <RouterLink :to="`/${currentLocale}/articles`" class="!border-none" :class="isArticlesActive ? activeStyle : inactiveStyle">
-            {{ $t('nav-articles') }}
-          </RouterLink>
+        <div class="subnav-scroll-area" :class="{ 'scrolled-start': isTabsScrolledStart, 'scrolled-end': isTabsScrolledEnd }">
+          <div ref="tabsScrollRef" class="subnav-tabs" @scroll.passive="onTabsScroll">
+            <RouterLink :to="`/${currentLocale}/notes`" class="!border-none" :class="isNotesActive ? activeStyle : inactiveStyle">
+              {{ $t('nav-notes') }}
+            </RouterLink>
+            <RouterLink :to="`/${currentLocale}/articles`" class="!border-none" :class="isArticlesActive ? activeStyle : inactiveStyle">
+              {{ $t('nav-articles') }}
+            </RouterLink>
+            <RouterLink :to="`/${currentLocale}/finds`" class="!border-none" :class="isFindsActive ? activeStyle : inactiveStyle">
+              {{ $t('nav-finds') }}
+            </RouterLink>
+          </div>
         </div>
-        <div class="flex-1" />
         <button
           class="search-trigger"
           :title="`${fluent.format('search-placeholder')} (${modKey}+K)`"
@@ -155,17 +198,70 @@ const modKey = computed(() => {
 </template>
 
 <style scoped>
-.subnav-tabs {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: baseline;
-  gap: 0.75rem;
+.subnav-scroll-area {
   flex: 1;
   min-width: 0;
 }
 
+.subnav-tabs {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  gap: 1.125rem;
+}
+
 .subnav-tabs a {
   white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .subnav-scroll-area {
+    position: relative;
+  }
+
+  .subnav-scroll-area::before,
+  .subnav-scroll-area::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 2.5rem;
+    height: 100%;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+  }
+
+  /* Left gradient (fade on overflow) */
+  .subnav-scroll-area::before {
+    left: 0;
+    background: linear-gradient(to right, var(--c-bg), transparent);
+  }
+
+  /* Right gradient (fade on overflow) */
+  .subnav-scroll-area::after {
+    right: 0;
+    background: linear-gradient(to right, transparent, var(--c-bg));
+  }
+
+  .subnav-scroll-area.scrolled-start::before {
+    opacity: 0;
+  }
+
+  .subnav-scroll-area.scrolled-end::after {
+    opacity: 0;
+  }
+
+  .subnav-tabs {
+    gap: 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .subnav-tabs::-webkit-scrollbar {
+    display: none; /* Chrome / Safari */
+  }
 }
 
 @media (max-width: 767px) {

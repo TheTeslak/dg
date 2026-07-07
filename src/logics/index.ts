@@ -133,3 +133,12 @@ export function resolvePath(path: string, currentRoutePath: string) {
 
   return `/${locale}/${cleanPath}`
 }
+
+export function extractDomain(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  }
+  catch {
+    return url.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '')
+  }
+}

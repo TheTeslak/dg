@@ -30,19 +30,19 @@ More details in the spoiler below:
 
 ⚙️ In early 2024, I joined an RPA startup building a semi-local assistant that controls a computer, like [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Since 2025, I've been building AI agents for various companies
 
-I'm not an ML engineer, though I've done basic model training (OCR CNN, with plans to fine-tune a small Qwen). I'm more of an integrator, adapting existing models for practical applications
+I'm not an ML engineer, though I've done basic model training (OCR CNN, with plans to fine-tune a small Qwen). I mostly adapt others' work for practical use
 
 My hands-on experience with AI began with an article [about Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) and its impressive (for the time) image generations
 
 The release of [Midjourney](https://t.me/TesNot/314) in 2022 completely hooked me — I spent days generating images, though it was a far cry from today's models
 
-I was using GPT even before ChatGPT launched ([my peak creation](https://t.me/Tes404/1058) + a post leading up to it), and I [wrote](https://t.me/Tes404/2929) about the release of GPT-3.5 on the very day it came out
+I was using GPT even before ChatGPT launched ([my peak](https://t.me/Tes404/1058) + a post leading up to it), including [ru](https://t.me/Tes404/599), and I [wrote](https://t.me/Tes404/2929) about the release of GPT-3.5 on the very day it came out
 
-I've built agents using LangGraph and LlamaIndex. Later, when the powerful (but high-maintenance) OpenClaw came out, I dove into its architecture. Right now, I'm exploring Hermes Agent and OpenHuman
+I've built agents using LangGraph and LlamaIndex, and automated some browser tasks with [Harpa](https://harpa.ai/). Later, I switched to the high-maintenance OpenClaw, analyzing its architecture. Right now, I'm exploring Hermes Agent and OpenHuman
 
 Through experimenting with local LLMs, I've become skeptical of anything under [at least]{.muted} 30B parameters for general-purpose tasks
 
-I keep a close eye on the LLM space: testing models, reading research papers, and maintaining a high-level understanding of transformers, attention mechanisms, training phases, and inference
+I keep a close eye on the LLM space: using them, reading papers, and having a surface-level grasp of transformers, attention, training phases, and inference
 
 :::
 

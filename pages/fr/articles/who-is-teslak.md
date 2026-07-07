@@ -36,11 +36,11 @@ Mon vrai contact avec les réseaux de neurones a commencé avec un article [sur 
 
 La sortie de [Midjourney](https://t.me/TesNot/314) en 2022 m’a beaucoup marqué : je passais des journées entières à générer des images, même si l’outil était alors infiniment loin des modèles actuels
 
-J’utilisais GPT avant même la sortie de ChatGPT ([mon sommet](https://t.me/Tes404/1058) + une publication juste avant), et j’ai écrit sur le lancement de la version 3.5 le jour même de sa sortie
+J’utilisais GPT avant même la sortie de ChatGPT ([mon pic](https://t.me/Tes404/1058) + une publication juste avant), y compris [ru](https://t.me/Tes404/599), et j’ai [écrit](https://t.me/Tes404/2929) sur le lancement de 3.5 le jour même de sa sortie
 
-J’ai développé un agent avec LangGraph et LlamaIndex. Plus tard, lors de la sortie du puissant (mais exigeant en maintenance) OpenClaw, j’ai analysé son architecture. Actuellement, je m’intéresse à Hermes Agent et OpenHuman
+J’ai développé des agents avec LangGraph et LlamaIndex, et j’ai automatisé certaines tâches du navigateur avec [Harpa](https://harpa.ai/). Plus tard, je suis passé à OpenClaw, exigeant en maintenance, et j’ai analysé son architecture. Actuellement, je m’intéresse à Hermes Agent et OpenHuman
 
-En expérimentant avec des modèles locaux, je reste sceptique vis-à-vis de tout ce qui se trouve en dessous de [au moins]{.muted} 30B pour des tâches générales
+En expérimentant avec des modèles locaux, je reste sceptique envers tout ce qui est sous [au moins]{.muted} 30B pour des tâches générales
 
 Je suis activement tous les LLM : je les utilise, je lis les *papers*, et je comprends dans les grandes lignes les transformers, l’attention, les phases d’entraînement et l’inférence
 

@@ -11,6 +11,9 @@ nav-now = Now
 nav-menu = Menu
 nav-close = Close
 nav-methodology = Methodology
+nav-finds = Finds
+finds-earlier = Earlier
+finds-telegram-promo = What caught my eye, though my stance may differ<br>More finds weekly in Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, in Russian
 
 a11y-skip-to-content = Skip to content
 a11y-home = Home

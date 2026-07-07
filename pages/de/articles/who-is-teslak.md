@@ -36,9 +36,9 @@ Mein erster engerer Kontakt mit neuronalen Netzen begann mit einem Artikel [übe
 
 Das im Jahr 2022 erschienene [Midjourney](https://t.me/TesNot/314) hat mich stark beeindruckt – ich habe tagelang Bilder generiert, obwohl es noch unendlich weit von den heutigen Modellen entfernt war
 
-Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([mein Gipfel](https://t.me/Tes404/1058) + ein Post kurz davor) und über den Release von 3.5 noch am selben Tag geschrieben
+Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([mein Peak](https://t.me/Tes404/1058) + ein Post kurz davor), einschließlich [ru](https://t.me/Tes404/599), und über den Release von 3.5 noch am selben Tag [geschrieben](https://t.me/Tes404/2929)
 
-Ich habe einen Agenten mit LangGraph und LlamaIndex entwickelt. Später, als das leistungsstarke, aber wartungsintensive OpenClaw herauskam, habe ich dessen Architektur analysiert. Derzeit sehe ich mir Hermes Agent und OpenHuman an
+Ich habe Agenten mit LangGraph und LlamaIndex entwickelt und einige Browser-Aufgaben mit [Harpa](https://harpa.ai/) automatisiert. Später wechselte ich zum wartungsintensiven OpenClaw und analysierte dessen Architektur. Derzeit sehe ich mir Hermes Agent und OpenHuman an
 
 Beim Experimentieren mit lokalen Modellen bin ich skeptisch gegenüber allem, was unter [mindestens]{.muted} 30B Parametern für allgemeine Aufgaben liegt
 

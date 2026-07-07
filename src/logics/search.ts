@@ -207,6 +207,20 @@ function hasExactWholeTerm(text: string, term: string): boolean {
   }
 }
 
+function getLocaleRank(
+  lang: string,
+  servedLocales: readonly SupportedLocale[],
+  currentLocale: string,
+) {
+  if (!isSupportedLocale(currentLocale))
+    return 0
+  if (lang === currentLocale)
+    return 0
+  if (servedLocales.includes(currentLocale))
+    return 1
+  return 2
+}
+
 function isSerializedSearchIndex(payload: unknown): payload is SerializedSearchIndex {
   return !!payload
     && typeof payload === 'object'
@@ -294,14 +308,12 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
       const title = result.title as string
       const highlightedTitle = highlightTerms(title, uniqueTerms)
 
-      // Boost score for current locale
-      const localBoost = result.lang === currentLocale ? 2 : 1
-      const score = result.score * localBoost
-
       const physicalPath = result.path as string
       const servedLocales = Array.isArray(result.servedLocales)
         ? result.servedLocales.filter(isSupportedLocale)
         : []
+      const lang = result.lang as string
+      const localeRank = getLocaleRank(lang, servedLocales, currentLocale)
       const path = isSupportedLocale(currentLocale)
         ? getArticleSearchPath(physicalPath, servedLocales, currentLocale)
         : physicalPath
@@ -312,14 +324,16 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
         highlightedTitle,
         date: result.date as string,
         type: result.type as string,
-        lang: result.lang as string,
+        lang,
         duration: result.duration as number | null,
         snippets,
-        score,
+        score: result.score,
+        localeRank,
       }
     })
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => a.localeRank - b.localeRank || b.score - a.score)
     .slice(0, 20)
+    .map(({ localeRank: _localeRank, ...result }) => result)
 }
 
 export function useSearch(currentLocale: Ref<string>) {

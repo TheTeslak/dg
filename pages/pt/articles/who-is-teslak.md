@@ -30,19 +30,19 @@ Mais detalhes no bloco retrátil
 
 ⚙️ No início de 2024, entrei em uma startup de RPA que desenvolvia um assistente semilocal para controlar o computador, nos moldes do [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Desde 2025, crio agentes de IA para diversas empresas
 
-Não sou engenheiro de ML, embora tenha treinado modelos de forma básica (OCR CNN, com planos de fazer fine-tuning em uma Qwen pequena). Na verdade, adapto o que é alheio para uso prático
+Não sou engenheiro de ML, embora tenha treinado modelos de forma básica (OCR CNN, com planos de fazer fine-tuning em uma Qwen pequena). Antes, adapto o alheio para uso prático
 
 Minha aproximação com as redes neurais começou com um artigo [sobre o Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) e suas imagens geradas, impressionantes para a época
 
 O lançamento do [Midjourney](https://t.me/TesNot/314) em 2022 me impressionou muito: eu passava dias inteiros gerando, embora estivesse infinitamente longe das atuais
 
-Eu já usava o GPT antes do lançamento do ChatGPT ([meu auge](https://t.me/Tes404/1058) + um post anterior), e escrevi sobre o lançamento da versão 3.5 no mesmo dia em que saiu
+Já usava o GPT antes do lançamento do ChatGPT ([meu pico](https://t.me/Tes404/1058) + um post anterior), incluindo [ru](https://t.me/Tes404/599), e [escrevi](https://t.me/Tes404/2929) sobre o lançamento de 3.5 no mesmo dia em que saiu
 
-Desenvolvi um agente com LangGraph e LlamaIndex. Mais tarde, com o lançamento do potente e exigente em termos de manutenção OpenClaw, analisei sua arquitetura. Atualmente, estou explorando o Hermes Agent e o OpenHuman
+Desenvolvi agentes com LangGraph e LlamaIndex, e automatizei algumas tarefas do navegador com [Harpa](https://harpa.ai/). Mais tarde, passei para o OpenClaw, exigente em manutenção, e analisei sua arquitetura. Atualmente, estou explorando o Hermes Agent e o OpenHuman
 
 Ao experimentar com modelos locais, sou cético em relação a qualquer modelo com menos de [pelo menos]{.muted} 30B para tarefas gerais
 
-Acompanho ativamente todos os LLMs: utilizo-os, leio artigos de pesquisa, entendo em linhas gerais os transformers, a atenção, as etapas de treinamento e a inferência
+Acompanho ativamente todos os LLMs: uso-os, leio papers, entendo em linhas gerais os transformers, a atenção, as etapas de treinamento e a inferência
 
 :::
 
