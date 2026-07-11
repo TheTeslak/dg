@@ -8,9 +8,13 @@ export interface FindItem {
 export const finds: FindItem[] = [
   {
     url: 'https://example.com/some/article?ref=123',
-    title: 'Отличная статья про X',
-    desc: 'Краткий комментарий, почему стоит прочитать',
-    date: '2026-07-05',
+    title: '1',
+    desc: '2',
+    date: '2026-01-01',
+  },
+  {
+    url: 'https://www.cloudflare.com/drop/',
+    title: 'Fast website publishing',
   },
   {
     url: 'https://www.lesswrong.com/posts/nhb8AyEcQGjQetgi5/the-llm-shoggoth-meme-is-weirder-than-you-think',
@@ -80,11 +84,28 @@ export const finds: FindItem[] = [
     desc: 'How a Cessna 172 is built and how its main systems work',
   },
   {
+    url: 'https://www.reddit.com/r/AskReddit/comments/180ywkj/whats_the_greatest_solved_mystery/?show=original',
+    title: 'Greatest solved mysteries',
+  },
+  {
     url: 'https://trends.google.com/trends/',
     title: 'Google Trends',
   },
   {
     url: 'https://neal.fun/',
     title: 'Playful web experiments',
+  },
+  {
+    url: 'https://en.wikipedia.org/wiki/Russo-Ukrainian_war_(2022%E2%80%93present)',
+    title: 'Russia’s war in Ukraine',
+  },
+  {
+    url: 'https://www.lesswrong.com/w/a-humans-guide-to-words',
+    title: 'A Human’s Guide to Words',
+    desc: 'There’s a lot to say about LessWrong, and one day I’ll write an essay on it — including what deserves criticism. Still, this section is one of its greatest',
+  },
+  {
+    url: 'https://en.wikipedia.org/wiki/Wikipedia%3AVital_articles',
+    title: 'Wikipedia’s essential topics',
   },
 ]
