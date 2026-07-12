@@ -1,0 +1,42 @@
+---
+import Default from '~/layouts/Default.astro'
+import { defaultLocale, makeT } from '~/utils/i18n'
+
+// A single static 404 served by the host for any unknown URL. The inline
+// script localizes the copy and the home link from the URL's locale prefix.
+const t = makeT(defaultLocale)
+---
+<Default locale={defaultLocale} title={t('page-not-found')} isNotFound={true} noFooter={true}>
+  <div class="prose m-auto mt-10 text-center">
+    <h1 class="text-5xl font-bold">404</h1>
+    <p class="op50" data-not-found-message>{t('page-not-found')}</p>
+    <div class="mt-5">
+      <a href={`/${defaultLocale}`} class="btn-gray" data-not-found-home>{t('action-go-home')}</a>
+    </div>
+  </div>
+</Default>
+
+<script>
+  // Localize the 404 copy from the requested URL's locale prefix.
+  const messages: Record<string, { text: string, home: string }> = {
+    en: { text: 'Page not found', home: 'Go home' },
+    ru: { text: 'Страница не найдена', home: 'На главную' },
+    es: { text: 'Página no encontrada', home: 'Ir al inicio' },
+    pt: { text: 'Página não encontrada', home: 'Ir para o início' },
+    de: { text: 'Seite nicht gefunden', home: 'Zur Startseite' },
+    fr: { text: 'Page introuvable', home: 'Retour à l’accueil' },
+  }
+  const match = window.location.pathname.match(/^\/(en|ru|es|pt|de|fr)(?=\/|$)/)
+  if (match) {
+    const locale = match[1]
+    const message = messages[locale]
+    const textEl = document.querySelector('[data-not-found-message]')
+    const homeEl = document.querySelector<HTMLAnchorElement>('[data-not-found-home]')
+    if (textEl && message)
+      textEl.textContent = message.text
+    if (homeEl && message) {
+      homeEl.textContent = message.home
+      homeEl.href = `/${locale}`
+    }
+  }
+</script>

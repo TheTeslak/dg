@@ -1,0 +1,95 @@
+---
+interface Props {
+  id: string
+  title?: string
+  poster?: string
+  /** start time in seconds */
+  start?: number
+}
+const { id, title = 'YouTube video', poster, start } = Astro.props
+const src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1${start ? `&start=${start}` : ''}`
+const posterSrc = poster ?? `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+---
+<div
+  class="youtube-embed"
+  data-youtube-embed
+  data-src={src}
+  role="region"
+  aria-label={title}
+>
+  <button type="button" class="youtube-poster" data-youtube-trigger aria-label={`Play video: ${title}`}>
+    <img src={posterSrc} alt="" loading="lazy" decoding="async" />
+    <span class="youtube-play" aria-hidden="true">
+      <svg viewBox="0 0 60 60" width="60" height="60"><polygon fill="white" points="22,15 22,45 47,30"></polygon><circle cx="30" cy="30" r="28" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/></svg>
+    </span>
+  </button>
+</div>
+
+<style>
+  .youtube-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin: 1.75em 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  }
+  .youtube-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .youtube-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+  }
+  .youtube-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .youtube-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 200ms ease;
+  }
+  .youtube-poster:hover .youtube-play {
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+</style>
+
+<script>
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-youtube-embed]').forEach((wrap) => {
+      const trigger = wrap.querySelector<HTMLButtonElement>('[data-youtube-trigger]')
+      if (!trigger || trigger.dataset.bound === '1') return
+      trigger.dataset.bound = '1'
+      trigger.addEventListener('click', () => {
+        const src = wrap.dataset.src
+        if (!src) return
+        const iframe = document.createElement('iframe')
+        iframe.src = src + '&autoplay=1'
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+        iframe.allowFullscreen = true
+        iframe.loading = 'lazy'
+        iframe.title = trigger.getAttribute('aria-label') || 'YouTube video'
+        wrap.innerHTML = ''
+        wrap.appendChild(iframe)
+      })
+    })
+  }
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

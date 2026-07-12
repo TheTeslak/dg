@@ -1,0 +1,80 @@
+---
+import { finds } from '~/data/finds'
+import { extractDomain, formatDate, makeT, type SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  locale: SupportedLocale
+}
+const { locale } = Astro.props
+const t = makeT(locale)
+
+const activeFinds = finds
+  .filter(item => !!item.date)
+  .sort((a, b) => +new Date(b.date!) - +new Date(a.date!))
+const archivedFinds = finds.filter(item => !item.date)
+---
+<div class="prose m-auto" style="contain: layout;">
+  {finds.length === 0 && (
+    <div class="py-2 op50 slide-enter">{t('blog-nothing-here')}</div>
+  )}
+
+  {finds.length > 0 && (
+    <>
+      <div
+        class="text-base opacity-35 mt-0 mb-10 leading-relaxed max-w-xl slide-enter"
+        style="--enter-stage: 0; --enter-step: 60ms;"
+        set:html={t('finds-telegram-promo')}
+      />
+
+      {activeFinds.length > 0 && (
+        <div class="mb-10">
+          {activeFinds.map((item, idx) => (
+            <div class="slide-enter" style={`--enter-stage: ${idx + 1}; --enter-step: 60ms;`}>
+              <a href={item.url} target="_blank" rel="noopener noreferrer" class="item block font-normal mb-6 mt-2 no-underline">
+                <div class="no-underline flex flex-col gap-1">
+                  <div class="title text-xl leading-1.2em flex gap-1.5 flex-wrap items-center">
+                    <span class="align-middle">{item.title}</span>
+                    <span class="op45 flex-none self-center text-base i-carbon-arrow-up-right" title={t('label-external')} aria-hidden="true"></span>
+                  </div>
+                  {item.desc && <div class="desc text-xl opacity-75 font-normal mt-1">{item.desc}</div>}
+                  <div class="flex gap-2 items-center text-base op60 mt-0.5">
+                    {item.date && <span>{formatDate(item.date, true, locale)}</span>}
+                    {item.date && <span>·</span>}
+                    <span>{extractDomain(item.url)}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {archivedFinds.length > 0 && (
+        <div class="mt-12">
+          <div
+            class="select-none mt-10 mb-6 slide-enter text-base font-bold opacity-35"
+            style={`--enter-stage: ${activeFinds.length + 1}; --enter-step: 60ms;`}
+          >
+            {t('finds-earlier')}
+          </div>
+          {archivedFinds.map((item, idx) => (
+            <div class="slide-enter" style={`--enter-stage: ${activeFinds.length + idx + 2}; --enter-step: 60ms;`}>
+              <a href={item.url} target="_blank" rel="noopener noreferrer" class="item block font-normal mb-6 mt-2 no-underline">
+                <div class="no-underline flex flex-col gap-1">
+                  <div class="title text-xl leading-1.2em flex gap-1.5 flex-wrap items-center">
+                    <span class="align-middle">{item.title}</span>
+                    <span class="op45 flex-none self-center text-base i-carbon-arrow-up-right" title={t('label-external')} aria-hidden="true"></span>
+                  </div>
+                  {item.desc && <div class="desc text-xl opacity-75 font-normal mt-1">{item.desc}</div>}
+                  <div class="flex gap-2 items-center text-base op60 mt-0.5">
+                    <span>{extractDomain(item.url)}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  )}
+</div>

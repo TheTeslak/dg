@@ -1,0 +1,455 @@
+---
+import { ClientRouter } from 'astro:transitions'
+import NavBar from '~/components/NavBar.astro'
+import Footer from '~/components/Footer.astro'
+import Lightbox from '~/components/Lightbox.astro'
+import {
+  defaultLocale,
+  getLanguageTag,
+  getLocaleFromPath,
+  isLocaleRootPath,
+  isSupportedLocale,
+  localeConfig,
+  makeT,
+  setPathLocale,
+  supportedLocales,
+  type SupportedLocale,
+} from '~/utils/i18n'
+import { getFeedName } from '~/locales/config'
+import { isDraftPost, isPostIndexable } from '~/utils/post-visibility'
+import { absoluteUrl, getCanonicalUrl, siteOrigin } from '~/utils/site'
+import 'markdown-it-github-alerts/styles/github-base.css'
+import 'markdown-it-github-alerts/styles/github-colors-dark-class.css'
+import 'markdown-it-github-alerts/styles/github-colors-light.css'
+import '~/styles/main.css'
+import '~/styles/prose.css'
+import '~/styles/markdown.css'
+import '~/styles/mdx-components.css'
+import '~/styles/post.css'
+
+interface Props {
+  locale?: SupportedLocale
+  title?: string
+  description?: string
+  image?: string
+  noFooter?: boolean
+  bodyClass?: string
+  art?: string
+  /** SEO context (the counterpart of dg's useSEO composable). */
+  isArticle?: boolean
+  isNotFound?: boolean
+  originalLocale?: SupportedLocale
+  availableLocales?: SupportedLocale[]
+  frontmatter?: Record<string, any>
+}
+
+const {
+  locale: propLocale,
+  title,
+  description,
+  image,
+  noFooter = false,
+  bodyClass = '',
+  art,
+  isArticle: isArticleProp = false,
+  isNotFound = false,
+  originalLocale,
+  availableLocales = [],
+  frontmatter: fm = {},
+} = Astro.props
+
+// With build.format 'file' the prerender pathname carries a `.html` suffix;
+// public URLs never do, so strip it before building canonical/hreflang.
+const path = Astro.url.pathname
+  .replace(/\.html$/, '')
+  .replace(/\/index$/, '/')
+  .replace(/\/+$/, '') || '/'
+const currentLocale: SupportedLocale = propLocale ?? getLocaleFromPath(path)
+const t = makeT(currentLocale)
+
+const siteName = 'Teslak'
+const locSiteName = localeConfig[currentLocale].siteName
+const defaultImage = `${siteOrigin}/og.png`
+const person = {
+  '@type': 'Person',
+  'name': siteName,
+  'url': siteOrigin,
+  'image': `${siteOrigin}/avatar.avif`,
+  'sameAs': [
+    'https://github.com/theTeslak',
+    'https://t.me/Teslak',
+    'https://t.me/TesNot',
+    'https://t.me/Tes404',
+  ],
+}
+
+function optionalString(value: unknown) {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined
+}
+
+function toIsoDate(value: unknown) {
+  if (!value)
+    return undefined
+  const date = new Date(value as string | Date)
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString()
+}
+
+const contentLocale: SupportedLocale = isSupportedLocale(fm.lang) ? fm.lang : currentLocale
+const isArticle = isArticleProp && !!fm.date
+
+const rawTitle = optionalString(title) || locSiteName
+const resolvedTitle = rawTitle === locSiteName || rawTitle.includes(locSiteName) || rawTitle.includes(siteName)
+  ? rawTitle
+  : `${rawTitle} · ${locSiteName}`
+
+const resolvedDescription = optionalString(description)
+  || optionalString(fm.description)
+  || optionalString(fm.excerpt)
+  || t('meta-description')
+
+// Alias URLs serve readers but must not masquerade as translated SEO pages.
+const isFallbackAlias = isArticle
+  && !!originalLocale
+  && originalLocale !== currentLocale
+  && !availableLocales.includes(currentLocale)
+
+const canonicalPath = isFallbackAlias && originalLocale
+  ? setPathLocale(path, originalLocale)
+  : path
+const canonicalUrl = getCanonicalUrl(canonicalPath)
+
+const resolvedImage = absoluteUrl(optionalString(image) ?? optionalString(fm.image)) || defaultImage
+
+const hreflangLocales: SupportedLocale[] = isArticle ? availableLocales : [...supportedLocales]
+const hreflangLinks = hreflangLocales.map(locale => ({
+  hreflang: getLanguageTag(locale),
+  href: `${siteOrigin}${setPathLocale(path, locale)}`,
+}))
+let xDefaultPath = isLocaleRootPath(path) ? '/' : setPathLocale(path, defaultLocale)
+if (isArticle && availableLocales.includes(defaultLocale))
+  xDefaultPath = setPathLocale(path, defaultLocale)
+else if (isArticle && availableLocales.length > 0)
+  xDefaultPath = setPathLocale(path, availableLocales[0])
+else if (originalLocale)
+  xDefaultPath = setPathLocale(path, originalLocale)
+
+const robots = (() => {
+  const explicitRobots = optionalString(fm.robots)
+  if (isNotFound)
+    return 'noindex, follow'
+  if (fm.draft || isDraftPost(fm.type))
+    return 'noindex, nofollow'
+  if (isFallbackAlias)
+    return 'noindex, follow'
+  if (isArticle && !isPostIndexable(fm))
+    return explicitRobots || 'noindex, nofollow'
+  return explicitRobots
+})()
+
+const isProfilePage = isArticle && (
+  canonicalPath.split('/').filter(Boolean).at(-1) === 'who-is-teslak'
+  || fm.type === 'profile'
+  || fm.profile === true
+)
+
+const schemaOrg = (() => {
+  if (isNotFound)
+    return undefined
+
+  if (isLocaleRootPath(path)) {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'url': siteOrigin,
+        'name': siteName,
+        'inLanguage': getLanguageTag(currentLocale),
+        'publisher': person,
+      },
+      {
+        '@context': 'https://schema.org',
+        ...person,
+      },
+    ]
+  }
+
+  if (!isArticle)
+    return undefined
+
+  const datePublished = toIsoDate(fm.date)
+  const dateModified = toIsoDate(fm.updated) || datePublished
+
+  if (isProfilePage) {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      'mainEntity': { ...person, description: resolvedDescription },
+      'inLanguage': getLanguageTag(contentLocale),
+      'datePublished': datePublished,
+      'dateModified': dateModified,
+    }
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    'mainEntityOfPage': { '@type': 'WebPage', '@id': canonicalUrl },
+    'headline': optionalString(fm.title),
+    'description': resolvedDescription,
+    'image': [resolvedImage],
+    'datePublished': datePublished,
+    'dateModified': dateModified,
+    'author': person,
+    'publisher': person,
+    'inLanguage': getLanguageTag(contentLocale),
+  }
+})()
+
+const articlePublished = isArticle ? toIsoDate(fm.date) : undefined
+const articleModified = isArticle ? (toIsoDate(fm.updated) || articlePublished) : undefined
+const articleTags: string[] = isArticle && Array.isArray(fm.tags)
+  ? fm.tags.filter((tag: unknown): tag is string => typeof tag === 'string' && !!tag.trim())
+  : []
+
+const ogLocaleMain = localeConfig[isArticle ? contentLocale : currentLocale].ogLocale
+const ogLocaleAlternates = hreflangLocales
+  .filter(locale => locale !== (isArticle ? contentLocale : currentLocale))
+  .map(locale => localeConfig[locale].ogLocale)
+
+const feedName = getFeedName(currentLocale)
+const feedTitle = localeConfig[currentLocale].feedTitle
+
+const defaultBodyClass = 'font-sans text-gray-700 dark:text-gray-200 relative'
+const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
+---
+<!doctype html>
+<html lang={getLanguageTag(currentLocale)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{resolvedTitle}</title>
+    <meta name="description" content={resolvedDescription} />
+    {robots && <meta name="robots" content={robots} />}
+    {!isNotFound && <link rel="canonical" href={canonicalUrl} />}
+    {!isNotFound && hreflangLinks.map(link => (
+      <link rel="alternate" type="text/html" hreflang={link.hreflang} href={link.href} />
+    ))}
+    {!isNotFound && (
+      <link rel="alternate" type="text/html" hreflang="x-default" href={`${siteOrigin}${xDefaultPath}`} />
+    )}
+
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={resolvedImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={resolvedTitle} />
+    <meta property="og:locale" content={ogLocaleMain} />
+    {ogLocaleAlternates.map(alt => <meta property="og:locale:alternate" content={alt} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={resolvedDescription} />
+    <meta name="twitter:image" content={resolvedImage} />
+    <meta name="twitter:image:alt" content={resolvedTitle} />
+    {articlePublished && <meta property="article:published_time" content={articlePublished} />}
+    {articleModified && <meta property="article:modified_time" content={articleModified} />}
+    {isArticle && <meta property="article:author" content={siteName} />}
+    {articleTags.map(tag => <meta property="article:tag" content={tag.trim()} />)}
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+
+    <link rel="alternate" type="application/rss+xml" title={`${feedTitle} RSS`} href={`/${feedName}.xml`} />
+    <link rel="alternate" type="application/atom+xml" title={`${feedTitle} Atom`} href={`/${feedName}.atom`} />
+    <link rel="alternate" type="application/feed+json" title={`${feedTitle} JSON Feed`} href={`/${feedName}.json`} />
+
+    {schemaOrg && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+    )}
+
+    <ClientRouter fallback="swap" />
+
+    <script is:inline>
+      // Apply persisted theme as early as possible to avoid FOUC.
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('vueuse-color-scheme')
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isDark = stored ? stored === 'dark' : prefersDark
+          document.documentElement.classList.toggle('dark', isDark)
+        } catch {}
+      })()
+    </script>
+  </head>
+  <body class={resolvedBodyClass}>
+    <a href="#main-content" class="skip-link">{t('a11y-skip-to-content')}</a>
+    {art && (
+      <div data-art data-default-art={art}>
+        {art === 'plum' && <art-plum></art-plum>}
+        {art === 'dots' && <art-dots></art-dots>}
+        {art === 'cellular' && <art-cellular></art-cellular>}
+        {art === 'topography' && <art-topography></art-topography>}
+        {art === 'interference' && <art-interference></art-interference>}
+        {art === 'random' && <art-random></art-random>}
+      </div>
+    )}
+    <NavBar locale={currentLocale} currentPath={path} />
+    <main id="main-content" class="px-7 py-10 of-x-hidden" tabindex="-1" role="main">
+      <slot />
+      {!noFooter && <Footer locale={currentLocale} />}
+    </main>
+    <Lightbox locale={currentLocale} />
+
+    <style>
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 1.5rem;
+        z-index: 1000;
+        padding: 0.5rem 1rem;
+        background-color: var(--c-bg);
+        color: inherit;
+        border: 1px solid rgba(125, 125, 125, 0.4);
+        border-radius: 0.25rem;
+        font-weight: bold;
+        text-decoration: none;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 1.5rem;
+        outline: 2px solid rgba(125, 125, 125, 0.6);
+        outline-offset: 4px;
+      }
+      [data-art] {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+    </style>
+
+    <script>
+      import { navigate } from 'astro:transitions/client'
+
+      // Re-apply persisted theme after Astro view transitions to avoid FOUC.
+      function reapplyTheme() {
+        try {
+          const stored = localStorage.getItem('vueuse-color-scheme')
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isDark = stored ? stored === 'dark' : prefersDark
+          document.documentElement.classList.toggle('dark', isDark)
+        } catch {}
+      }
+      document.addEventListener('astro:after-swap', reapplyTheme)
+
+      if (!(window as any).__dgGreeted) {
+        (window as any).__dgGreeted = true
+        // eslint-disable-next-line no-console
+        console.log(
+          '%c\u{1F441} if you gaze long into an abyss, the abyss also gazes at you',
+          'color: #888; font-size: 14px; font-family: monospace;',
+        )
+      }
+
+      /* ---- Keyboard Navigation & Art Background Override ----
+         preventDefault() is only called when a shortcut actually applies, so
+         arrow keys keep scrolling articles and F5 keeps refreshing pages
+         without art — matching dg's useKeyboardNav guards. */
+      const artStyles = ['plum', 'dots', 'cellular', 'topography', 'interference']
+      const navSuffixes = ['', '/notes', '/projects', '/photos']
+
+      function applyArtOverride() {
+        const container = document.querySelector('[data-art]')
+        if (!container) return
+        const override = localStorage.getItem('dg-art-override')
+        const defaultArt = container.getAttribute('data-default-art') || ''
+        const targetArt = override || defaultArt
+        if (!targetArt) return
+        const child = container.firstElementChild
+        if (child && child.tagName.toLowerCase() === `art-${targetArt}`) return
+        container.replaceChildren(document.createElement(`art-${targetArt}`))
+      }
+
+      function cycleArt(direction: 'up' | 'down') {
+        const container = document.querySelector('[data-art]')
+        if (!container) return
+        const child = container.firstElementChild
+        if (!child) return
+        const current = child.tagName.toLowerCase().replace('art-', '')
+        let idx = artStyles.indexOf(current)
+        if (idx === -1) idx = 0
+        const nextIdx = direction === 'up'
+          ? (idx - 1 + artStyles.length) % artStyles.length
+          : (idx + 1) % artStyles.length
+        const nextStyle = artStyles[nextIdx]
+        localStorage.setItem('dg-art-override', nextStyle)
+        container.replaceChildren(document.createElement(`art-${nextStyle}`))
+      }
+
+      function isEditableTarget(target: EventTarget | null) {
+        if (!(target instanceof HTMLElement)) return false
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return true
+        if (target.isContentEditable) return true
+        return false
+      }
+
+      function findNavIndex(): { idx: number, navPaths: string[] } {
+        const locale = document.documentElement.lang.split('-')[0] || 'en'
+        const navPaths = navSuffixes.map(s => `/${locale}${s}`)
+        const path = window.location.pathname.replace(/\/$/, '') || '/'
+        return { idx: navPaths.indexOf(path), navPaths }
+      }
+
+      function handleGlobalKeydown(e: KeyboardEvent) {
+        if (isEditableTarget(e.target)) return
+
+        const lightbox = document.getElementById('lightbox')
+        if (lightbox && !lightbox.hidden) return
+        if (document.querySelector('.search-input-container')) return
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          const { idx, navPaths } = findNavIndex()
+          if (idx === -1) return
+          e.preventDefault()
+          const next = e.key === 'ArrowRight'
+            ? (idx + 1) % navPaths.length
+            : (idx - 1 + navPaths.length) % navPaths.length
+          navigate(navPaths[next])
+        }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          // Only cycle when an art background is present on this page.
+          if (!document.querySelector('[data-art]')) return
+          e.preventDefault()
+          cycleArt(e.key === 'ArrowDown' ? 'down' : 'up')
+        }
+        else if (e.key === 'F5') {
+          if (!document.querySelector('[data-art]')) return
+          e.preventDefault()
+          localStorage.removeItem('dg-art-override')
+          applyArtOverride()
+        }
+      }
+
+      function initKeyboardNav() {
+        applyArtOverride()
+        document.removeEventListener('keydown', handleGlobalKeydown)
+        document.addEventListener('keydown', handleGlobalKeydown)
+      }
+
+      initKeyboardNav()
+      document.addEventListener('astro:page-load', initKeyboardNav)
+    </script>
+
+    <script>
+      // Register art-* custom elements lazily so they don't block initial paint.
+      import('~/components/art/index.ts')
+    </script>
+  </body>
+</html>

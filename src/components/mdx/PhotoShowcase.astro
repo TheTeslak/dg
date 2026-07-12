@@ -1,0 +1,181 @@
+---
+import { Image } from 'astro:assets'
+
+interface Props {
+  ids?: string[] | string
+  ':ids'?: string[] | string
+  mode?: 'slide' | 'grid'
+  ':mode'?: 'slide' | 'grid'
+  view?: 'cover' | 'contain'
+  ':view'?: 'cover' | 'contain'
+  limit?: number | string
+  ':limit'?: number | string
+}
+
+const rawIds = Astro.props.ids || Astro.props[':ids']
+const mode = Astro.props.mode || Astro.props[':mode'] || 'grid'
+const view = Astro.props.view || Astro.props[':view'] || 'cover'
+const rawLimit = Astro.props.limit || Astro.props[':limit']
+const limit = rawLimit ? parseInt(String(rawLimit), 10) : undefined
+
+// Import all JPEGs and metadata from /src/assets/photos/
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/photos/*.{jpg,JPG,png,PNG,webp,avif}',
+  { eager: true },
+)
+const metaModules = import.meta.glob<Record<string, unknown>>(
+  '/src/assets/photos/*.json',
+  { eager: true, import: 'default' },
+)
+
+interface PhotoEntry {
+  name: string
+  src: ImageMetadata
+  meta?: { text?: string, lang?: string, blurhash?: string }
+  index: number
+}
+
+// Map all images
+const allPhotosSorted: PhotoEntry[] = Object.entries(imageModules)
+  .map(([path, mod]) => {
+    const name = path.replace(/^.*\/(.+)\.\w+$/, '$1')
+    const meta = (metaModules[path.replace(/\.\w+$/, '.json')] as PhotoEntry['meta']) || undefined
+    return { name, src: mod.default, meta, index: 0 }
+  })
+  .sort((a, b) => (a.name < b.name ? 1 : a.name > b.name ? -1 : 0))
+  .map((p, i) => ({ ...p, index: i }))
+
+// Filter/select based on props
+let photos: PhotoEntry[] = []
+
+const ids = typeof rawIds === 'string'
+  ? rawIds.split(',').map(i => i.trim()).filter(Boolean)
+  : Array.isArray(rawIds)
+    ? rawIds.map(i => String(i).trim()).filter(Boolean)
+    : []
+
+if (ids.length > 0) {
+  const selected: PhotoEntry[] = []
+  for (const id of ids) {
+    const found = allPhotosSorted.find(p => p.name === id || p.name.includes(id))
+    if (found) {
+      selected.push(found)
+    } else {
+      console.warn(`[PhotoShowcase] Missing photo id: ${id}`)
+    }
+  }
+  photos = selected
+} else if (limit) {
+  photos = allPhotosSorted.slice(0, limit)
+} else {
+  photos = allPhotosSorted
+}
+---
+{mode === 'slide' ? (
+  <div
+    class="photos flex gap-4 pt-3 pb-1 w-screen overflow-x-auto photos-slide-container"
+    style="margin-left: calc(var(--prose-margin) * -1); padding-left: var(--prose-margin); padding-right: var(--prose-margin); scrollbar-width: none;"
+  >
+    {photos.map((p) => (
+      <div lang={p.meta?.lang}>
+        <div class="photo-hover">
+          <Image
+            src={p.src}
+            alt={p.meta?.text || ''}
+            data-photo-index={p.index}
+            decoding="async"
+            loading="lazy"
+            class="w-80 h-80 max-w-80 max-h-80 min-w-80 min-h-80 aspect-square object-cover"
+          />
+        </div>
+        {p.meta?.text && (
+          <div class="text-sm opacity-75 mt-2 max-w-80 line-clamp-2">
+            {p.meta.text}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+) : (
+  <div
+    class="photos photo-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-500 mx-auto"
+    data-photo-view-mode={view}
+  >
+    {photos.map((p) => {
+      const caption = p.meta?.text
+      return (
+        <div>
+          <div class="photo-hover">
+            <Image
+              src={p.src}
+              alt={caption || ''}
+              data-photo-index={p.index}
+              decoding="async"
+              loading="lazy"
+              class="w-full"
+            />
+          </div>
+        </div>
+      )
+    })}
+  </div>
+)}
+
+<style>
+  .photos-slide-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .photos-slide-container::-webkit-scrollbar {
+    display: none;
+  }
+  .photo-grid {
+    padding: 0 1rem;
+  }
+  .photo-grid :global(img) {
+    width: 100%;
+    display: block;
+  }
+  .photo-grid[data-photo-view-mode='cover'] :global(img) {
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+  }
+  .photo-grid[data-photo-view-mode='contain'] :global(img) {
+    object-fit: contain;
+    aspect-ratio: auto;
+    background: var(--c-bg);
+  }
+  @media (min-width: 640px) {
+    .photo-grid[data-photo-view-mode='contain'] :global(img) {
+      aspect-ratio: 1 / 1;
+    }
+  }
+</style>
+
+<script>
+  function initSlideScroll() {
+    document.querySelectorAll<HTMLElement>('.photos-slide-container').forEach((container) => {
+      if (container.dataset.bound === '1') return
+      container.dataset.bound = '1'
+      let hasHorizontalScroll = false
+
+      container.addEventListener('wheel', (e) => {
+        if (hasHorizontalScroll) return
+        if (e.deltaX !== 0) {
+          hasHorizontalScroll = true
+          return
+        }
+        if (container.scrollLeft <= 0 && e.deltaY <= 0) return
+        if (container.scrollLeft >= container.scrollWidth - container.clientWidth && e.deltaY > 0) return
+
+        container.scrollTo({
+          left: container.scrollLeft + e.deltaY,
+        })
+        e.preventDefault()
+      }, { passive: false })
+    })
+  }
+
+  initSlideScroll()
+  document.addEventListener('astro:page-load', initSlideScroll)
+</script>

@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content'
+
+interface Props {
+  links: string[] | string
+  ':links'?: string[] | string
+}
+
+const rawLinks = Astro.props.links || Astro.props[':links']
+const links = typeof rawLinks === 'string'
+  ? rawLinks.split(',').map(s => s.trim()).filter(Boolean)
+  : Array.isArray(rawLinks)
+    ? rawLinks.map(s => String(s).trim()).filter(Boolean)
+    : []
+
+const locale = Astro.params.locale || 'en'
+const allArticles = await getCollection('articles')
+
+const articles = links.map(slug => {
+  const entry = allArticles.find(e => {
+    const parts = e.id.split('/')
+    const fileSlug = parts.slice(1).join('/').replace(/\.[^.]+$/, '')
+    const fileLocale = parts[0]
+    return fileSlug === slug && fileLocale === locale
+  })
+
+  if (!entry) return null
+
+  return {
+    path: `/${locale}/articles/${slug}`,
+    title: entry.data.title || entry.data.display || '',
+    description: entry.data.excerpt || entry.data.description || '',
+  }
+}).filter((x): x is NonNullable<typeof x> => !!x)
+---
+{articles.length > 0 && (
+  <div class="article-links">
+    {articles.map(article => (
+      <a href={article.path} class="article-link-card">
+        <span class="article-link-title">{article.title}</span>
+        <span class="article-link-excerpt">
+          {article.description || article.title}
+        </span>
+      </a>
+    ))}
+  </div>
+)}
+
+<style>
+.article-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.article-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(125, 125, 125, 0.25);
+  border-radius: 0.5rem;
+  text-decoration: none !important;
+  transition: all 0.25s ease;
+  opacity: 0.65;
+  overflow: hidden;
+  color: inherit !important;
+}
+
+.article-link-card:hover {
+  opacity: 1;
+  border-color: rgba(125, 125, 125, 0.35);
+  background: rgba(125, 125, 125, 0.06);
+}
+
+.article-link-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.article-link-excerpt {
+  font-size: 1rem;
+  line-height: 1.5;
+  height: 4.125em; /* 2.75 lines */
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to bottom, black 20%, rgba(0, 0, 0, 0.15) 100%);
+  mask-image: linear-gradient(to bottom, black 20%, rgba(0, 0, 0, 0.15) 100%);
+}
+
+:global(.dark) .article-link-card {
+  border-color: rgba(125, 125, 125, 0.4);
+}
+
+:global(.dark) .article-link-card:hover {
+  border-color: rgba(125, 125, 125, 0.5);
+  background: rgba(125, 125, 125, 0.08);
+}
+</style>

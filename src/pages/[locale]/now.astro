@@ -1,0 +1,25 @@
+---
+import Default from '~/layouts/Default.astro'
+import NowEntry from '~/components/NowEntry.astro'
+import { nowContent } from '~/data/home'
+import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+
+export async function getStaticPaths() {
+  return supportedLocales.map(locale => ({ params: { locale } }))
+}
+
+const { locale } = Astro.params as { locale: SupportedLocale }
+const content = nowContent[locale]
+---
+<Default locale={locale} title={content.title} description={content.description} art="random">
+  <div class="prose m-auto mb-8">
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5">{content.display}</h1>
+  </div>
+  <div class="prose m-auto slide-enter-content">
+    {content.entries.map(entry => (
+      <NowEntry date={entry.date} locale={locale}>
+        <p set:html={entry.html} />
+      </NowEntry>
+    ))}
+  </div>
+</Default>

@@ -1,0 +1,120 @@
+---
+import { formatDate, formatReadingDuration, isRecentPost, makeT, type SupportedLocale } from '~/utils/i18n'
+import { isDraftPost, sortByDateDesc, type PostSummary } from '~/utils/posts'
+
+interface Props {
+  posts: PostSummary[]
+  locale: SupportedLocale
+}
+const { posts, locale } = Astro.props
+const t = makeT(locale)
+
+const sorted = sortByDateDesc(posts)
+
+function postLangTag(post: PostSummary): string | null {
+  if (post.lang && post.lang !== locale)
+    return post.lang.toUpperCase()
+  return null
+}
+
+function isSameYear(a?: Date, b?: Date) {
+  return !!a && !!b && a.getFullYear() === b.getFullYear()
+}
+---
+<ul role="list" style="contain: layout;" data-post-list data-locale={locale}>
+  {sorted.length === 0 && (
+    <div role="listitem" class="py-2 op50">{t('blog-nothing-here')}</div>
+  )}
+  {sorted.map((post, idx) => {
+    const isExternal = !!post.redirect
+    const href = post.redirect || post.path
+    const langTag = postLangTag(post)
+    const duration = formatReadingDuration(post.duration, locale)
+    const stage = Math.min(idx, 10)
+    const newGroup = !isSameYear(post.date, sorted[idx - 1]?.date)
+    return (
+      <>
+        {newGroup && post.date && (
+          <div
+            role="listitem"
+            class="select-none relative h-20 pointer-events-none slide-enter"
+            style={`--enter-stage: ${stage - 2}; --enter-step: 60ms;`}
+          >
+            <span class="text-8em color-transparent absolute font-bold op10" style="left: -3rem; top: -2rem; -webkit-text-stroke: 2px #aaaaaa;">
+              {post.date.getFullYear()}
+            </span>
+          </div>
+        )}
+        <div
+          role="listitem"
+          class="slide-enter"
+          style={`--enter-stage: ${stage}; --enter-step: 60ms;`}
+          data-post-lang={post.lang || locale}
+        >
+          <a
+            href={href}
+            class="item block font-normal mb-6 mt-2 no-underline"
+            target={isExternal ? '_blank' : undefined}
+            rel={isExternal ? 'noopener noreferrer' : undefined}
+          >
+            <div class="no-underline flex flex-col md:flex-row gap-2 md:items-center">
+              <div class="title text-xl leading-1.2em flex gap-2 flex-wrap">
+                {langTag && (
+                  <span class="align-middle flex-none text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 ml--10 mr-2 my-auto hidden md:block">{langTag}</span>
+                )}
+                <span class="align-middle">{post.title}</span>
+                {isExternal && (
+                  <span
+                    class="align-middle op50 flex-none text-xs ml--1.5 i-carbon-arrow-up-right"
+                    title={t('label-external')}
+                    aria-hidden="true"
+                  ></span>
+                )}
+              </div>
+
+              <div class="flex gap-2 items-center">
+                <span class="text-xl op60 ws-nowrap">
+                  {isDraftPost(post.type) && <span role="img" aria-label="Draft">🚧 </span>}
+                  {isRecentPost(post.date, post.updated) && !isDraftPost(post.type) && <span role="img" aria-label="Recent">🌱 </span>}
+                  {formatDate(post.date, true, locale)}
+                </span>
+                {duration && <span class="text-xl op60 ws-nowrap">· {duration}</span>}
+                {post.place && <span class="text-xl op60 ws-nowrap md:hidden">· {post.place}</span>}
+                {langTag && (
+                  <span class="align-middle flex-none text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto md:hidden">{langTag}</span>
+                )}
+              </div>
+            </div>
+            {post.place && <div class="op45 text-xl hidden mt--2 md:block">{post.place}</div>}
+          </a>
+        </div>
+      </>
+    )
+  })}
+</ul>
+
+<script>
+  // "Only {LANG}" filter: hides posts whose content language differs from the
+  // site locale. State lives in localStorage; SearchSubNav dispatches the
+  // change event this listener consumes.
+  function applyOnlyLanguage() {
+    const enabled = (() => {
+      try {
+        return localStorage.getItem('teslak-only-language') === 'true'
+      }
+      catch {
+        return false
+      }
+    })()
+    document.querySelectorAll<HTMLElement>('[data-post-list]').forEach((list) => {
+      const locale = list.getAttribute('data-locale') || 'en'
+      list.querySelectorAll<HTMLElement>('[data-post-lang]').forEach((item) => {
+        item.hidden = enabled && item.getAttribute('data-post-lang') !== locale
+      })
+    })
+  }
+
+  applyOnlyLanguage()
+  document.addEventListener('astro:page-load', applyOnlyLanguage)
+  document.documentElement.addEventListener('teslak-only-language-change', applyOnlyLanguage)
+</script>

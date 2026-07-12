@@ -1,0 +1,103 @@
+---
+import { formatDate, isRecentPost, type SupportedLocale } from '~/utils/i18n'
+import { isDraftPost } from '~/utils/post-visibility'
+import type { PostSummary } from '~/utils/posts'
+
+interface Props {
+  locale: SupportedLocale
+  currentPath: string
+  posts: PostSummary[]
+}
+const { locale, currentPath, posts } = Astro.props
+
+const sorted = [...posts].sort((a, b) => {
+  const ad = a.date ? a.date.getTime() : 0
+  const bd = b.date ? b.date.getTime() : 0
+  return bd - ad
+})
+const idx = sorted.findIndex(p => p.path === currentPath)
+const olderPost = idx !== -1 && idx + 1 < sorted.length ? sorted[idx + 1] : null
+const newerPost = idx !== -1 && idx - 1 >= 0 ? sorted[idx - 1] : null
+const hasNavigation = newerPost || olderPost
+---
+{hasNavigation && (
+  <nav class="post-nav" aria-label="Article navigation">
+    {newerPost ? (
+      <a href={newerPost.path} class="post-nav-link post-nav-newer flex-1">
+        <span class="i-ri-arrow-left-s-line shrink-0" aria-hidden="true"></span>
+        <div class="post-nav-text">
+          <span class="post-nav-title">{newerPost.title}</span>
+          <span class="post-nav-date">
+            {isDraftPost(newerPost.type) && <span>🚧 </span>}
+            {isRecentPost(newerPost.date, newerPost.updated) && !isDraftPost(newerPost.type) && <span>🌱 </span>}
+            {newerPost.date && formatDate(newerPost.date, true, locale)}
+          </span>
+        </div>
+      </a>
+    ) : (
+      <div class="flex-1" />
+    )}
+
+    {olderPost ? (
+      <a href={olderPost.path} class="post-nav-link post-nav-older flex-1">
+        <div class="post-nav-text align-right">
+          <span class="post-nav-title text-right">{olderPost.title}</span>
+          <span class="post-nav-date">
+            {isDraftPost(olderPost.type) && <span>🚧 </span>}
+            {isRecentPost(olderPost.date, olderPost.updated) && !isDraftPost(olderPost.type) && <span>🌱 </span>}
+            {olderPost.date && formatDate(olderPost.date, true, locale)}
+          </span>
+        </div>
+        <span class="i-ri-arrow-right-s-line shrink-0" aria-hidden="true"></span>
+      </a>
+    ) : (
+      <div class="flex-1" />
+    )}
+  </nav>
+)}
+
+<style>
+  .post-nav {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0 0;
+  }
+  .post-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(125, 125, 125, 0.25);
+    border-radius: 0.5rem;
+    text-decoration: none !important;
+    color: inherit;
+    min-width: 0;
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
+  .post-nav-link:hover {
+    background: rgba(125, 125, 125, 0.07);
+    border-color: rgba(125, 125, 125, 0.4);
+  }
+  .post-nav-older {
+    justify-content: flex-end;
+  }
+  .post-nav-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .post-nav-text.align-right {
+    align-items: flex-end;
+  }
+  .post-nav-title {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .post-nav-date {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+</style>

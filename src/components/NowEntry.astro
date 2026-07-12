@@ -1,0 +1,48 @@
+---
+import { getLanguageTag, type SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  date: string
+  locale: SupportedLocale
+}
+const { date, locale } = Astro.props
+
+const match = date.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+const parsed = match
+  ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  : null
+
+const formattedDate = (() => {
+  if (!parsed)
+    return date
+  const includeYear = parsed.getFullYear() !== new Date().getFullYear()
+  const formatted = new Intl.DateTimeFormat(getLanguageTag(locale), {
+    day: 'numeric',
+    month: 'long',
+    ...(includeYear ? { year: 'numeric' } : {}),
+  }).format(parsed)
+  return locale === 'ru' ? formatted.replace(/\s*г\.$/, '') : formatted
+})()
+---
+<section class="now-entry">
+  <time datetime={date} class="now-entry-date">{formattedDate}</time>
+  <div class="now-entry-content">
+    <slot />
+  </div>
+</section>
+
+<style is:global>
+  .now-entry {
+    margin-top: 2.5rem;
+  }
+  .now-entry-date {
+    display: block;
+    opacity: 0.5;
+  }
+  .now-entry-content > :first-child {
+    margin-top: 0;
+  }
+  .now-entry-content > :last-child {
+    margin-bottom: 0;
+  }
+</style>

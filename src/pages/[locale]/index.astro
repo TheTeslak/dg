@@ -1,0 +1,28 @@
+---
+import Default from '~/layouts/Default.astro'
+import HomeIntro from '~/components/HomeIntro.astro'
+import { homeContent } from '~/data/home'
+import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+
+export async function getStaticPaths() {
+  return supportedLocales.map(locale => ({ params: { locale } }))
+}
+
+const { locale } = Astro.params as { locale: SupportedLocale }
+const content = homeContent[locale]
+---
+<Default
+  locale={locale}
+  title={content.title}
+  description={content.description}
+  art="random"
+>
+  <HomeIntro
+    locale={locale}
+    display={content.display}
+    avatarHref={`/${locale}/who-is-teslak`}
+    avatarText={content.avatarText}
+    paragraphs={content.paragraphs}
+    emailIntro={`${content.emailIntro} <span class="font-mono">Teslak<span class="i-carbon-at" aria-hidden="true"></span>proton.me</span>`}
+  />
+</Default>

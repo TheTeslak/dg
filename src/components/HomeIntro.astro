@@ -1,0 +1,69 @@
+---
+import type { SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  locale: SupportedLocale
+  display: string
+  avatarHref: string
+  avatarText: string
+  paragraphs: string[]
+  emailIntro: string
+}
+const { display, avatarHref, avatarText, paragraphs, emailIntro } = Astro.props
+
+const titleParts = (() => {
+  if (!avatarText)
+    return { before: '', linked: '', after: display }
+  const idx = display.indexOf(avatarText)
+  if (idx === -1)
+    return { before: '', linked: '', after: display }
+  return {
+    before: display.slice(0, idx),
+    linked: avatarText,
+    after: display.slice(idx + avatarText.length),
+  }
+})()
+---
+<div class="prose m-auto mb-8 h-card">
+  <h1 class="slide-enter-50 !mt-0 !mb-2.5 p-name">
+    {titleParts.linked ? (
+      <>
+        {titleParts.before && <span class="title-rest p-note">{titleParts.before}</span>}
+        <a href={avatarHref} class="title-pic-link u-url">
+          <img src="/avatar.avif" alt="" class="title-pic u-photo title-pic--full" />
+          <span class="p-name">{titleParts.linked}</span>
+        </a>
+        {titleParts.after && <span class="title-rest p-note">{titleParts.after}</span>}
+      </>
+    ) : (
+      display
+    )}
+  </h1>
+</div>
+
+<article class="prose m-auto slide-enter-content">
+  {paragraphs.map(html => (
+    <p set:html={html} />
+  ))}
+
+  <hr />
+
+  <p class="mt--2! flex gap-4 flex-wrap">
+    <a href="https://signal.me/#eu/0ojeaUswyejbiq9TmA36oThynM-IJEHhlH5cXGOi59EkXcuGR9dO9JFN9JQvyx7x" target="_blank" rel="noopener">
+      <span class="op75 i-simple-icons-signal" aria-hidden="true"></span> Signal
+    </a>
+    <a href="https://t.me/Teslak" target="_blank" rel="noopener">
+      <span class="op75 i-simple-icons-telegram" aria-hidden="true"></span> Telegram
+    </a>
+    <a href="https://discord.com/users/289830548338376706" target="_blank" rel="noopener">
+      <span class="op75 i-simple-icons-discord" aria-hidden="true"></span> Discord
+    </a>
+    <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank" rel="noopener">
+      <span class="op75 i-ph-matrix-logo-fill" aria-hidden="true"></span> Matrix
+    </a>
+  </p>
+
+  <p set:html={emailIntro} />
+</article>
+
+<!-- Title avatar/glint styles live globally in src/styles/post.css -->

@@ -1,0 +1,40 @@
+---
+interface Props {
+  link: string
+  label?: string
+}
+const { link, label = "Let's chat" } = Astro.props
+---
+<a
+  class="cal-com-btn"
+  href={`https://cal.com/${link}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-cal-link={link}
+>
+  <span class="i-ri-calendar-event-line" aria-hidden="true"></span>
+  <span>{label}</span>
+</a>
+
+<style>
+  .cal-com-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(125, 125, 125, 0.4);
+    text-decoration: none !important;
+    color: inherit;
+    background: rgba(125, 125, 125, 0.05);
+    transition: background-color 200ms ease, border-color 200ms ease, transform 180ms ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .cal-com-btn:hover {
+    background: rgba(125, 125, 125, 0.1);
+    border-color: rgba(125, 125, 125, 0.55);
+    transform: translateY(-1px);
+  }
+  .cal-com-btn:active { transform: translateY(0); }
+</style>

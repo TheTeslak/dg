@@ -1,0 +1,42 @@
+---
+import Default from '~/layouts/Default.astro'
+import ListPosts from '~/components/ListPosts.astro'
+import SearchSubNav from '~/components/SearchSubNav.astro'
+import { localeConfig, makeT, supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { filterByType, getAllArticles, sortByDateDesc } from '~/utils/posts'
+
+export async function getStaticPaths() {
+  return supportedLocales.map(locale => ({ params: { locale } }))
+}
+
+const { locale } = Astro.params as { locale: SupportedLocale }
+const t = makeT(locale)
+const all = await getAllArticles()
+// One entry per slug in this locale: the physical translation wins,
+// otherwise the fallback source serving this locale.
+const posts = sortByDateDesc(
+  filterByType(
+    all.filter(p => p.servedLocales.includes(locale)
+      && !(p.locale !== locale && all.some(o => o.slug === p.slug && o.locale === locale))),
+    'blog',
+  ).map(p => ({ ...p, path: `/${locale}/${p.slug}` })),
+)
+
+const labels = {
+  notes: t('nav-notes'),
+  articles: t('nav-articles'),
+  finds: t('nav-finds'),
+  onlyLanguage: t('blog-only-lang', { lang: locale.toUpperCase() }),
+  searchPlaceholder: t('search-placeholder'),
+  searchClose: t('search-close'),
+  searchLoading: t('search-loading'),
+  searchStartTyping: t('search-start-typing'),
+  searchNoResults: t('search-no-results'),
+  durationSuffix: localeConfig[locale].minuteAbbreviation,
+}
+---
+<Default locale={locale} title="Teslak Articles" art="plum">
+  <SearchSubNav locale={locale} labels={labels}>
+    <ListPosts posts={posts} locale={locale} />
+  </SearchSubNav>
+</Default>

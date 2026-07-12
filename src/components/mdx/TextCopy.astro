@@ -1,0 +1,68 @@
+---
+interface Props {
+  value: string
+  class?: string
+}
+const { value, class: className } = Astro.props
+---
+<button
+  type="button"
+  class:list={['text-copy', className]}
+  data-text-copy
+  data-value={value}
+  aria-label="Copy"
+>
+  <span class="text-copy-value"><slot>{value}</slot></span>
+  <span class="text-copy-icon i-ri-links-line" aria-hidden="true"></span>
+  <span class="text-copy-feedback i-ri-check-line" aria-hidden="true"></span>
+</button>
+
+<style>
+  .text-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.05em 0.4em;
+    border-radius: 0.3em;
+    border: 0;
+    background: rgba(125, 125, 125, 0.12);
+    color: inherit;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    transition: background 200ms ease;
+  }
+  .text-copy:hover {
+    background: rgba(125, 125, 125, 0.2);
+  }
+  .text-copy-icon,
+  .text-copy-feedback {
+    font-size: 0.85em;
+    opacity: 0.5;
+    transition: opacity 200ms ease;
+  }
+  .text-copy.is-copied .text-copy-icon { display: none; }
+  .text-copy:not(.is-copied) .text-copy-feedback { display: none; }
+</style>
+
+<script>
+  function init() {
+    document.querySelectorAll<HTMLButtonElement>('[data-text-copy]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return
+      btn.dataset.bound = '1'
+      let timer: ReturnType<typeof setTimeout> | undefined
+      btn.addEventListener('click', async () => {
+        const value = btn.dataset.value || btn.querySelector('.text-copy-value')?.textContent || ''
+        try {
+          await navigator.clipboard.writeText(value)
+          btn.classList.add('is-copied')
+          if (timer) clearTimeout(timer)
+          timer = setTimeout(() => btn.classList.remove('is-copied'), 1500)
+        } catch {}
+      })
+    })
+  }
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

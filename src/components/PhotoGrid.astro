@@ -1,0 +1,148 @@
+---
+import { Image } from 'astro:assets'
+import { makeT, type SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  locale: SupportedLocale
+}
+const { locale } = Astro.props
+
+// Import all JPEGs from /src/assets/photos/
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/photos/*.{jpg,JPG,png,PNG,webp,avif}',
+  { eager: true },
+)
+const metaModules = import.meta.glob<Record<string, unknown>>(
+  '/src/assets/photos/*.json',
+  { eager: true, import: 'default' },
+)
+
+interface PhotoEntry {
+  name: string
+  src: ImageMetadata
+  meta?: { text?: string, lang?: string, blurhash?: string }
+  index: number
+}
+
+const photos: PhotoEntry[] = Object.entries(imageModules)
+  .map(([path, mod]) => {
+    const name = path.replace(/^.*\/(.+)\.\w+$/, '$1')
+    const meta = (metaModules[path.replace(/\.\w+$/, '.json')] as PhotoEntry['meta']) || undefined
+    return { name, src: mod.default, meta, index: 0 }
+  })
+  .sort((a, b) => (a.name < b.name ? 1 : a.name > b.name ? -1 : 0))
+  .map((p, i) => ({ ...p, index: i }))
+
+const t = makeT(locale)
+const viewCoverLabel = t('photos-view-cover')
+const viewContainLabel = t('photos-view-contain')
+
+if (photos.length === 0)
+  console.warn('[photos] src/assets/photos is empty — run `pnpm photos:sync` to copy the photo library (see README-MIGRATION.md).')
+---
+<div class="flex justify-center mb-6 relative z-10 slide-enter" style="--enter-stage: 0;">
+  <button
+    type="button"
+    class="photo-toggle-btn flex items-center gap-2 px-4 py-2 rounded-full op40 hover:op80 transition-all duration-300 outline-none select-none cursor-pointer"
+    data-text-cover={viewCoverLabel}
+    data-text-contain={viewContainLabel}
+  >
+    <div class="text-lg photo-toggle-icon i-ri-layout-masonry-line"></div>
+    <span class="photo-toggle-text">{viewContainLabel}</span>
+  </button>
+</div>
+
+<div class="photos photo-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-500 mx-auto" data-photo-view-mode="cover">
+  {photos.map((p) => {
+    const caption = (!p.meta?.lang || p.meta.lang === locale) ? p.meta?.text : undefined
+    return (
+      <div>
+        <div class="photo-hover">
+          <Image
+            src={p.src}
+            alt={caption || ''}
+            data-photo-index={p.index}
+            decoding="async"
+            loading="lazy"
+            widths={[400, 800, 1200]}
+            sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+            class="w-full"
+          />
+        </div>
+      </div>
+    )
+  })}
+</div>
+
+<style>
+  .photo-toggle-btn {
+    border: none;
+    background: transparent;
+    color: inherit;
+  }
+  .photo-grid {
+    padding: 0 1rem;
+  }
+  .photo-grid :global(img) {
+    width: 100%;
+    display: block;
+  }
+  .photo-grid[data-photo-view-mode='cover'] :global(img) {
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+  }
+  .photo-grid[data-photo-view-mode='contain'] :global(img) {
+    object-fit: contain;
+    aspect-ratio: auto;
+    background: var(--c-bg);
+  }
+  @media (min-width: 640px) {
+    .photo-grid[data-photo-view-mode='contain'] :global(img) {
+      aspect-ratio: 1 / 1;
+    }
+  }
+</style>
+
+<script>
+  function init() {
+    const grid = document.querySelector<HTMLElement>('.photo-grid')
+    const btn = document.querySelector<HTMLButtonElement>('.photo-toggle-btn')
+    const icon = document.querySelector<HTMLElement>('.photo-toggle-icon')
+    const textSpan = document.querySelector<HTMLElement>('.photo-toggle-text')
+    if (!grid || !btn || !icon || !textSpan) return
+
+    let mode: 'cover' | 'contain' = 'cover'
+    try {
+      const stored = localStorage.getItem('teslak-gallery-view') as 'cover' | 'contain' | null
+      if (stored === 'cover' || stored === 'contain') mode = stored
+    } catch {}
+
+    const textCover = btn.dataset.textCover || 'Crop to fit'
+    const textContain = btn.dataset.textContain || 'Do not crop'
+
+    function updateUI(currentMode: 'cover' | 'contain') {
+      grid!.dataset.photoViewMode = currentMode
+      if (currentMode === 'cover') {
+        icon!.className = 'text-lg photo-toggle-icon i-ri-layout-masonry-line'
+        textSpan!.textContent = textContain
+      } else {
+        icon!.className = 'text-lg photo-toggle-icon i-ri-grid-line'
+        textSpan!.textContent = textCover
+      }
+    }
+
+    updateUI(mode)
+
+    if (btn.dataset.bound !== '1') {
+      btn.dataset.bound = '1'
+      btn.addEventListener('click', () => {
+        mode = mode === 'cover' ? 'contain' : 'cover'
+        try { localStorage.setItem('teslak-gallery-view', mode) } catch {}
+        updateUI(mode)
+      })
+    }
+  }
+
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

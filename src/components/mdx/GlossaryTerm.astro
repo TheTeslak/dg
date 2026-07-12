@@ -1,0 +1,396 @@
+---
+interface Props {
+  term?: string
+  definition?: string
+}
+const { term, definition } = Astro.props
+---
+<span
+  class="glossary-term"
+  data-glossary-term
+  data-term={term}
+  data-definition={definition}
+  tabindex="0"
+  role="button"
+  aria-haspopup="dialog"
+><slot /></span>
+
+<style is:global>
+  .glossary-term {
+    display: inline;
+    cursor: help;
+    text-decoration: underline dotted rgba(125, 125, 125, 0.6);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 200ms ease, background-color 200ms ease;
+  }
+  .glossary-term:hover,
+  .glossary-term:focus-visible {
+    text-decoration-color: currentColor;
+    background: rgba(125, 125, 125, 0.1);
+    border-radius: 0.15em;
+  }
+  .glossary-term:focus-visible {
+    outline: 2px solid rgba(125, 125, 125, 0.45);
+    outline-offset: 2px;
+  }
+
+  /* ---- Desktop Sidebar Margin Note ---- */
+  .margin-note {
+    position: fixed;
+    right: 18px;
+    width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 40px);
+    min-width: 160px;
+    max-width: 280px;
+    font-size: 1em;
+    line-height: 1.5;
+    z-index: 200;
+    animation: marginNoteFadeIn 0.15s ease;
+    border: 1px solid rgba(125, 125, 125, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    background: var(--c-bg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+  @media (min-width: 1280px) {
+    .margin-note {
+      right: 28px;
+      width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 50px);
+    }
+  }
+  .margin-note-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5em;
+    margin-bottom: 0.3em;
+  }
+  .margin-note-term {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #222;
+    line-height: 1.3;
+  }
+  html.dark .margin-note-term {
+    color: #ddd;
+  }
+  .margin-note-close {
+    cursor: pointer;
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  .margin-note-close:hover {
+    opacity: 1;
+  }
+  .margin-note-body {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  html.dark .margin-note-body {
+    color: #bbb;
+  }
+  .margin-note-body a, .glossary-sheet-body a {
+    color: inherit;
+    border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+    transition: border 0.3s ease-in-out;
+  }
+  .margin-note-body a:hover, .glossary-sheet-body a:hover {
+    border-bottom-color: currentColor;
+  }
+  .margin-note-body mark, .glossary-sheet-body mark {
+    background: rgba(30, 30, 30, 0.88);
+    color: #fff;
+    border-radius: 0.15em;
+    padding: 0.05em 0.25em;
+    margin: 0 0.02em;
+  }
+  html.dark .margin-note-body mark, html.dark .glossary-sheet-body mark {
+    background: rgba(235, 235, 235, 0.9);
+    color: #111;
+  }
+  .margin-note-body code, .glossary-sheet-body code {
+    font-size: 0.92em;
+    background-color: #aaaaaa18;
+    border-radius: 0.25rem;
+    padding: 0.2em 0.3em;
+  }
+
+  @keyframes marginNoteFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* ---- Mobile Glossary Bottom Sheet ---- */
+  .glossary-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.25s ease;
+  }
+  html.dark .glossary-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .glossary-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 401;
+    max-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  html.dark .glossary-sheet {
+    background: rgba(20, 20, 20, 0.96);
+    box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
+  }
+  .glossary-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem 0;
+    flex-shrink: 0;
+  }
+  .glossary-sheet-term {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 3rem);
+  }
+  html.dark .glossary-sheet-term {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .glossary-sheet-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    opacity: 0.5;
+    cursor: pointer;
+  }
+  .glossary-sheet-close:hover {
+    opacity: 1;
+  }
+  .glossary-sheet-body {
+    font-size: 0.95rem;
+    color: #555;
+    padding: 0.75rem 1.25rem 1.25rem;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+  html.dark .glossary-sheet-body {
+    color: #bbb;
+  }
+</style>
+
+<script>
+  function ensureMarginNote(): HTMLElement {
+    let el = document.getElementById('glossary-margin-note')
+    if (el) return el
+    el = document.createElement('div')
+    el.id = 'glossary-margin-note'
+    el.className = 'margin-note'
+    el.style.display = 'none'
+    el.innerHTML = `
+      <div class="margin-note-header">
+        <div class="margin-note-term" id="margin-note-term-id"></div>
+        <button class="margin-note-close" id="margin-note-close-id" aria-label="Close note">
+          <span class="i-ri-close-line" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="margin-note-body" id="margin-note-body-id"></div>
+    `
+    document.body.appendChild(el)
+
+    el.querySelector('#margin-note-close-id')?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      hideGlossary()
+    })
+    return el
+  }
+
+  function ensureMobileSheet(): { backdrop: HTMLElement; sheet: HTMLElement } {
+    let backdrop = document.getElementById('glossary-backdrop')
+    let sheet = document.getElementById('glossary-sheet')
+    if (backdrop && sheet) return { backdrop, sheet }
+
+    backdrop = document.createElement('div')
+    backdrop.id = 'glossary-backdrop'
+    backdrop.className = 'glossary-backdrop'
+    backdrop.style.display = 'none'
+    backdrop.style.opacity = '0'
+    document.body.appendChild(backdrop)
+
+    sheet = document.createElement('div')
+    sheet.id = 'glossary-sheet'
+    sheet.className = 'glossary-sheet'
+    sheet.style.display = 'none'
+    sheet.style.transform = 'translateY(100%)'
+    sheet.innerHTML = `
+      <div class="glossary-sheet-header">
+        <div class="glossary-sheet-term" id="glossary-sheet-term-id"></div>
+        <button class="glossary-sheet-close" id="glossary-sheet-close-id" aria-label="Close sheet">
+          <span class="i-ri-close-line" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="glossary-sheet-body" id="glossary-sheet-body-id"></div>
+    `
+    document.body.appendChild(sheet)
+
+    backdrop.addEventListener('click', hideGlossary)
+    sheet.querySelector('#glossary-sheet-close-id')?.addEventListener('click', (e) => {
+      e.stopPropagation()
+      hideGlossary()
+    })
+
+    return { backdrop, sheet }
+  }
+
+  function showGlossary(target: HTMLElement) {
+    const term = target.getAttribute('data-term') || target.textContent || ''
+    const definition = target.getAttribute('data-definition') || ''
+    if (!definition) return
+
+    const isMobile = window.innerWidth < 1024
+
+    if (!isMobile) {
+      // Desktop Margin Note
+      hideMobileSheet()
+      const note = ensureMarginNote()
+
+      const termEl = note.querySelector('#margin-note-term-id')
+      const bodyEl = note.querySelector('#margin-note-body-id')
+      if (termEl) termEl.textContent = term
+      if (bodyEl) bodyEl.innerHTML = definition
+
+      note.style.display = 'block'
+
+      requestAnimationFrame(() => {
+        const rect = target.getBoundingClientRect()
+        const noteHeight = note.offsetHeight
+        // Position at the same top offset, bounded by viewport
+        const maxTop = window.innerHeight - noteHeight - 16
+        const targetTop = Math.max(16, Math.min(rect.top, maxTop))
+        note.style.top = `${targetTop}px`
+      })
+    } else {
+      // Mobile Bottom Sheet
+      hideMarginNote()
+      const { backdrop, sheet } = ensureMobileSheet()
+
+      const termEl = sheet.querySelector('#glossary-sheet-term-id')
+      const bodyEl = sheet.querySelector('#glossary-sheet-body-id')
+      if (termEl) termEl.textContent = term
+      if (bodyEl) bodyEl.innerHTML = definition
+
+      backdrop.style.display = 'block'
+      sheet.style.display = 'flex'
+      document.body.style.overflow = 'hidden'
+
+      requestAnimationFrame(() => {
+        backdrop.style.opacity = '1'
+        sheet.style.transform = 'translateY(0)'
+      })
+    }
+  }
+
+  function hideMarginNote() {
+    const note = document.getElementById('glossary-margin-note')
+    if (note) note.style.display = 'none'
+  }
+
+  function hideMobileSheet() {
+    const backdrop = document.getElementById('glossary-backdrop')
+    const sheet = document.getElementById('glossary-sheet')
+    if (backdrop) {
+      backdrop.style.opacity = '0'
+      setTimeout(() => {
+        if (backdrop.style.opacity === '0') backdrop.style.display = 'none'
+      }, 250)
+    }
+    if (sheet) {
+      sheet.style.transform = 'translateY(100%)'
+      setTimeout(() => {
+        if (sheet.style.transform === 'translateY(100%)') sheet.style.display = 'none'
+      }, 300)
+    }
+    document.body.style.overflow = ''
+  }
+
+  function hideGlossary() {
+    hideMarginNote()
+    hideMobileSheet()
+  }
+
+  function init() {
+    document.querySelectorAll<HTMLElement>('[data-glossary-term]').forEach((node) => {
+      if (node.dataset.bound === '1') return
+      node.dataset.bound = '1'
+
+      node.addEventListener('click', (e) => {
+        e.stopPropagation()
+        showGlossary(node)
+      })
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          e.stopPropagation()
+          showGlossary(node)
+        }
+      })
+    })
+
+    // Click outside to close
+    document.removeEventListener('click', handleOutsideClick)
+    document.addEventListener('click', handleOutsideClick)
+
+    // Escape to close
+    document.removeEventListener('keydown', handleEscape)
+    document.addEventListener('keydown', handleEscape)
+  }
+
+  function handleOutsideClick(e: MouseEvent) {
+    const target = e.target as HTMLElement
+    if (target.closest('[data-glossary-term]')) return
+    if (target.closest('#glossary-margin-note')) return
+    if (target.closest('#glossary-sheet')) return
+    hideGlossary()
+  }
+
+  function handleEscape(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      hideGlossary()
+    }
+  }
+
+  init()
+  document.addEventListener('astro:page-load', init)
+  document.addEventListener('astro:before-swap', hideGlossary)
+</script>

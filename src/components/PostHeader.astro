@@ -1,0 +1,147 @@
+---
+import { formatDate, formatReadingDuration, isRecentPost, makeT, type SupportedLocale } from '~/utils/i18n'
+import { isDraftPost } from '~/utils/post-visibility'
+import type { PostSummary } from '~/utils/posts'
+
+interface Props {
+  frontmatter: Record<string, any>
+  locale: SupportedLocale
+  isFallback?: boolean
+  fallbackSourceLocale?: SupportedLocale
+  postType?: 'note' | 'blog'
+  backlinks?: PostSummary[]
+}
+const { frontmatter: fm, locale, isFallback, fallbackSourceLocale, postType = 'blog', backlinks } = Astro.props
+const t = makeT(locale)
+const duration = formatReadingDuration(fm.duration, locale)
+const dateStr = fm.date ? formatDate(fm.date, false, locale) : ''
+const updatedStr = fm.updated ? formatDate(fm.updated, false, locale) : ''
+const dateIso = fm.date ? new Date(fm.date).toISOString() : ''
+const recent = isRecentPost(fm.date, fm.updated)
+const draft = isDraftPost(fm.type) || fm.draft
+
+const display = fm.display ?? fm.title
+const pic = fm.pic && fm.pic.src
+  ? {
+      src: fm.pic.src as string,
+      r: (fm.pic.r as string) || 'sm',
+      link: (fm.pic.link as string) || undefined,
+      text: (fm.pic.text as string) || undefined,
+    }
+  : undefined
+
+const titleParts = (() => {
+  if (!display)
+    return null
+  if (!pic?.text || !pic.link)
+    return { before: '', linked: '', after: display }
+  const idx = (display as string).indexOf(pic.text)
+  if (idx === -1)
+    return { before: '', linked: '', after: display }
+  return {
+    before: (display as string).slice(0, idx),
+    linked: pic.text,
+    after: (display as string).slice(idx + pic.text.length),
+  }
+})()
+---
+<div lang={locale} class:list={['prose m-auto mb-8', fm.wrapperClass, !fm.date && pic && 'h-card']}>
+  {isFallback && fallbackSourceLocale && (
+    <div class="my-8 slide-enter bg-blue-4:10 text-blue-4 border-l-3 border-blue-4 px-4 py-3 flex gap-2 items-center">
+      <div class="i-carbon-translate text-lg flex-none" aria-hidden="true"></div>
+      <span class="text-[75%] leading-tight">
+        {t('page-not-translated', { lang: fallbackSourceLocale.toUpperCase(), type: postType })}
+      </span>
+    </div>
+  )}
+  {draft && (
+    <div class="my-8 slide-enter text-center font-wisper text-3xl text-gray-400 dark:text-gray-500 select-none">
+      {t('post-draft-notice')}
+    </div>
+  )}
+  {backlinks && backlinks.length > 0 && (
+    <div class="backlinks-container slide-enter-50">
+      {backlinks.map(parent => (
+        <div class="backlink-header">
+          <a href={parent.path} class="backlink-link">
+            <div class="i-ri-corner-left-up-line backlink-icon" aria-hidden="true"></div>
+            <span>
+              {isDraftPost(parent.type) && <span role="img" aria-label="Draft">🚧 </span>}{parent.title}
+            </span>
+            {parent.lang && parent.lang !== locale && (
+              <span class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none">{parent.lang.toUpperCase()}</span>
+            )}
+          </a>
+        </div>
+      ))}
+    </div>
+  )}
+  {display && (
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5 p-name" lang={fm.lang}>
+      {pic && titleParts?.linked ? (
+        <>
+          {titleParts.before && <span class="title-rest p-note">{titleParts.before}</span>}
+          <a href={pic.link} class="title-pic-link u-url">
+            <img src={pic.src} alt="" class:list={['title-pic u-photo', `title-pic--${pic.r}`]} />
+            <span class="p-name">{titleParts.linked}</span>
+          </a>
+          {titleParts.after && <span class="title-rest p-note">{titleParts.after}</span>}
+        </>
+      ) : (
+        display
+      )}
+    </h1>
+  )}
+  {fm.date && (
+    <p class="slide-enter-50 !mt-0">
+      <span class="opacity-50">
+        {draft && <span role="img" aria-label="Draft">🚧 </span>}
+        {recent && !draft && <span role="img" aria-label="Recent">🌱 </span>}
+        <time class="dt-published" datetime={dateIso}>{dateStr}</time>
+        {updatedStr && <span> · {t('post-updated')} {updatedStr}</span>}
+        {duration && <span> · {duration}</span>}
+      </span>
+    </p>
+  )}
+  {fm.date && (
+    <div class="p-author h-card" style="display: none;">
+      <a class="u-url p-name" href="https://teslak.me">Teslak</a>
+      <img class="u-photo" src="/avatar.avif" alt="Teslak" />
+    </div>
+  )}
+  {fm.place && (
+    <p class="mt--4!">
+      <span class="op50">{t('post-place-at')} </span>
+      {fm.placeLink ? (
+        <a href={fm.placeLink} target="_blank" rel="noopener noreferrer">
+          {fm.place}
+        </a>
+      ) : (
+        <span class="font-bold">{fm.place}</span>
+      )}
+    </p>
+  )}
+  {fm.subtitle && (
+    <p class="opacity-50 !-mt-6 italic slide-enter" lang={fm.lang}>{fm.subtitle}</p>
+  )}
+</div>
+
+<style is:global>
+  /* Kept for the template article's <PostNoticeBanner> demo component. */
+  .post-notice-banner {
+    border: 1px solid rgba(125, 125, 125, 0.25);
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .post-notice-banner.is-draft {
+    border-color: rgba(255, 200, 0, 0.45);
+    background: rgba(255, 200, 0, 0.08);
+    opacity: 0.85;
+  }
+</style>

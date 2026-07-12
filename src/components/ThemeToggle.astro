@@ -1,0 +1,90 @@
+---
+import { makeT } from '~/utils/i18n'
+import type { SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  locale: SupportedLocale
+  class?: string
+}
+const { locale, class: className } = Astro.props
+const t = makeT(locale)
+---
+<button
+  type="button"
+  class:list={['theme-toggle select-none', className]}
+  data-theme-toggle
+  title={t('action-toggle-theme')}
+  aria-label={t('action-toggle-theme')}
+>
+  <span class="i-ri-sun-line dark:i-ri-moon-line" aria-hidden="true"></span>
+</button>
+
+<script>
+  function applyTheme(theme: 'dark' | 'light') {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    try {
+      localStorage.setItem('vueuse-color-scheme', theme)
+    } catch {}
+  }
+
+  function startToggle(event: MouseEvent) {
+    const currentlyDark = document.documentElement.classList.contains('dark')
+    const next = currentlyDark ? 'light' : 'dark'
+
+    const startViewTransition =
+      (document as Document & {
+        startViewTransition?: (cb: () => void | Promise<void>) => {
+          ready: Promise<void>
+        }
+      }).startViewTransition?.bind(document)
+
+    if (
+      !startViewTransition ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      applyTheme(next)
+      return
+    }
+
+    const x = event.clientX
+    const y = event.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    )
+    const transition = startViewTransition(() => {
+      applyTheme(next)
+    })
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+      const isDarkNow = document.documentElement.classList.contains('dark')
+      document.documentElement.animate(
+        {
+          clipPath: isDarkNow ? [...clipPath].reverse() : clipPath,
+        },
+        {
+          duration: 400,
+          easing: 'ease-out',
+          fill: 'forwards',
+          pseudoElement: isDarkNow
+            ? '::view-transition-old(root)'
+            : '::view-transition-new(root)',
+        },
+      )
+    })
+  }
+
+  function init() {
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((btn) => {
+      if (btn.dataset.themeToggleBound === '1') return
+      btn.dataset.themeToggleBound = '1'
+      btn.addEventListener('click', (e) => startToggle(e as MouseEvent))
+    })
+  }
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

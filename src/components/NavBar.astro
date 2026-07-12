@@ -1,0 +1,408 @@
+---
+import Logo from './Logo.astro'
+import ThemeToggle from './ThemeToggle.astro'
+import LanguageSelector from './LanguageSelector.astro'
+import { makeT, localePath, type SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  locale: SupportedLocale
+  currentPath: string
+}
+const { locale, currentPath } = Astro.props
+const t = makeT(locale)
+const feedHref = locale === 'en' ? '/feed.xml' : `/feed-${locale}.xml`
+const isPostPage = /\/(?:articles|notes)\//.test(currentPath)
+---
+<header class="header z-40">
+  <a class="logo-link" href={localePath(locale)} aria-label={t('a11y-home')}>
+    <Logo width={48} />
+  </a>
+
+  <button
+    type="button"
+    class="mobile-menu-btn md:hidden"
+    data-mobile-menu-btn
+    aria-expanded="false"
+    aria-controls="mobile-menu-overlay"
+  >
+    <span data-mobile-label-open>{t('nav-menu')}</span>
+    <span data-mobile-label-close hidden>{t('nav-close')}</span>
+  </button>
+
+  <div
+    class="fixed right-3 bottom-3 z-100 flex items-center gap-2 transition duration-300 print:hidden floating-actions"
+    data-floating-actions
+    aria-hidden="true"
+  >
+    {isPostPage && (
+      <button
+        type="button"
+        class="floating-btn copy-link-btn"
+        data-copy-link
+        title={t('post-copy-link')}
+        data-copied-title={t('post-link-copied')}
+      >
+        <span class="i-ri-links-line shrink-0" aria-hidden="true"></span>
+        <span class="copy-label" data-copied-label>{t('post-link-copied')}</span>
+      </button>
+    )}
+    <button
+      type="button"
+      class="floating-btn scroll-top-btn"
+      data-scroll-top
+      title={t('action-to-top')}
+      aria-label={t('action-to-top')}
+    >
+      <span class="i-ri-arrow-up-line" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <nav class="nav" aria-label={t('a11y-main-navigation')}>
+    <div class="spacer"></div>
+    <div class="right print:op0">
+      <a href={localePath(locale, '/notes')} class="lt-md:hidden" title={t('nav-blog')}>
+        <span>{t('nav-blog')}</span>
+      </a>
+      <a href={localePath(locale, '/now')} class="lt-md:hidden" title={t('nav-now')}>
+        {t('nav-now')}
+      </a>
+      <a href={localePath(locale, '/projects')} class="lt-md:hidden" title={t('nav-projects')}>
+        <span>{t('nav-projects')}</span>
+      </a>
+      <a href={localePath(locale, '/photos')} class="lt-md:hidden" title={t('nav-photos')}>
+        {t('nav-photos')}
+      </a>
+
+      <a href="https://t.me/" target="_blank" rel="noopener" title="Telegram" class="lt-md:hidden">
+        <span class="i-ri-telegram-2-line scale-110" aria-hidden="true"></span>
+      </a>
+      <a href={feedHref} target="_blank" title="RSS" class="lt-md:hidden">
+        <span class="i-ri-rss-line" aria-hidden="true"></span>
+      </a>
+
+      <ThemeToggle locale={locale} class="lt-md:hidden" />
+      <LanguageSelector currentLocale={locale} currentPath={currentPath} class="lt-md:hidden" />
+    </div>
+  </nav>
+
+  <div
+    id="mobile-menu-overlay"
+    class="mobile-menu-overlay"
+    data-mobile-menu-overlay
+    hidden
+  >
+    <div class="mobile-menu-panel">
+      <nav class="mobile-menu-links" aria-label={t('a11y-main-navigation')}>
+        <a href={localePath(locale)}>Teslak.Me</a>
+        <a href={localePath(locale, '/notes')}>{t('nav-blog')}</a>
+        <a href={localePath(locale, '/now')}>{t('nav-now')}</a>
+        <a href={localePath(locale, '/projects')}>{t('nav-projects')}</a>
+        <a href={localePath(locale, '/photos')}>{t('nav-photos')}</a>
+      </nav>
+      <div class="mobile-menu-icons">
+        <a href="https://t.me/" target="_blank" rel="noopener" title="Telegram">
+          <span class="i-ri-telegram-2-line scale-110" aria-hidden="true"></span>
+        </a>
+        <a href={feedHref} target="_blank" title="RSS">
+          <span class="i-ri-rss-line" aria-hidden="true"></span>
+        </a>
+        <ThemeToggle locale={locale} />
+        <LanguageSelector currentLocale={locale} currentPath={currentPath} />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header h1 {
+    margin-bottom: 0;
+  }
+  .logo-link {
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    margin: 1.25rem;
+    user-select: none;
+    outline: none;
+    z-index: 10;
+  }
+  @media (min-width: 1024px) {
+    .logo-link {
+      position: fixed;
+    }
+  }
+  .nav {
+    padding: 2rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto max-content;
+    box-sizing: border-box;
+  }
+  .nav > * {
+    margin: auto;
+  }
+  .nav a,
+  .nav button {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+    opacity: 0.75;
+    outline: none;
+  }
+  .nav a:focus-visible,
+  .nav button:focus-visible {
+    outline: 2px solid rgba(125, 125, 125, 0.4);
+    outline-offset: 4px;
+  }
+  .nav a:hover,
+  .nav button:hover {
+    opacity: 1;
+    text-decoration-color: inherit;
+  }
+  .nav .right {
+    display: grid;
+    grid-gap: 1.2rem;
+    grid-auto-flow: column;
+  }
+  .nav .right > * {
+    margin: auto;
+  }
+
+  @media (max-width: 1023px) {
+    .floating-actions {
+      display: none !important;
+    }
+  }
+
+  .floating-actions {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .floating-actions.is-scrolled {
+    opacity: 0.75;
+    pointer-events: auto;
+  }
+  .floating-actions.is-scrolled:hover {
+    opacity: 1;
+  }
+
+  .floating-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    background: var(--c-bg);
+    border-radius: 999px;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s ease;
+  }
+  .floating-btn:hover {
+    background: #e7e7e7;
+  }
+  :global(html.dark) .floating-btn:hover {
+    background: #1b1b1b;
+  }
+  .copy-link-btn {
+    overflow: hidden;
+    padding: 0;
+    transition: padding 0.3s ease, background-color 0.3s ease;
+  }
+  .copy-link-btn.is-copied {
+    padding: 0 1rem 0 0.75rem;
+  }
+  .copy-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: max-width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease;
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+  }
+  .copy-link-btn.is-copied .copy-label {
+    max-width: 10rem;
+    margin-left: 0.5rem;
+    opacity: 1;
+  }
+
+  .mobile-menu-btn {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    height: 3rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(125, 125, 125, 0.11);
+    transition:
+      background 200ms ease,
+      transform 180ms ease;
+    z-index: 201;
+  }
+  @media (min-width: 768px) {
+    .mobile-menu-btn {
+      display: none !important;
+    }
+  }
+  .mobile-menu-btn:hover {
+    background: rgba(125, 125, 125, 0.18);
+    transform: scale(1.07);
+  }
+  .mobile-menu-btn:active {
+    background: rgba(125, 125, 125, 0.18);
+    transform: scale(0.93);
+    transition-duration: 80ms;
+  }
+
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-menu-overlay[hidden] {
+    display: none;
+  }
+  .mobile-menu-panel {
+    background: var(--c-bg);
+    border-bottom: 1px solid rgba(125, 125, 125, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  :global(html.dark) .mobile-menu-panel {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  .mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .mobile-menu-links a {
+    display: block;
+    padding: 0.55rem 0;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: inherit;
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 200ms ease;
+  }
+  .mobile-menu-links a:hover {
+    opacity: 1;
+  }
+  .mobile-menu-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(125, 125, 125, 0.12);
+  }
+  .mobile-menu-icons a,
+  .mobile-menu-icons button {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.55;
+    transition: opacity 200ms ease;
+    background: none;
+    border: none;
+    padding: 0.3rem;
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu-icons a:hover,
+  .mobile-menu-icons button:hover {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  function init() {
+    const floating = document.querySelector<HTMLElement>('[data-floating-actions]')
+    const onScroll = () => {
+      if (!floating) return
+      const scrolled = window.scrollY > 300
+      floating.classList.toggle('is-scrolled', scrolled)
+      floating.setAttribute('aria-hidden', scrolled ? 'false' : 'true')
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+
+    document.querySelectorAll<HTMLButtonElement>('[data-scroll-top]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return
+      btn.dataset.bound = '1'
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      })
+    })
+
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-link]').forEach((btn) => {
+      if (btn.dataset.bound === '1') return
+      btn.dataset.bound = '1'
+      const initialTitle = btn.getAttribute('title') || ''
+      const copiedTitle = btn.dataset.copiedTitle || initialTitle
+      let timer: ReturnType<typeof setTimeout> | undefined
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href)
+          btn.classList.add('is-copied')
+          btn.setAttribute('title', copiedTitle)
+          const iconSpan = btn.querySelector('span[class*="i-ri-"]')
+          if (iconSpan) iconSpan.className = iconSpan.className.replace('i-ri-links-line', 'i-ri-check-line')
+          if (timer) clearTimeout(timer)
+          timer = setTimeout(() => {
+            btn.classList.remove('is-copied')
+            btn.setAttribute('title', initialTitle)
+            if (iconSpan) iconSpan.className = iconSpan.className.replace('i-ri-check-line', 'i-ri-links-line')
+          }, 2000)
+        } catch {}
+      })
+    })
+
+    const mobileBtn = document.querySelector<HTMLButtonElement>('[data-mobile-menu-btn]')
+    const overlay = document.querySelector<HTMLElement>('[data-mobile-menu-overlay]')
+    const labelOpen = document.querySelector<HTMLElement>('[data-mobile-label-open]')
+    const labelClose = document.querySelector<HTMLElement>('[data-mobile-label-close]')
+    if (mobileBtn && overlay && mobileBtn.dataset.bound !== '1') {
+      mobileBtn.dataset.bound = '1'
+      const setOpen = (open: boolean) => {
+        overlay.hidden = !open
+        mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false')
+        if (labelOpen) labelOpen.hidden = open
+        if (labelClose) labelClose.hidden = !open
+        document.body.style.overflow = open ? 'hidden' : ''
+      }
+      mobileBtn.addEventListener('click', () => {
+        setOpen(overlay.hidden)
+      })
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) setOpen(false)
+      })
+      overlay.querySelectorAll('a').forEach((a) => {
+        a.addEventListener('click', () => setOpen(false))
+      })
+    }
+  }
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

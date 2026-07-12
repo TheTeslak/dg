@@ -1,0 +1,17 @@
+---
+interface Props {
+  repo: string
+  name?: string
+}
+const { repo, name } = Astro.props
+const displayName = name || (repo.startsWith('teslak/') ? repo.slice(7) : repo)
+---
+<span class="whitespace-nowrap">
+  <span class="i-carbon-logo-github inline-block vertical-mid" aria-hidden="true"></span>
+  <a
+    class="opacity-70 ml-1 font-mono hover:opacity-100 transition-opacity duration-200"
+    href={`https://github.com/${repo}`}
+    target="_blank"
+    rel="noopener"
+  >{displayName}</a>
+</span>

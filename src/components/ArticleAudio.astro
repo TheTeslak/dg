@@ -1,0 +1,97 @@
+---
+interface AudioMeta {
+  url: string
+  duration?: string
+  title?: string
+  artist?: string
+  downloadUrl?: string
+  sourceTextUpdatedAt?: string
+}
+interface Props {
+  audio: AudioMeta
+  articleTitle: string
+  articleUpdatedAt: string
+  articleImage?: string
+  articleSlug?: string
+  labels: Record<string, string>
+}
+const { audio, articleTitle, articleUpdatedAt, articleImage, articleSlug = '', labels } = Astro.props
+const sourceTime = audio.sourceTextUpdatedAt ? Date.parse(audio.sourceTextUpdatedAt) : Number.NaN
+const articleTime = articleUpdatedAt ? Date.parse(articleUpdatedAt) : Number.NaN
+const outdated = Number.isFinite(sourceTime) && Number.isFinite(articleTime) && sourceTime < articleTime
+---
+
+<article-audio-player
+  class="article-audio"
+  data-storage-key={`article-audio:${articleSlug}:${audio.url}`}
+  data-title={audio.title || articleTitle}
+  data-artist={audio.artist || 'Teslak'}
+  data-image={articleImage || '/avatar.avif'}
+  data-play-label={labels.play}
+  data-pause-label={labels.pause}
+>
+  <audio preload="metadata" src={audio.url}></audio>
+  <div class="article-audio-main">
+    <button type="button" class="article-audio-play" data-audio-play aria-label={labels.play} title={labels.play}>
+      <span class="i-ri-play-fill" data-audio-play-icon aria-hidden="true"></span>
+      <span class="article-audio-spinner" data-audio-spinner hidden aria-hidden="true"></span>
+    </button>
+    <div class="article-audio-copy">
+      <span class="article-audio-eyebrow">{labels.label}</span>
+      <strong class="article-audio-title">{audio.title || articleTitle}</strong>
+      <div class="article-audio-timeline" data-audio-timeline hidden>
+        <span data-audio-current>0:00</span>
+        <input type="range" min="0" max="0" value="0" step="0.1" data-audio-progress aria-label={labels.progress} />
+        <span data-audio-duration>{audio.duration || '0:00'}</span>
+      </div>
+    </div>
+    <div class="article-audio-actions">
+      <button type="button" data-audio-back title={labels.rewind} aria-label={labels.rewind}><span class="i-fluent-skip-back-15-20-regular" aria-hidden="true"></span></button>
+      <button type="button" data-audio-forward title={labels.forward} aria-label={labels.forward}><span class="i-fluent-skip-forward-15-20-regular" aria-hidden="true"></span></button>
+      <button type="button" data-audio-speed title={labels.speed} aria-label={labels.speed}>1×</button>
+      <a href={audio.downloadUrl || audio.url} download title={labels.download} aria-label={labels.download}><span class="i-ri-download-line" aria-hidden="true"></span></a>
+    </div>
+  </div>
+  {outdated && <p class="article-audio-warning"><span class="i-ri-alert-line" aria-hidden="true"></span>{labels.outdated}</p>}
+  <p class="article-audio-error" data-audio-error hidden>{labels.error}</p>
+</article-audio-player>
+
+<script>
+  import '~/scripts/article-audio.ts'
+</script>
+
+<style is:global>
+  .article-audio { display: block; position: relative; margin: 0.5rem 0 2rem; border: 1px solid #7d7d7d38; border-radius: 0.85rem; background: #7d7d7d0d; backdrop-filter: blur(10px); transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease; }
+  .article-audio:hover { border-color: #7d7d7d60; background: #7d7d7d14; }
+  .article-audio-main { display: flex; align-items: center; gap: 0.9rem; padding: 0.9rem; }
+  .article-audio-play { position: relative; display: grid; place-items: center; flex: none; width: 3rem; height: 3rem; border: 0; border-radius: 999px; background: #7d7d7d1c; color: inherit; cursor: pointer; font-size: 1.35rem; transition: transform 200ms ease, background 200ms ease; }
+  .article-audio-play:hover { transform: scale(1.055); background: #7d7d7d2b; }
+  .article-audio-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .article-audio-eyebrow { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.45; }
+  .article-audio-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.96rem; color: var(--fg-deep); }
+  .article-audio-timeline { display: grid; grid-template-columns: auto 1fr auto; gap: 0.5rem; align-items: center; margin-top: 0.35rem; font: 0.72rem/1.2 'IBM Plex Mono', monospace; opacity: 0.65; }
+  .article-audio-timeline[hidden] { display: none; }
+  .article-audio-timeline input { width: 100%; accent-color: currentColor; cursor: pointer; }
+  .article-audio-actions { display: flex; align-items: center; gap: 0.15rem; }
+  .article-audio-actions button,
+  .article-audio-actions a { display: grid; place-items: center; min-width: 2rem; height: 2rem; padding: 0 0.35rem; border: 0 !important; border-radius: 0.4rem; background: none; color: inherit; font: inherit; font-size: 0.82rem; opacity: 0.48; cursor: pointer; transition: opacity 180ms ease, background 180ms ease, transform 180ms ease; }
+  .article-audio-actions button:hover,
+  .article-audio-actions a:hover { opacity: 1; background: #7d7d7d18; transform: translateY(-1px); }
+  .article-audio-warning,
+  .article-audio-error { display: flex; align-items: center; gap: 0.4rem; margin: 0; padding: 0 0.9rem 0.8rem; font-size: 0.78rem; opacity: 0.65; }
+  .article-audio-error { color: #d14; }
+  .article-audio-error[hidden] { display: none; }
+  .article-audio-spinner { width: 1rem; height: 1rem; border: 2px solid #7d7d7d50; border-top-color: currentColor; border-radius: 50%; animation: audio-spin 700ms linear infinite; }
+  .article-audio-spinner[hidden] { display: none; }
+  .article-audio.is-sticky { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 350; max-width: 38rem; margin: 0 auto; background: color-mix(in srgb, var(--c-bg) 92%, transparent); box-shadow: 0 12px 40px #0003; animation: audio-rise 300ms cubic-bezier(.16,1,.3,1) both; }
+  @keyframes audio-spin { to { transform: rotate(1turn); } }
+  @keyframes audio-rise { from { opacity: 0; transform: translateY(12px); } }
+  @media (max-width: 640px) {
+    .article-audio-main { align-items: flex-start; flex-wrap: wrap; }
+    .article-audio-copy { width: calc(100% - 4rem); }
+    .article-audio-actions { width: 100%; justify-content: flex-end; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .article-audio, .article-audio * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>

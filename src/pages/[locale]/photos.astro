@@ -1,0 +1,21 @@
+---
+import Default from '~/layouts/Default.astro'
+import PhotoGrid from '~/components/PhotoGrid.astro'
+import { photosMeta } from '~/data/home'
+import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+
+export async function getStaticPaths() {
+  return supportedLocales.map(locale => ({ params: { locale } }))
+}
+
+const { locale } = Astro.params as { locale: SupportedLocale }
+const meta = photosMeta[locale]
+---
+<Default locale={locale} title={meta.title} description={meta.description} bodyClass="photos-page">
+  <PhotoGrid locale={locale} />
+  {meta.credit && (
+    <div class="prose mx-auto mt-10">
+      <em class="op50" set:html={meta.credit}></em>
+    </div>
+  )}
+</Default>

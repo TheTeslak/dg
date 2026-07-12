@@ -1,0 +1,320 @@
+---
+import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { render } from 'astro:content'
+import Default from '~/layouts/Default.astro'
+import PostHeader from '~/components/PostHeader.astro'
+import PostNavigation from '~/components/PostNavigation.astro'
+import ArticleAudio from '~/components/ArticleAudio.astro'
+import ScrollProgressToc from '~/components/ScrollProgressToc.astro'
+import { formatDate, formatReadingDuration, isRecentPost, makeT, type SupportedLocale } from '~/utils/i18n'
+import { isDraftPost } from '~/utils/post-visibility'
+import { getFallbackTargets } from '~/utils/article-locales'
+import {
+  filterByType,
+  getAllArticles,
+  getArticlesData,
+  getBacklinksFor,
+  getReferencedByFor,
+  sortByDateDesc,
+} from '~/utils/posts'
+
+export async function getStaticPaths() {
+  // Slugs that would shadow static locale pages. The original project logged
+  // a route-conflict warning; here a collision fails the build outright.
+  const RESERVED_SLUGS = new Set(['articles', 'notes', 'now', 'photos', 'projects', 'finds'])
+  const { all, statesBySlug } = await getArticlesData()
+
+  const paths: { params: { locale: SupportedLocale, slug: string }, props: Record<string, any> }[] = []
+
+  // Physical translations — including hidden drafts, which keep their
+  // preview URL but never spread to other locales.
+  for (const post of all) {
+    if (RESERVED_SLUGS.has(post.slug))
+      throw new Error(`[routes] article slug "${post.slug}" conflicts with a static page route.`)
+    paths.push({
+      params: { locale: post.locale, slug: post.slug },
+      props: {
+        entryId: `${post.locale}/${post.slug}`,
+        post,
+        isFallback: false,
+      },
+    })
+  }
+
+  // Cross-locale fallback aliases: unambiguous source (English preferred,
+  // otherwise a single routable translation; ambiguity throws — ported from
+  // dg build/article.ts getArticleFallbackSource).
+  for (const [slug, states] of statesBySlug.entries()) {
+    for (const { target, source } of getFallbackTargets(states)) {
+      const post = all.find(p => p.slug === slug && p.locale === source)
+      if (!post)
+        continue
+      paths.push({
+        params: { locale: target, slug },
+        props: {
+          entryId: `${source}/${slug}`,
+          post,
+          isFallback: true,
+          fallbackSourceLocale: source,
+        },
+      })
+    }
+  }
+
+  return paths
+}
+
+const { locale, slug } = Astro.params as { locale: SupportedLocale, slug: string }
+const { entryId, post, isFallback, fallbackSourceLocale } = Astro.props as Record<string, any>
+
+const { entriesById } = await getArticlesData()
+const entry = entriesById.get(entryId)
+if (!entry)
+  throw new Error(`[routes] missing content entry "${entryId}"`)
+
+const { Content, headings } = await render(entry)
+const fm = entry.data as Record<string, any>
+const t = makeT(locale)
+
+// --- Audio: `audio: true` resolves a local file like dg's resolveAudioFile ---
+const AUDIO_EXTENSIONS = ['m4a', 'mp3', 'ogg', 'opus', 'wav']
+const audio = (() => {
+  let value = fm.audio
+  if (value === true) {
+    const found = AUDIO_EXTENSIONS
+      .map(ext => `/audio/${post.locale}/${post.slug}.${ext}`)
+      .find(candidate => existsSync(resolve(`public${candidate}`)))
+    if (!found) {
+      console.warn(`[frontmatter] ${entryId}: "audio: true" but no audio file found under public/audio/.`)
+      return undefined
+    }
+    value = { url: found }
+  }
+  if (!value || typeof value === 'boolean' || !value.url)
+    return undefined
+  return {
+    url: value.url,
+    duration: value.duration,
+    title: value.title,
+    artist: value.artist,
+    downloadUrl: value.downloadUrl,
+    sourceTextUpdatedAt: value.sourceTextUpdatedAt
+      ? new Date(value.sourceTextUpdatedAt).toISOString()
+      : undefined,
+  }
+})()
+
+const articleUpdatedAt = (fm.updated ? new Date(fm.updated) : (fm.date ? new Date(fm.date) : undefined))?.toISOString()
+const articleTitle = fm.display ?? fm.title ?? ''
+const postType = ((fm.type || 'blog') as string).split('+').includes('note') ? 'note' : 'blog'
+
+const allArticles = await getAllArticles()
+const sameLocaleSameType = sortByDateDesc(
+  filterByType(
+    allArticles.filter(p => p.servedLocales.includes(locale)
+      && !(p.locale !== locale && allArticles.some(o => o.slug === p.slug && o.locale === locale))),
+    postType,
+  ).map(p => ({ ...p, path: `/${locale}/${p.slug}` })),
+)
+const currentPath = `/${locale}/${slug}`
+const backlinks = await getBacklinksFor(fm.backlink, locale)
+const referencedBy = await getReferencedByFor(slug, locale)
+const backToAllPath = `/${locale}/${postType === 'note' ? 'notes' : 'articles'}`
+---
+<Default
+  locale={locale}
+  title={fm.title}
+  description={fm.description}
+  image={post.image}
+  art={fm.art}
+  isArticle={true}
+  originalLocale={post.locale}
+  availableLocales={post.availableLocales}
+  frontmatter={{ ...fm, excerpt: post.excerpt, tags: post.tags }}
+>
+  <div
+    class={fm.date ? 'h-entry' : undefined}
+    data-copy-link-container
+    data-heading-link={t('heading-link')}
+    data-heading-copied={t('heading-copied')}
+  >
+    <PostHeader
+      frontmatter={{ ...fm, duration: post.duration }}
+      locale={locale}
+      isFallback={isFallback}
+      fallbackSourceLocale={fallbackSourceLocale}
+      postType={postType}
+      backlinks={backlinks}
+    />
+
+    {audio && (
+      <div class="prose m-auto">
+        <ArticleAudio
+          audio={audio}
+          articleTitle={articleTitle}
+          articleUpdatedAt={articleUpdatedAt || ''}
+          articleImage={post.image}
+          articleSlug={slug}
+          labels={{
+            label: t('article-audio-label'),
+            play: t('article-audio-play'),
+            pause: t('article-audio-pause'),
+            rewind: t('article-audio-rewind'),
+            forward: t('article-audio-forward'),
+            speed: t('article-audio-speed'),
+            download: t('article-audio-download'),
+            close: t('article-audio-close'),
+            progress: t('article-audio-progress'),
+            error: t('article-audio-error'),
+            outdated: t('article-audio-outdated'),
+          }}
+        />
+      </div>
+    )}
+
+    {fm.title && headings.length > 1 && (
+      <ScrollProgressToc
+        headings={headings}
+        title={articleTitle}
+        duration={formatReadingDuration(post.duration, locale)}
+        alwaysOn={Boolean(fm.tocAlwaysOn)}
+        labels={{ link: t('heading-link'), copied: t('heading-copied') }}
+      />
+    )}
+
+    <article
+      class:list={[
+        'prose m-auto slide-enter-content',
+        fm.tocAlwaysOn && 'toc-always-on',
+        fm.class,
+        fm.date && 'e-content',
+      ]}
+      lang={fm.lang !== locale ? fm.lang : undefined}
+    >
+      <Content />
+    </article>
+
+    {fm.date && (
+      <div class="prose m-auto mt-8 mb-8 slide-enter print:hidden">
+        {(fm.telegram || fm.mastodon || fm.twitter) && (
+          <div class="mb-4">
+            <span class="font-mono opacity-50">&gt; </span>
+            <span class="opacity-50">{t('post-comment-on')}&nbsp;</span>
+            {[
+              fm.telegram && { href: fm.telegram, label: t('post-link-telegram') },
+              fm.twitter && { href: fm.twitter, label: t('post-link-twitter') },
+              fm.mastodon && { href: fm.mastodon, label: t('post-link-mastodon') },
+            ].filter(Boolean).map((link: any, i: number) => (
+              <>
+                {i > 0 && <span class="opacity-25"> / </span>}
+                <a href={link.href} target="_blank" rel="noopener noreferrer" class="opacity-50 hover:opacity-75 transition-opacity">
+                  {link.label}
+                </a>
+              </>
+            ))}
+          </div>
+        )}
+
+        {referencedBy.length > 0 && (
+          <div class="referenced-by mt-9 mb-6">
+            <div class="referenced-by-label">
+              <div class="i-ri-links-line referenced-by-label-icon" aria-hidden="true"></div>
+              <span>{t('post-referenced-by')}</span>
+            </div>
+            {referencedBy.map(ref => (
+              <div class="referenced-by-item">
+                <a href={ref.path} class="referenced-by-link">
+                  <div class="i-ri-corner-left-up-line backlink-icon" aria-hidden="true"></div>
+                  <span>{ref.title}</span>
+                </a>
+                {ref.lang && ref.lang !== locale && (
+                  <span class="text-xs bg-zinc:15 text-[#91919b] rounded px-1 py-0.5 my-auto flex-none">{ref.lang.toUpperCase()}</span>
+                )}
+                {ref.date && (
+                  <span class="referenced-by-date">
+                    {isDraftPost(ref.type) && <span role="img" aria-label="Draft">🚧 </span>}
+                    {isRecentPost(ref.date, ref.updated) && !isDraftPost(ref.type) && <span role="img" aria-label="Recent">🌱 </span>}
+                    {formatDate(ref.date, false, locale)}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <PostNavigation locale={locale} currentPath={currentPath} posts={sameLocaleSameType} />
+
+        <div class="mt-8">
+          <span class="font-mono opacity-50">&gt; </span>
+          <a href={backToAllPath} class="font-mono opacity-50 hover:opacity-75 transition-opacity duration-200">
+            {t('action-back-to-all')}
+          </a>
+        </div>
+      </div>
+    )}
+  </div>
+</Default>
+
+<script>
+  import '~/scripts/mdx-interactions.ts'
+
+  function initHeadingCopy() {
+    const container = document.querySelector('[data-copy-link-container]')
+    if (!container) return
+    const anchorKey = container.getAttribute('data-heading-link') || 'link'
+    const copiedKey = container.getAttribute('data-heading-copied') || 'copied'
+    const headings = container.querySelectorAll('article h1[id], article h2[id], article h3[id], article h4[id], article h5[id], article h6[id]')
+
+    headings.forEach((heading) => {
+      if (heading.getAttribute('data-heading-bound') === '1') return
+      heading.setAttribute('data-heading-bound', '1')
+      heading.setAttribute('tabindex', '0')
+      heading.setAttribute('data-tooltip', anchorKey)
+      heading.setAttribute('aria-description', anchorKey)
+
+      const handleCopy = async (e: Event) => {
+        e.preventDefault()
+        const url = `${window.location.origin}${window.location.pathname}#${heading.id}`
+        try {
+          await navigator.clipboard.writeText(url)
+          heading.setAttribute('data-tooltip', copiedKey)
+          heading.classList.remove('source-highlight-fade')
+          heading.classList.add('source-highlight')
+          setTimeout(() => {
+            heading.classList.add('source-highlight-fade')
+            heading.classList.remove('source-highlight')
+            setTimeout(() => {
+              heading.setAttribute('data-tooltip', anchorKey)
+              heading.classList.remove('source-highlight-fade')
+            }, 3000)
+          }, 1200)
+        } catch (err) {
+          console.error('Failed to copy', err)
+        }
+      }
+
+      heading.addEventListener('click', handleCopy)
+      heading.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') handleCopy(e)
+      })
+    })
+  }
+
+  initHeadingCopy()
+  document.addEventListener('astro:page-load', initHeadingCopy)
+</script>
+
+<style is:global>
+  .source-highlight {
+    background: rgba(50, 130, 255, 0.2) !important;
+    border-radius: 0.25em;
+    box-shadow: 0 0 0 4px rgba(50, 130, 255, 0.2) !important;
+  }
+
+  .source-highlight-fade {
+    background: transparent !important;
+    box-shadow: 0 0 0 4px transparent !important;
+    transition: background 3s ease-out, box-shadow 3s ease-out !important;
+  }
+</style>

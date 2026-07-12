@@ -1,0 +1,71 @@
+{
+  "name": "dg-astro",
+  "type": "module",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "pnpm sources && node --experimental-strip-types scripts/search-index.ts",
+    "build": "astro build && node --experimental-strip-types scripts/rss.ts && node --experimental-strip-types scripts/generate-seo.ts && node --experimental-strip-types scripts/redirects.ts",
+    "dev": "astro dev --host 127.0.0.1 --port 4321",
+    "preview": "astro preview --host 127.0.0.1 --port 4322",
+    "astro": "astro",
+    "check": "astro check && pnpm check:markdown",
+    "check:markdown": "node --experimental-strip-types scripts/check-markdown.ts",
+    "search-index": "node --experimental-strip-types scripts/search-index.ts",
+    "sources": "node --experimental-strip-types scripts/resolve-sources.ts",
+    "photos:sync": "node --experimental-strip-types scripts/sync-photos.ts"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "^7.2.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@shikijs/transformers": "^4.1.0",
+    "@unocss/astro": "^66.7.5",
+    "@unocss/preset-attributify": "^66.7.5",
+    "@unocss/preset-icons": "^66.7.5",
+    "@unocss/preset-web-fonts": "^66.7.5",
+    "@unocss/preset-wind3": "^66.7.5",
+    "@unocss/reset": "^66.7.5",
+    "@unocss/transformer-directives": "^66.7.5",
+    "astro": "^7.0.7",
+    "fast-glob": "^3.3.3",
+    "feed": "^5.2.1",
+    "fs-extra": "^11.3.5",
+    "gray-matter": "^4.0.3",
+    "hast-util-to-string": "^3.0.1",
+    "markdown-it": "^14.1.0",
+    "markdown-it-github-alerts": "^1.0.1",
+    "markdown-it-link-attributes": "^4.0.1",
+    "mdast-util-to-string": "^4.0.0",
+    "minisearch": "^7.2.0",
+    "rehype-external-links": "^3.0.0",
+    "rehype-raw": "^7.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-github-blockquote-alert": "^2.1.0",
+    "sharp": "^0.34.5",
+    "unist-util-visit": "^5.1.0",
+    "unocss": "^66.7.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@iconify-json/carbon": "^1.2.5",
+    "@iconify-json/fluent": "^1.2.27",
+    "@iconify-json/ph": "^1.2.2",
+    "@iconify-json/ri": "^1.2.6",
+    "@iconify-json/simple-icons": "^1.2.62",
+    "@iconify-json/solar": "^1.2.5",
+    "@types/fs-extra": "^11.0.4",
+    "@types/hast": "^3.0.4",
+    "@types/markdown-it": "^14.1.2",
+    "@types/mdast": "^4.0.4",
+    "typescript": "^5.6.3",
+    "unified": "^11.0.5"
+  },
+  "packageManager": "pnpm@11.1.2",
+  "pnpm": {
+    "allowBuilds": {
+      "@resvg/resvg-js": true,
+      "esbuild": true,
+      "sharp": true
+    }
+  }
+}

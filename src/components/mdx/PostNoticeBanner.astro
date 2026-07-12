@@ -1,0 +1,51 @@
+---
+interface Props {
+  originalLocale?: string
+  'original-locale'?: string
+  ':original-locale'?: string
+  isDraft?: boolean | string
+  'is-draft'?: boolean | string
+  ':is-draft'?: boolean | string
+}
+
+const originalLocale = Astro.props.originalLocale || Astro.props['original-locale'] || Astro.props[':original-locale'] || 'en'
+const rawIsDraft = Astro.props.isDraft || Astro.props['is-draft'] || Astro.props[':is-draft']
+const isDraft = rawIsDraft === true || rawIsDraft === 'true' || rawIsDraft === ''
+
+const locale = Astro.params.locale || 'en'
+---
+<div class="prose m-auto mb-8">
+  {isDraft ? (
+    <div class="post-notice-banner slide-enter is-draft">
+      {locale === 'ru' && "Черновик! Загляни позже."}
+      {locale === 'es' && "Este es un borrador, el contenido puede estar incompleto. Vuelve más tarde."}
+      {locale === 'en' && "This is a draft post, the content may be incomplete. Please check back later."}
+    </div>
+  ) : (
+    <div class="post-notice-banner slide-enter">
+      <span class="i-ri-translate-2" aria-hidden="true"></span>
+      {locale === 'ru' && `Ещё не переведена, показана ${originalLocale.toUpperCase()} версия`}
+      {locale === 'es' && `Aún no traducida, mostrando la versión en ${originalLocale.toUpperCase()}`}
+      {locale === 'en' && `Not translated yet, showing ${originalLocale.toUpperCase()} version`}
+    </div>
+  )}
+</div>
+
+<style>
+  .post-notice-banner {
+    border: 1px solid rgba(125, 125, 125, 0.25);
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    opacity: 0.7;
+    margin-bottom: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .post-notice-banner.is-draft {
+    border-color: rgba(255, 200, 0, 0.45);
+    background: rgba(255, 200, 0, 0.08);
+    opacity: 0.85;
+  }
+</style>

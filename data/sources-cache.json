@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "urls": {
+    "https://example.com": {
+      "title": "Example Domain",
+      "fetchedAt": "1970-01-01T00:00:00.000Z"
+    },
+    "https://icones.js.org": {
+      "title": "Icônes — Icon Explorer",
+      "fetchedAt": "1970-01-01T00:00:00.000Z"
+    },
+    "https://youtu.be/dQw4w9WgXcQ": {
+      "title": "YouTube",
+      "fetchedAt": "1970-01-01T00:00:00.000Z"
+    },
+    "https://en.wikipedia.org/wiki/Representational_state_transfer": {
+      "title": "REST — Wikipedia",
+      "fetchedAt": "1970-01-01T00:00:00.000Z"
+    }
+  },
+  "articles": {
+    "src/content/articles/en/template.md": {
+      "hash": "67d1f793ed02938f61702feee93771b373b95f310d8cb5abcf6a339d739b76f9",
+      "urls": [
+        "https://example.com",
+        "https://icones.js.org",
+        "https://en.wikipedia.org/wiki/Representational_state_transfer"
+      ],
+      "generatedAt": "2026-07-12T12:25:18.820Z"
+    }
+  }
+}

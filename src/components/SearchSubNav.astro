@@ -1,0 +1,121 @@
+---
+interface Props {
+  locale: string
+  labels: {
+    notes: string
+    articles: string
+    finds: string
+    onlyLanguage: string
+    searchPlaceholder: string
+    searchClose: string
+    searchLoading: string
+    searchStartTyping: string
+    searchNoResults: string
+    durationSuffix: string
+  }
+}
+
+const { locale, labels } = Astro.props
+const currentPath = Astro.url.pathname
+---
+
+<section
+  class="search-subnav prose m-auto mb-8 select-none"
+  data-search-subnav
+  data-locale={locale}
+  data-labels={JSON.stringify(labels)}
+>
+  <button type="button" class="language-filter" data-language-filter>
+    <span class="i-carbon-checkbox" data-language-filter-icon aria-hidden="true"></span>
+    {labels.onlyLanguage}
+  </button>
+
+  <div class="search-subnav-row">
+    <nav class="subnav-tabs" data-search-navigation aria-label={labels.searchPlaceholder}>
+      <a href={`/${locale}/notes`} class:list={['subnav-tab', currentPath.includes('/notes') && 'is-active']}>{labels.notes}</a>
+      <a href={`/${locale}/articles`} class:list={['subnav-tab', currentPath.includes('/articles') && 'is-active']}>{labels.articles}</a>
+      <a href={`/${locale}/finds`} class:list={['subnav-tab', currentPath.includes('/finds') && 'is-active']}>{labels.finds}</a>
+    </nav>
+    <button type="button" class="search-trigger" data-search-open title={labels.searchPlaceholder} aria-label={labels.searchPlaceholder}>
+      <span class="i-ri-search-line" aria-hidden="true"></span>
+    </button>
+    <div class="search-input-container" data-search-form hidden>
+      <span class="search-input-icon i-ri-search-line" aria-hidden="true"></span>
+      <input type="search" class="search-input" data-search-input placeholder={labels.searchPlaceholder} aria-label={labels.searchPlaceholder} autocomplete="off" />
+      <button type="button" class="search-close-btn" data-search-close title={labels.searchClose} aria-label={labels.searchClose}>
+        <span class="i-ri-close-line" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-panel" data-search-panel hidden aria-live="polite">
+    <p class="search-status" data-search-status>{labels.searchStartTyping}</p>
+    <div class="search-results" data-search-results></div>
+  </div>
+
+  <div data-search-content>
+    <slot />
+  </div>
+</section>
+
+<script>
+  import '~/scripts/search-sub-nav.ts'
+</script>
+
+<style is:global>
+  .search-subnav .language-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+    border: 0;
+    border-radius: 0.2rem;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .search-subnav .language-filter:hover,
+  .search-subnav .language-filter:focus-visible { opacity: 1; }
+  .search-subnav-row { display: flex; align-items: center; gap: 0.75rem; min-height: 2.75rem; }
+  .subnav-tabs { display: flex; align-items: baseline; gap: 0.75rem; flex: 1; min-width: 0; }
+  .subnav-tab { white-space: nowrap; border: 0 !important; font-size: 1.875rem; opacity: 0.3; transition: opacity 220ms ease, transform 220ms ease; }
+  .subnav-tab:hover,
+  .subnav-tab:focus-visible { opacity: 0.65; transform: translateY(-1px); }
+  .subnav-tab.is-active { opacity: 1; text-decoration: underline; text-underline-offset: 0.16em; }
+  .search-trigger,
+  .search-close-btn { border: 0; background: none; color: inherit; cursor: pointer; opacity: 0.45; transition: opacity 200ms ease, transform 200ms ease; }
+  .search-trigger { padding: 0.35rem; font-size: 1.2rem; }
+  .search-trigger:hover,
+  .search-close-btn:hover { opacity: 1; transform: scale(1.06); }
+  .search-input-container { display: flex; align-items: center; gap: 0.6rem; width: 100%; border: 1px solid #7d7d7d73; border-radius: 0.5rem; padding: 0.45rem 0.75rem; animation: search-expand 250ms ease both; }
+  .search-input-container[hidden] { display: none; }
+  .search-input-container:focus-within { border-color: #7d7d7dbf; }
+  .search-input-icon { opacity: 0.55; flex: none; }
+  .search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: inherit; font: inherit; font-size: 1.1rem; }
+  .search-panel { margin-top: 1rem; }
+  .search-panel[hidden] { display: none; }
+  .search-status { text-align: center; padding: 2rem 0; opacity: 0.5; }
+  .search-results { display: flex; flex-direction: column; gap: 0.75rem; }
+  .search-result-card { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.15rem 0.75rem; border: 1px solid #7d7d7d40 !important; border-radius: 0.65rem; opacity: 0.68; overflow: hidden; transition: opacity 250ms ease, border-color 250ms ease, background 250ms ease, transform 250ms ease; }
+  .search-result-card:hover { opacity: 1; border-color: #7d7d7d70 !important; background: #7d7d7d0f; transform: translateY(-1px); }
+  .search-result-title { display: flex; align-items: center; gap: 0.4rem; font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
+  .search-result-lang-tag { flex: none; padding: 0.15rem 0.3rem; border-radius: 0.25rem; background: #7d7d7d26; color: #969696; font-size: 0.75rem; line-height: 1.2; }
+  .search-result-snippets { display: flex; flex-direction: column; }
+  .search-result-snippet { font-size: 1rem; line-height: 1.55; opacity: 0.9; }
+  .search-snippet-divider { border-top: 1px dashed #7d7d7d33; margin: 0.2rem 0; }
+  .search-result-meta { display: flex; gap: 0.35rem; font-size: 0.9rem; opacity: 0.5; }
+  .search-result-card mark { background: #1e1e1ee0; color: #fff; border-radius: 0.15em; padding: 0.05em 0.25em; }
+  html.dark .search-result-card mark { background: #ebebebe6; color: #111; }
+  @keyframes search-expand { from { opacity: 0; transform: scaleX(0.88); transform-origin: right; } to { opacity: 1; transform: scaleX(1); transform-origin: right; } }
+  @media (max-width: 520px) {
+    .subnav-tabs { gap: 0.5rem; }
+    .subnav-tab { font-size: 1.45rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .search-subnav *, .search-subnav *::before, .search-subnav *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>

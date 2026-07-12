@@ -1,0 +1,292 @@
+---
+import { localeConfig, makeT, supportedLocales, type SupportedLocale } from '~/utils/i18n'
+
+interface Props {
+  currentLocale: SupportedLocale
+  currentPath: string
+  class?: string
+}
+const { currentLocale, currentPath, class: className } = Astro.props
+const t = makeT(currentLocale)
+---
+<div class:list={['lang-selector', className]} data-language-selector>
+  <button
+    type="button"
+    class="lang-toggle"
+    title={t('action-change-language')}
+    aria-label={t('action-change-language')}
+    aria-haspopup="menu"
+    aria-expanded="false"
+    data-lang-toggle
+  >
+    <span class="lang-code">{currentLocale.toUpperCase()}</span>
+    <svg class="lang-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+      <path d="M2.5 3.75L5 6.25L7.5 3.75" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <div class="lang-dropdown" role="menu" hidden data-lang-dropdown>
+    <div class="lang-hover-bg" data-lang-hover-bg></div>
+    {supportedLocales.map(lang => (
+      <button
+        type="button"
+        role="menuitem"
+        class:list={['lang-option', currentLocale === lang && 'lang-option-active']}
+        data-lang={lang}
+        data-current-path={currentPath}
+        lang={localeConfig[lang].languageTag}
+      >
+        <span class="lang-option-name">{localeConfig[lang].nativeName}</span>
+        <span class="lang-option-code">{lang.toUpperCase()}</span>
+      </button>
+    ))}
+    <hr class="lang-divider" />
+    <a
+      href={`/${currentLocale}/no-single-language#методология-перевода`}
+      role="menuitem"
+      class="lang-option"
+      data-lang-methodology
+    >
+      <span class="lang-option-name">{t('nav-methodology')}</span>
+      <div class="i-ri-question-line lang-option-icon" aria-hidden="true"></div>
+    </a>
+  </div>
+</div>
+
+<style is:global>
+  /* Ported from dg LanguageSelector.vue (scoped styles flattened). */
+  .lang-selector {
+    position: relative;
+  }
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.25rem 0.5rem;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+    outline: none;
+    border-radius: 6px;
+    user-select: none;
+  }
+  .lang-toggle:hover {
+    opacity: 1;
+  }
+  .lang-toggle:focus-visible {
+    outline: 2px solid rgba(125, 125, 125, 0.4);
+    outline-offset: 2px;
+  }
+  .lang-chevron {
+    transition: transform 0.2s ease;
+  }
+  .lang-selector.is-open .lang-chevron {
+    transform: rotate(180deg);
+  }
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    right: 0;
+    min-width: 8.5rem;
+    padding: 0.25rem;
+    background: var(--c-bg);
+    border: 1px solid rgba(125, 125, 125, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transform-origin: top right;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+  }
+  html.dark .lang-dropdown {
+    border-color: rgba(125, 125, 125, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+  .lang-dropdown[hidden] {
+    display: none;
+  }
+  .lang-dropdown.is-entering,
+  .lang-dropdown.is-leaving {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  .lang-hover-bg {
+    position: absolute;
+    left: 0.25rem;
+    right: 0.25rem;
+    top: 0;
+    background: rgba(125, 125, 125, 0.09);
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 0.12s ease,
+      transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+      height 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  html.dark .lang-hover-bg {
+    background: rgba(125, 125, 125, 0.14);
+  }
+  .lang-hover-bg.lang-hover-bg-visible {
+    opacity: 1;
+  }
+  .lang-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-align: left;
+    border-radius: 8px;
+    outline: none;
+    opacity: 0.65;
+    transition: opacity 0.15s ease;
+    z-index: 1;
+    text-decoration: none;
+  }
+  .lang-option:hover {
+    opacity: 1;
+  }
+  .lang-option:focus-visible {
+    outline: 2px solid rgba(125, 125, 125, 0.4);
+    outline-offset: -2px;
+  }
+  .lang-option-active {
+    opacity: 1;
+    font-weight: 600;
+  }
+  .lang-option-name {
+    flex: 1;
+  }
+  .lang-option-code {
+    font-size: 0.7rem;
+    opacity: 0.45;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .lang-divider {
+    border: none;
+    border-top: 1px solid rgba(125, 125, 125, 0.15);
+    margin: 0.25rem 0.5rem;
+  }
+  html.dark .lang-divider {
+    border-top-color: rgba(125, 125, 125, 0.25);
+  }
+  .lang-option-icon {
+    font-size: 0.9rem;
+    opacity: 0.55;
+  }
+</style>
+
+<script>
+  import { setLocaleCookie, migrateLegacyLocalePreference } from '~/utils/locale-cookie'
+  import { setPathLocale, isSupportedLocale } from '~/utils/i18n'
+
+  function initSelector(root: HTMLElement) {
+    if (root.dataset.bound === '1')
+      return
+    root.dataset.bound = '1'
+
+    const toggle = root.querySelector<HTMLButtonElement>('[data-lang-toggle]')!
+    const dropdown = root.querySelector<HTMLElement>('[data-lang-dropdown]')!
+    const hoverBg = root.querySelector<HTMLElement>('[data-lang-hover-bg]')!
+
+    let open = false
+    let leaveTimer: ReturnType<typeof setTimeout> | undefined
+
+    function setOpen(next: boolean) {
+      open = next
+      toggle.setAttribute('aria-expanded', String(next))
+      root.classList.toggle('is-open', next)
+      if (next) {
+        if (leaveTimer)
+          clearTimeout(leaveTimer)
+        dropdown.hidden = false
+        dropdown.classList.add('is-entering')
+        requestAnimationFrame(() => dropdown.classList.remove('is-entering'))
+      }
+      else {
+        dropdown.classList.add('is-leaving')
+        clearHighlight()
+        leaveTimer = setTimeout(() => {
+          dropdown.classList.remove('is-leaving')
+          dropdown.hidden = true
+        }, 120)
+      }
+    }
+
+    function clearHighlight() {
+      hoverBg.classList.remove('lang-hover-bg-visible')
+    }
+
+    function setHighlight(option: HTMLElement) {
+      hoverBg.style.transform = `translateY(${option.offsetTop}px)`
+      hoverBg.style.height = `${option.offsetHeight}px`
+      hoverBg.classList.add('lang-hover-bg-visible')
+    }
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation()
+      setOpen(!open)
+    })
+
+    dropdown.addEventListener('mouseleave', clearHighlight)
+    dropdown.querySelectorAll<HTMLElement>('.lang-option').forEach((option) => {
+      option.addEventListener('mouseenter', () => setHighlight(option))
+      option.addEventListener('focus', () => setHighlight(option))
+    })
+
+    dropdown.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang || ''
+        if (!isSupportedLocale(lang))
+          return
+        const currentPath = btn.dataset.currentPath || window.location.pathname
+        // The choice must reach Netlify Edge; the cookie is what the
+        // locale-redirect edge function reads on the next neutral visit.
+        setLocaleCookie(lang)
+        const newPath = setPathLocale(currentPath, lang)
+        if (newPath !== currentPath)
+          window.location.assign(newPath)
+        else
+          setOpen(false)
+      })
+    })
+
+    dropdown.querySelector('[data-lang-methodology]')?.addEventListener('click', () => setOpen(false))
+
+    document.addEventListener('click', (e) => {
+      if (open && !root.contains(e.target as Node))
+        setOpen(false)
+    })
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && open)
+        setOpen(false)
+    })
+  }
+
+  function init() {
+    migrateLegacyLocalePreference()
+    document.querySelectorAll<HTMLElement>('[data-language-selector]').forEach(initSelector)
+  }
+
+  init()
+  document.addEventListener('astro:page-load', init)
+</script>

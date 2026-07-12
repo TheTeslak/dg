@@ -1,0 +1,30 @@
+backend:
+  name: git-gateway
+  branch: astro
+media_folder: public/images
+public_folder: /images
+collections:
+  - name: articles-en
+    label: Articles (EN)
+    folder: src/content/articles/en
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - {label: Title, name: title, widget: string}
+      - {label: Description, name: description, widget: text, required: false}
+      - {label: Type, name: type, widget: string, required: false, hint: 'blog / note / draft (combinable with +)'}
+      - {label: Draft, name: draft, widget: boolean, required: false}
+      - {label: Date, name: date, widget: datetime}
+      - {label: Body, name: body, widget: markdown}
+  - name: articles-ru
+    label: Articles (RU)
+    folder: src/content/articles/ru
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - {label: Title, name: title, widget: string}
+      - {label: Description, name: description, widget: text, required: false}
+      - {label: Type, name: type, widget: string, required: false}
+      - {label: Draft, name: draft, widget: boolean, required: false}
+      - {label: Date, name: date, widget: datetime}
+      - {label: Body, name: body, widget: markdown}

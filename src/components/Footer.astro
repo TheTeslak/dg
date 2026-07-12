@@ -1,0 +1,14 @@
+---
+import type { SupportedLocale } from '~/utils/i18n'
+interface Props { locale: SupportedLocale }
+const { locale: _locale } = Astro.props
+---
+<div class="mt-10 mb-6 prose m-auto flex slide-enter animate-delay-1200! copyright">
+  <div class="flex-auto"></div>
+</div>
+
+<style is:global>
+  .no-copyright ~ .copyright {
+    display: none;
+  }
+</style>

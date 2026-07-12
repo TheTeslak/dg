@@ -1,0 +1,53 @@
+---
+import { defaultLocale, supportedLocales } from '~/utils/i18n'
+import { LOCALE_COOKIE_NAME } from '~/locales/config'
+
+/**
+ * Neutral entry route. In production Netlify's edge function
+ * (netlify/edge-functions/locale-redirect.ts) negotiates the locale
+ * server-side from the `site-locale` cookie / Accept-Language and 307s
+ * before this page is ever served. This static page is only the no-edge /
+ * no-JS fallback and must never be indexed.
+ */
+const localeList = supportedLocales.join(',')
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Teslak</title>
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href={`https://teslak.me/${defaultLocale}`} />
+    <script is:inline define:vars={{ localeList, defaultLocale, cookieName: LOCALE_COOKIE_NAME }}>
+      ;(() => {
+        const supported = localeList.split(',')
+        const go = locale => window.location.replace(`/${locale}`)
+        try {
+          // 1. Explicit choice — the same cookie the edge function reads.
+          const cookieMatch = document.cookie.match(new RegExp(`(?:^|;\\s*)${cookieName}=([^;]*)`))
+          if (cookieMatch && supported.includes(cookieMatch[1]))
+            return go(cookieMatch[1])
+          // 2. Browser preference order.
+          const languages = navigator.languages || [navigator.language]
+          for (const lang of languages) {
+            const short = (lang || '').toLowerCase().split('-')[0]
+            if (supported.includes(short))
+              return go(short)
+          }
+          go(defaultLocale)
+        } catch {
+          go(defaultLocale)
+        }
+      })()
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content={`0; url=/${defaultLocale}`} />
+    </noscript>
+  </head>
+  <body>
+    <noscript>
+      <p>Redirecting to the <a href={`/${defaultLocale}`}>English version</a>.</p>
+    </noscript>
+  </body>
+</html>
