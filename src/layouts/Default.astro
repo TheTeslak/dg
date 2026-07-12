@@ -278,12 +278,13 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
     <script is:inline>
       // Apply persisted theme as early as possible to avoid FOUC.
       ;(() => {
-        try {
-          const stored = localStorage.getItem('vueuse-color-scheme')
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          const isDark = stored ? stored === 'dark' : prefersDark
-          document.documentElement.classList.toggle('dark', isDark)
-        } catch {}
+        let stored = null
+        try { stored = localStorage.getItem('vueuse-color-scheme') } catch {}
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        // VueUse may have left `auto` in storage. Only an explicit light/dark
+        // choice should override the operating-system preference.
+        const isDark = stored === 'dark' || (stored !== 'light' && prefersDark)
+        document.documentElement.classList.toggle('dark', isDark)
       })()
     </script>
   </head>
@@ -340,14 +341,24 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
 
       // Re-apply persisted theme after Astro view transitions to avoid FOUC.
       function reapplyTheme() {
-        try {
-          const stored = localStorage.getItem('vueuse-color-scheme')
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          const isDark = stored ? stored === 'dark' : prefersDark
-          document.documentElement.classList.toggle('dark', isDark)
-        } catch {}
+        let stored = null
+        try { stored = localStorage.getItem('vueuse-color-scheme') } catch {}
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const isDark = stored === 'dark' || (stored !== 'light' && prefersDark)
+        document.documentElement.classList.toggle('dark', isDark)
       }
       document.addEventListener('astro:after-swap', reapplyTheme)
+
+      // Match VueUse's `auto` behaviour until the visitor makes an explicit
+      // choice with the theme button.
+      if (!(window as any).__dgThemeMediaBound) {
+        ;(window as any).__dgThemeMediaBound = true
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          let stored = null
+          try { stored = localStorage.getItem('vueuse-color-scheme') } catch {}
+          if (stored !== 'dark' && stored !== 'light') reapplyTheme()
+        })
+      }
 
       if (!(window as any).__dgGreeted) {
         (window as any).__dgGreeted = true
@@ -363,6 +374,7 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
          arrow keys keep scrolling articles and F5 keeps refreshing pages
          without art — matching dg's useKeyboardNav guards. */
       const artStyles = ['plum', 'dots', 'cellular', 'topography', 'interference']
+      const validArtStyles = new Set([...artStyles, 'random'])
       const navSuffixes = ['', '/notes', '/projects', '/photos']
 
       function applyArtOverride() {
@@ -370,8 +382,8 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
         if (!container) return
         const override = localStorage.getItem('dg-art-override')
         const defaultArt = container.getAttribute('data-default-art') || ''
-        const targetArt = override || defaultArt
-        if (!targetArt) return
+        const targetArt = override && artStyles.includes(override) ? override : defaultArt
+        if (!validArtStyles.has(targetArt)) return
         const child = container.firstElementChild
         if (child && child.tagName.toLowerCase() === `art-${targetArt}`) return
         container.replaceChildren(document.createElement(`art-${targetArt}`))
@@ -380,11 +392,11 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
       function cycleArt(direction: 'up' | 'down') {
         const container = document.querySelector('[data-art]')
         if (!container) return
-        const child = container.firstElementChild
-        if (!child) return
-        const current = child.tagName.toLowerCase().replace('art-', '')
-        let idx = artStyles.indexOf(current)
-        if (idx === -1) idx = 0
+        // This deliberately follows dg's override sequence rather than the
+        // randomly rendered child. First ↓ selects plum; first ↑ selects
+        // topography. Further presses traverse all five styles cyclically.
+        const current = localStorage.getItem('dg-art-override') || ''
+        const idx = artStyles.indexOf(current)
         const nextIdx = direction === 'up'
           ? (idx - 1 + artStyles.length) % artStyles.length
           : (idx + 1) % artStyles.length
@@ -412,7 +424,9 @@ const resolvedBodyClass = `${defaultBodyClass} ${bodyClass}`.trim()
 
         const lightbox = document.getElementById('lightbox')
         if (lightbox && !lightbox.hidden) return
-        if (document.querySelector('.search-input-container')) return
+        // The search input always exists in Astro's server markup; suppress
+        // shortcuts only while the search UI is actually open.
+        if (document.querySelector('.search-input-container:not([hidden])')) return
 
         if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
           const { idx, navPaths } = findNavIndex()

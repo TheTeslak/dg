@@ -54,6 +54,8 @@ function init(root: HTMLElement) {
   const filter = root.querySelector<HTMLButtonElement>('[data-language-filter]')!
   const filterIcon = root.querySelector<HTMLElement>('[data-language-filter-icon]')!
   const navigation = root.querySelector<HTMLElement>('[data-search-navigation]')!
+  const tabsScrollArea = root.querySelector<HTMLElement>('[data-tabs-scroll-area]')!
+  const tabsScroll = root.querySelector<HTMLElement>('[data-tabs-scroll]')!
   const openButton = root.querySelector<HTMLButtonElement>('[data-search-open]')!
   const form = root.querySelector<HTMLElement>('[data-search-form]')!
   const input = root.querySelector<HTMLInputElement>('[data-search-input]')!
@@ -66,6 +68,17 @@ function init(root: HTMLElement) {
   let documents = new Map<string, SearchDocument>()
   let timer = 0
   const controller = new AbortController()
+
+  const updateTabsOverflow = () => {
+    const atStart = tabsScroll.scrollLeft <= 1
+    const atEnd = tabsScroll.scrollWidth <= tabsScroll.clientWidth
+      || tabsScroll.scrollLeft + tabsScroll.clientWidth >= tabsScroll.scrollWidth - 1
+    tabsScrollArea.classList.toggle('scrolled-start', atStart)
+    tabsScrollArea.classList.toggle('scrolled-end', atEnd)
+  }
+  tabsScroll.addEventListener('scroll', updateTabsOverflow, { passive: true, signal: controller.signal })
+  window.addEventListener('resize', updateTabsOverflow, { passive: true, signal: controller.signal })
+  requestAnimationFrame(updateTabsOverflow)
 
   const setOnlyLocale = (enabled: boolean) => {
     try { localStorage.setItem('teslak-only-language', String(enabled)) } catch {}
@@ -134,6 +147,7 @@ function init(root: HTMLElement) {
   function close() {
     navigation.hidden = false
     openButton.hidden = false
+    // Finds keeps the same vertical rhythm with an invisible, inert filter.
     filter.hidden = false
     form.hidden = true
     panel.hidden = true
@@ -141,6 +155,7 @@ function init(root: HTMLElement) {
     input.value = ''
     results.replaceChildren()
     openButton.focus()
+    requestAnimationFrame(updateTabsOverflow)
   }
 
   openButton.addEventListener('click', () => void open())

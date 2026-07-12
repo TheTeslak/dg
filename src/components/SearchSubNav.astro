@@ -17,6 +17,7 @@ interface Props {
 
 const { locale, labels } = Astro.props
 const currentPath = Astro.url.pathname
+const showLanguageFilter = !currentPath.includes('/finds')
 ---
 
 <section
@@ -25,17 +26,26 @@ const currentPath = Astro.url.pathname
   data-locale={locale}
   data-labels={JSON.stringify(labels)}
 >
-  <button type="button" class="language-filter" data-language-filter>
+  <button
+    type="button"
+    class:list={['language-filter', !showLanguageFilter && 'is-unavailable']}
+    data-language-filter
+    disabled={!showLanguageFilter}
+    aria-hidden={showLanguageFilter ? undefined : 'true'}
+    tabindex={showLanguageFilter ? 0 : -1}
+  >
     <span class="i-carbon-checkbox" data-language-filter-icon aria-hidden="true"></span>
     {labels.onlyLanguage}
   </button>
 
   <div class="search-subnav-row">
-    <nav class="subnav-tabs" data-search-navigation aria-label={labels.searchPlaceholder}>
-      <a href={`/${locale}/notes`} class:list={['subnav-tab', currentPath.includes('/notes') && 'is-active']}>{labels.notes}</a>
-      <a href={`/${locale}/articles`} class:list={['subnav-tab', currentPath.includes('/articles') && 'is-active']}>{labels.articles}</a>
-      <a href={`/${locale}/finds`} class:list={['subnav-tab', currentPath.includes('/finds') && 'is-active']}>{labels.finds}</a>
-    </nav>
+    <div class="subnav-scroll-area scrolled-start" data-tabs-scroll-area data-search-navigation>
+      <nav class="subnav-tabs" data-tabs-scroll aria-label={labels.searchPlaceholder}>
+        <a href={`/${locale}/notes`} class:list={['subnav-tab', currentPath.includes('/notes') && 'is-active']}>{labels.notes}</a>
+        <a href={`/${locale}/articles`} class:list={['subnav-tab', currentPath.includes('/articles') && 'is-active']}>{labels.articles}</a>
+        <a href={`/${locale}/finds`} class:list={['subnav-tab', currentPath.includes('/finds') && 'is-active']}>{labels.finds}</a>
+      </nav>
+    </div>
     <button type="button" class="search-trigger" data-search-open title={labels.searchPlaceholder} aria-label={labels.searchPlaceholder}>
       <span class="i-ri-search-line" aria-hidden="true"></span>
     </button>
@@ -78,14 +88,19 @@ const currentPath = Astro.url.pathname
     cursor: pointer;
     transition: opacity 200ms ease, transform 200ms ease;
   }
+  .search-subnav .language-filter.is-unavailable {
+    visibility: hidden;
+    pointer-events: none;
+  }
   .search-subnav .language-filter:hover,
   .search-subnav .language-filter:focus-visible { opacity: 1; }
-  .search-subnav-row { display: flex; align-items: center; gap: 0.75rem; min-height: 2.75rem; }
-  .subnav-tabs { display: flex; align-items: baseline; gap: 0.75rem; flex: 1; min-width: 0; }
-  .subnav-tab { white-space: nowrap; border: 0 !important; font-size: 1.875rem; opacity: 0.3; transition: opacity 220ms ease, transform 220ms ease; }
+  .search-subnav-row { display: flex; align-items: center; gap: 1.5rem; min-height: 2.75rem; }
+  .subnav-scroll-area { flex: 1; min-width: 0; }
+  .subnav-tabs { display: flex; flex-flow: row nowrap; align-items: baseline; gap: 1.125rem; }
+  .subnav-tab { white-space: nowrap; border: 0 !important; text-decoration: none !important; font-size: 1.875rem; opacity: 0.3; transition: opacity 200ms ease; }
   .subnav-tab:hover,
-  .subnav-tab:focus-visible { opacity: 0.65; transform: translateY(-1px); }
-  .subnav-tab.is-active { opacity: 1; text-decoration: underline; text-underline-offset: 0.16em; }
+  .subnav-tab:focus-visible { opacity: 0.6; }
+  .subnav-tab.is-active { opacity: 1; }
   .search-trigger,
   .search-close-btn { border: 0; background: none; color: inherit; cursor: pointer; opacity: 0.45; transition: opacity 200ms ease, transform 200ms ease; }
   .search-trigger { padding: 0.35rem; font-size: 1.2rem; }
@@ -111,8 +126,32 @@ const currentPath = Astro.url.pathname
   .search-result-card mark { background: #1e1e1ee0; color: #fff; border-radius: 0.15em; padding: 0.05em 0.25em; }
   html.dark .search-result-card mark { background: #ebebebe6; color: #111; }
   @keyframes search-expand { from { opacity: 0; transform: scaleX(0.88); transform-origin: right; } to { opacity: 1; transform: scaleX(1); transform-origin: right; } }
-  @media (max-width: 520px) {
-    .subnav-tabs { gap: 0.5rem; }
+  @media (max-width: 639px) {
+    .search-subnav-row { gap: 1rem; }
+    .subnav-scroll-area { position: relative; }
+    .subnav-scroll-area::before,
+    .subnav-scroll-area::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      z-index: 2;
+      width: 2.5rem;
+      height: 100%;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 200ms ease;
+    }
+    .subnav-scroll-area::before { left: 0; background: linear-gradient(to right, var(--c-bg), transparent); }
+    .subnav-scroll-area::after { right: 0; background: linear-gradient(to right, transparent, var(--c-bg)); }
+    .subnav-scroll-area.scrolled-start::before,
+    .subnav-scroll-area.scrolled-end::after { opacity: 0; }
+    .subnav-tabs {
+      gap: 0.75rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .subnav-tabs::-webkit-scrollbar { display: none; }
     .subnav-tab { font-size: 1.45rem; }
   }
   @media (prefers-reduced-motion: reduce) {
