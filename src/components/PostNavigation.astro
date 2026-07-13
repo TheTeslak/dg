@@ -83,18 +83,30 @@ const hasNavigation = newerPost || olderPost
   }
   .post-nav-text {
     display: flex;
+    flex: 1 1 0;
     flex-direction: column;
     gap: 0.15rem;
+    width: 0;
     min-width: 0;
   }
   .post-nav-text.align-right {
     align-items: flex-end;
   }
   .post-nav-title {
+    display: block;
+    width: 100%;
     font-weight: 500;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     white-space: nowrap;
+  }
+  .post-nav-newer .post-nav-title {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
+  }
+  .post-nav-older .post-nav-title {
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent 100%);
+    mask-image: linear-gradient(to left, #000 calc(100% - 2.5rem), transparent 100%);
   }
   .post-nav-date {
     font-size: 0.8rem;
