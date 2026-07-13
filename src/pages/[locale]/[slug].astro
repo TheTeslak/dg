@@ -74,6 +74,7 @@ if (!entry)
   throw new Error(`[routes] missing content entry "${entryId}"`)
 
 const { Content, headings } = await render(entry)
+const tocHeadings = headings.filter(heading => heading.depth === 2 || heading.depth === 3)
 const fm = entry.data as Record<string, any>
 const t = makeT(locale)
 
@@ -173,13 +174,12 @@ const backToAllPath = `/${locale}/${postType === 'note' ? 'notes' : 'articles'}`
       </div>
     )}
 
-    {fm.title && headings.length > 1 && (
+    {fm.title && tocHeadings.length > 2 && (
       <ScrollProgressToc
-        headings={headings}
+        headings={tocHeadings}
         title={articleTitle}
         duration={formatReadingDuration(post.duration, locale)}
-        alwaysOn={Boolean(fm.tocAlwaysOn)}
-        labels={{ link: t('heading-link'), copied: t('heading-copied') }}
+        labels={{ link: t('heading-link'), copied: t('heading-copied'), close: t('nav-close') }}
       />
     )}
 

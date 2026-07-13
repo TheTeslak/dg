@@ -4,36 +4,120 @@ interface Props {
   headings: Heading[]
   title: string
   duration?: string
-  alwaysOn?: boolean
-  labels: { link: string; copied: string }
+  labels: { link: string; copied: string; close: string }
 }
-const { headings, title, duration, alwaysOn = false, labels } = Astro.props
+
+const { headings, title, duration, labels } = Astro.props
+const tocHeadings = headings.filter(heading => heading.depth === 2 || heading.depth === 3)
+
+const DOT_HEIGHT = 3
+const GAP_SIZE = 4
+const STEP_SIZE = 22
+const STEP_GAP_MULTIPLIER = 1.5
+const PADDING_TOP = 16
+const PADDING_BOTTOM = 16
+
+let currentY = PADDING_TOP
+const items = tocHeadings.map((heading, index) => {
+  if (index > 0) {
+    const previous = tocHeadings[index - 1]
+    currentY += heading.depth < previous.depth
+      ? STEP_SIZE * STEP_GAP_MULTIPLIER
+      : STEP_SIZE
+  }
+  return { ...heading, position: currentY }
+})
+const trackHeight = (items.at(-1)?.position ?? PADDING_TOP) + DOT_HEIGHT + PADDING_BOTTOM
+const lineSegments = items.slice(0, -1).flatMap((item, index) => {
+  const y1 = item.position + DOT_HEIGHT + GAP_SIZE
+  const y2 = items[index + 1].position - GAP_SIZE
+  return y2 > y1 ? [{ y1, y2 }] : []
+})
 ---
 
-<div class:list={['scroll-toc', alwaysOn && 'is-always-on']} data-scroll-toc data-labels={JSON.stringify(labels)}>
-  <div class="scroll-toc-anchor table-of-contents-anchor"><span class="i-ri-menu-2-fill" aria-hidden="true"></span></div>
-  <div class="scroll-toc-panel">
-    <header class="scroll-toc-title"><strong>{title}</strong>{duration && <span>{duration}</span>}</header>
-    <div class="scroll-toc-track" aria-hidden="true"><span data-toc-progress></span></div>
-    <nav class="scroll-toc-list" aria-label={title}>
-      {headings.map((heading, index) => (
-        <button type="button" class:list={['scroll-toc-item', heading.depth >= 3 && 'is-h3']} data-toc-id={heading.slug} data-toc-index={index}>
-          <span class="scroll-toc-dot"></span><span class="scroll-toc-label">{heading.text}</span>
+<div class="scroll-toc" data-scroll-toc data-labels={JSON.stringify(labels)}>
+  <div class="table-of-contents-anchor scroll-toc-anchor-hint" aria-hidden="true">
+    <span class="i-ri-menu-2-fill"></span>
+  </div>
+
+  <header class="scroll-toc-title">
+    <div class="scroll-toc-title-text">{title}</div>
+    {duration && <div class="scroll-toc-title-duration">{duration}</div>}
+  </header>
+
+  <div class="scroll-toc-scroll-wrapper" data-toc-scroll-wrapper>
+    <div class="scroll-toc-track" style={`height:${trackHeight}px`}>
+      <svg class="scroll-toc-svg" width="8" height={trackHeight} viewBox={`0 0 8 ${trackHeight}`} aria-hidden="true">
+        {lineSegments.map(segment => (
+          <line x1="4" y1={segment.y1} x2="4" y2={segment.y2} class="scroll-toc-line"></line>
+        ))}
+        {items.map(item => (
+          <line
+            x1="4"
+            y1={item.position}
+            x2="4"
+            y2={item.position + DOT_HEIGHT}
+            stroke-linecap="round"
+            class="scroll-toc-dot"
+            data-toc-dot
+          ></line>
+        ))}
+      </svg>
+
+      {items.map((heading, index) => (
+        <button
+          type="button"
+          class:list={['scroll-toc-item', heading.depth === 3 && 'is-h3']}
+          style={`top:${heading.position + DOT_HEIGHT / 2}px`}
+          data-toc-id={heading.slug}
+          data-toc-index={index}
+          data-toc-position={heading.position}
+          aria-label={heading.text}
+        >
+          <span class="scroll-toc-label">{heading.text}</span>
         </button>
       ))}
-    </nav>
+    </div>
   </div>
 </div>
 
 <div class="mobile-action-bar" data-mobile-toc-bar>
-  <button type="button" class="mobile-action-btn" data-mobile-toc-open aria-label={title}><span class="i-ri-menu-2-fill" aria-hidden="true"></span></button>
-  <button type="button" class="mobile-action-btn" data-mobile-copy aria-label={labels.link}><span class="i-ri-links-line" data-mobile-copy-icon aria-hidden="true"></span><span data-mobile-copy-text hidden>{labels.copied}</span></button>
+  <button type="button" class="mobile-action-btn" data-mobile-toc-open title={title} aria-label={title}>
+    <span class="i-ri-menu-2-fill text-xl" aria-hidden="true"></span>
+  </button>
+  <button type="button" class="mobile-action-btn" data-mobile-copy title={labels.link} aria-label={labels.link}>
+    <span class="i-ri-links-line shrink-0 text-xl" data-mobile-copy-icon aria-hidden="true"></span>
+    <span class="mobile-action-copied-text" data-mobile-copy-text hidden>{labels.copied}</span>
+  </button>
 </div>
+
 <div class="mobile-toc-backdrop" data-mobile-toc-backdrop hidden></div>
-<aside class="mobile-toc-sheet" data-mobile-toc-sheet hidden aria-label={title}>
-  <header><div><strong>{title}</strong>{duration && <small>{duration}</small>}</div><button type="button" data-mobile-toc-close aria-label="Close"><span class="i-ri-close-line" aria-hidden="true"></span></button></header>
-  <nav>
-    {headings.map(heading => <button type="button" class:list={['mobile-toc-sheet-item', heading.depth >= 3 && 'is-h3']} data-toc-id={heading.slug}>{heading.text}</button>)}
+<aside
+  class="mobile-toc-sheet"
+  data-mobile-toc-sheet
+  role="dialog"
+  aria-modal="true"
+  aria-label={title}
+  aria-hidden="true"
+  hidden
+>
+  <header class="mobile-toc-sheet-header">
+    <div class="mobile-toc-sheet-title">{title}</div>
+    <button type="button" class="mobile-toc-sheet-close" data-mobile-toc-close aria-label={labels.close}>
+      <span class="i-ri-close-line" aria-hidden="true"></span>
+    </button>
+  </header>
+  {duration && <div class="mobile-toc-sheet-duration">{duration}</div>}
+  <nav class="mobile-toc-sheet-list" aria-label={title}>
+    {items.map(heading => (
+      <button
+        type="button"
+        class:list={['mobile-toc-sheet-item', heading.depth === 3 && 'is-h3']}
+        data-toc-id={heading.slug}
+      >
+        {heading.text}
+      </button>
+    ))}
   </nav>
 </aside>
 
@@ -42,55 +126,195 @@ const { headings, title, duration, alwaysOn = false, labels } = Astro.props
 </script>
 
 <style is:global>
-  .scroll-toc { position: fixed; inset: 5rem auto 2.5rem 1.1rem; z-index: 200; display: none; width: min(25rem, calc(50vw - 25rem)); min-width: 12rem; pointer-events: none; }
-  .scroll-toc-anchor { position: absolute; top: 0; left: 0; pointer-events: none; transition: opacity 250ms ease, transform 250ms ease; }
-  .scroll-toc-panel { height: 100%; padding: 0.25rem 0; opacity: 0; transform: translateX(-0.5rem); pointer-events: none; transition: opacity 280ms ease, transform 280ms cubic-bezier(.16,1,.3,1); }
-  .scroll-toc:hover .scroll-toc-panel,
-  .scroll-toc:focus-within .scroll-toc-panel,
-  .scroll-toc.is-near .scroll-toc-panel,
-  .scroll-toc.is-always-on .scroll-toc-panel { opacity: 1; transform: none; pointer-events: auto; }
-  .scroll-toc:hover .scroll-toc-anchor,
-  .scroll-toc:focus-within .scroll-toc-anchor,
-  .scroll-toc.is-near .scroll-toc-anchor,
-  .scroll-toc.is-always-on .scroll-toc-anchor { opacity: 0; transform: translateX(-0.4rem); }
-  .scroll-toc-title { display: flex; flex-direction: column; padding: 0 0.75rem 0.75rem 1.35rem; line-height: 1.25; }
-  .scroll-toc-title strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.85rem; opacity: 0.82; }
-  .scroll-toc-title span { margin-top: 0.12rem; font-size: 0.73rem; opacity: 0.45; }
-  .scroll-toc-list { position: relative; display: flex; flex-direction: column; max-height: calc(100% - 3rem); overflow: auto; scrollbar-width: none; }
-  .scroll-toc-track { position: absolute; top: 3rem; bottom: 0.5rem; left: 0.45rem; width: 1px; background: #8883; overflow: hidden; }
-  .scroll-toc-track span { display: block; width: 100%; height: 0; background: #777b; transition: height 180ms ease-out; }
-  html.dark .scroll-toc-track span { background: #ccca; }
-  .scroll-toc-item { display: grid; grid-template-columns: 0.9rem minmax(0, 1fr); align-items: center; gap: 0.45rem; width: 100%; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; padding: 0.28rem 0.75rem 0.28rem 0; opacity: 0.5; transition: opacity 200ms ease, transform 200ms ease; }
-  .scroll-toc-item.is-h3 { padding-left: 0.55rem; font-size: 0.92em; }
-  .scroll-toc-item:hover,
-  .scroll-toc-item.is-active { opacity: 1; transform: translateX(0.15rem); }
-  .scroll-toc-dot { width: 0.32rem; height: 0.32rem; justify-self: center; border-radius: 50%; background: currentColor; transition: transform 200ms ease; }
-  .scroll-toc-item.is-active .scroll-toc-dot { transform: scale(1.6); }
-  .scroll-toc-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8rem; line-height: 1.3; }
-  .mobile-action-bar { display: none; }
-  .mobile-toc-backdrop,
-  .mobile-toc-sheet { display: none; }
-  @media (min-width: 1024px) { .scroll-toc { display: block; pointer-events: auto; } }
-  @media (max-width: 1023px) {
-    .mobile-action-bar { position: fixed; inset: auto 0 0; z-index: 300; display: flex; justify-content: space-between; padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom)); pointer-events: none; }
-    .mobile-action-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; min-width: 2.75rem; height: 2.75rem; padding: 0 0.85rem; border: 0; border-radius: 999px; background: var(--c-bg); color: inherit; box-shadow: 0 3px 16px #0002; pointer-events: auto; cursor: pointer; transition: background 200ms ease, transform 200ms ease; }
-    .mobile-action-btn:hover { background: #8882; transform: translateY(-1px); }
-    .mobile-toc-backdrop { position: fixed; inset: 0; z-index: 400; display: block; background: #0006; opacity: 1; transition: opacity 300ms ease; }
-    .mobile-toc-backdrop[hidden] { display: none; }
-    .mobile-toc-sheet { position: fixed; inset: auto 0 0; z-index: 401; display: flex; flex-direction: column; max-height: 65vh; padding-bottom: env(safe-area-inset-bottom); border-radius: 1.25rem 1.25rem 0 0; background: color-mix(in srgb, var(--c-bg) 96%, transparent); box-shadow: 0 -8px 36px #0003; backdrop-filter: blur(20px); animation: toc-sheet-in 350ms cubic-bezier(.32,.72,0,1) both; }
-    .mobile-toc-sheet[hidden] { display: none; }
-    .mobile-toc-sheet header { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem 0.5rem; }
-    .mobile-toc-sheet header > div { display: flex; flex-direction: column; min-width: 0; }
-    .mobile-toc-sheet header strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .mobile-toc-sheet header small { margin-top: 0.15rem; opacity: 0.5; }
-    .mobile-toc-sheet header button { width: 2rem; height: 2rem; border: 0; border-radius: 50%; background: #8882; color: inherit; cursor: pointer; }
-    .mobile-toc-sheet nav { overflow: auto; padding: 0.5rem 1rem 1rem; }
-    .mobile-toc-sheet-item { display: block; width: 100%; border: 0; border-radius: 0.5rem; background: none; color: inherit; text-align: left; padding: 0.55rem 0.75rem; opacity: 0.58; cursor: pointer; transition: background 150ms ease, opacity 150ms ease; }
-    .mobile-toc-sheet-item.is-h3 { padding-left: 1.75rem; font-size: 0.9em; }
-    .mobile-toc-sheet-item:hover,
-    .mobile-toc-sheet-item.is-active { background: #8882; opacity: 1; }
+  .scroll-toc {
+    position: fixed;
+    left: 18px;
+    top: 80px;
+    bottom: 40px;
+    z-index: 200;
+    width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 40px);
+    min-width: 200px;
+    max-width: 400px;
+    pointer-events: auto;
+    cursor: default;
+    display: none;
+    flex-direction: column;
   }
-  @keyframes toc-sheet-in { from { transform: translateY(100%); } }
+  .scroll-toc::before { content: ''; position: absolute; inset: 0 100% 0 auto; width: 18px; }
+  @media (min-width: 1024px) { .scroll-toc { display: flex; } }
+  @media (min-width: 1280px) {
+    .scroll-toc { left: 28px; width: calc(50vw - (var(--prose-max-width, 58ch) * 0.625) - 50px); }
+    .scroll-toc::before { width: 28px; }
+  }
+
+  .scroll-toc-scroll-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: clip;
+    scrollbar-width: none;
+    opacity: 0;
+    transform: translateX(-8px);
+    pointer-events: none;
+    transition: opacity 250ms ease, transform 250ms ease;
+  }
+  .scroll-toc-scroll-wrapper::-webkit-scrollbar { display: none; }
+  .scroll-toc:hover .scroll-toc-scroll-wrapper,
+  .scroll-toc:focus-within .scroll-toc-scroll-wrapper,
+  .scroll-toc.is-near .scroll-toc-scroll-wrapper { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+  .scroll-toc-track { position: relative; left: 0; width: 100%; }
+  .scroll-toc-anchor-hint {
+    flex-shrink: 0;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: none;
+    transition: opacity 250ms ease, transform 250ms ease;
+  }
+  .scroll-toc:hover .scroll-toc-anchor-hint,
+  .scroll-toc:focus-within .scroll-toc-anchor-hint,
+  .scroll-toc.is-near .scroll-toc-anchor-hint { opacity: 0; transform: translateX(-6px); }
+  .scroll-toc-svg { position: absolute; left: 4px; top: 2px; overflow: visible; }
+  .scroll-toc-line { stroke: rgba(150, 150, 150, 0.22); stroke-width: 1.5; }
+  html.dark .scroll-toc-line { stroke: rgba(150, 150, 150, 0.13); }
+  .scroll-toc-dot { stroke: rgba(130, 130, 130, 0.5); stroke-width: 2.5; transition: stroke 300ms ease; }
+  html.dark .scroll-toc-dot { stroke: rgba(170, 170, 170, 0.35); }
+  .scroll-toc-dot.is-active { stroke: rgba(80, 80, 80, 0.9); stroke-width: 3; }
+  html.dark .scroll-toc-dot.is-active { stroke: rgba(210, 210, 210, 0.7); }
+
+  .scroll-toc-item {
+    position: absolute;
+    left: 20px;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 2px 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+  .scroll-toc-label {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    color: rgba(80, 80, 80, 0.65);
+    font-size: 0.82rem;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-4px);
+    pointer-events: none;
+    transition: opacity 300ms ease, transform 300ms ease, color 250ms ease;
+  }
+  html.dark .scroll-toc-label { color: rgba(200, 200, 200, 0.55); }
+  .scroll-toc-item.is-active .scroll-toc-label { color: rgba(40, 40, 40, 0.95); font-weight: 500; }
+  html.dark .scroll-toc-item.is-active .scroll-toc-label { color: rgba(230, 230, 230, 0.85); }
+  .scroll-toc-item.is-h3 .scroll-toc-label { padding-left: 8px; font-size: 0.78rem; }
+  .scroll-toc-item:hover .scroll-toc-label { color: #000; text-decoration: underline; text-decoration-color: rgba(0, 0, 0, 0.3); text-underline-offset: 3px; }
+  html.dark .scroll-toc-item:hover .scroll-toc-label { color: #fff; text-decoration-color: rgba(255, 255, 255, 0.3); }
+  .scroll-toc:hover .scroll-toc-label,
+  .scroll-toc:focus-within .scroll-toc-label,
+  .scroll-toc.is-near .scroll-toc-label { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+  .scroll-toc-title {
+    flex-shrink: 0;
+    padding: 0 12px 0 4px;
+    margin-bottom: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+  .scroll-toc:hover .scroll-toc-title,
+  .scroll-toc:focus-within .scroll-toc-title,
+  .scroll-toc.is-near .scroll-toc-title { opacity: 1; transform: translateX(0); }
+  .scroll-toc-title-text { width: 100%; overflow: hidden; color: rgba(40, 40, 40, 0.85); font-size: 0.85rem; font-weight: 600; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+  html.dark .scroll-toc-title-text { color: rgba(220, 220, 220, 0.8); }
+  .scroll-toc-title-duration { margin-top: 2px; color: rgba(120, 120, 120, 0.55); font-size: 0.75rem; }
+  html.dark .scroll-toc-title-duration { color: rgba(160, 160, 160, 0.45); }
+
+  .mobile-action-bar { display: none; }
+  .mobile-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 9999px;
+    background: var(--c-bg);
+    color: inherit;
+    cursor: pointer;
+    transition: background 300ms ease, opacity 300ms ease, padding 300ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mobile-action-btn:hover,
+  .mobile-action-btn:active { background: #e7e7e7; }
+  html.dark .mobile-action-btn:hover,
+  html.dark .mobile-action-btn:active { background: #1b1b1b; }
+  .mobile-action-btn.is-copied { padding-left: 0.75rem; padding-right: 1rem; }
+  .mobile-action-copied-text { margin-left: 0.5rem; overflow: hidden; font-size: 0.875rem; font-weight: 500; white-space: nowrap; }
+
+  .mobile-toc-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 300ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html.dark .mobile-toc-backdrop { background: rgba(0, 0, 0, 0.6); }
+  .mobile-toc-backdrop.is-open { opacity: 1; }
+  .mobile-toc-backdrop[hidden],
+  .mobile-toc-sheet[hidden] { display: none; }
+  .mobile-toc-sheet {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 401;
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    border-radius: 1.25rem 1.25rem 0 0;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    transform: translateY(100%);
+    transition: transform 350ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .mobile-toc-sheet.is-open { transform: translateY(0); }
+  html.dark .mobile-toc-sheet { background: rgba(20, 20, 20, 0.96); box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4); }
+  .mobile-toc-sheet-header { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; padding: 1rem 1.25rem 0; }
+  .mobile-toc-sheet-title { max-width: calc(100% - 3rem); overflow: hidden; color: rgba(0, 0, 0, 0.85); font-size: 0.95rem; font-weight: 600; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+  html.dark .mobile-toc-sheet-title { color: rgba(255, 255, 255, 0.85); }
+  .mobile-toc-sheet-close { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 2rem; height: 2rem; border: 0; border-radius: 9999px; background: rgba(0, 0, 0, 0.06); color: rgba(0, 0, 0, 0.4); cursor: pointer; }
+  html.dark .mobile-toc-sheet-close { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.4); }
+  .mobile-toc-sheet-duration { flex-shrink: 0; padding: 0.2rem 1.25rem 0; color: rgba(120, 120, 120, 0.55); font-size: 0.78rem; }
+  html.dark .mobile-toc-sheet-duration { color: rgba(160, 160, 160, 0.45); }
+  .mobile-toc-sheet-list { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; padding: 0.75rem 1rem 1rem; scrollbar-width: none; }
+  .mobile-toc-sheet-list::-webkit-scrollbar { display: none; }
+  .mobile-toc-sheet-item { display: block; width: 100%; padding: 0.55rem 0.75rem; border: 0; border-radius: 0.5rem; background: transparent; color: rgba(0, 0, 0, 0.55); font: inherit; font-size: 0.92rem; line-height: 1.4; text-align: left; cursor: pointer; transition: background 150ms ease, color 150ms ease; }
+  html.dark .mobile-toc-sheet-item { color: rgba(255, 255, 255, 0.5); }
+  .mobile-toc-sheet-item.is-h3 { padding-left: 1.75rem; font-size: 0.87rem; }
+  .mobile-toc-sheet-item.is-active { background: rgba(0, 0, 0, 0.04); color: rgba(0, 0, 0, 0.9); font-weight: 500; }
+  html.dark .mobile-toc-sheet-item.is-active { background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.88); }
+  .mobile-toc-sheet-item:active { background: rgba(0, 0, 0, 0.08); }
+  html.dark .mobile-toc-sheet-item:active { background: rgba(255, 255, 255, 0.1); }
+
+  @media (max-width: 1023px) {
+    .mobile-action-bar { position: fixed; inset: auto 0 0; z-index: 300; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+    .mobile-action-bar > * { pointer-events: auto; }
+  }
   @media print { .scroll-toc, .mobile-action-bar, .mobile-toc-backdrop, .mobile-toc-sheet { display: none !important; } }
-  @media (prefers-reduced-motion: reduce) { .scroll-toc *, .mobile-action-bar *, .mobile-toc-sheet { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-toc *, .mobile-action-bar *, .mobile-toc-backdrop, .mobile-toc-sheet { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+  }
 </style>
