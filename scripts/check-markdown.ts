@@ -2,20 +2,20 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createMarkdownProcessor } from '@astrojs/markdown-remark'
-import rehypeRaw from 'rehype-raw'
-import rehypeImageFigures from '../src/utils/rehype-image-figures.ts'
-import remarkInlineAttrs from '../src/utils/remark-inline-attrs.ts'
-import remarkSources from '../src/utils/remark-sources.ts'
-import remarkSpoiler from '../src/utils/remark-spoiler.ts'
+import { feedRehypePlugins, remarkPlugins, siteRehypePlugins } from '../src/utils/markdown-pipeline.ts'
 
 const processor = await createMarkdownProcessor({
-  remarkPlugins: [remarkSpoiler, remarkInlineAttrs, remarkSources],
-  rehypePlugins: [rehypeRaw, rehypeImageFigures],
+  remarkPlugins: [...remarkPlugins] as any,
+  rehypePlugins: [...siteRehypePlugins] as any,
+})
+const feedProcessor = await createMarkdownProcessor({
+  remarkPlugins: [...remarkPlugins] as any,
+  rehypePlugins: [...feedRehypePlugins] as any,
 })
 
-async function render(markdown: string, locale = 'en') {
-  return (await processor.render(markdown, {
-    fileURL: new URL(`file:///tmp/content/articles/${locale}/fixture.md`),
+async function render(markdown: string, locale = 'en', feed = false, collection = 'articles') {
+  return (await (feed ? feedProcessor : processor).render(markdown, {
+    fileURL: new URL(`file:///tmp/content/${collection}/${locale}/fixture.md`),
   })).code
 }
 
@@ -44,6 +44,15 @@ const sources = await render('[Mention](https://example.com)\n\n<!-- sources -->
 assert.match(sources, /id="src-ref-1"/)
 assert.match(sources, />Quellen</)
 assert.match(sources, /class="source-backref"/)
+
+const feedComponents = await render('[[toc]]\n\n# Heading\n\n<TranslationStats />', 'en', true)
+assert.doesNotMatch(feedComponents, /<TranslationStats\b/i)
+assert.doesNotMatch(feedComponents, /table-of-contents/)
+assert.match(feedComponents, /translation-stats/)
+
+const now = await render('<NowEntry date="2026-06-01">\n\nHallo!\n\n</NowEntry>', 'de', false, 'pages')
+assert.match(now, /<section class="now-entry">/)
+assert.match(now, /datetime="2026-06-01"/)
 
 const articleRoot = resolve('src/content/articles')
 for (const locale of readdirSync(articleRoot)) {

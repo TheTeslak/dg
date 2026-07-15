@@ -32,9 +32,9 @@ remaining gaps, and priorities are tracked in `MIGRATION-REVIEW.md`.
 5. **Slugs/anchors** — `src/utils/slugify.ts` is the dg implementation
    verbatim; heading ids and TOC links share one uniquifier
    (`src/utils/heading-ids.ts`), so legacy `#fragment` links keep working.
-6. **Data layer** — `src/utils/posts.ts` normalizes everything once (reading
-   time, auto-excerpt, `/og/{slug}.png` fallback, hashtags→tags) with a
-   module-level cache; the dead remark frontmatter plugin is gone.
+6. **Data layer** — `src/utils/article-normalization.ts` is shared by Astro
+   collections and Node build scripts (reading time, excerpt, image fallback,
+   tags). Strict shared Zod schemas reject unknown or malformed frontmatter.
 7. **SEO** — `Default.astro` ports `useSEO`: hreflang + x-default, robots
    rules (drafts noindex, fallback aliases `noindex,follow` with canonical to
    the source locale), JSON-LD (WebSite/Person/BlogPosting/ProfilePage),
@@ -50,9 +50,9 @@ remaining gaps, and priorities are tracked in `MIGRATION-REVIEW.md`.
    the `site-locale` cookie (with one-way legacy-localStorage migration) are
    ported; the static root page is only a no-edge/no-JS fallback and is
    `noindex`. `netlify.toml` restores security/caching headers.
-10. **Feeds** — `scripts/rss.ts` renders full HTML content (markdown-it with
-    the same custom syntax pre-transforms), absolute URLs, audio enclosures,
-    JSON Feed 1.1 with authors/tags/attachments — for all six locales.
+10. **Feeds** — `scripts/rss.ts` uses the same Unified remark/rehype syntax
+    modules as Astro, with a feed-specific semantic renderer; it emits absolute
+    URLs, audio enclosures and JSON Feed 1.1 for all six locales.
 11. **Search** — the index stores `servedLocales`; results rewrite URLs into
     the current site locale and rank by locale tiers + whole-word boost
     (ported `getLocaleRank`/`boostDocument`). The "Only {LANG}" toggle now
@@ -68,20 +68,25 @@ remaining gaps, and priorities are tracked in `MIGRATION-REVIEW.md`.
 14. **i18n system** — one `localeConfig` (6 locales: en/ru/es/pt/de/fr) drives
     everything; message dictionaries ported from the Fluent files including
     plural rules (`days-left`) and select variants (`page-not-translated`).
-15. **Restored pages/features** — `/{locale}/finds` (with real data), a real
-    `404.astro`, home/now pages built from the dg markdown content, the CMS
-    admin config, all `_redirects` entries incl. de/fr/pt feeds.
+15. **Restored pages/features** — all seven static page types for six locales
+    live in the strict `pages` content collection. This includes Markdown-first
+    home/now content, localized metadata, finds, photos and projects.
 
 ## Photos
 
-The ~100 MB photo library is intentionally not committed. Copy it with:
+The ~100 MB photo library is intentionally not committed. `predev` and
+`prebuild` run `pnpm photos:sync`, which uses the first available source:
+`PHOTOS_SOURCE`, `./photos`, `../dg/photos`, then a sparse checkout of the
+public legacy repository. Netlify therefore needs no sibling repository.
+
+To use an explicit local source:
 
 ```sh
 PHOTOS_SOURCE=/path/to/dg/photos pnpm photos:sync
 ```
 
-`PhotoGrid`/`PhotoShowcase` pick the files up from `src/assets/photos`
-automatically (a build warning reminds you when the folder is empty).
+`PhotoGrid`/`PhotoShowcase` pick the files up from `src/assets/photos`.
+The sync and build fail instead of silently publishing an empty gallery.
 
 ## v3 additions (component-fidelity pass)
 
@@ -102,7 +107,8 @@ automatically (a build warning reminds you when the folder is empty).
   native TypeScript controller (progress, edge reveal, mobile action bar + sheet).
 - **LanguageSelector** — dg design: code+chevron trigger, animated dropdown
   with sliding hover highlight, native names + codes, methodology link.
-- **GitHub alerts** — full markdown-it-github-alerts stylesheets imported.
+- **GitHub alerts** — rendered by Unified and styled locally; no second
+  Markdown parser is installed.
 - **Toolchain** — Astro 7 (`@astrojs/markdown-remark` for the remark/rehype
   pipeline), pnpm (`packageManager` pinned, lockfile committed).
 

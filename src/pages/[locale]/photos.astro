@@ -1,21 +1,22 @@
 ---
+import { render } from 'astro:content'
 import Default from '~/layouts/Default.astro'
 import PhotoGrid from '~/components/PhotoGrid.astro'
-import { photosMeta } from '~/data/home'
 import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { getStaticPage } from '~/utils/static-pages'
 
 export async function getStaticPaths() {
   return supportedLocales.map(locale => ({ params: { locale } }))
 }
 
 const { locale } = Astro.params as { locale: SupportedLocale }
-const meta = photosMeta[locale]
+const page = await getStaticPage(locale, 'photos')
+const { Content } = await render(page)
+const meta = page.data
 ---
 <Default locale={locale} title={meta.title} description={meta.description} bodyClass="photos-page">
   <PhotoGrid locale={locale} />
-  {meta.credit && (
-    <div class="prose mx-auto mt-10">
-      <em class="op50" set:html={meta.credit}></em>
-    </div>
-  )}
+  <div class="prose mx-auto mt-10 op50">
+    <Content />
+  </div>
 </Default>

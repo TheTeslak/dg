@@ -1,4 +1,4 @@
-import type { MessageDictionary } from './types'
+import type { MessageDictionary } from './types.ts'
 
 export default {
   'meta-description': 'Blog de Teslak',
@@ -27,6 +27,7 @@ export default {
   'action-back-to-all': 'Revenir à la liste',
   'action-change-language': 'Changer de langue',
   'action-go-home': 'Retour à l’accueil',
+  'lightbox-close': 'Fermer l’aperçu de l’image',
 
   'page-not-translated': ({ lang, type }) => type === 'note'
     ? `Pas encore traduite ; affichage de la version en ${lang}`

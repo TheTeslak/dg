@@ -1,5 +1,5 @@
-import type { MessageDictionary } from './types'
-import { plural } from './types'
+import type { MessageDictionary } from './types.ts'
+import { plural } from './types.ts'
 
 export default {
   'meta-description': 'Блог Teslak',
@@ -28,6 +28,7 @@ export default {
   'action-back-to-all': 'Ко всему',
   'action-change-language': 'Сменить язык',
   'action-go-home': 'На главную',
+  'lightbox-close': 'Закрыть просмотр изображения',
 
   'page-not-translated': 'Ещё не переведена, показана {lang} версия',
   'page-not-found': 'Страница не найдена',

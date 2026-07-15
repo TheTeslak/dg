@@ -1,20 +1,21 @@
 ---
 import Default from '~/layouts/Default.astro'
 import ListProjects from '~/components/ListProjects.astro'
-import { projectsMeta } from '~/data/home'
 import { projects } from '~/data/projects'
 import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { getStaticPage } from '~/utils/static-pages'
 
 export async function getStaticPaths() {
   return supportedLocales.map(locale => ({ params: { locale } }))
 }
 
 const { locale } = Astro.params as { locale: SupportedLocale }
-const meta = projectsMeta[locale]
+const page = await getStaticPage(locale, 'projects')
+const meta = page.data
 ---
-<Default locale={locale} title="Teslak Projects" description={meta.description} art="dots">
+<Default locale={locale} title={meta.title} description={meta.description} art={meta.art}>
   <div class="prose m-auto mb-8">
-    <h1 class="slide-enter-50 !mt-0 !mb-2.5">{meta.display}</h1>
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5">{meta.display || meta.title}</h1>
   </div>
   <ListProjects projects={projects} locale={locale} />
 </Default>

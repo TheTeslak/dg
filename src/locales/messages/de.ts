@@ -1,4 +1,4 @@
-import type { MessageDictionary } from './types'
+import type { MessageDictionary } from './types.ts'
 
 export default {
   'meta-description': 'Teslaks Blog',
@@ -27,6 +27,7 @@ export default {
   'action-back-to-all': 'Zurück zur Übersicht',
   'action-change-language': 'Sprache ändern',
   'action-go-home': 'Zur Startseite',
+  'lightbox-close': 'Bildvorschau schließen',
 
   'page-not-translated': 'Noch nicht übersetzt; die Version auf {lang} wird angezeigt',
   'page-not-found': 'Seite nicht gefunden',

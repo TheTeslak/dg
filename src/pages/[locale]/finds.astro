@@ -3,12 +3,14 @@ import Default from '~/layouts/Default.astro'
 import ListFinds from '~/components/ListFinds.astro'
 import SearchSubNav from '~/components/SearchSubNav.astro'
 import { localeConfig, makeT, supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { getStaticPage } from '~/utils/static-pages'
 
 export async function getStaticPaths() {
   return supportedLocales.map(locale => ({ params: { locale } }))
 }
 
 const { locale } = Astro.params as { locale: SupportedLocale }
+const page = await getStaticPage(locale, 'finds')
 const t = makeT(locale)
 
 const labels = {
@@ -24,7 +26,7 @@ const labels = {
   durationSuffix: localeConfig[locale].minuteAbbreviation,
 }
 ---
-<Default locale={locale} title="Finds" art="topography">
+<Default locale={locale} title={page.data.title} description={page.data.description} art={page.data.art}>
   <SearchSubNav locale={locale} labels={labels}>
     <ListFinds locale={locale} />
   </SearchSubNav>

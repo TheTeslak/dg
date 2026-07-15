@@ -51,16 +51,17 @@ async function collectEntries() {
   const entries: SitemapEntry[] = []
   const trainingAllowedPaths: string[] = []
   const trainingBlockedPaths: string[] = []
-  const buildTime = new Date().toISOString()
 
   for (const locale of supportedLocales) {
     for (const section of STATIC_SECTIONS) {
+      const pageName = section ? section.slice(1) : 'home'
+      const pageFile = resolve(`src/content/pages/${locale}/${pageName}.md`)
       entries.push({
         path: `/${locale}${section}`,
         groupKey: section || '/home',
         locale,
         isArticle: false,
-        lastmod: buildTime,
+        lastmod: fs.statSync(pageFile).mtime.toISOString(),
       })
     }
   }

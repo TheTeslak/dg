@@ -4,8 +4,7 @@
  * Vue component, so tags like `<TranslationStats />` resolved globally.
  * Astro's `<Content components={...}>` mapping only works for MDX, so plain
  * markdown needs this rehype pass (running after `rehype-raw`) that replaces
- * the custom elements with the same markup the `src/components/mdx/*.astro`
- * components produce. Interactive behavior lives in
+ * custom elements with static, semantic HTML. Interactive behavior lives in
  * `src/scripts/mdx-interactions.ts`, styles in `src/styles/mdx-components.css`.
  */
 import { readdirSync, readFileSync, existsSync } from 'node:fs'
@@ -16,6 +15,10 @@ import { visit } from 'unist-util-visit'
 import matter from 'gray-matter'
 import { localeConfig, supportedLocales, isSupportedLocale, type SupportedLocale } from '../locales/config.ts'
 import { isPostVisible } from './post-visibility.ts'
+
+interface RehypeComponentsOptions {
+  mode?: 'site' | 'feed'
+}
 
 function h(tagName: string, properties: Properties = {}, children: ElementContent[] = []): Element {
   return { type: 'element', tagName, properties, children }
@@ -109,10 +112,14 @@ function getTranslationStats(): LocaleStat[] {
 
 const CIRCUMFERENCE = 2 * Math.PI * 16
 
-function renderTranslationStats(): Element | undefined {
+function renderTranslationStats(mode: 'site' | 'feed'): Element | undefined {
   const stats = getTranslationStats()
   if (!stats.length)
     return undefined
+  if (mode === 'feed') {
+    return h('ul', { className: ['translation-stats'] }, stats.map(item =>
+      h('li', {}, [text(`${item.name}: ${item.percentage}%`)])))
+  }
   return h('div', { className: ['translation-stats', 'grid', 'grid-cols-1', 'md:grid-cols-3', 'gap-[2px]', 'my-6'] }, stats.map(item =>
     h('div', { className: ['translation-stats-item', 'pl-4', 'pr-5', 'py-3', 'flex', 'items-center', 'justify-between'] }, [
       h('span', { className: ['font-sans', 'font-medium'] }, [text(item.name)]),
@@ -168,12 +175,14 @@ function renderArticleLinks(node: Element, locale: SupportedLocale): Element | u
 // Simple presentational components
 // ---------------------------------------------------------------------------
 
-function renderYouTubeEmbed(node: Element): Element {
+function renderYouTubeEmbed(node: Element, mode: 'site' | 'feed'): Element {
   const id = attr(node, 'id') ?? ''
   const title = attr(node, 'title') ?? 'YouTube video'
   const poster = attr(node, 'poster') ?? `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
   const start = attr(node, 'start')
   const src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1${start ? `&start=${start}` : ''}`
+  if (mode === 'feed')
+    return h('p', {}, [h('a', { href: `https://www.youtube.com/watch?v=${id}`, target: '_blank', rel: ['noopener'] }, [text(title)])])
   return h('div', { className: ['youtube-embed'], 'data-youtube-embed': '', 'data-src': src, role: 'region', 'aria-label': title }, [
     h('button', { type: 'button', className: ['youtube-poster'], 'data-youtube-trigger': '', 'aria-label': `Play video: ${title}` }, [
       h('img', { src: poster, alt: '', loading: 'lazy', decoding: 'async' }),
@@ -227,9 +236,11 @@ function renderGitHubLink(node: Element): Element {
   ])
 }
 
-function renderTextCopy(node: Element): Element {
+function renderTextCopy(node: Element, mode: 'site' | 'feed'): Element {
   const value = attr(node, 'value') ?? ''
   const label = node.children.length ? node.children : [text(value)]
+  if (mode === 'feed')
+    return h('code', {}, label)
   return h('button', { type: 'button', className: ['text-copy'], 'data-text-copy': '', 'data-value': value, 'aria-label': 'Copy' }, [
     h('span', { className: ['text-copy-value'] }, label),
     h('span', { className: ['text-copy-icon', 'i-ri-links-line'], 'aria-hidden': 'true' }),
@@ -320,28 +331,55 @@ function renderPostNoticeBanner(node: Element, locale: SupportedLocale): Element
   ])
 }
 
+function formatNowDate(value: string, locale: SupportedLocale) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (!match)
+    return value
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+  const formatted = new Intl.DateTimeFormat(localeConfig[locale].languageTag, {
+    day: 'numeric',
+    month: 'long',
+    ...(date.getFullYear() !== new Date().getFullYear() ? { year: 'numeric' } : {}),
+  }).format(date)
+  return locale === 'ru' ? formatted.replace(/\s*г\.$/, '') : formatted
+}
+
+function renderNowEntry(node: Element, locale: SupportedLocale): Element {
+  const date = attr(node, 'date') || ''
+  return h('section', { className: ['now-entry'] }, [
+    h('time', { dateTime: date, className: ['now-entry-date'] }, [text(formatNowDate(date, locale))]),
+    h('div', { className: ['now-entry-content'] }, node.children),
+  ])
+}
+
 // ---------------------------------------------------------------------------
 
-const rehypeComponents: Plugin<[], Root> = () => {
+const rehypeComponents: Plugin<[RehypeComponentsOptions?], Root> = (options = {}) => {
+  const mode = options.mode || 'site'
   return (tree, file) => {
     const filePath = String(file?.path ?? file?.history?.[0] ?? '')
-    const localeMatch = filePath.match(/articles[\\/](\w+)[\\/]/)
+    const localeMatch = filePath.match(/(?:articles|pages)[\\/](\w+)[\\/]/)
     const locale: SupportedLocale = localeMatch && isSupportedLocale(localeMatch[1]) ? localeMatch[1] : 'en'
 
     visit(tree, 'element', (node: Element, index, parent) => {
       if (!parent || typeof index !== 'number')
         return
+      const classes = Array.isArray(node.properties?.className) ? node.properties.className : []
+      if (mode === 'feed' && classes.includes('table-of-contents')) {
+        parent.children.splice(index, 1)
+        return index
+      }
 
       let replacement: Element | undefined
       switch (node.tagName) {
         case 'translationstats':
-          replacement = renderTranslationStats()
+          replacement = renderTranslationStats(mode)
           break
         case 'articlelinks':
           replacement = renderArticleLinks(node, locale)
           break
         case 'youtubeembed':
-          replacement = renderYouTubeEmbed(node)
+          replacement = renderYouTubeEmbed(node, mode)
           break
         case 'tweet':
           replacement = renderTweet(node)
@@ -350,7 +388,7 @@ const rehypeComponents: Plugin<[], Root> = () => {
           replacement = renderGitHubLink(node)
           break
         case 'textcopy':
-          replacement = renderTextCopy(node)
+          replacement = renderTextCopy(node, mode)
           break
         case 'calcom':
           replacement = renderCalCom(node)
@@ -366,6 +404,9 @@ const rehypeComponents: Plugin<[], Root> = () => {
           // the showcase only appears in the hidden template draft.
           parent.children.splice(index, 1)
           return index
+        case 'nowentry':
+          replacement = renderNowEntry(node, locale)
+          break
         default:
           return
       }

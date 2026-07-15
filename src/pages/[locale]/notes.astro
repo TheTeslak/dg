@@ -3,6 +3,7 @@ import Default from '~/layouts/Default.astro'
 import ListPosts from '~/components/ListPosts.astro'
 import SearchSubNav from '~/components/SearchSubNav.astro'
 import { localeConfig, makeT, supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { getStaticPage } from '~/utils/static-pages'
 import { filterByType, getAllArticles, sortByDateDesc } from '~/utils/posts'
 
 export async function getStaticPaths() {
@@ -10,6 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { locale } = Astro.params as { locale: SupportedLocale }
+const page = await getStaticPage(locale, 'notes')
 const t = makeT(locale)
 const all = await getAllArticles()
 const posts = sortByDateDesc(
@@ -33,7 +35,7 @@ const labels = {
   durationSuffix: localeConfig[locale].minuteAbbreviation,
 }
 ---
-<Default locale={locale} title="Teslak Notes" art="plum">
+<Default locale={locale} title={page.data.title} description={page.data.description} art={page.data.art}>
   <SearchSubNav locale={locale} labels={labels}>
     <ListPosts posts={posts} locale={locale} />
   </SearchSubNav>

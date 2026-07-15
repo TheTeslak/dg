@@ -1,15 +1,11 @@
 ---
-import type { SupportedLocale } from '~/utils/i18n'
-
 interface Props {
-  locale: SupportedLocale
   display: string
   avatarHref: string
   avatarText: string
-  paragraphs: string[]
   emailIntro: string
 }
-const { display, avatarHref, avatarText, paragraphs, emailIntro } = Astro.props
+const { display, avatarHref, avatarText, emailIntro } = Astro.props
 
 const titleParts = (() => {
   if (!avatarText)
@@ -42,9 +38,7 @@ const titleParts = (() => {
 </div>
 
 <article class="prose m-auto slide-enter-content">
-  {paragraphs.map(html => (
-    <p set:html={html} />
-  ))}
+  <slot />
 
   <hr />
 

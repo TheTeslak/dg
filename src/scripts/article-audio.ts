@@ -7,6 +7,7 @@ class ArticleAudioPlayer extends HTMLElement {
   private rates = [1, 1.25, 1.5, 2]
   private rateIndex = 0
   private lastSaved = 0
+  private stickyClosed = false
 
   connectedCallback() {
     if (this.dataset.bound === 'true') return
@@ -17,6 +18,7 @@ class ArticleAudioPlayer extends HTMLElement {
     const forward = this.querySelector<HTMLButtonElement>('[data-audio-forward]')!
     const speed = this.querySelector<HTMLButtonElement>('[data-audio-speed]')!
     const progress = this.querySelector<HTMLInputElement>('[data-audio-progress]')!
+    const close = this.querySelector<HTMLButtonElement>('[data-audio-close]')!
 
     play.addEventListener('click', () => this.audio.paused ? void this.start() : this.audio.pause())
     back.addEventListener('click', () => this.seek(this.audio.currentTime - 15))
@@ -27,20 +29,32 @@ class ArticleAudioPlayer extends HTMLElement {
       speed.textContent = `${this.rates[this.rateIndex]}×`
     })
     progress.addEventListener('input', () => this.seek(Number(progress.value)))
+    close.addEventListener('click', () => this.closeSticky())
+    this.addEventListener('keydown', event => this.handleKeydown(event))
     this.audio.addEventListener('loadedmetadata', () => { this.restore(); this.update() })
     this.audio.addEventListener('timeupdate', () => { this.update(); this.save() })
     this.audio.addEventListener('play', () => { this.waiting = false; this.syncState() })
     this.audio.addEventListener('pause', () => this.syncState())
     this.audio.addEventListener('waiting', () => { this.waiting = true; this.syncState() })
     this.audio.addEventListener('canplay', () => { this.waiting = false; this.syncState() })
-    this.audio.addEventListener('ended', () => { localStorage.removeItem(this.dataset.storageKey || ''); this.syncState() })
+    this.audio.addEventListener('ended', () => {
+      this.audio.currentTime = 0
+      this.interacted = false
+      this.waiting = false
+      this.stickyClosed = false
+      try { localStorage.removeItem(this.dataset.storageKey || '') } catch {}
+      this.update()
+      this.syncState()
+    })
     this.audio.addEventListener('error', () => { this.querySelector<HTMLElement>('[data-audio-error]')!.hidden = false; this.syncState() })
     this.sentinel = document.createElement('span')
     this.sentinel.setAttribute('aria-hidden', 'true')
     this.sentinel.style.cssText = 'display:block;height:0;pointer-events:none'
     this.before(this.sentinel)
     this.observer = new IntersectionObserver(([entry]) => {
-      const sticky = this.interacted && !entry.isIntersecting && entry.boundingClientRect.top < 0
+      if (entry.isIntersecting)
+        this.stickyClosed = false
+      const sticky = this.interacted && !this.stickyClosed && !entry.isIntersecting && entry.boundingClientRect.top < 0
       this.classList.toggle('is-sticky', sticky)
       if (this.sentinel) this.sentinel.style.height = sticky ? `${this.offsetHeight}px` : '0'
     })
@@ -53,7 +67,7 @@ class ArticleAudioPlayer extends HTMLElement {
     this.sentinel?.remove()
     this.audio?.pause()
     if ('mediaSession' in navigator) {
-      for (const action of ['play', 'pause', 'seekbackward', 'seekforward'] as MediaSessionAction[]) {
+      for (const action of ['play', 'pause', 'seekbackward', 'seekforward', 'seekto'] as MediaSessionAction[]) {
         try { navigator.mediaSession.setActionHandler(action, null) } catch {}
       }
     }
@@ -73,6 +87,34 @@ class ArticleAudioPlayer extends HTMLElement {
     this.update()
   }
 
+  private closeSticky() {
+    this.stickyClosed = true
+    this.classList.remove('is-sticky')
+    if (this.sentinel)
+      this.sentinel.style.height = '0'
+  }
+
+  private handleKeydown(event: KeyboardEvent) {
+    const target = event.target
+    const interactive = target instanceof HTMLElement
+      && !!target.closest('a, button, input, textarea, select, [contenteditable="true"]')
+    if (interactive && (event.key === ' ' || event.key === 'Enter'))
+      return
+    if (event.key === ' ' || event.key === 'Enter') {
+      event.preventDefault()
+      if (this.audio.paused) void this.start()
+      else this.audio.pause()
+    }
+    else if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      this.seek(this.audio.currentTime - 15)
+    }
+    else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      this.seek(this.audio.currentTime + 15)
+    }
+  }
+
   private update() {
     const duration = Number.isFinite(this.audio.duration) ? this.audio.duration : 0
     const progress = this.querySelector<HTMLInputElement>('[data-audio-progress]')!
@@ -82,6 +124,7 @@ class ArticleAudioPlayer extends HTMLElement {
     const durationEl = this.querySelector<HTMLElement>('[data-audio-duration]')!
     if (duration && durationEl.textContent === '0:00') durationEl.textContent = this.format(duration)
     this.querySelector<HTMLElement>('[data-audio-timeline]')!.hidden = !(this.interacted || this.audio.currentTime > 0)
+    this.updateMediaSessionState()
   }
 
   private syncState() {
@@ -94,6 +137,7 @@ class ArticleAudioPlayer extends HTMLElement {
     const label = this.audio.paused ? this.dataset.playLabel : this.dataset.pauseLabel
     button.setAttribute('aria-label', label || '')
     button.title = label || ''
+    this.updateMediaSessionState()
   }
 
   private restore() {
@@ -118,12 +162,29 @@ class ArticleAudioPlayer extends HTMLElement {
   }
 
   private updateMediaSession() {
-    if (!('mediaSession' in navigator)) return
+    if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return
     navigator.mediaSession.metadata = new MediaMetadata({ title: this.dataset.title, artist: this.dataset.artist, artwork: [{ src: this.dataset.image || '/avatar.avif' }] })
     navigator.mediaSession.setActionHandler('play', () => void this.start())
     navigator.mediaSession.setActionHandler('pause', () => this.audio.pause())
     navigator.mediaSession.setActionHandler('seekbackward', details => this.seek(this.audio.currentTime - (details.seekOffset || 15)))
     navigator.mediaSession.setActionHandler('seekforward', details => this.seek(this.audio.currentTime + (details.seekOffset || 15)))
+    try { navigator.mediaSession.setActionHandler('seekto', details => details.seekTime != null && this.seek(details.seekTime)) } catch {}
+    this.updateMediaSessionState()
+  }
+
+  private updateMediaSessionState() {
+    if (!('mediaSession' in navigator)) return
+    try {
+      navigator.mediaSession.playbackState = this.audio.paused ? 'paused' : 'playing'
+      if (Number.isFinite(this.audio.duration) && this.audio.duration > 0) {
+        navigator.mediaSession.setPositionState({
+          duration: this.audio.duration,
+          playbackRate: this.audio.playbackRate || 1,
+          position: Math.min(this.audio.currentTime, this.audio.duration),
+        })
+      }
+    }
+    catch {}
   }
 }
 

@@ -1,25 +1,30 @@
 ---
+import { render } from 'astro:content'
 import Default from '~/layouts/Default.astro'
-import NowEntry from '~/components/NowEntry.astro'
-import { nowContent } from '~/data/home'
 import { supportedLocales, type SupportedLocale } from '~/utils/i18n'
+import { getStaticPage } from '~/utils/static-pages'
 
 export async function getStaticPaths() {
   return supportedLocales.map(locale => ({ params: { locale } }))
 }
 
 const { locale } = Astro.params as { locale: SupportedLocale }
-const content = nowContent[locale]
+const entry = await getStaticPage(locale, 'now')
+const { Content } = await render(entry)
+const content = entry.data
 ---
-<Default locale={locale} title={content.title} description={content.description} art="random">
+<Default locale={locale} title={content.title} description={content.description} art={content.art}>
   <div class="prose m-auto mb-8">
-    <h1 class="slide-enter-50 !mt-0 !mb-2.5">{content.display}</h1>
+    <h1 class="slide-enter-50 !mt-0 !mb-2.5">{content.display || content.title}</h1>
   </div>
   <div class="prose m-auto slide-enter-content">
-    {content.entries.map(entry => (
-      <NowEntry date={entry.date} locale={locale}>
-        <p set:html={entry.html} />
-      </NowEntry>
-    ))}
+    <Content />
   </div>
 </Default>
+
+<style is:global>
+  .now-entry { margin-top: 2.5rem; }
+  .now-entry-date { display: block; opacity: 0.5; }
+  .now-entry-content > :first-child { margin-top: 0; }
+  .now-entry-content > :last-child { margin-bottom: 0; }
+</style>

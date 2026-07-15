@@ -1,15 +1,11 @@
 ---
-import type { SupportedLocale } from '~/utils/i18n'
+import { makeT, type SupportedLocale } from '~/utils/i18n'
 
 interface Props {
   locale: SupportedLocale
 }
 const { locale } = Astro.props
-const closeLabel = locale === 'en'
-  ? 'Close image preview'
-  : locale === 'ru'
-    ? 'Закрыть просмотр'
-    : 'Cerrar vista'
+const closeLabel = makeT(locale)('lightbox-close')
 ---
 <div
   id="lightbox"

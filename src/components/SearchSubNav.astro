@@ -117,10 +117,13 @@ const showLanguageFilter = !currentPath.includes('/finds')
   .search-results { display: flex; flex-direction: column; gap: 0.75rem; }
   .search-result-card { display: flex; flex-direction: column; gap: 0.35rem; padding: 1rem 1.15rem 0.75rem; border: 1px solid #7d7d7d40 !important; border-radius: 0.65rem; opacity: 0.68; overflow: hidden; transition: opacity 250ms ease, border-color 250ms ease, background 250ms ease, transform 250ms ease; }
   .search-result-card:hover { opacity: 1; border-color: #7d7d7d70 !important; background: #7d7d7d0f; transform: translateY(-1px); }
+  .search-result-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
   .search-result-title { display: flex; align-items: center; gap: 0.4rem; font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
   .search-result-lang-tag { flex: none; padding: 0.15rem 0.3rem; border-radius: 0.25rem; background: #7d7d7d26; color: #969696; font-size: 0.75rem; line-height: 1.2; }
+  .search-result-type { flex: none; font-size: 0.75rem; opacity: 0.4; text-transform: lowercase; }
   .search-result-snippets { display: flex; flex-direction: column; }
   .search-result-snippet { font-size: 1rem; line-height: 1.55; opacity: 0.9; }
+  .search-result-snippet.is-last { max-height: 3.5em; overflow: hidden; mask-image: linear-gradient(to bottom, #000 30%, #0000001f 100%); }
   .search-snippet-divider { border-top: 1px dashed #7d7d7d33; margin: 0.2rem 0; }
   .search-result-meta { display: flex; gap: 0.35rem; font-size: 0.9rem; opacity: 0.5; }
   .search-result-card mark { background: #1e1e1ee0; color: #fff; border-radius: 0.15em; padding: 0.05em 0.25em; }

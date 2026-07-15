@@ -38,7 +38,7 @@ const viewCoverLabel = t('photos-view-cover')
 const viewContainLabel = t('photos-view-contain')
 
 if (photos.length === 0)
-  console.warn('[photos] src/assets/photos is empty — run `pnpm photos:sync` to copy the photo library (see README-MIGRATION.md).')
+  throw new Error('[photos] src/assets/photos is empty — run `pnpm photos:sync` before building.')
 ---
 <div class="flex justify-center mb-6 relative z-10 slide-enter" style="--enter-stage: 0;">
   <button

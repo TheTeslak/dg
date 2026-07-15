@@ -11,6 +11,7 @@ import fs from 'fs-extra'
 import matter from 'gray-matter'
 import type { SupportedLocale } from '../../src/locales/config.ts'
 import { supportedLocales } from '../../src/locales/config.ts'
+import { normalizeArticleContent } from '../../src/utils/article-normalization.ts'
 import { getArticlePath } from '../../src/utils/article-path.ts'
 import {
   buildArticleStates,
@@ -18,7 +19,7 @@ import {
   getIndexableLocales,
   type ArticleStatesBySlug,
 } from '../../src/utils/article-locales.ts'
-import { estimateReadingMinutes, extractExcerpt } from '../../src/utils/content-cleanup.ts'
+import { articleSchema } from '../../src/utils/content-schema.ts'
 
 export interface ArticleFile {
   locale: SupportedLocale
@@ -34,17 +35,6 @@ export interface ArticleFile {
   availableLocales: SupportedLocale[]
 }
 
-function toDurationMinutes(duration: unknown): number | null {
-  if (typeof duration === 'number' && Number.isFinite(duration))
-    return Math.max(1, Math.round(duration))
-  if (typeof duration === 'string') {
-    const match = duration.trim().match(/^(\d+)(?:\s*min)?$/i)
-    if (match)
-      return Math.max(1, Number.parseInt(match[1], 10))
-  }
-  return null
-}
-
 export async function loadArticleFiles(): Promise<ArticleFile[]> {
   const raw: Omit<ArticleFile, 'servedLocales' | 'availableLocales'>[] = []
 
@@ -54,8 +44,15 @@ export async function loadArticleFiles(): Promise<ArticleFile[]> {
       const filename = basename(file)
       if (filename === 'index.md' || filename.startsWith('['))
         continue
-      const { data, content } = matter(await fs.readFile(file, 'utf-8'))
+      const parsed = matter(await fs.readFile(file, 'utf-8'))
+      const data = articleSchema.parse(parsed.data)
+      const content = parsed.content
       const slug = filename.replace(/\.md$/, '')
+      if (data.lang !== locale)
+        throw new Error(`[frontmatter] ${file}: lang must match its "${locale}" directory.`)
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))
+        throw new Error(`[frontmatter] ${file}: slug must be lowercase kebab-case.`)
+      const normalized = normalizeArticleContent(data, content, slug)
       raw.push({
         locale,
         slug,
@@ -63,9 +60,9 @@ export async function loadArticleFiles(): Promise<ArticleFile[]> {
         data,
         content,
         path: getArticlePath(locale, slug),
-        duration: toDurationMinutes(data.duration) ?? estimateReadingMinutes(content),
-        excerpt: data.excerpt || extractExcerpt(content, 400),
-        image: data.image || (data.title ? `/og/${slug}.png` : undefined),
+        duration: normalized.duration ?? null,
+        excerpt: normalized.excerpt || '',
+        image: normalized.image,
       })
     }
   }

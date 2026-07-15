@@ -3,9 +3,9 @@ import type { SupportedLocale } from '~/locales/config'
 import { isSupportedLocale, supportedLocales } from '~/locales/config'
 import { getArticlePath } from './article-path.ts'
 import { buildArticleStates, getArticleServedLocales, getIndexableLocales, type ArticleStatesBySlug } from './article-locales.ts'
-import { estimateReadingMinutes, extractExcerpt } from './content-cleanup.ts'
+import { normalizeArticleContent } from './article-normalization.ts'
 import { isDraftPost, isPostVisible } from './post-visibility.ts'
-import { daysUntil, parseReadingMinutes } from './i18n'
+import { daysUntil } from './i18n'
 
 export { isDraftPost, isPostVisible }
 
@@ -45,17 +45,6 @@ export function slugFromId(id: string): string {
   return (withoutLocale || id).replace(/\.[^.]+$/, '')
 }
 
-function normalizeTags(data: Record<string, any>): string[] | undefined {
-  const raw = data.tags ?? data.hashtags
-  if (!Array.isArray(raw))
-    return undefined
-  const tags = raw
-    .filter((tag: unknown): tag is string => typeof tag === 'string')
-    .map(tag => tag.trim().replace(/^#+/, ''))
-    .filter(Boolean)
-  return tags.length ? tags : undefined
-}
-
 /**
  * The single data-layer normalization point (the counterpart of dg's
  * `normalizeFrontmatter`): reading time estimation, excerpt extraction and
@@ -75,18 +64,16 @@ function toPostSummary(
 
   const date = data.date instanceof Date ? data.date : (data.date ? new Date(data.date) : undefined)
   const updated = data.updated instanceof Date ? data.updated : (data.updated ? new Date(data.updated) : undefined)
-  const duration = parseReadingMinutes(data.duration) ?? (body ? estimateReadingMinutes(body) : undefined)
-  const excerpt = data.excerpt || (body ? extractExcerpt(body, 400) : undefined)
-  const image = data.image || (data.title ? `/og/${slug}.png` : undefined)
+  const normalized = normalizeArticleContent(data, body, slug)
 
   const states = statesBySlug.get(slug) ?? []
   return {
     path: getArticlePath(locale, slug),
-    title: data.title || slug,
+    title: normalized.title,
     date,
     updated,
     lang: data.lang,
-    duration,
+    duration: normalized.duration,
     redirect: data.redirect,
     place: data.place,
     placeLink: data.placeLink,
@@ -94,9 +81,9 @@ function toPostSummary(
     description: data.description,
     draft: data.draft,
     robots: data.robots,
-    excerpt,
-    image,
-    tags: normalizeTags(data),
+    excerpt: normalized.excerpt,
+    image: normalized.image,
+    tags: normalized.tags,
     locale,
     slug,
     backlink: data.backlink,

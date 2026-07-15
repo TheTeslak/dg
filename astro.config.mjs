@@ -1,24 +1,12 @@
 import { defineConfig } from 'astro/config'
 import { unified } from '@astrojs/markdown-remark'
 import UnoCSS from '@unocss/astro'
-import rehypeExternalLinks from 'rehype-external-links'
-import rehypeRaw from 'rehype-raw'
-import remarkBreaks from 'remark-breaks'
-import { remarkAlert } from 'remark-github-blockquote-alert'
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from '@shikijs/transformers'
-import remarkComponentClose from './src/utils/remark-component-close.ts'
-import rehypeComponents from './src/utils/rehype-components.ts'
-import rehypeHeadingIds from './src/utils/rehype-heading-ids.ts'
-import rehypeImageFigures from './src/utils/rehype-image-figures.ts'
-import remarkInlineAttrs from './src/utils/remark-inline-attrs.ts'
-import remarkMark from './src/utils/remark-mark.ts'
-import remarkSources from './src/utils/remark-sources.ts'
-import remarkSpoiler from './src/utils/remark-spoiler.ts'
-import remarkToc from './src/utils/remark-toc.ts'
+import { remarkPlugins, siteRehypePlugins } from './src/utils/markdown-pipeline.ts'
 
 // https://astro.build/config
 export default defineConfig({
@@ -55,30 +43,8 @@ export default defineConfig({
     processor: unified({
       // The original markdown-it pipeline had no typographer; keep quotes as-is.
       smartypants: false,
-      remarkPlugins: [
-        // Order matters: self-closing component tags must become explicit
-        // open+close pairs before rehype-raw parses them.
-        remarkComponentClose,
-        // Block-level spoilers first, then inline syntax.
-        remarkSpoiler,
-        remarkInlineAttrs,
-        remarkMark,
-        remarkAlert,
-        remarkToc,
-        remarkSources,
-        // markdown-it ran with `breaks: true`; single newlines are hard breaks.
-        remarkBreaks,
-      ],
-      rehypePlugins: [
-        // Parse raw HTML so custom components inside .md can be rendered
-        // statically by rehype-components.
-        rehypeRaw,
-        rehypeComponents,
-        // Heading ids use the site's own slugify (shared with remark-toc).
-        rehypeHeadingIds,
-        [rehypeExternalLinks, { target: '_blank', rel: ['noopener'] }],
-        rehypeImageFigures,
-      ],
+      remarkPlugins: [...remarkPlugins],
+      rehypePlugins: [...siteRehypePlugins],
     }),
     shikiConfig: {
       themes: {

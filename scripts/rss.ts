@@ -4,15 +4,15 @@
  * audio enclosures/attachments, per-locale feed metadata, JSON Feed 1.1.
  */
 import type { FeedOptions, Item } from 'feed'
-import { dirname } from 'node:path'
+import { dirname, resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { createMarkdownProcessor } from '@astrojs/markdown-remark'
 import { Feed } from 'feed'
 import fs from 'fs-extra'
-import MarkdownIt from 'markdown-it'
-import GitHubAlerts from 'markdown-it-github-alerts'
-import LinkAttributes from 'markdown-it-link-attributes'
 import type { SupportedLocale } from '../src/locales/config.ts'
 import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config.ts'
 import { isPostIndexable } from '../src/utils/post-visibility.ts'
+import { feedRehypePlugins, remarkPlugins } from '../src/utils/markdown-pipeline.ts'
 import { loadArticleFiles, type ArticleFile } from './lib/articles.ts'
 
 const DOMAIN = 'https://teslak.me'
@@ -22,24 +22,10 @@ const AUTHOR = {
   link: DOMAIN,
 }
 
-const markdown = MarkdownIt({
-  html: true,
-  breaks: true,
-  linkify: true,
+const markdown = await createMarkdownProcessor({
+  remarkPlugins: [...remarkPlugins] as any,
+  rehypePlugins: [...feedRehypePlugins] as any,
 })
-  .use(LinkAttributes, {
-    matcher: (link: string) => /^https?:\/\//.test(link),
-    attrs: {
-      target: '_blank',
-      rel: 'noopener',
-    },
-  })
-  .use(GitHubAlerts)
-
-// ---------------------------------------------------------------------------
-// Markdown pre-transforms mirroring the site's remark plugins so feed HTML
-// matches the published pages (spoilers, muted spans, glossary, ==mark==).
-// ---------------------------------------------------------------------------
 
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => {
@@ -52,39 +38,6 @@ function escapeHtml(s: string): string {
       default: return c
     }
   })
-}
-
-function preTransform(content: string): string {
-  let text = content
-    // [[toc]] has no meaning inside a feed reader.
-    .replace(/^\s*\[\[toc\]\]\s*$/gim, '')
-    // ==mark== highlight
-    .replace(/==([^=\n]+)==/g, '<mark>$1</mark>')
-    // Glossary terms → plain text with a title tooltip (feed readers have no JS).
-    .replace(/\[([^\]\n]+)\]\{term="([^"]*)"\s+definition="([^"]*)"\}/g, (_m, label: string, _term: string, definition: string) =>
-      `<abbr title="${escapeHtml(definition)}">${label}</abbr>`)
-    // Muted spans
-    .replace(/\[([^\]\n]+)\]\{\.muted\}/g, '<em>$1</em>')
-
-  // ::: spoiler Title ... ::: → <details>
-  const lines = text.split('\n')
-  const output: string[] = []
-  let inSpoiler = false
-  for (const line of lines) {
-    const open = line.trim().match(/^:{3,}\s*spoiler\b(.*)$/)
-    if (open) {
-      inSpoiler = true
-      output.push(`<details><summary>${escapeHtml(open[1].trim() || 'Spoiler')}</summary>`, '')
-      continue
-    }
-    if (inSpoiler && /^:{3,}\s*$/.test(line.trim())) {
-      inSpoiler = false
-      output.push('', '</details>')
-      continue
-    }
-    output.push(line)
-  }
-  return output.join('\n')
 }
 
 // ---------------------------------------------------------------------------
@@ -114,10 +67,13 @@ function normalizeFeedHtml(html: string) {
     })
 }
 
-function getFeedContent(content: string, locale: SupportedLocale, link: string) {
-  const html = normalizeFeedHtml(markdown.render(preTransform(content)))
-  const note = markdown.utils.escapeHtml(localeConfig[locale].feedReaderNote)
-  const href = markdown.utils.escapeHtml(link)
+async function getFeedContent(article: ArticleFile, locale: SupportedLocale, link: string) {
+  const rendered = await markdown.render(article.content, {
+    fileURL: pathToFileURL(resolve(article.file)),
+  })
+  const html = normalizeFeedHtml(rendered.code)
+  const note = escapeHtml(localeConfig[locale].feedReaderNote)
+  const href = escapeHtml(link)
   return `${html.trim()}\n\n<p><a href="${href}">${note}</a></p>\n`
 }
 
@@ -195,7 +151,7 @@ function withAtomLanguage(xml: string, locale: SupportedLocale) {
 
 // ---------------------------------------------------------------------------
 
-function buildLocaleFeed(locale: SupportedLocale, articles: ArticleFile[]) {
+async function buildLocaleFeed(locale: SupportedLocale, articles: ArticleFile[]) {
   const feedName = getFeedName(locale)
   const feedUrl = `${DOMAIN}/${feedName}`
 
@@ -238,7 +194,7 @@ function buildLocaleFeed(locale: SupportedLocale, articles: ArticleFile[]) {
       // `published` as Atom <published> / RSS <pubDate>.
       date: updatedAt,
       published: publishedAt,
-      content: getFeedContent(article.content, locale, link),
+      content: await getFeedContent(article, locale, link),
       author: [AUTHOR],
       link,
     }
@@ -318,7 +274,7 @@ async function run() {
   }
 
   for (const locale of supportedLocales) {
-    const { feedName, options, posts } = buildLocaleFeed(locale, articles)
+    const { feedName, options, posts } = await buildLocaleFeed(locale, articles)
     await writeFeed(feedName, options, posts, locale)
     console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts → dist/${feedName}.xml`)
   }
