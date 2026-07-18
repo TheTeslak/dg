@@ -32,7 +32,7 @@ title: My Article
 display: Custom Title for Article Page # overrides title on page
 description: SEO and social preview text (max 400 chars).
 subtitle: A short catchphrase below the title
-image: /og/articles/my-article.png # optional 1200x630 custom OG image
+image: /og/pages/my-article.png # optional 1200x630 custom OG image
 date: 2026-03-24T10:00:00Z
 updated: 2026-04-30T10:00:00Z # shows 'updated' date
 lang: en # content language (for example: en, ru, es)
@@ -229,22 +229,26 @@ You can embed photos directly inside an article. They do not have to be limited 
 
 ### Standard & Wide Images
 
-Standard markdown images fit within the content column. When `alt` text is provided, it automatically becomes a centered caption below the image via `<figcaption>`.
+Standard markdown images fit within the content column. By default, the `alt` text also becomes a centered caption below the image via `<figcaption>`. Use `caption=...` when the accessible image description and visible editorial caption should differ.
 
 If you want to hide the caption visually (for design reasons) while keeping it fully accessible to screen readers, or if you want the image to span wider on desktop, you can use the native markdown modifier syntax by appending options separated by a pipe (`|`) character inside the alt text brackets:
 
 - `![Alt text](/path/to/image)` — Standard width layout with a visible caption.
+- `![Detailed alt text|caption=Short visible caption](/path/to/image)` — Standard width layout with distinct accessible and visible texts.
 - `![Alt text|no-caption](/path/to/image)` — Standard width layout, caption is hidden visually (no `<figcaption>` is rendered, but the `alt` tag is kept for a11y).
 - `![Alt text|wide](/path/to/image)` — Wide layout (breaks out of the content container on desktop) with a visible caption.
+- `![Detailed alt text|wide|caption=Short visible caption](/path/to/image)` — Wide layout with a distinct caption.
 - `![Alt text|wide|no-caption](/path/to/image)` — Wide layout, caption is hidden visually.
+
+Options after the alt text are order-independent. Prefer layout flags first and `caption=...` last for readability, for example `![Alt text|wide|caption=Visible caption](...)`.
 
 **Standard (with caption):**
 
 ```markdown
-![Avatars showcase](/images/avatars.avif)
+![A collage of Teslak avatars|caption=Avatars showcase](/images/avatars.avif)
 ```
 
-![Avatars showcase](/images/avatars.avif)
+![A collage of Teslak avatars|caption=Avatars showcase](/images/avatars.avif)
 
 **Standard (without caption, screen-reader accessible):**
 
@@ -257,10 +261,10 @@ If you want to hide the caption visually (for design reasons) while keeping it f
 **Wide layout (with caption):**
 
 ```markdown
-![Avatars showcase|wide](/images/avatars.avif)
+![A collage of Teslak avatars|wide|caption=Avatars showcase](/images/avatars.avif)
 ```
 
-![Avatars showcase|wide](/images/avatars.avif)
+![A collage of Teslak avatars|wide|caption=Avatars showcase](/images/avatars.avif)
 
 **Wide layout (without caption, screen-reader accessible):**
 

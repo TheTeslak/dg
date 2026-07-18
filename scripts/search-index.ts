@@ -6,6 +6,7 @@ import fs from 'fs-extra'
 import matter from 'gray-matter'
 import MiniSearch from 'minisearch'
 import { getArticleServedLocales } from '../build/article'
+import { contentSourceDirectory } from '../build/constants'
 import { stripMarkdownForSearch } from '../build/content-cleanup'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { supportedLocales } from '../src/locales/config'
@@ -84,7 +85,7 @@ async function buildSearchIndex() {
   const documents: SearchDocument[] = []
 
   for (const locale of supportedLocales) {
-    const pattern = `pages/${locale}/articles/*.md`
+    const pattern = `pages/${locale}/${fg.escapePath(contentSourceDirectory)}/*.md`
     const files = await fg(pattern)
 
     for (const filePath of files) {

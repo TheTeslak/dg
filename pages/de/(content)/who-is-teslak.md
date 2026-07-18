@@ -36,9 +36,9 @@ Mein erster engerer Kontakt mit neuronalen Netzen begann mit einem Artikel [übe
 
 Das im Jahr 2022 erschienene [Midjourney](https://t.me/TesNot/314) hat mich stark beeindruckt – ich habe tagelang Bilder generiert, obwohl es noch unendlich weit von den heutigen Modellen entfernt war
 
-Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([mein Peak](https://t.me/Tes404/1058) + ein Post kurz davor), einschließlich [ru](https://t.me/Tes404/599), und über den Release von 3.5 noch am selben Tag [geschrieben](https://t.me/Tes404/2929)
+Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([mein Peak](https://t.me/Tes404/1058) + ein Post kurz davor), einschließlich [ru](https://t.me/Tes404/599), und über den Release von 3.5 noch am selben Tag [geschrieben](https://t.me/Tes404/2929)
 
-Ich habe Agenten mit LangGraph und LlamaIndex entwickelt und einige Browser-Aufgaben mit [Harpa](https://harpa.ai/) automatisiert. Später wechselte ich zum wartungsintensiven OpenClaw und analysierte dessen Architektur. Derzeit sehe ich mir Hermes Agent und OpenHuman an
+Ich habe Agenten mit LangGraph und LlamaIndex entwickelt und einige Browser-Aufgaben mit [Harpa](https://harpa.ai/) automatisiert. Mit dem Erscheinen von OpenClaw bin ich darauf umgestiegen und habe seine Architektur und deren Wandel analysiert. Derzeit sehe ich mir Hermes Agent und OpenHuman an
 
 Beim Experimentieren mit lokalen Modellen bin ich skeptisch gegenüber allem, was unter [mindestens]{.muted} 30B Parametern für allgemeine Aufgaben liegt
 
@@ -90,7 +90,7 @@ Das „k“ hat keine besondere Bedeutung. Vielleicht hat mich damals [KDE Plasm
 
 Ich habe verschiedene Avatare genutzt, besonders Ritter, und aus Datenschutzgründen nie echte Fotos. Als ich mich Teslak nannte, setzte ich einen Blitz
 
-![Evolution der Avatare](/images/avatars.avif)
+![Eine Collage von Teslak-Avataren mit Rittern, einem Blitz, einem Elfen und einem Roboter|caption=Evolution der Avatare](/images/avatars.avif)
 
 Ich wollte mehr persönliche Identität: Ich dachte mir einen Charakter aus, stellte eine Illustratorin ein und passte das Ergebnis an. Als es mir nicht mehr gefiel, engagierte ich eine andere Künstlerin, brachte noch mehr eigene Änderungen ein und der Elf blieb schließlich ein ganzes Stück länger
 

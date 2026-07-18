@@ -1,7 +1,7 @@
 /**
  * Audio metadata processor for articles.
  *
- * Scans articles in `pages/<locale>/articles/` that have `audio: true`
+ * Scans content pages in `pages/<locale>/(content)/` that have `audio: true`
  * (or an explicit `audio` object), locates the corresponding audio file
  * under `public/audio/<locale>/`, reads its duration with
  * `music-metadata`, and writes a small JSON cache to `data/audio-metadata.json`.
@@ -17,6 +17,7 @@ import { resolve } from 'node:path'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import * as mm from 'music-metadata'
+import { contentSourceDirectory } from '../build/constants'
 import { supportedLocales } from '../src/locales/config'
 
 const audioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
@@ -46,16 +47,16 @@ async function main() {
   let warnings = 0
 
   for (const locale of supportedLocales) {
-    const articlesDir = resolve(root, `pages/${locale}/articles`)
-    if (!fs.existsSync(articlesDir))
+    const contentDir = resolve(root, `pages/${locale}/${contentSourceDirectory}`)
+    if (!fs.existsSync(contentDir))
       continue
 
-    for (const file of fs.readdirSync(articlesDir)) {
+    for (const file of fs.readdirSync(contentDir)) {
       if (!file.endsWith('.md') || file.startsWith('['))
         continue
 
       const slug = file.replace(/\.md$/, '')
-      const filePath = resolve(articlesDir, file)
+      const filePath = resolve(contentDir, file)
       const { data } = matter(fs.readFileSync(filePath, 'utf-8'))
 
       // Only process articles that use the audio feature

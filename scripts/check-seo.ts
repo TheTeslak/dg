@@ -4,6 +4,8 @@ import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
 import sharp from 'sharp'
+import { getArticleInfo } from '../build/article'
+import { contentSourceDirectory } from '../build/constants'
 import { isSupportedLanguageTag, isSupportedLocale, supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { isPostRoutable } from '../src/logics/post-visibility'
@@ -62,14 +64,14 @@ async function getExpectedFallbackPages() {
     physical: Set<string>
     routable: Set<string>
   }>()
-  const articleFiles = await fg('pages/*/articles/*.md')
+  const articleFiles = await fg(`pages/*/${fg.escapePath(contentSourceDirectory)}/*.md`)
 
   for (const file of articleFiles) {
-    const match = file.match(/^pages\/([^/]+)\/articles\/([^/]+)\.md$/)
-    if (!match || !isSupportedLocale(match[1]) || match[2] === 'index' || match[2].startsWith('['))
+    const contentPage = getArticleInfo(file)
+    if (!contentPage || contentPage.slug.startsWith('['))
       continue
 
-    const [, locale, slug] = match
+    const { sourceLocale: locale, slug } = contentPage
     const state = articles.get(slug) || {
       physical: new Set<string>(),
       routable: new Set<string>(),

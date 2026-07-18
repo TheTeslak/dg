@@ -12,6 +12,7 @@ import { performance } from 'node:perf_hooks'
 import process from 'node:process'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
+import { contentSourceDirectory } from '../build/constants'
 import { supportedLocales } from '../src/locales/config'
 
 // ── Configuration ──
@@ -331,7 +332,7 @@ function findArticles(specificPath?: string): string[] {
   // Scan enabled articles
   const articles: string[] = []
   for (const locale of supportedLocales) {
-    const dir = resolve(PAGES_DIR, locale, 'articles')
+    const dir = resolve(PAGES_DIR, locale, contentSourceDirectory)
     if (!fs.existsSync(dir))
       continue
     for (const file of fs.readdirSync(dir)) {

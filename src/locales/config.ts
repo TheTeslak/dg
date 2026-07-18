@@ -2,7 +2,7 @@
  * Localization architecture:
  *
  * - The URL locale controls UI messages, dates, navigation, and document language.
- * - Article content locale comes from its physical `pages/<locale>/articles` file.
+ * - Article content locale comes from its physical `pages/<locale>/(content)` file.
  * - UI-message fallback and article-content fallback are independent.
  * - Matching article slugs across locale folders identify translations.
  * - Missing translations use route aliases while keeping the requested URL locale.

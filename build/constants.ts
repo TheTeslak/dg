@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 export { supportedLocales } from '../src/locales/config'
 export type { SupportedLocale } from '../src/locales/config'
 
+export const contentSourceDirectory = '(content)'
 export const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const
 export const supportedAudioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
 

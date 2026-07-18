@@ -38,7 +38,7 @@ El lanzamiento de [Midjourney](https://t.me/TesNot/314) en 2022 me impresionó m
 
 Usaba GPT antes del lanzamiento de ChatGPT ([mi pico](https://t.me/Tes404/1058) + una publicación previa), incluyendo [ru](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
 
-Desarrollé agentes con LangGraph y LlamaIndex, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Más tarde, pasé a OpenClaw, exigente en mantenimiento, y analicé su arquitectura. Actualmente, estoy explorando Hermes Agent y OpenHuman
+Desarrollé agentes con LangGraph y LlamaIndex, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Con la salida de OpenClaw, me pasé a él, analizando su arquitectura y cómo iba evolucionando. Actualmente, estoy explorando Hermes Agent y OpenHuman
 
 Al experimentar con modelos locales, soy escéptico ante cualquier modelo de menos de [al menos]{.muted} 30B para tareas generales
 
@@ -90,7 +90,7 @@ La «k» no tiene un significado especial. Quizás en aquel entonces me influyó
 
 Solía usar avatares diversos, especialmente caballeros, y por cuestiones de privacidad, nunca fotos reales. Al llamarme Teslak, me puse un rayo
 
-![Evolución de los avatares](/images/avatars.avif)
+![Un collage de avatares de Teslak con caballeros, un rayo, un elfo y un robot|caption=Evolución de los avatares](/images/avatars.avif)
 
 Quise mayor identidad propia: ideé un personaje, contraté a una ilustradora y edité el resultado. Cuando me dejó de gustar, contraté a otra y, con aún más modificaciones de mi parte, el elfo se quedó bastante más tiempo
 

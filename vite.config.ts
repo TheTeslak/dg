@@ -22,7 +22,7 @@ import SVG from 'vite-svg-loader'
 import { VueRouterAutoImports } from 'vue-router/unplugin'
 import VueRouter from 'vue-router/vite'
 import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getArticleLocaleStates } from './build/article'
-import { supportedLocales } from './build/constants'
+import { contentSourceDirectory, supportedLocales } from './build/constants'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
 import { registerCustomPlugins } from './build/markdown-plugins'
 import { generateSeoFiles } from './build/seo'
@@ -135,7 +135,7 @@ export default defineConfig({
             const backlinks = Array.isArray(frontmatter.backlink) ? frontmatter.backlink : [frontmatter.backlink]
             for (const backlinkSlug of backlinks) {
               const backlinkExists = supportedLocales.some(loc =>
-                fs.existsSync(resolve(__dirname, `pages/${loc}/articles/${backlinkSlug}.md`)),
+                fs.existsSync(resolve(__dirname, `pages/${loc}/${contentSourceDirectory}/${backlinkSlug}.md`)),
               )
               if (!backlinkExists)
                 warnFrontmatter(`[frontmatter] ${path}: backlink "${backlinkSlug}" does not match any article.`)

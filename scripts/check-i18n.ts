@@ -10,6 +10,7 @@ import {
   getArticleLocaleStates,
   getArticleServedLocales,
 } from '../build/article'
+import { contentSourceDirectory } from '../build/constants'
 import localeRedirect, { config as localeRedirectConfig } from '../netlify/edge-functions/locale-redirect'
 import {
   defaultLocale,
@@ -24,7 +25,7 @@ import { isPostIndexable, isPostRoutable } from '../src/logics/post-visibility'
 // These pages define the localized site shell, so silently falling back would hide incomplete locales.
 const requiredPages = [
   '[...404].md',
-  'articles/index.md',
+  'articles.md',
   'index.md',
   'notes.md',
   'now.md',
@@ -232,7 +233,12 @@ async function run() {
     }
   }
 
-  const articleFiles = await fg('pages/*/articles/*.md')
+  const articleFiles = await fg(`pages/*/${fg.escapePath(contentSourceDirectory)}/*.md`)
+  if (!articleFiles.length) {
+    failures.push(
+      `No content pages found under pages/<locale>/${contentSourceDirectory}/.`,
+    )
+  }
   const localesBySlug = new Map<string, Set<SupportedLocale>>()
 
   for (const file of articleFiles) {

@@ -47,7 +47,7 @@ catalogs:
     unplugin-icons: ^23.0.1
     unplugin-vue-components: ^32.1.0
     unplugin-vue-markdown: ^32.0.0
-    vite: ^8.1.1
+    vite: ^8.1.4
     vite-plugin-inspect: ^11.4.1
     vite-plugin-optimize-exclude: ^0.0.1
     vite-ssg: ^28.3.0

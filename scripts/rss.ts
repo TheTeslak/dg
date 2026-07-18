@@ -9,8 +9,10 @@ import MarkdownIt from 'markdown-it'
 import anchor from 'markdown-it-anchor'
 import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
+import { contentSourceDirectory } from '../build/constants'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { registerCustomPlugins } from '../build/markdown-plugins'
+import { finds } from '../src/data/finds'
 import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { isPostIndexable } from '../src/logics/post-visibility'
@@ -148,9 +150,9 @@ function getFeedCategories(tags: unknown) {
   return categories.length ? categories : undefined
 }
 
-function getFeedImage(frontmatter: Record<string, any>, slug: string) {
+function getFeedImage(frontmatter: Record<string, any>) {
   return normalizeFeedUrl(frontmatter.image)
-    || (frontmatter.title ? `${DOMAIN}/og/${slug}.png` : undefined)
+    || `${DOMAIN}/og.png`
 }
 
 function getFeedDescription(frontmatter: Record<string, any>) {
@@ -222,7 +224,7 @@ async function run() {
 }
 
 async function buildLocaleFeed(locale: SupportedLocale) {
-  const files = await fg(`pages/${locale}/articles/*.md`)
+  const files = await fg(`pages/${locale}/${fg.escapePath(contentSourceDirectory)}/*.md`)
 
   const feedName = getFeedName(locale)
   const feedUrl = `${DOMAIN}/${feedName}`
@@ -264,7 +266,7 @@ async function buildLocaleFeed(locale: SupportedLocale) {
           const slug = basename(i, '.md')
           const link = `${DOMAIN}${getArticlePath(locale, slug)}`
           const html = getFeedContent(content, locale, link, i)
-          const image = getFeedImage(frontmatter, slug)
+          const image = getFeedImage(frontmatter)
           const description = getFeedDescription(frontmatter)
           const categories = getFeedCategories(frontmatter.tags)
 
@@ -304,14 +306,52 @@ async function buildLocaleFeed(locale: SupportedLocale) {
     ))
     .filter(isFeedItem)
 
-  posts.sort((a, b) => +new Date(b.date) - +new Date(a.date))
+  const items = [...posts, ...getFindFeedItems()]
+  items.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 
-  if (posts.length)
-    options.updated = posts[0].date
+  if (items.length)
+    options.updated = items[0].date
 
-  await writeFeed(feedName, options, posts, locale)
+  await writeFeed(feedName, options, items, locale)
 
-  console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts → dist/${feedName}.xml`)
+  console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts + ${items.length - posts.length} finds → dist/${feedName}.xml`)
+}
+
+function getFindFeedItems(): Item[] {
+  const ids = new Set<string>()
+
+  return finds
+    .filter(find => !!find.date)
+    .map((find) => {
+      if (ids.has(find.id))
+        throw new Error(`[RSS] Duplicate find id: ${find.id}`)
+      ids.add(find.id)
+
+      const date = toFeedDate(find.date, `find:${find.id}`, 'date')
+      const url = new URL(find.url)
+      if (!['http:', 'https:'].includes(url.protocol))
+        throw new Error(`[RSS] Unsupported find URL protocol for ${find.id}: ${url.protocol}`)
+
+      const href = markdown.utils.escapeHtml(url.href)
+      const domain = markdown.utils.escapeHtml(url.hostname.replace(/^www\./, ''))
+      const description = find.desc?.trim()
+      const content = [
+        description ? `<p>${markdown.utils.escapeHtml(description)}</p>` : '',
+        `<p><a href="${href}">${domain}</a></p>`,
+      ].filter(Boolean).join('\n')
+
+      return {
+        id: `urn:teslak:find:${find.id}`,
+        title: find.title,
+        description,
+        content,
+        date,
+        published: date,
+        author: [AUTHOR],
+        category: [{ name: 'find' }],
+        link: url.href,
+      } as Item
+    })
 }
 
 function toJsonFeedAuthor(author = AUTHOR) {

@@ -283,7 +283,8 @@ export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
 
 /**
  * Convert standalone ![alt](src) into <figure><img><figcaption>alt</figcaption></figure>.
- * Triggers when <p> contains a single <img>. If alt text exists, it adds <figcaption>.
+ * Supports pipe-separated layout flags and an optional distinct caption:
+ * ![alt|wide|caption=Visible caption](src).
  */
 export function imageFiguresPlugin(md: MarkdownIt) {
   md.core.ruler.after('inline', 'image_figures', (state) => {
@@ -308,6 +309,10 @@ export function imageFiguresPlugin(md: MarkdownIt) {
       const parts = rawAlt.split('|').map(s => s.trim())
       const cleanAlt = parts[0] || ''
       const options = parts.slice(1)
+      const customCaption = options
+        .find(option => option.startsWith('caption='))
+        ?.slice('caption='.length)
+        .trim()
 
       // Set clean content and alt attribute on the image token
       imgToken.content = cleanAlt
@@ -330,15 +335,14 @@ export function imageFiguresPlugin(md: MarkdownIt) {
         token.attrSet('class', 'img-wide')
       }
 
-      const showCaption = cleanAlt && !options.includes('no-caption')
+      const caption = customCaption ?? cleanAlt
+      const showCaption = caption && !options.includes('no-caption')
 
       if (showCaption) {
         // Insert figcaption tokens after the inline (before figure_close)
         const captionOpen = new state.Token('html_block', '', 0)
-        captionOpen.content = `<figcaption>${md.utils.escapeHtml(cleanAlt)}</figcaption>\n`
+        captionOpen.content = `<figcaption>${md.utils.escapeHtml(caption)}</figcaption>\n`
 
-        // Clear the alt from the image so it doesn't duplicate as attr
-        // (keep it as the HTML alt attribute on <img> for a11y)
         tokens.splice(i + 2, 0, captionOpen)
         i += 1 // skip the inserted token
       }

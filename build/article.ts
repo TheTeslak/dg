@@ -14,12 +14,15 @@ import {
 } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
 import { isPostIndexable, isPostRoutable, isPostVisible } from '../src/logics/post-visibility'
-import { supportedAudioExtensions } from './constants'
+import { contentSourceDirectory, supportedAudioExtensions } from './constants'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
 export function getArticleInfo(id: string) {
-  const match = id.match(/pages[\\/](?<locale>[^/\\]+)[\\/]articles[\\/](?<slug>[^/\\]+)\.md$/)
+  const sourceDirectoryRE = contentSourceDirectory.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const match = id.match(new RegExp(
+    `pages[\\\\/](?<locale>[^/\\\\]+)[\\\\/]${sourceDirectoryRE}[\\\\/](?<slug>[^/\\\\]+)\\.md$`,
+  ))
   if (!match?.groups || !isSupportedLocale(match.groups.locale))
     return
   return {
@@ -44,7 +47,7 @@ export interface ArticleLocaleState {
 export function getArticleLocaleStates(slug: string): ArticleLocaleState[] {
   // Matching filenames are the translation identity, avoiding duplicate YAML metadata.
   return supportedLocales.flatMap((locale) => {
-    const file = resolve(currentDir, `../pages/${locale}/articles/${slug}.md`)
+    const file = resolve(currentDir, `../pages/${locale}/${contentSourceDirectory}/${slug}.md`)
     if (!fs.existsSync(file))
       return []
 
@@ -99,11 +102,11 @@ export function getArticleFallbackPaths() {
   const slugs = new Set<string>()
 
   for (const locale of supportedLocales) {
-    const articlesDir = resolve(currentDir, `../pages/${locale}/articles`)
-    if (!fs.existsSync(articlesDir))
+    const contentDir = resolve(currentDir, `../pages/${locale}/${contentSourceDirectory}`)
+    if (!fs.existsSync(contentDir))
       continue
 
-    for (const file of fs.readdirSync(articlesDir)) {
+    for (const file of fs.readdirSync(contentDir)) {
       if (file.endsWith('.md') && file !== 'index.md' && !file.startsWith('['))
         slugs.add(file.slice(0, -'.md'.length))
     }

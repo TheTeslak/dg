@@ -3,7 +3,7 @@ import { dirname, extname, resolve } from 'node:path'
 import fs from 'fs-extra'
 import sharp from 'sharp'
 import { getArticleInfo } from './article'
-import { supportedLocales, supportedOgSourceExtensions } from './constants'
+import { contentSourceDirectory, supportedLocales, supportedOgSourceExtensions } from './constants'
 import { warnFrontmatter } from './frontmatter'
 
 // Legacy/manual generator. The build intentionally does not import this module:
@@ -24,8 +24,8 @@ export function resolveOgSource(id: string) {
   const article = getArticleInfo(id)
   const bases = article
     ? [
-        resolve(__dirname, `../public/og/articles/${article.slug}`),
-        ...supportedLocales.map(locale => resolve(__dirname, `../pages/${locale}/articles/${article.slug}`)),
+        resolve(__dirname, `../public/og/pages/${article.slug}`),
+        ...supportedLocales.map(locale => resolve(__dirname, `../pages/${locale}/${contentSourceDirectory}/${article.slug}`)),
       ]
     : [id.slice(0, -3)]
 

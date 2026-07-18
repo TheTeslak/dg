@@ -38,7 +38,7 @@ The release of [Midjourney](https://t.me/TesNot/314) in 2022 completely hooked 
 
 I was using GPT even before ChatGPT launched ([my peak](https://t.me/Tes404/1058) + a post leading up to it), including [ru](https://t.me/Tes404/599), and I [wrote](https://t.me/Tes404/2929) about the release of GPT-3.5 on the very day it came out
 
-I've built agents using LangGraph and LlamaIndex, and automated some browser tasks with [Harpa](https://harpa.ai/). Later, I switched to the high-maintenance OpenClaw, analyzing its architecture. Right now, I'm exploring Hermes Agent and OpenHuman
+I've built agents using LangGraph and LlamaIndex, and automated some browser tasks with [Harpa](https://harpa.ai/). When OpenClaw came out, I switched to it, analyzing its architecture and how it evolved. Right now, I'm exploring Hermes Agent and OpenHuman
 
 Through experimenting with local LLMs, I've become skeptical of anything under [at least]{.muted} 30B parameters for general-purpose tasks
 
@@ -90,7 +90,7 @@ The "k" at the end doesn't mean much. Perhaps I was influenced by [KDE Plasma](h
 
 I used to use various avatars — especially knights — and for privacy, never real photos. Once I adopted the name Teslak, I switched to a lightning bolt
 
-![Avatar evolution](/images/avatars.avif)
+![A collage of Teslak avatars with knights, a lightning bolt, an elf, and a robot|caption=Avatar evolution](/images/avatars.avif)
 
 Wanting a more distinct identity, I designed a character, hired an illustrator, and touched up the final design. When I got tired of it, I hired another artist and did even more edits myself; that elf ended up sticking around longer
 
