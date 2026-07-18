@@ -1,6 +1,7 @@
 import {
   createLocalFontProcessor,
 } from '@unocss/preset-web-fonts/local'
+import { readFileSync } from 'node:fs'
 import {
   defineConfig,
   presetAttributify,
@@ -10,7 +11,15 @@ import {
   transformerDirectives,
 } from 'unocss'
 
+const rehypeComponentsSource = readFileSync(new URL('./src/utils/rehype-components.ts', import.meta.url), 'utf8')
+
 export default defineConfig({
+  content: {
+    // This server-only module does not pass through Vite's normal extraction
+    // pipeline, so give UnoCSS its source directly instead of duplicating an
+    // ever-growing list of component utilities in the safelist.
+    inline: [{ code: rehypeComponentsSource, id: 'src/utils/rehype-components.ts' }],
+  },
   shortcuts: [
     {
       'bg-base': 'bg-[var(--c-bg)]',

@@ -6,7 +6,7 @@ import {
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from '@shikijs/transformers'
-import { remarkPlugins, siteRehypePlugins } from './src/utils/markdown-pipeline.ts'
+import { markdownProcessorOptions, remarkPlugins, siteRehypePlugins } from './src/utils/markdown-pipeline.ts'
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,8 +41,7 @@ export default defineConfig({
   },
   markdown: {
     processor: unified({
-      // The original markdown-it pipeline had no typographer; keep quotes as-is.
-      smartypants: false,
+      ...markdownProcessorOptions,
       remarkPlugins: [...remarkPlugins],
       rehypePlugins: [...siteRehypePlugins],
     }),

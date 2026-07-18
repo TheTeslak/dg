@@ -140,8 +140,7 @@ const remarkSpoiler: Plugin<[], Root> = () => {
       }
 
       if (closeIndex === -1) {
-        console.warn(`[markdown] ${file?.path ?? ''}: unclosed spoiler block.`)
-        continue
+        file.fail('unclosed spoiler block.', node)
       }
 
       const closeTarget = children[closeIndex] as Paragraph

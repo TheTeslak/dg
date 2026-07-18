@@ -178,6 +178,10 @@ a.header-anchor {
   transition: opacity 0.2s ease;
 }
 
+a.header-anchor::before {
+  content: '#';
+}
+
 a.header-anchor:hover,
 a.header-anchor:focus {
   text-decoration: none;

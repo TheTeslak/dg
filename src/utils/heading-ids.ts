@@ -1,11 +1,9 @@
 import { slugify } from './slugify.ts'
 
 /**
- * Deterministic heading-id assignment shared by the TOC (remark) and the
- * heading `id` attributes (rehype). Both passes walk headings in document
- * order, so running the same uniquifier on both sides guarantees the TOC
- * hrefs always match the rendered ids — a single source of truth, like the
- * `markdown-it-anchor` + TOC pairing in the original project.
+ * Deterministic heading-id assignment used by the final HAST heading/TOC pass.
+ * Keeping the uniquifier here also makes the legacy fragment format explicit
+ * and independently testable.
  */
 export function createHeadingIdFactory() {
   const seen = new Map<string, number>()

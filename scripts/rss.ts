@@ -12,7 +12,7 @@ import fs from 'fs-extra'
 import type { SupportedLocale } from '../src/locales/config.ts'
 import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config.ts'
 import { isPostIndexable } from '../src/utils/post-visibility.ts'
-import { feedRehypePlugins, remarkPlugins } from '../src/utils/markdown-pipeline.ts'
+import { feedRehypePlugins, markdownProcessorOptions, remarkPlugins } from '../src/utils/markdown-pipeline.ts'
 import { loadArticleFiles, type ArticleFile } from './lib/articles.ts'
 
 const DOMAIN = 'https://teslak.me'
@@ -23,6 +23,7 @@ const AUTHOR = {
 }
 
 const markdown = await createMarkdownProcessor({
+  ...markdownProcessorOptions,
   remarkPlugins: [...remarkPlugins] as any,
   rehypePlugins: [...feedRehypePlugins] as any,
 })
@@ -70,6 +71,7 @@ function normalizeFeedHtml(html: string) {
 async function getFeedContent(article: ArticleFile, locale: SupportedLocale, link: string) {
   const rendered = await markdown.render(article.content, {
     fileURL: pathToFileURL(resolve(article.file)),
+    frontmatter: article.data,
   })
   const html = normalizeFeedHtml(rendered.code)
   const note = escapeHtml(localeConfig[locale].feedReaderNote)
