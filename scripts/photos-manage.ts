@@ -6,7 +6,6 @@ import ExifReader from 'exifreader'
 import fg from 'fast-glob'
 import { basename, join, parse } from 'pathe'
 import sharp from 'sharp'
-import { compressSharp } from './img-compress'
 
 const folder = fileURLToPath(new URL('../photos', import.meta.url))
 
@@ -17,7 +16,7 @@ let files = (await fg('**/*.{jpg,png,jpeg}', {
 }))
   .sort((a, b) => a.localeCompare(b))
 
-// Compress photos
+// Import photos
 for (const filepath of files) {
   if (basename(filepath).startsWith('p-')) {
     continue
@@ -27,7 +26,6 @@ for (const filepath of files) {
   if (ext === '.jpeg')
     ext = '.jpg'
   const buffer = await fs.readFile(filepath)
-  const img = await sharp(buffer)
   const exif = await ExifReader.load(buffer)
 
   let title: string | undefined
@@ -61,14 +59,10 @@ for (const filepath of files) {
     index++
   writepath = join(folder, `${base}${index}${ext}`.toLowerCase())
 
-  const { outBuffer, percent, outFile } = await compressSharp(img, buffer, filepath, writepath)
-  if (outFile !== filepath || percent > -0.10)
-    await fs.writeFile(outFile, outBuffer)
-  if (outFile !== filepath)
-    await fs.unlink(filepath)
+  await fs.rename(filepath, writepath)
 
   if (title) {
-    await fs.writeFile(outFile.replace(/\.\w+$/, '.json'), JSON.stringify({ text: title }, null, 2))
+    await fs.writeFile(writepath.replace(/\.\w+$/, '.json'), JSON.stringify({ text: title }, null, 2))
   }
 }
 

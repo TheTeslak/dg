@@ -23,11 +23,14 @@ import { VueRouterAutoImports } from 'vue-router/unplugin'
 import VueRouter from 'vue-router/vite'
 import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getArticleLocaleStates } from './build/article'
 import { contentSourceDirectory, supportedLocales } from './build/constants'
+import { findSourceLocale, getFindAliasPaths, getFindFallbackPaths, getFindInfo } from './build/find'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
 import { registerCustomPlugins } from './build/markdown-plugins'
 import { generateSeoFiles } from './build/seo'
 import { slugify } from './scripts/slugify'
 import { getArticlePath } from './src/logics/article-path'
+import { getFindPath } from './src/logics/find-path'
+import { isPostRoutable } from './src/logics/post-visibility'
 import { siteOrigin } from './src/logics/site'
 import 'vite-ssg'
 
@@ -128,6 +131,19 @@ export default defineConfig({
                 route.addAlias(aliases)
               }
             }
+          }
+
+          const findMatch = getFindInfo(path)
+          if (findMatch && !findMatch.slug.startsWith('[') && findMatch.slug !== 'index') {
+            const { slug } = findMatch
+            route.path = getFindPath(findSourceLocale, slug)
+            frontmatter.originalLocale = findSourceLocale
+            frontmatter.availableLocales = [findSourceLocale]
+            routeMeta.isFind = true
+            routeMeta.findSlug = slug
+            routeMeta.findLocale = findSourceLocale
+            if (isPostRoutable(frontmatter))
+              route.addAlias(getFindAliasPaths(slug))
           }
 
           // Validate backlink slug at build time
@@ -285,7 +301,7 @@ export default defineConfig({
     formatting: 'minify',
     includedRoutes(paths) {
       const staticPaths = paths.filter(path => !path.includes(':'))
-      return [...new Set([...staticPaths, ...getArticleFallbackPaths()])]
+      return [...new Set([...staticPaths, ...getArticleFallbackPaths(), ...getFindFallbackPaths()])]
     },
     async onFinished() {
       await generateSeoFiles({ siteOrigin })

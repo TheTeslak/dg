@@ -10,6 +10,7 @@ export const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'
 export const supportedAudioExtensions = ['.m4a', '.opus', '.ogg', '.mp3', '.wav'] as const
 
 export const frontmatterKnownKeys = new Set([
+  'ai',
   'art',
   'audio',
   'availableLocales',

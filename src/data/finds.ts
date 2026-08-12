@@ -49,6 +49,12 @@ export const finds: FindItem[] = [
     desc: 'Interactive data on global AI adoption and its effects on the economy',
   },
   {
+    id: '1000-players-simulate-civilization',
+    url: 'https://youtu.be/ef568d0CrRY',
+    title: '1000 Players Simulate Civilization: Rich & Poor',
+    desc: 'A hardcore simulation where death is permanent. Divided into two contrasting biomes, players built empires and formed alliances. But resource inequality and political ambition quickly turned a peaceful experiment into a story of espionage, framed leaders, and global war',
+  },
+  {
     id: 'internet-hall-of-fame',
     url: 'https://www.internethalloffame.org/',
     title: 'Internet Hall of Fame',

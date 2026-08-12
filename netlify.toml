@@ -4,7 +4,7 @@ publish = "dist"
 
 [build.environment]
 NODE_VERSION = "24"
-PNPM_VERSION = "10"
+PNPM_VERSION = "11"
 
 [[headers]]
 for = "/assets/*"

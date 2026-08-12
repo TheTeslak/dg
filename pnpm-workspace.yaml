@@ -1,5 +1,8 @@
 catalogMode: prefer
 
+minimumReleaseAgeExclude:
+  - '@iconify/json@2.2.501'
+
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -30,19 +33,19 @@ catalog:
 
 catalogs:
   build:
-    '@shikijs/markdown-it': ^4.3.0
-    '@shikijs/transformers': ^4.3.0
-    '@shikijs/twoslash': ^4.3.0
-    '@unocss/preset-web-fonts': ^66.7.4
+    '@shikijs/markdown-it': ^4.3.1
+    '@shikijs/transformers': ^4.3.1
+    '@shikijs/twoslash': ^4.3.1
+    '@unocss/preset-web-fonts': ^66.7.5
     '@vitejs/plugin-vue': ^6.0.7
     gray-matter: ^4.0.3
-    markdown-it: ^14.2.0
-    markdown-it-anchor: ^9.2.0
+    markdown-it: ^14.3.0
+    markdown-it-anchor: ^9.2.1
     markdown-it-github-alerts: ^1.0.1
     markdown-it-link-attributes: ^4.0.1
     markdown-it-magic-link: ^0.1.4
     markdown-it-table-of-contents: ^1.2.0
-    unocss: ^66.7.4
+    unocss: ^66.7.5
     unplugin-auto-import: ^21.0.0
     unplugin-icons: ^23.0.1
     unplugin-vue-components: ^32.1.0
@@ -53,8 +56,8 @@ catalogs:
     vite-ssg: ^28.3.0
     vite-svg-loader: ^5.1.1
   dev:
-    '@antfu/eslint-config': ^8.2.0
-    '@iconify/json': ^2.2.493
+    '@antfu/eslint-config': ^9.1.0
+    '@iconify/json': ^2.2.501
     '@octokit/core': ^7.0.6
     '@octokit/rest': ^22.0.1
     ansis: ^4.3.1
@@ -69,27 +72,25 @@ catalogs:
     lint-staged: ^17.0.8
     music-metadata: ^11.13.0
     pathe: ^2.0.3
-    prompts: ^2.4.2
     rimraf: ^6.1.3
     sharp: ^0.35.2
-    simple-git: ^3.36.0
     simple-git-hooks: ^2.13.1
-    tsx: ^4.22.4
+    tsx: ^4.23.1
     typescript: ~6.0.3
     vue-tsc: ^3.3.5
   frontend:
     '@antfu/utils': ^9.3.0
     '@unhead/vue': ^2.1.15
-    '@unocss/reset': ^66.7.4
+    '@unocss/reset': ^66.7.5
     '@unpic/placeholder': ^0.1.2
-    '@vueuse/core': ^14.2.1
+    '@vueuse/core': ^14.3.0
     dayjs: ^1.11.21
     matter-attractors: ^0.1.6
     matter-js: ^0.20.0
     nprogress: ^0.2.0
     pinia: ^3.0.4
     pixi.js: ^8.19.0
-    shiki: ^4.3.0
+    shiki: ^4.3.1
     simplex-noise: ^4.0.3
     vue: ^3.5.39
     vue-router: ^5.1.0
@@ -99,12 +100,12 @@ catalogs:
     '@types/markdown-it-link-attributes': ^3.0.5
     '@types/node': ^24.13.2
     '@types/nprogress': ^0.2.3
-    '@types/prompts': ^2.4.9
 
-onlyBuiltDependencies:
-  - canvas
-  - esbuild
-  - exifreader
-  - sharp
-  - simple-git-hooks
-  - unrs-resolver
+allowBuilds:
+  canvas: true
+  esbuild: true
+  exifreader: true
+  sharp: true
+  simple-git-hooks: true
+  unrs-resolver: true
+  vue-demi: false

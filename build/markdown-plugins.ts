@@ -6,11 +6,16 @@ import sizeOf from 'image-size'
 import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config'
 import { isRealArticle } from './article'
 import { parseSpoilerOpeningTitle } from './content-cleanup'
+import { isRealFind } from './find'
 import { warnFrontmatter } from './frontmatter'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const mutedSpanSyntax = '{.muted}'
 const suspiciousInlineAttributeRE = /\[[^\]\n]{0,120}(?:\]\{[^}\n]{0,160}(?:\}|$)|\[\{[^}\n]{0,160}(?:\}|$)|\{[.#][^}\n]{0,80}(?:\}|$))/g
+
+function isContentPage(id: string) {
+  return isRealArticle(id) || isRealFind(id)
+}
 
 export interface MarkdownDiagnostic {
   line?: number
@@ -57,8 +62,14 @@ function renderSpoilerOpen(title: string, escapeHtml: (value: string) => string)
 function skipInlineAttributeWhitespace(src: string, pos: number) {
   while (pos < src.length) {
     const code = src.charCodeAt(pos)
-    if (code !== 0x20 /* space */ && code !== 0x09 /* tab */)
+    if (
+      code !== 0x20 /* space */
+      && code !== 0x09 /* tab */
+      && code !== 0xA0 /* no-break space */
+      && code !== 0x202F /* narrow no-break space */
+    ) {
       break
+    }
     pos += 1
   }
   return pos
@@ -409,7 +420,7 @@ export function imageAttributesPlugin(md: MarkdownIt) {
 export function imageAltCheckPlugin(md: MarkdownIt) {
   md.core.ruler.after('image_attributes', 'image_alt_check', (state) => {
     const id = state.env?.id || state.env?.path || ''
-    if (!isRealArticle(id))
+    if (!isContentPage(id))
       return
 
     const tokens = state.tokens
@@ -436,7 +447,7 @@ export function imageAltCheckPlugin(md: MarkdownIt) {
 export function sourceLinkIdsPlugin(md: MarkdownIt) {
   md.core.ruler.after('image_alt_check', 'source_link_ids', (state) => {
     const id = state.env?.id || state.env?.path || ''
-    if (!isRealArticle(id))
+    if (!isContentPage(id))
       return
 
     // Check for sources block presence
@@ -516,7 +527,7 @@ export function sourceLinkIdsPlugin(md: MarkdownIt) {
 export function sourcesBlockPlugin(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   md.core.ruler.after('source_link_ids', 'sources_block', (state) => {
     const id = state.env?.id || state.env?.path || ''
-    if (!isRealArticle(id))
+    if (!isContentPage(id))
       return
 
     const linkMap: Map<string, string[]> | undefined = state.env.sourceLinkMap

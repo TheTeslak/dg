@@ -22,6 +22,8 @@ function getPostLangTag(lang: string) {
 function getTypeLabel(type: string) {
   if (type === 'note')
     return fluent.format('nav-notes')
+  if (type === 'find')
+    return fluent.format('nav-finds')
   return null
 }
 

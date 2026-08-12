@@ -33,7 +33,7 @@ const isArticlesActive = computed(() => {
 })
 
 const isFindsActive = computed(() => {
-  return route.path.includes('/finds')
+  return route.meta.isFind === true || route.path.includes('/finds')
 })
 
 const showLanguageFilter = computed(() => !isFindsActive.value)

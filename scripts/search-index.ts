@@ -8,9 +8,11 @@ import MiniSearch from 'minisearch'
 import { getArticleServedLocales } from '../build/article'
 import { contentSourceDirectory } from '../build/constants'
 import { stripMarkdownForSearch } from '../build/content-cleanup'
+import { getFindFiles, getFindServedLocales } from '../build/find'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
+import { getFindPath } from '../src/logics/find-path'
 import { isPostVisible } from '../src/logics/post-visibility'
 
 const MAX_BODY_LENGTH = 10_000
@@ -122,6 +124,34 @@ async function buildSearchIndex() {
         servedLocales: getArticleServedLocales(locale, slug),
       })
     }
+  }
+
+  for (const filePath of await getFindFiles()) {
+    const filename = filePath.split('/').pop() || ''
+    if (filename === 'index.md' || filename.startsWith('['))
+      continue
+
+    const raw = await fs.readFile(filePath, 'utf-8')
+    const { data, content } = matter(raw)
+    const frontmatter = normalizeFrontmatter(data, content, filePath)
+    if (!isPostVisible(frontmatter))
+      continue
+
+    const slug = filename.replace(/\.md$/, '')
+    const path = getFindPath('en', slug)
+    documents.push({
+      id: path.slice(1),
+      path,
+      title: frontmatter.title || slug,
+      description: frontmatter.description || frontmatter.excerpt || '',
+      body: stripMarkdownForSearch(content).slice(0, MAX_BODY_LENGTH),
+      tags: normalizeTags(frontmatter.tags || frontmatter.hashtags),
+      type: 'find',
+      date: toIsoDate(frontmatter.date, filePath),
+      lang: 'en',
+      duration: toDurationMinutes(frontmatter.duration),
+      servedLocales: getFindServedLocales(),
+    })
   }
 
   // Each physical translation remains searchable; aliases only affect its destination URL.

@@ -13,7 +13,8 @@ nav-close = Cerrar
 nav-methodology = Metodología
 nav-finds = Hallazgos
 finds-earlier = Antes
-finds-telegram-promo = Lo que me llamó la atención, aunque mi postura pueda ser diferente<br>Más hallazgos semanales en Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, en ruso
+finds-telegram-promo = Lo que me llamó la atención, aunque mi postura pueda ser diferente<br>Más hallazgos diarios en Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, en ruso
+finds-english-only = Los textos de Hallazgos están solo en inglés
 
 a11y-skip-to-content = Ir al contenido
 a11y-home = Inicio

@@ -6,6 +6,7 @@ import { getLanguageTag, isSupportedLocale } from '~/locales/config'
 import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
 import { getArticleArchivePath } from '~/logics/article-path'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
+import { getFindIndexPath } from '~/logics/find-path'
 import { glossaryKey } from '~/logics/glossary'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 import { artOverride } from '~/logics/keyboard-nav'
@@ -124,6 +125,7 @@ const currentLocale = computed(() => {
   return getLocaleFromPath(route.path)
 })
 const currentLanguageTag = computed(() => getLanguageTag(currentLocale.value))
+const isFind = computed(() => String(frontmatter.type || '').split('+').includes('find'))
 const contentLanguageTag = computed(() => {
   return isSupportedLocale(frontmatter.lang)
     ? getLanguageTag(frontmatter.lang)
@@ -207,12 +209,16 @@ const articleImage = computed(() => {
  */
 const postType = computed(() => {
   const type = frontmatter.type || 'blog'
+  if (type.split('+').includes('find'))
+    return 'find'
   if (type.split('+').includes('note'))
     return 'note'
   return 'blog'
 })
 
 const backToAllPath = computed(() => {
+  if (postType.value === 'find')
+    return getFindIndexPath(currentLocale.value)
   if (postType.value === 'note')
     return `/${currentLocale.value}/notes`
   return getArticleArchivePath(currentLocale.value)
@@ -591,7 +597,7 @@ onMounted(() => {
       >
         <span class="opacity-50">
           <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
-          <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span>
+          <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind"> · {{ frontmatter.ai === true ? 'synthetic' : 'synthesis' }}</span>
         </span>
       </p>
       <div v-if="frontmatter.date" class="p-author h-card" style="display: none;">
@@ -617,8 +623,9 @@ onMounted(() => {
       <PostDraftBanner
         v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
       />
+      <FindLanguageNotice v-if="isFind && currentLocale !== 'en'" />
       <PostNoticeBanner
-        v-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
+        v-else-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
         :original-locale="frontmatter.originalLocale"
         :post-type="postType"
       />
@@ -733,7 +740,7 @@ onMounted(() => {
       </div>
 
       <PostNavigation
-        v-if="frontmatter.date"
+        v-if="frontmatter.date && !isFind"
         :current-path="route.path"
         :type="postType"
         class="mt-9 mb-6"

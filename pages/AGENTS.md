@@ -13,6 +13,14 @@ Rules for file-based route content under `pages/`.
 - Missing translations are supported through fallback aliases. Do not create placeholder copies only for locale parity.
 - A new physical translation replaces the fallback alias on the next route generation.
 
+## Finds Content
+
+- Internal finds live only at `pages/en/(finds)/<slug>.md` and are served at `/<locale>/finds/<slug>` through locale aliases. `(finds)` is a pathless source group that prevents detail pages from nesting under the `finds.md` index route.
+- The URL locale controls the interface; internal find content intentionally remains English.
+- Internal finds require `title`, `type: find`, `lang: en`, and a publication `date`; they are added to the Finds list automatically.
+- Set `ai: true` only when the find text is AI-generated.
+- Do not duplicate internal finds in `src/data/finds.ts`; that file contains external finds only.
+
 ## Frontmatter
 
 - Content-page frontmatter must include `title`, `date`, and `lang`.

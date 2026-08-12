@@ -1,6 +1,7 @@
 import { getArticleInfo, isRealArticle, resolveAudioFile } from './article'
 import { audioMetadata, frontmatterKnownKeys } from './constants'
 import { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
+import { isRealFind } from './find'
 
 export { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
 
@@ -27,6 +28,7 @@ export function toDurationMinutes(duration: unknown): number | undefined {
 
 export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, content: string, id: string) {
   const frontmatter = { ...rawFrontmatter }
+  const isPublishedContent = isRealArticle(id) || isRealFind(id)
 
   // Normalize date fields: gray-matter/js-yaml may parse ISO dates into
   // native Date objects.  Serialising a Date through route meta (SSG / SSR)
@@ -38,7 +40,7 @@ export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, conten
     }
   }
 
-  if (isRealArticle(id) && frontmatter.date) {
+  if (isPublishedContent && frontmatter.date) {
     const publishedAt = new Date(frontmatter.date)
     if (Number.isNaN(publishedAt.getTime())) {
       warnFrontmatter(`[frontmatter] ${id}: "date" is invalid.`)
@@ -75,7 +77,7 @@ export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, conten
     else
       warnFrontmatter(`[frontmatter] ${id}: unable to parse "duration" value "${String(frontmatter.duration)}".`)
   }
-  else if (isRealArticle(id)) {
+  else if (isPublishedContent) {
     frontmatter.duration = estimateReadingMinutes(content)
   }
 
@@ -140,7 +142,7 @@ export function normalizeFrontmatter(rawFrontmatter: Record<string, any>, conten
   }
 
   // Auto-generate excerpt from article body (first ~200 chars of clean text)
-  if (!frontmatter.excerpt && content && isRealArticle(id)) {
+  if (!frontmatter.excerpt && content && isPublishedContent) {
     frontmatter.excerpt = extractExcerpt(content, 400)
   }
 

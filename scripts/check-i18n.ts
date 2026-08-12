@@ -11,6 +11,7 @@ import {
   getArticleServedLocales,
 } from '../build/article'
 import { contentSourceDirectory } from '../build/constants'
+import { findSourceDirectory, getFindInfo } from '../build/find'
 import localeRedirect, { config as localeRedirectConfig } from '../netlify/edge-functions/locale-redirect'
 import {
   defaultLocale,
@@ -20,6 +21,7 @@ import {
 } from '../src/locales/config'
 import { getPreferredLocale, negotiateLocale } from '../src/locales/negotiation'
 import { getArticlePath, getArticleSearchPath } from '../src/logics/article-path'
+import { getFindPath } from '../src/logics/find-path'
 import { isPostIndexable, isPostRoutable } from '../src/logics/post-visibility'
 
 // These pages define the localized site shell, so silently falling back would hide incomplete locales.
@@ -262,6 +264,36 @@ async function run() {
     const locales = localesBySlug.get(article.slug) || new Set<SupportedLocale>()
     locales.add(article.sourceLocale)
     localesBySlug.set(article.slug, locales)
+  }
+
+  const findFiles = await fg(`pages/*/${fg.escapePath(findSourceDirectory)}/*.md`)
+  for (const file of findFiles) {
+    const find = getFindInfo(file)
+    if (!find) {
+      failures.push(`${file}: internal finds must live under pages/en/${findSourceDirectory}/.`)
+      continue
+    }
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(find.slug))
+      failures.push(`${file}: find slug "${find.slug}" must be a lowercase kebab-case filename.`)
+
+    const { data } = matter(await fs.readFile(file, 'utf-8'))
+    if (data.lang !== 'en')
+      failures.push(`${file}: "lang" must be "en".`)
+    if (data.type !== 'find')
+      failures.push(`${file}: "type" must be "find".`)
+    if (typeof data.title !== 'string' || !data.title.trim())
+      failures.push(`${file}: "title" must be a non-empty string.`)
+    if (!data.date || Number.isNaN(new Date(data.date).getTime()))
+      failures.push(`${file}: "date" must be a valid publication date.`)
+    if (data.ai != null && typeof data.ai !== 'boolean')
+      failures.push(`${file}: "ai" must be true or omitted.`)
+
+    for (const locale of supportedLocales) {
+      const expected = `/${locale}/finds/${find.slug}`
+      if (getFindPath(locale, find.slug) !== expected)
+        failures.push(`${file}: find path is wrong for "${locale}".`)
+    }
   }
 
   const fallbackCases: Array<{

@@ -5,6 +5,7 @@ import type { SupportedLocale } from '~/locales/config'
 import { useDebounceFn } from '@vueuse/core'
 import { computed, ref, shallowRef, watch } from 'vue'
 import { getArticleSearchPath } from '~/logics/article-path'
+import { getFindPath } from '~/logics/find-path'
 import { isSupportedLocale } from '~/logics/i18n-path'
 
 export interface SearchDocument {
@@ -315,7 +316,9 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
       const lang = result.lang as string
       const localeRank = getLocaleRank(lang, servedLocales, currentLocale)
       const path = isSupportedLocale(currentLocale)
-        ? getArticleSearchPath(physicalPath, servedLocales, currentLocale)
+        ? result.type === 'find'
+          ? getFindPath(currentLocale, String(result.id).split('/').at(-1) || '')
+          : getArticleSearchPath(physicalPath, servedLocales, currentLocale)
         : physicalPath
 
       return {
@@ -327,7 +330,7 @@ function performSearch(query: string, currentLocale: string): SearchResult[] {
         lang,
         duration: result.duration as number | null,
         snippets,
-        score: result.score,
+        score: result.score * (result.type === 'find' ? 0.4 : 1),
         localeRank,
       }
     })

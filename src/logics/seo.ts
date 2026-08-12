@@ -85,6 +85,10 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   const isArticle = computed(() => {
     return route.meta.isArticle === true && !!frontmatter.value.date
   })
+  const isFind = computed(() => {
+    return String(frontmatter.value.type || '').split('+').includes('find') && !!frontmatter.value.date
+  })
+  const isPublishedPage = computed(() => isArticle.value || isFind.value)
   const isNotFound = computed(() => route.meta.isNotFound === true)
 
   const originalLocale = computed<SupportedLocale | undefined>(() => {
@@ -101,7 +105,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
 
   const isFallbackArticleAlias = computed(() => {
     // Alias URLs serve readers but must not masquerade as translated SEO pages.
-    return isArticle.value
+    return isPublishedPage.value
       && !!originalLocale.value
       && originalLocale.value !== currentLocale.value
       && !articleLocales.value.includes(currentLocale.value)
@@ -121,7 +125,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
   })
 
   const hreflangLocales = computed<SupportedLocale[]>(() => {
-    if (isArticle.value)
+    if (isPublishedPage.value)
       return articleLocales.value
     return [...supportedLocales]
   })
@@ -136,9 +140,9 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     }))
 
     let xDefaultPath = getDefaultXDefaultPath(route.path)
-    if (isArticle.value && articleLocales.value.includes(defaultLocale))
+    if (isPublishedPage.value && articleLocales.value.includes(defaultLocale))
       xDefaultPath = setPathLocale(route.path, defaultLocale)
-    else if (isArticle.value && articleLocales.value.length > 0)
+    else if (isPublishedPage.value && articleLocales.value.length > 0)
       xDefaultPath = setPathLocale(route.path, articleLocales.value[0])
     else if (originalLocale.value)
       xDefaultPath = setPathLocale(route.path, originalLocale.value)
@@ -166,14 +170,14 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     if (isFallbackArticleAlias.value)
       return 'noindex, follow'
 
-    if (isArticle.value && !isPostIndexable(frontmatter.value))
+    if (isPublishedPage.value && !isPostIndexable(frontmatter.value))
       return explicitRobots || 'noindex, nofollow'
 
     return explicitRobots
   })
 
   const isProfilePage = computed(() => {
-    if (!isArticle.value)
+    if (!isPublishedPage.value)
       return false
     const slug = getRouteSlug(canonicalPath.value)
     return (
@@ -226,7 +230,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
 
     return {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': isFind.value ? 'Article' : 'BlogPosting',
       'mainEntityOfPage': {
         '@type': 'WebPage',
         '@id': canonicalUrl.value,
@@ -249,13 +253,13 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
       { key: 'og:title', property: 'og:title', content: title.value },
       { key: 'og:description', property: 'og:description', content: description.value },
       { key: 'og:url', property: 'og:url', content: canonicalUrl.value },
-      { key: 'og:type', property: 'og:type', content: isArticle.value ? 'article' : 'website' },
+      { key: 'og:type', property: 'og:type', content: isPublishedPage.value ? 'article' : 'website' },
       { key: 'og:image', property: 'og:image', content: image.value },
       { key: 'og:image:type', property: 'og:image:type', content: 'image/png' },
       { key: 'og:image:width', property: 'og:image:width', content: String(socialImageWidth) },
       { key: 'og:image:height', property: 'og:image:height', content: String(socialImageHeight) },
       { key: 'og:image:alt', property: 'og:image:alt', content: title.value },
-      { key: 'og:locale', property: 'og:locale', content: localeConfig[isArticle.value ? contentLocale.value : currentLocale.value].ogLocale },
+      { key: 'og:locale', property: 'og:locale', content: localeConfig[isPublishedPage.value ? contentLocale.value : currentLocale.value].ogLocale },
       { key: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
       { key: 'twitter:title', name: 'twitter:title', content: title.value },
       { key: 'twitter:description', name: 'twitter:description', content: description.value },
@@ -264,7 +268,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     ]
 
     for (const locale of hreflangLocales.value) {
-      if (locale !== (isArticle.value ? contentLocale.value : currentLocale.value)) {
+      if (locale !== (isPublishedPage.value ? contentLocale.value : currentLocale.value)) {
         meta.push({
           key: `og:locale:alternate:${locale}`,
           property: 'og:locale:alternate',
@@ -276,7 +280,7 @@ export function useSEO(frontmatterRef: ComputedRef<Frontmatter> | Frontmatter = 
     if (robots.value)
       meta.push({ key: 'robots', name: 'robots', content: robots.value })
 
-    if (isArticle.value) {
+    if (isPublishedPage.value) {
       const published = toIsoDate(frontmatter.value.date)
       const modified = toIsoDate(frontmatter.value.updated) || published
 

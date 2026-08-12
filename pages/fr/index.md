@@ -8,7 +8,7 @@ pic:
   r: full
   link: /fr/who-is-teslak
   text: Teslak
-display: Teslak s’intéresse à l’informatique, à l’IA, au design UX, à la philosophie, à l’économie, à la biologie ✦ et à bien d’autres sujets
+display: Teslak est curieux de l’informatique, de l’IA, du design UX, de la philosophie, de l’économie, de la biologie ✦ et de plein d’autres choses
 ---
 
 Je travaille sur des agents d’IA, l’automatisation et toujours sur le design, même si celui-ci a beaucoup évolué ces dernières années

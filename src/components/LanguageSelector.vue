@@ -93,8 +93,8 @@ async function changeLang(lang: string) {
       @click="toggle"
     >
       <span class="lang-code">{{ currentLocale.toUpperCase() }}</span>
-      <svg class="lang-chevron" :class="{ 'lang-chevron-open': open }" width="10" height="10" viewBox="0 0 10 10" fill="none">
-        <path d="M2.5 3.75L5 6.25L7.5 3.75" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+      <svg class="lang-chevron" :class="{ 'lang-chevron-open': open }" width="12" height="12" viewBox="0 0 10 10" fill="none">
+        <path d="M2.5 3.75L5 6.25L7.5 3.75" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </button>
 
@@ -153,7 +153,7 @@ async function changeLang(lang: string) {
   background: none;
   color: inherit;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: inherit;
   font-weight: 500;
   letter-spacing: 0.03em;
   opacity: 0.75;

@@ -10,11 +10,13 @@ import anchor from 'markdown-it-anchor'
 import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { contentSourceDirectory } from '../build/constants'
+import { getFindFiles } from '../build/find'
 import { normalizeFrontmatter } from '../build/frontmatter'
 import { registerCustomPlugins } from '../build/markdown-plugins'
 import { finds } from '../src/data/finds'
 import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config'
 import { getArticlePath } from '../src/logics/article-path'
+import { getFindPath } from '../src/logics/find-path'
 import { isPostIndexable } from '../src/logics/post-visibility'
 import { slugify } from './slugify'
 
@@ -306,7 +308,8 @@ async function buildLocaleFeed(locale: SupportedLocale) {
     ))
     .filter(isFeedItem)
 
-  const items = [...posts, ...getFindFeedItems()]
+  const findItems = await getFindFeedItems(locale)
+  const items = [...posts, ...findItems]
   items.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 
   if (items.length)
@@ -317,10 +320,10 @@ async function buildLocaleFeed(locale: SupportedLocale) {
   console.log(`[RSS] ${locale.toUpperCase()}: ${posts.length} posts + ${items.length - posts.length} finds → dist/${feedName}.xml`)
 }
 
-function getFindFeedItems(): Item[] {
+async function getFindFeedItems(locale: SupportedLocale): Promise<Item[]> {
   const ids = new Set<string>()
 
-  return finds
+  const externalItems = finds
     .filter(find => !!find.date)
     .map((find) => {
       if (ids.has(find.id))
@@ -352,6 +355,55 @@ function getFindFeedItems(): Item[] {
         link: url.href,
       } as Item
     })
+
+  const internalItems = (
+    await Promise.all((await getFindFiles()).map(async (filePath) => {
+      const slug = basename(filePath, '.md')
+      if (slug === 'index' || slug.startsWith('['))
+        return
+
+      if (ids.has(slug))
+        throw new Error(`[RSS] Duplicate find id: ${slug}`)
+      ids.add(slug)
+
+      const raw = await fs.readFile(filePath, 'utf-8')
+      const { data, content } = matter(raw)
+      const frontmatter = normalizeFrontmatter(data, content, filePath)
+      normalizedFrontmatterById.set(resolve(filePath), frontmatter)
+      if (!isPostIndexable(frontmatter))
+        return
+
+      const path = getFindPath(locale, slug)
+      const link = `${DOMAIN}${path}`
+      const description = getFeedDescription(frontmatter)
+      const date = toFeedDate(frontmatter.date, filePath, 'date')
+      const updated = frontmatter.updated
+        ? toFeedDate(frontmatter.updated, filePath, 'updated')
+        : date
+      const href = markdown.utils.escapeHtml(link)
+      const contentHtml = [
+        description ? `<p>${markdown.utils.escapeHtml(description)}</p>` : '',
+        `<p><a href="${href}">${markdown.utils.escapeHtml(localeConfig[locale].feedReaderNote)}</a></p>`,
+      ].filter(Boolean).join('\n')
+
+      return {
+        id: `urn:teslak:find:${slug}`,
+        title: frontmatter.title || slug,
+        description,
+        content: contentHtml,
+        date: updated,
+        published: date,
+        author: [AUTHOR],
+        category: [
+          { name: 'find' },
+          ...(frontmatter.ai === true ? [{ name: 'synthetic' }] : [{ name: 'synthesis' }]),
+        ],
+        link,
+      } as Item
+    }))
+  ).filter(isFeedItem)
+
+  return [...externalItems, ...internalItems]
 }
 
 function toJsonFeedAuthor(author = AUTHOR) {

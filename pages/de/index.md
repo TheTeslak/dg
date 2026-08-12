@@ -8,7 +8,7 @@ pic:
   r: full
   link: /de/who-is-teslak
   text: Teslak
-display: Teslak interessiert sich für IT, KI, UX-Design, Philosophie, Wirtschaft, Biologie ✦ und mehr
+display: Teslak ist neugierig auf IT, KI, UX-Design, Philosophie, Wirtschaft, Biologie ✦ und allerlei anderes
 ---
 
 Arbeite an KI-Agenten, Automatisierung und weiterhin an Design, auch wenn es sich in den letzten Jahren stark verändert hat
