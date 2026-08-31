@@ -33,12 +33,13 @@ catalog:
 
 catalogs:
   build:
-    '@shikijs/markdown-it': ^4.3.1
-    '@shikijs/transformers': ^4.3.1
-    '@shikijs/twoslash': ^4.3.1
+    '@shikijs/markdown-exit': ^4.4.3
+    '@shikijs/transformers': ^4.4.3
+    '@shikijs/twoslash': ^4.4.3
     '@unocss/preset-web-fonts': ^66.7.5
     '@vitejs/plugin-vue': ^6.0.7
     gray-matter: ^4.0.3
+    markdown-exit: ^1.3.0
     markdown-it: ^14.3.0
     markdown-it-anchor: ^9.2.1
     markdown-it-github-alerts: ^1.0.1
@@ -49,8 +50,8 @@ catalogs:
     unplugin-auto-import: ^21.0.0
     unplugin-icons: ^23.0.1
     unplugin-vue-components: ^32.1.0
-    unplugin-vue-markdown: ^32.0.0
-    vite: ^8.1.4
+    unplugin-vue-markdown: ^32.1.0
+    vite: ^8.2.2
     vite-plugin-inspect: ^11.4.1
     vite-plugin-optimize-exclude: ^0.0.1
     vite-ssg: ^28.3.0
@@ -90,7 +91,7 @@ catalogs:
     nprogress: ^0.2.0
     pinia: ^3.0.4
     pixi.js: ^8.19.0
-    shiki: ^4.3.1
+    shiki: ^4.4.3
     simplex-noise: ^4.0.3
     vue: ^3.5.39
     vue-router: ^5.1.0

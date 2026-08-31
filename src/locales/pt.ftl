@@ -15,6 +15,8 @@ nav-finds = Achados
 finds-earlier = Antes
 finds-telegram-promo = O que me chamou a atenção, embora minha postura possa ser diferente<br>Mais achados diários no Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, em russo
 finds-english-only = Os textos de Achados estão apenas em inglês
+finds-synthetic-label = Sobre conteúdo sintético
+finds-synthetic-explanation = Os artigos dos achados são geralmente redigidos por IA com base nas minhas conversas com ela
 
 a11y-skip-to-content = Ir para o conteúdo
 a11y-home = Início

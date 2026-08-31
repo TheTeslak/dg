@@ -15,6 +15,8 @@ nav-finds = Находки
 finds-earlier = Раньше
 finds-telegram-promo = Что зацепило внимание, хотя моя позиция может отличаться<br>Больше ежедневных находок — в тгк <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>
 finds-english-only = Тексты в находках — только на английском
+finds-synthetic-label = О синтетическом контенте
+finds-synthetic-explanation = Статьи в находках обычно составлены нейросетью по моим диалогам с ней
 
 a11y-skip-to-content = Перейти к содержимому
 a11y-home = Главная

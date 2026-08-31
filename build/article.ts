@@ -2,7 +2,7 @@
  * Article localization is based on physical files with matching slugs.
  * This module selects fallback sources; `vite.config.ts` turns them into route aliases.
  */
-import type { SupportedLocale } from '../src/locales/config'
+import type { SupportedLocale } from '../src/locales/config.ts'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
@@ -11,10 +11,10 @@ import {
   articleFallbackLocale,
   isSupportedLocale,
   supportedLocales,
-} from '../src/locales/config'
-import { getArticlePath } from '../src/logics/article-path'
-import { isPostIndexable, isPostRoutable, isPostVisible } from '../src/logics/post-visibility'
-import { contentSourceDirectory, supportedAudioExtensions } from './constants'
+} from '../src/locales/config.ts'
+import { getArticlePath } from '../src/logics/article-path.ts'
+import { isPostIndexable, isPostRoutable, isPostVisible } from '../src/logics/post-visibility.ts'
+import { contentSourceDirectory, supportedAudioExtensions } from './constants.ts'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 

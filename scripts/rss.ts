@@ -5,13 +5,14 @@ import fg from 'fast-glob'
 import { Feed } from 'feed'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
-import MarkdownIt from 'markdown-it'
+import { createMarkdownExit } from 'markdown-exit'
 import anchor from 'markdown-it-anchor'
 import GitHubAlerts from 'markdown-it-github-alerts'
 import LinkAttributes from 'markdown-it-link-attributes'
 import { contentSourceDirectory } from '../build/constants'
 import { getFindFiles } from '../build/find'
 import { normalizeFrontmatter } from '../build/frontmatter'
+import { useMarkdownItPlugin } from '../build/markdown-compat'
 import { registerCustomPlugins } from '../build/markdown-plugins'
 import { finds } from '../src/data/finds'
 import { getFeedName, getLanguageTag, localeConfig, supportedLocales } from '../src/locales/config'
@@ -27,23 +28,23 @@ const AUTHOR = {
   link: DOMAIN,
 }
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
-const markdown = MarkdownIt({
+const markdown = createMarkdownExit({
   html: true,
   breaks: true,
   linkify: true,
 })
-  .use(anchor, {
-    slugify,
-    permalink: false,
-  })
-  .use(LinkAttributes, {
-    matcher: (link: string) => /^https?:\/\//.test(link),
-    attrs: {
-      target: '_blank',
-      rel: 'noopener',
-    },
-  })
-  .use(GitHubAlerts)
+
+useMarkdownItPlugin(markdown, anchor, {
+  slugify,
+})
+useMarkdownItPlugin(markdown, LinkAttributes, {
+  matcher: (link: string) => /^https?:\/\//.test(link),
+  attrs: {
+    target: '_blank',
+    rel: 'noopener',
+  },
+})
+useMarkdownItPlugin(markdown, GitHubAlerts)
 
 registerCustomPlugins(markdown, normalizedFrontmatterById)
 

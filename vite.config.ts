@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import MarkdownItShiki from '@shikijs/markdown-it'
+import MarkdownItShiki from '@shikijs/markdown-exit'
 import { transformerNotationDiff, transformerNotationHighlight, transformerNotationWordHighlight } from '@shikijs/transformers'
 import { rendererRich, transformerTwoslash } from '@shikijs/twoslash'
 import Vue from '@vitejs/plugin-vue'
@@ -21,28 +21,22 @@ import Exclude from 'vite-plugin-optimize-exclude'
 import SVG from 'vite-svg-loader'
 import { VueRouterAutoImports } from 'vue-router/unplugin'
 import VueRouter from 'vue-router/vite'
-import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getArticleLocaleStates } from './build/article'
-import { contentSourceDirectory, supportedLocales } from './build/constants'
-import { findSourceLocale, getFindAliasPaths, getFindFallbackPaths, getFindInfo } from './build/find'
-import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter'
-import { registerCustomPlugins } from './build/markdown-plugins'
-import { generateSeoFiles } from './build/seo'
-import { slugify } from './scripts/slugify'
-import { getArticlePath } from './src/logics/article-path'
-import { getFindPath } from './src/logics/find-path'
-import { isPostRoutable } from './src/logics/post-visibility'
-import { siteOrigin } from './src/logics/site'
+import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getArticleLocaleStates } from './build/article.ts'
+import { contentSourceDirectory, supportedLocales } from './build/constants.ts'
+import { findSourceLocale, getFindAliasPaths, getFindFallbackPaths, getFindInfo } from './build/find.ts'
+import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter.ts'
+import { useMarkdownItPlugin } from './build/markdown-compat.ts'
+import { registerCustomPlugins } from './build/markdown-plugins.ts'
+import { generateSeoFiles } from './build/seo.ts'
+import { slugify } from './scripts/slugify.ts'
+import { getArticlePath } from './src/logics/article-path.ts'
+import { getFindPath } from './src/logics/find-path.ts'
+import { isPostRoutable } from './src/logics/post-visibility.ts'
+import { siteOrigin } from './src/logics/site.ts'
 import 'vite-ssg'
 
 const isDev = process.env.NODE_ENV !== 'production'
 const normalizedFrontmatterById = new Map<string, Record<string, any>>()
-
-function useMarkdownPlugin(md: { use: (...args: any[]) => unknown }, plugin: unknown, options?: unknown) {
-  if (options === undefined)
-    md.use(plugin)
-  else
-    md.use(plugin, options)
-}
 
 function getArticleRouteConflict(locale: string, slug: string) {
   const candidates = [
@@ -52,13 +46,13 @@ function getArticleRouteConflict(locale: string, slug: string) {
     `pages/${locale}/${slug}/index.vue`,
   ]
 
-  return candidates.find(candidate => fs.existsSync(resolve(__dirname, candidate)))
+  return candidates.find(candidate => fs.existsSync(resolve(import.meta.dirname, candidate)))
 }
 
 export default defineConfig({
   resolve: {
     alias: [
-      { find: '~/', replacement: `${resolve(__dirname, 'src')}/` },
+      { find: '~/', replacement: `${resolve(import.meta.dirname, 'src')}/` },
     ],
   },
   optimizeDeps: {
@@ -151,7 +145,7 @@ export default defineConfig({
             const backlinks = Array.isArray(frontmatter.backlink) ? frontmatter.backlink : [frontmatter.backlink]
             for (const backlinkSlug of backlinks) {
               const backlinkExists = supportedLocales.some(loc =>
-                fs.existsSync(resolve(__dirname, `pages/${loc}/${contentSourceDirectory}/${backlinkSlug}.md`)),
+                fs.existsSync(resolve(import.meta.dirname, `pages/${loc}/${contentSourceDirectory}/${backlinkSlug}.md`)),
               )
               if (!backlinkExists)
                 warnFrontmatter(`[frontmatter] ${path}: backlink "${backlinkSlug}" does not match any article.`)
@@ -187,8 +181,8 @@ export default defineConfig({
         quotes: '""\'\'',
         breaks: true,
       },
-      async markdownSetup(md) {
-        useMarkdownPlugin(md, await MarkdownItShiki({
+      markdownSetup(md) {
+        md.use(MarkdownItShiki({
           themes: {
             dark: 'vitesse-dark',
             light: 'vitesse-light',
@@ -208,7 +202,7 @@ export default defineConfig({
           ],
         }))
 
-        useMarkdownPlugin(md, anchor, {
+        useMarkdownItPlugin(md, anchor, {
           slugify,
           permalink: anchor.permalink.linkInsideHeader({
             symbol: '#',
@@ -216,7 +210,7 @@ export default defineConfig({
           }),
         })
 
-        useMarkdownPlugin(md, LinkAttributes, {
+        useMarkdownItPlugin(md, LinkAttributes, {
           matcher: (link: string) => /^https?:\/\//.test(link),
           attrs: {
             target: '_blank',
@@ -224,17 +218,17 @@ export default defineConfig({
           },
         })
 
-        useMarkdownPlugin(md, TOC, {
+        useMarkdownItPlugin(md, TOC, {
           includeLevel: [1, 2, 3, 4],
           slugify,
           containerHeaderHtml: '<div class="table-of-contents-anchor"><div class="i-ri-menu-2-fill" /></div>',
         })
 
-        useMarkdownPlugin(md, GitHubAlerts)
+        useMarkdownItPlugin(md, GitHubAlerts)
 
         // Register all custom markdown-it plugins (image figures, alt check,
         // source back-references, sources block, ==mark== highlight)
-        registerCustomPlugins(md as unknown as import('markdown-it').default, normalizedFrontmatterById)
+        registerCustomPlugins(md, normalizedFrontmatterById)
       },
       frontmatterPreprocess(frontmatter, options, id, defaults) {
         if (id.endsWith('.md')) {

@@ -1,15 +1,15 @@
-import type { PostVisibilityFrontmatter } from '../src/logics/post-visibility'
-import type { SupportedLocale } from './constants'
+import type { PostVisibilityFrontmatter } from '../src/logics/post-visibility.ts'
+import type { SupportedLocale } from './constants.ts'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
-import { defaultLocale, getLanguageTag, localeSegmentPattern } from '../src/locales/config'
-import { getArticlePath } from '../src/logics/article-path'
-import { hasNoindexRobots, isDraftPost, isPostIndexable } from '../src/logics/post-visibility'
-import { getArticleInfo } from './article'
-import { supportedLocales } from './constants'
+import { defaultLocale, getLanguageTag, localeSegmentPattern } from '../src/locales/config.ts'
+import { getArticlePath } from '../src/logics/article-path.ts'
+import { hasNoindexRobots, isDraftPost, isPostIndexable } from '../src/logics/post-visibility.ts'
+import { getArticleInfo } from './article.ts'
+import { supportedLocales } from './constants.ts'
 
 interface SeoFrontmatter extends PostVisibilityFrontmatter {
   updated?: string | Date

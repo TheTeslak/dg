@@ -595,10 +595,14 @@ onMounted(() => {
         v-if="frontmatter.date"
         class="slide-enter-50 !mt-0"
       >
-        <span class="opacity-50">
-          <span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span>
-          <span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind"> · {{ frontmatter.ai === true ? 'synthetic' : 'synthesis' }}</span>
-        </span>
+        <span class="opacity-50"><span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span><span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind"> · </span></span><Popover
+          v-if="isFind && frontmatter.ai === true"
+          trigger="synthetic"
+          :label="$t('finds-synthetic-label')"
+          muted
+        >
+          {{ $t('finds-synthetic-explanation') }}
+        </Popover><span v-else-if="isFind" class="opacity-50">synthesis</span>
       </p>
       <div v-if="frontmatter.date" class="p-author h-card" style="display: none;">
         <a class="u-url p-name" href="https://teslak.me">Teslak</a>
@@ -1281,8 +1285,8 @@ article :deep(.source-highlight-fade) {
   background-clip: text;
   background-image: linear-gradient(100deg, currentColor 40%, var(--title-glint) 50%, currentColor 60%);
   background-size: 400% 100%;
-  background-position: -400% center;
-  animation: title-glint 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-position: 150% center;
+  animation: title-glint 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 html.dark .title-pic-link {
   --title-glint: #aaa;
@@ -1296,11 +1300,11 @@ html.dark .title-pic-link {
 }
 @keyframes title-glint {
   0%,
-  62.5% {
-    background-position: -150% center;
+  66.7% {
+    background-position: 150% center;
   }
   100% {
-    background-position: 150% center;
+    background-position: -150% center;
   }
 }
 .title-rest {
@@ -1346,8 +1350,15 @@ h1:has(.title-pic-link:hover) .title-rest {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .art-enter {
+  .art-enter,
+  .title-pic-link {
     animation: none;
+  }
+  .title-pic-link {
+    -webkit-text-fill-color: unset;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    background-image: none;
   }
 }
 </style>

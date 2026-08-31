@@ -1,5 +1,5 @@
-import type { SupportedLocale } from '../locales/config'
-import { isSupportedLocale, localeSegmentPattern } from '../locales/config'
+import type { SupportedLocale } from '../locales/config.ts'
+import { isSupportedLocale, localeSegmentPattern } from '../locales/config.ts'
 
 const findRouteRE = new RegExp(`^/(${localeSegmentPattern})/finds/([^/]+)/?$`)
 

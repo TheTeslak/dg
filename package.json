@@ -1,7 +1,7 @@
 {
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.14.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "build": "pnpm lint:md && pnpm check:i18n && tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects && pnpm check:seo",
     "check:i18n": "tsx scripts/check-i18n.ts",
@@ -42,7 +42,7 @@
     "@iconify/json": "catalog:dev",
     "@octokit/core": "catalog:dev",
     "@octokit/rest": "catalog:dev",
-    "@shikijs/markdown-it": "catalog:build",
+    "@shikijs/markdown-exit": "catalog:build",
     "@shikijs/transformers": "catalog:build",
     "@shikijs/twoslash": "catalog:build",
     "@types/fs-extra": "catalog:types",
@@ -65,6 +65,7 @@
     "gray-matter": "catalog:build",
     "image-size": "catalog:",
     "lint-staged": "catalog:dev",
+    "markdown-exit": "catalog:build",
     "markdown-it": "catalog:build",
     "markdown-it-anchor": "catalog:build",
     "markdown-it-github-alerts": "catalog:build",

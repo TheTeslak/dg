@@ -2,8 +2,8 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fs from 'fs-extra'
 
-export { supportedLocales } from '../src/locales/config'
-export type { SupportedLocale } from '../src/locales/config'
+export { supportedLocales } from '../src/locales/config.ts'
+export type { SupportedLocale } from '../src/locales/config.ts'
 
 export const contentSourceDirectory = '(content)'
 export const supportedOgSourceExtensions = ['avif', 'webp', 'png', 'jpg', 'jpeg'] as const

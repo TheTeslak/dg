@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import ansis from 'ansis'
 import fg from 'fast-glob'
 import matter from 'gray-matter'
-import MarkdownIt from 'markdown-it'
+import { createMarkdownExit } from 'markdown-exit'
 import { parse } from 'vue/compiler-sfc'
 import { formatMarkdownDiagnostic, registerCustomPlugins } from '../build/markdown-plugins'
 
@@ -11,7 +11,7 @@ async function run() {
   const files = await fg('pages/**/*.md')
   let hasErrors = false
 
-  const md = new MarkdownIt({ html: true })
+  const md = createMarkdownExit({ html: true })
   registerCustomPlugins(md, new Map())
 
   console.log(ansis.blue(`Checking ${files.length} markdown files for HTML validity...`))

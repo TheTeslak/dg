@@ -29,7 +29,7 @@ Creo [proyectos personales](/es/projects)
   <a href="https://signal.me/#eu/0ojeaUswyejbiq9TmA36oThynM-IJEHhlH5cXGOi59EkXcuGR9dO9JFN9JQvyx7x" target="_blank"><span op75 i-simple-icons-signal /> Signal</a>
   <a href="https://t.me/Teslak" target="_blank"><span op75 i-simple-icons-telegram /> Telegram</a>
   <a href="https://discord.com/users/289830548338376706" target="_blank"><span op75 i-simple-icons-discord /> Discord</a>
-  <a href="https://matrix.to/#/@teslak:unredacted.org" target="_blank"><span op75 i-ph-matrix-logo-fill /> Matrix</a>
+  <a href="https://smp19.simplex.im/a#ZZe8llIR9yKEFjb_Jn6TAM0dyHYZ3dVusDDJVbf-HNc" target="_blank"><span op75 i-simple-icons-simplex /> SimpleX</a>
 </p>
 
-O por correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span>
+O por correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="¿Por qué no GPG?">El correo electrónico es intrínsecamente inseguro. Para mensajes privados — Signal [o SimpleX]{.muted}</Popover>

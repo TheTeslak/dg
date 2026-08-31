@@ -1,13 +1,13 @@
-import type MarkdownIt from 'markdown-it'
+import type { MarkdownExit } from 'markdown-exit'
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sizeOf from 'image-size'
-import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config'
-import { isRealArticle } from './article'
-import { parseSpoilerOpeningTitle } from './content-cleanup'
-import { isRealFind } from './find'
-import { warnFrontmatter } from './frontmatter'
+import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config.ts'
+import { isRealArticle } from './article.ts'
+import { parseSpoilerOpeningTitle } from './content-cleanup.ts'
+import { isRealFind } from './find.ts'
+import { warnFrontmatter } from './frontmatter.ts'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const mutedSpanSyntax = '{.muted}'
@@ -142,7 +142,7 @@ function parseGlossaryAttributes(src: string, pos: number) {
  * Markdown content
  * :::
  */
-export function spoilerBlockPlugin(md: MarkdownIt) {
+export function spoilerBlockPlugin(md: MarkdownExit) {
   md.block.ruler.before('fence', 'spoiler', (state, startLine, endLine, silent) => {
     const start = state.bMarks[startLine] + state.tShift[startLine]
     const max = state.eMarks[startLine]
@@ -196,7 +196,7 @@ export function spoilerBlockPlugin(md: MarkdownIt) {
  *
  * Only `.muted` is supported intentionally; this is not a general attributes parser.
  */
-export function mutedSpanPlugin(md: MarkdownIt) {
+export function mutedSpanPlugin(md: MarkdownExit) {
   md.inline.ruler.before('link', 'muted_span', (state, silent) => {
     const start = state.pos
     if (state.src.charCodeAt(start) !== 0x5B /* [ */)
@@ -231,7 +231,7 @@ export function mutedSpanPlugin(md: MarkdownIt) {
  *
  * Keeps authoring concise while preserving the existing GlossaryTerm runtime UI.
  */
-export function glossaryTermPlugin(md: MarkdownIt) {
+export function glossaryTermPlugin(md: MarkdownExit) {
   md.inline.ruler.before('link', 'glossary_term', (state, silent) => {
     const start = state.pos
     if (state.src.charCodeAt(start) !== 0x5B /* [ */)
@@ -265,7 +265,7 @@ export function glossaryTermPlugin(md: MarkdownIt) {
 /**
  * Warn when Djot-style attributes were probably mistyped and leaked into text.
  */
-export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
+export function inlineAttributeLeakWarningPlugin(md: MarkdownExit) {
   md.core.ruler.after('inline', 'inline_attribute_leak_warning', (state) => {
     for (const token of state.tokens) {
       if (token.type !== 'inline' || !token.children)
@@ -297,7 +297,7 @@ export function inlineAttributeLeakWarningPlugin(md: MarkdownIt) {
  * Supports pipe-separated layout flags and an optional distinct caption:
  * ![alt|wide|caption=Visible caption](src).
  */
-export function imageFiguresPlugin(md: MarkdownIt) {
+export function imageFiguresPlugin(md: MarkdownExit) {
   md.core.ruler.after('inline', 'image_figures', (state) => {
     const tokens = state.tokens
     for (let i = 0; i < tokens.length; i++) {
@@ -365,7 +365,7 @@ export function imageFiguresPlugin(md: MarkdownIt) {
  * Automatically read physical image dimensions and inject width/height.
  * Mark non-first markdown images as lazy to avoid delaying above-the-fold media.
  */
-export function imageAttributesPlugin(md: MarkdownIt) {
+export function imageAttributesPlugin(md: MarkdownExit) {
   md.core.ruler.after('image_figures', 'image_attributes', (state) => {
     let imageIndex = 0
 
@@ -417,7 +417,7 @@ export function imageAttributesPlugin(md: MarkdownIt) {
 /**
  * Warn if article images lack alt text (WCAG 1.1.1).
  */
-export function imageAltCheckPlugin(md: MarkdownIt) {
+export function imageAltCheckPlugin(md: MarkdownExit) {
   md.core.ruler.after('image_attributes', 'image_alt_check', (state) => {
     const id = state.env?.id || state.env?.path || ''
     if (!isContentPage(id))
@@ -444,7 +444,7 @@ export function imageAltCheckPlugin(md: MarkdownIt) {
 /**
  * Assigns ID to external links for sources back-referencing.
  */
-export function sourceLinkIdsPlugin(md: MarkdownIt) {
+export function sourceLinkIdsPlugin(md: MarkdownExit) {
   md.core.ruler.after('image_alt_check', 'source_link_ids', (state) => {
     const id = state.env?.id || state.env?.path || ''
     if (!isContentPage(id))
@@ -524,7 +524,7 @@ export function sourceLinkIdsPlugin(md: MarkdownIt) {
 /**
  * Renders sources spoiler with back-references.
  */
-export function sourcesBlockPlugin(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
+export function sourcesBlockPlugin(md: MarkdownExit, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   md.core.ruler.after('source_link_ids', 'sources_block', (state) => {
     const id = state.env?.id || state.env?.path || ''
     if (!isContentPage(id))
@@ -650,7 +650,7 @@ export function sourcesBlockPlugin(md: MarkdownIt, normalizedFrontmatterById: Ma
  * Custom ==highlight== syntax (Obsidian-style mark).
  * Converts ==text== to <mark>text</mark>, no external plugin needed.
  */
-export function markHighlightPlugin(md: MarkdownIt) {
+export function markHighlightPlugin(md: MarkdownExit) {
   md.inline.ruler.before('emphasis', 'mark', (state, silent) => {
     if (silent)
       return false
@@ -680,9 +680,9 @@ export function markHighlightPlugin(md: MarkdownIt) {
 }
 
 /**
- * Register all custom markdown-it plugins.
+ * Register all custom Markdown plugins.
  */
-export function registerCustomPlugins(md: MarkdownIt, normalizedFrontmatterById: Map<string, Record<string, any>>) {
+export function registerCustomPlugins(md: MarkdownExit, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   spoilerBlockPlugin(md)
   mutedSpanPlugin(md)
   glossaryTermPlugin(md)

@@ -1,12 +1,12 @@
-import type { SupportedLocale } from '../src/locales/config'
+import type { SupportedLocale } from '../src/locales/config.ts'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
-import { supportedLocales } from '../src/locales/config'
-import { getFindPath } from '../src/logics/find-path'
-import { isPostRoutable } from '../src/logics/post-visibility'
+import { supportedLocales } from '../src/locales/config.ts'
+import { getFindPath } from '../src/logics/find-path.ts'
+import { isPostRoutable } from '../src/logics/post-visibility.ts'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 const repoRoot = resolve(currentDir, '..')

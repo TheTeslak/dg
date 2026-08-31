@@ -1,9 +1,9 @@
-import { getArticleInfo, isRealArticle, resolveAudioFile } from './article'
-import { audioMetadata, frontmatterKnownKeys } from './constants'
-import { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
-import { isRealFind } from './find'
+import { getArticleInfo, isRealArticle, resolveAudioFile } from './article.ts'
+import { audioMetadata, frontmatterKnownKeys } from './constants.ts'
+import { estimateReadingMinutes, extractExcerpt } from './content-cleanup.ts'
+import { isRealFind } from './find.ts'
 
-export { estimateReadingMinutes, extractExcerpt } from './content-cleanup'
+export { estimateReadingMinutes, extractExcerpt } from './content-cleanup.ts'
 
 const frontmatterWarnings = new Set<string>()
 const futureDateWarningGraceMs = 24 * 60 * 60 * 1000

@@ -15,6 +15,8 @@ nav-finds = Finds
 finds-earlier = Earlier
 finds-telegram-promo = What caught my eye, though my stance may differ<br>More daily finds on Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, in Russian
 finds-english-only = Texts in Finds are English only
+finds-synthetic-label = About synthetic content
+finds-synthetic-explanation = Articles in Finds are usually written by AI based on my conversations with it
 
 a11y-skip-to-content = Skip to content
 a11y-home = Home
