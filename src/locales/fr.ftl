@@ -14,7 +14,7 @@ nav-methodology = Méthodologie
 nav-finds = Trouvailles
 finds-earlier = Plus tôt
 finds-telegram-promo = Ce qui a attiré mon attention, bien que ma position puisse différer<br>Plus de trouvailles quotidiennes sur Telegram : <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, en russe
-finds-english-only = Les textes des Trouvailles sont uniquement en anglais
+finds-notice = Les textes de Trouvailles sont uniquement en anglais et se distinguent du reste du blog
 finds-synthetic-label = À propos du contenu synthétique
 finds-synthetic-explanation = Les articles des trouvailles sont généralement rédigés par une IA à partir de mes conversations avec elle
 

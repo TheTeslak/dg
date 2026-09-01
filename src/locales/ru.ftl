@@ -14,9 +14,15 @@ nav-methodology = Методология
 nav-finds = Находки
 finds-earlier = Раньше
 finds-telegram-promo = Что зацепило внимание, хотя моя позиция может отличаться<br>Больше ежедневных находок — в тгк <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>
-finds-english-only = Тексты в находках — только на английском
+finds-notice = Тексты в находках — только на английском и отличаются от остального блога
+finds-synthetic-trigger = синтетика
+finds-synthesis-trigger = синтез
 finds-synthetic-label = О синтетическом контенте
 finds-synthetic-explanation = Статьи в находках обычно составлены нейросетью по моим диалогам с ней
+
+post-clip-trigger = вырезка
+post-clip-label = О вырезках
+post-clip-explanation = Материал сохранён из сторонних источников во избежание потери данных на внешних сайтах и для удобного формата чтения
 
 a11y-skip-to-content = Перейти к содержимому
 a11y-home = Главная

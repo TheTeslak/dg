@@ -343,8 +343,9 @@ onBeforeUnmount(() => {
   border-radius: 0.75rem;
   background: var(--info-popover-bg);
   box-shadow:
-    0 12px 32px rgb(0 0 0 / 6%),
-    0 2px 8px rgb(0 0 0 / 4%);
+    0 2px 4px rgba(0, 0, 0, 0.02),
+    0 6px 12px rgba(0, 0, 0, 0.03),
+    0 16px 32px rgba(0, 0, 0, 0.05);
   color: #555;
   font-size: 1rem;
   line-height: 1.5;
@@ -361,11 +362,12 @@ onBeforeUnmount(() => {
 }
 
 html.dark .info-popover-surface {
-  --info-popover-bg: rgb(22 22 22 / 97%);
+  --info-popover-bg: #191919;
   --info-popover-border: rgb(255 255 255 / 13%);
   box-shadow:
-    0 16px 42px rgb(0 0 0 / 48%),
-    0 3px 12px rgb(0 0 0 / 28%);
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.35),
+    0 20px 40px rgba(0, 0, 0, 0.55);
   color: #bbb;
 }
 

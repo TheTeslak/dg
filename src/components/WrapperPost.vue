@@ -627,7 +627,7 @@ onMounted(() => {
       <PostDraftBanner
         v-if="frontmatter.draft || isDraftPost(frontmatter.type)"
       />
-      <FindLanguageNotice v-if="isFind && currentLocale !== 'en'" />
+      <FindNoticeBanner v-if="isFind" />
       <PostNoticeBanner
         v-else-if="frontmatter.originalLocale && frontmatter.originalLocale !== currentLocale && !frontmatter.draft && !isDraftPost(frontmatter.type)"
         :original-locale="frontmatter.originalLocale"

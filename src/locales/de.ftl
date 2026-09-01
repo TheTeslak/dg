@@ -14,7 +14,7 @@ nav-methodology = Methodik
 nav-finds = Funde
 finds-earlier = Früher
 finds-telegram-promo = Was mir aufgefallen ist, auch wenn meine Position abweichen kann<br>Mehr tägliche Funde gibt es auf Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, auf Russisch
-finds-english-only = Texte unter „Funde“ gibt es nur auf Englisch
+finds-notice = Texte unter „Funde“ gibt es nur auf Englisch und unterscheiden sich vom Rest des Blogs
 finds-synthetic-label = Über synthetische Inhalte
 finds-synthetic-explanation = Die Artikel in den Fundstücken werden meist von einer KI auf Grundlage meiner Gespräche mit ihr verfasst
 

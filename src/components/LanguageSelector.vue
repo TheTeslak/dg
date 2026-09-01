@@ -189,7 +189,10 @@ async function changeLang(lang: string) {
   background: var(--c-bg);
   border: 1px solid rgba(125, 125, 125, 0.15);
   border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.02),
+    0 6px 12px rgba(0, 0, 0, 0.03),
+    0 16px 32px rgba(0, 0, 0, 0.05);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -197,7 +200,10 @@ async function changeLang(lang: string) {
 
 html.dark .lang-dropdown {
   border-color: rgba(125, 125, 125, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.35),
+    0 20px 40px rgba(0, 0, 0, 0.55);
 }
 
 /* Sliding hover background */
