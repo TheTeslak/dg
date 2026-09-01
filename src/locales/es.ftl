@@ -22,7 +22,7 @@ finds-synthetic-explanation = Los artículos de los descubrimientos suelen estar
 
 post-clip-trigger = recorte
 post-clip-label = Acerca de los recortes
-post-clip-explanation = Material guardado de fuentes externas para evitar la pérdida de datos y garantizar un formato de lectura cómodo
+post-clip-explanation = Se guarda el material externo por si el original deja de estar disponible y para facilitar la lectura
 
 a11y-skip-to-content = Ir al contenido
 a11y-home = Inicio

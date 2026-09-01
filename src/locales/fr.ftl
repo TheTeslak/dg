@@ -22,7 +22,7 @@ finds-synthetic-explanation = Les articles des trouvailles sont généralement r
 
 post-clip-trigger = extrait
 post-clip-label = À propos des extraits
-post-clip-explanation = Contenu sauvegardé depuis des sources externes pour éviter la perte de données et assurer un format de lecture adapté
+post-clip-explanation = Le contenu externe est conservé au cas où l’original deviendrait indisponible et pour faciliter la lecture
 
 a11y-skip-to-content = Aller au contenu
 a11y-home = Accueil

@@ -22,7 +22,7 @@ finds-synthetic-explanation = Die Artikel in den Fundstücken werden meist von e
 
 post-clip-trigger = Ausschnitt
 post-clip-label = Über Ausschnitte
-post-clip-explanation = Aus externen Quellen gesicherter Inhalt zur Vermeidung von Datenverlust und für ein angenehmes Leseformat
+post-clip-explanation = Externe Inhalte werden aufbewahrt, falls das Original nicht verfügbar ist, und lassen sich hier leichter lesen
 
 a11y-skip-to-content = Zum Inhalt springen
 a11y-home = Startseite

@@ -22,7 +22,7 @@ finds-synthetic-explanation = Articles in Finds are usually written by AI based 
 
 post-clip-trigger = clip
 post-clip-label = About clips
-post-clip-explanation = Material preserved from external sources to prevent data loss and ensure a convenient reading format
+post-clip-explanation = External content is kept in case the original is unavailable and for easier reading
 
 a11y-skip-to-content = Skip to content
 a11y-home = Home
