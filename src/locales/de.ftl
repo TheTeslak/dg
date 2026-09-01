@@ -15,8 +15,14 @@ nav-finds = Funde
 finds-earlier = Früher
 finds-telegram-promo = Was mir aufgefallen ist, auch wenn meine Position abweichen kann<br>Mehr tägliche Funde gibt es auf Telegram: <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>, auf Russisch
 finds-notice = Texte unter „Funde“ gibt es nur auf Englisch und unterscheiden sich vom Rest des Blogs
+finds-synthetic-trigger = Synthetisch
+finds-synthesis-trigger = Synthese
 finds-synthetic-label = Über synthetische Inhalte
 finds-synthetic-explanation = Die Artikel in den Fundstücken werden meist von einer KI auf Grundlage meiner Gespräche mit ihr verfasst
+
+post-clip-trigger = Ausschnitt
+post-clip-label = Über Ausschnitte
+post-clip-explanation = Aus externen Quellen gesicherter Inhalt zur Vermeidung von Datenverlust und für ein angenehmes Leseformat
 
 a11y-skip-to-content = Zum Inhalt springen
 a11y-home = Startseite

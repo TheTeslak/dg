@@ -333,6 +333,9 @@ async function run() {
   }> = [
     { name: 'published', frontmatter: { date: '2000-01-01', type: 'note' }, expected: true },
     { name: 'draft', frontmatter: { date: '2000-01-01', type: 'draft' }, expected: false },
+    { name: 'hidden', frontmatter: { date: '2000-01-01', type: 'hidden' }, expected: false },
+    { name: 'clip', frontmatter: { date: '2000-01-01', type: 'clip' }, expected: false },
+    { name: 'no date', frontmatter: { type: 'note' }, expected: false },
     { name: 'combined draft', frontmatter: { date: '2000-01-01', type: 'note+draft' }, expected: false },
     { name: 'noindex', frontmatter: { date: '2000-01-01', robots: 'noindex, follow' }, expected: false },
     { name: 'future', frontmatter: { date: '2999-01-01', type: 'note' }, expected: true },
@@ -355,6 +358,8 @@ async function run() {
     { name: 'published', frontmatter: { date: '2000-01-01', type: 'note' }, expected: true },
     { name: 'combined draft', frontmatter: { date: '2000-01-01', type: 'note+draft' }, expected: true },
     { name: 'hidden draft', frontmatter: { date: '2000-01-01', type: 'draft' }, expected: false },
+    { name: 'hidden post', frontmatter: { date: '2000-01-01', type: 'hidden' }, expected: false },
+    { name: 'no date post', frontmatter: { type: 'note' }, expected: false },
     { name: 'draft flag', frontmatter: { date: '2000-01-01', draft: true }, expected: false },
   ]
 

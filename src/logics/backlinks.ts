@@ -1,7 +1,7 @@
 import type { RouteRecordNormalized } from 'vue-router'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { isPostVisible } from '~/logics'
+import { isClipPost, isHiddenPost, isPostVisible } from '~/logics'
 import { getArticlePath, getArticleRouteInfo } from '~/logics/article-path'
 import { getLocaleFromPath } from '~/logics/i18n-path'
 
@@ -40,7 +40,7 @@ export function useBacklink() {
   const currentLocale = computed(() => getLocaleFromPath(route.path))
 
   const backlinkSlugs = computed<string[]>(() => {
-    const raw = route.meta.frontmatter?.backlink
+    const raw = route.meta.frontmatter?.backlink ?? route.meta.inferredBacklink
     if (!raw)
       return []
     const list = Array.isArray(raw) ? raw : [raw]
@@ -60,8 +60,7 @@ export function useBacklink() {
         (r: RouteRecordNormalized) =>
           r.path === targetPath
           && r.meta.isArticle === true
-          && r.meta.frontmatter?.title
-          && isPostVisible(r.meta.frontmatter || {}),
+          && Boolean(r.meta.frontmatter?.title),
       )
       if (found) {
         const fm = found.meta.frontmatter!
@@ -105,6 +104,8 @@ export function useReferencedBy() {
         if (r.meta.isArticle !== true || getLocaleFromPath(r.path) !== currentLocale.value)
           return false
         if (!r.meta.frontmatter?.title || !isPostVisible(r.meta.frontmatter || {}))
+          return false
+        if (isClipPost(r.meta.frontmatter?.type) || isHiddenPost(r.meta.frontmatter?.type))
           return false
 
         const rawBacklink = r.meta.frontmatter?.backlink

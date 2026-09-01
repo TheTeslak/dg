@@ -25,6 +25,7 @@ import { getArticleFallbackPaths, getArticleFallbackSource, getArticleInfo, getA
 import { contentSourceDirectory, supportedLocales } from './build/constants.ts'
 import { findSourceLocale, getFindAliasPaths, getFindFallbackPaths, getFindInfo } from './build/find.ts'
 import { normalizeFrontmatter, warnFrontmatter } from './build/frontmatter.ts'
+import { buildArticleLinkGraph } from './build/link-graph.ts'
 import { useMarkdownItPlugin } from './build/markdown-compat.ts'
 import { registerCustomPlugins } from './build/markdown-plugins.ts'
 import { generateSeoFiles } from './build/seo.ts'
@@ -111,6 +112,12 @@ export default defineConfig({
               routeMeta.isArticle = true
               routeMeta.articleSlug = slug
               routeMeta.articleLocale = sourceLocale
+
+              const linkGraph = buildArticleLinkGraph()
+              const inferredParents = linkGraph.incomingLinks.get(slug)
+              if (inferredParents && inferredParents.length > 0) {
+                routeMeta.inferredBacklink = inferredParents
+              }
 
               const aliases: string[] = []
               for (const targetLocale of supportedLocales) {

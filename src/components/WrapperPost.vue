@@ -3,7 +3,7 @@ import type { GlossaryState } from '~/logics/glossary'
 import type { ArticleAudio } from '~/types'
 import { useFluent } from 'fluent-vue'
 import { getLanguageTag, isSupportedLocale } from '~/locales/config'
-import { formatDate, formatReadingDuration, isDraftPost, isRecentPost, resolvePath } from '~/logics'
+import { formatDate, formatReadingDuration, isClipPost, isDraftPost, isHiddenPost, isRecentPost, resolvePath } from '~/logics'
 import { getArticleArchivePath } from '~/logics/article-path'
 import { useBacklink, useReferencedBy } from '~/logics/backlinks'
 import { getFindIndexPath } from '~/logics/find-path'
@@ -126,6 +126,8 @@ const currentLocale = computed(() => {
 })
 const currentLanguageTag = computed(() => getLanguageTag(currentLocale.value))
 const isFind = computed(() => String(frontmatter.type || '').split('+').includes('find'))
+const isClip = computed(() => isClipPost(frontmatter.type))
+const isHidden = computed(() => isHiddenPost(frontmatter.type))
 const contentLanguageTag = computed(() => {
   return isSupportedLocale(frontmatter.lang)
     ? getLanguageTag(frontmatter.lang)
@@ -595,14 +597,21 @@ onMounted(() => {
         v-if="frontmatter.date"
         class="slide-enter-50 !mt-0"
       >
-        <span class="opacity-50"><span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span><span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind"> · </span></span><Popover
+        <span class="opacity-50"><span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span><span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind || isClip"> · </span></span><Popover
           v-if="isFind && frontmatter.ai === true"
-          trigger="synthetic"
+          :trigger="$t('finds-synthetic-trigger')"
           :label="$t('finds-synthetic-label')"
           muted
         >
           {{ $t('finds-synthetic-explanation') }}
-        </Popover><span v-else-if="isFind" class="opacity-50">synthesis</span>
+        </Popover><span v-else-if="isFind" class="opacity-50">{{ $t('finds-synthesis-trigger') }}</span><Popover
+          v-else-if="isClip"
+          :trigger="$t('post-clip-trigger')"
+          :label="$t('post-clip-label')"
+          muted
+        >
+          {{ $t('post-clip-explanation') }}
+        </Popover>
       </p>
       <div v-if="frontmatter.date" class="p-author h-card" style="display: none;">
         <a class="u-url p-name" href="https://teslak.me">Teslak</a>
@@ -713,7 +722,7 @@ onMounted(() => {
         </Transition>
       </Teleport>
     </ClientOnly>
-    <div v-if="route.path !== '/' && frontmatter.date" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
+    <div v-if="route.path !== '/' && (frontmatter.date || frontmatter.title)" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
       <template v-if="frontmatter.telegram || frontmatter.twitter">
         <span font-mono op50>> </span>
         <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
@@ -744,7 +753,7 @@ onMounted(() => {
       </div>
 
       <PostNavigation
-        v-if="frontmatter.date && !isFind"
+        v-if="frontmatter.date && !isFind && !isClip && !isHidden"
         :current-path="route.path"
         :type="postType"
         class="mt-9 mb-6"

@@ -63,9 +63,20 @@ pic: # optional inline image next to a title word
 
 #### Field Logic & Behavior
 
-- **`type` (Status & Visibility)**: This field controls where the post appears and its status.
-  - `type: draft` or `draft: true`: Hidden from lists, aliases, RSS, and indexing, but still available at its physical locale URL.
-  - `type: note+draft` (or `blog+draft`): Visible in lists and locale aliases with a **🚧 indicator**, but excluded from RSS, sitemap, and indexing.
+- **`type` (Status & Visibility)**: This field controls post discovery, distribution, banners, and navigation:
+
+| Frontmatter `type` | Blog Lists / RSS | Draft Banner | 🚧 Icon | Popover Badge | Date Line under Title |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `blog` / `note` *(default)* | ✅ Visible | ❌ | ❌ | ❌ | Visible (if `date` set) |
+| `draft` *(or `draft: true`)* | ❌ Hidden | ✅ Draft notice | ✅ 🚧 | ❌ | Visible (if `date` set) |
+| `note+draft` / `blog+draft` | ✅ Visible | ✅ Draft notice | ✅ 🚧 | ❌ | Visible |
+| `hidden` | ❌ Hidden | ❌ | ❌ | ❌ | Only if `date` is set |
+| [`clip`](/en/sample-clip) *(or `clipping`)* | ❌ Hidden | ❌ | ❌ | ✅ `clip` | Visible (if `date` set) |
+
+> [!NOTE]
+> **Dateless Pages**: If the `date` field is omitted from frontmatter, the entire date metadata line below the title is omitted, rendering a clean header without publication dates or reading duration.
+>
+> **Preserved Clips**: See [Sample Preserved Clip](/en/sample-clip) for a live example of an unlisted clipping page with an automatic parent backlink (`⬑ Main Big Template`) and an interactive **clip** Popover.
 - **`display`**: Overrides the `title` on the page itself. Useful when the `title` needs to be optimized for lists/RSS but the page needs a different look.
 - **`subtitle`**: Secondary title shown in italics below the main header.
 - **`image`**: Optional custom `1200x630` PNG for Open Graph, social previews, and audio player artwork. Omit it to use the universal `/og.png`.

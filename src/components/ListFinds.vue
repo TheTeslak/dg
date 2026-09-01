@@ -112,7 +112,7 @@ const archivedFinds = computed(() => {
                 </template>
                 <template v-else>
                   <span>·</span>
-                  <span>{{ item.ai ? 'synthetic' : 'synthesis' }}</span>
+                  <span>{{ item.ai ? $t('finds-synthetic-trigger') : $t('finds-synthesis-trigger') }}</span>
                 </template>
               </div>
             </div>
