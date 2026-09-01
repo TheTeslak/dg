@@ -10,6 +10,10 @@ export const onlyLanguage = useLocalStorage('teslak-only-language', false)
 
 export const galleryView = useLocalStorage<'cover' | 'contain'>('teslak-gallery-view', 'cover')
 
+export function toggleGalleryView() {
+  galleryView.value = galleryView.value === 'cover' ? 'contain' : 'cover'
+}
+
 export const isLightboxOpen = ref(false)
 
 type DocumentWithOptionalViewTransition = Document & {
