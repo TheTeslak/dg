@@ -26,12 +26,11 @@ const triggerLabel = computed(() => isOpen.value
   : props.label)
 
 const VIEWPORT_GUTTER = 14
-const TRIGGER_GAP = 14
-const ARROW_EDGE_GUTTER = 18
+const TRIGGER_GAP = 6
 
 let positionFrame: number | null = null
 
-function updatePosition() {
+function updatePosition(isScroll = false) {
   if (typeof window === 'undefined' || !isOpen.value)
     return
 
@@ -56,28 +55,36 @@ function updatePosition() {
   const maxTop = Math.max(VIEWPORT_GUTTER, window.innerHeight - popoverHeight - VIEWPORT_GUTTER)
   const top = Math.min(Math.max(desiredTop, VIEWPORT_GUTTER), maxTop)
 
-  const triggerCenter = triggerRect.left + triggerRect.width / 2
-  const maxLeft = Math.max(VIEWPORT_GUTTER, window.innerWidth - popoverWidth - VIEWPORT_GUTTER)
-  const left = Math.min(
-    Math.max(triggerCenter - popoverWidth / 2, VIEWPORT_GUTTER),
-    maxLeft,
-  )
-  const arrowLeft = Math.min(
-    Math.max(triggerCenter - left, ARROW_EDGE_GUTTER),
-    popoverWidth - ARROW_EDGE_GUTTER,
-  )
+  if (!isScroll) {
+    const triggerCenter = triggerRect.left + triggerRect.width / 2
+    const maxLeft = Math.max(VIEWPORT_GUTTER, window.innerWidth - popoverWidth - VIEWPORT_GUTTER)
+    const left = Math.min(
+      Math.max(triggerCenter - popoverWidth / 2, VIEWPORT_GUTTER),
+      maxLeft,
+    )
+    const originX = Math.min(
+      Math.max(triggerCenter - left, 12),
+      popoverWidth - 12,
+    )
 
-  positionStyle.value = {
-    'left': `${Math.round(left)}px`,
-    'top': `${Math.round(top)}px`,
-    '--popover-arrow-left': `${Math.round(arrowLeft)}px`,
-    '--popover-origin-x': `${Math.round(arrowLeft)}px`,
-    '--popover-origin-y': placement.value === 'top' ? '100%' : '0%',
+    positionStyle.value = {
+      'left': `${Math.round(left)}px`,
+      'top': `${Math.round(top)}px`,
+      '--popover-origin-x': `${Math.round(originX)}px`,
+      '--popover-origin-y': placement.value === 'top' ? '100%' : '0%',
+    }
+  }
+  else {
+    positionStyle.value = {
+      ...positionStyle.value,
+      'top': `${Math.round(top)}px`,
+      '--popover-origin-y': placement.value === 'top' ? '100%' : '0%',
+    }
   }
   isPositioned.value = true
 }
 
-function schedulePosition() {
+function schedulePosition(isScroll = false) {
   if (typeof window === 'undefined' || !isOpen.value)
     return
 
@@ -86,7 +93,7 @@ function schedulePosition() {
 
   positionFrame = requestAnimationFrame(() => {
     positionFrame = null
-    updatePosition()
+    updatePosition(isScroll)
   })
 }
 
@@ -127,12 +134,50 @@ function handlePointerDown(event: PointerEvent) {
   closePopover(false)
 }
 
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  const selector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  return Array.from(container.querySelectorAll<HTMLElement>(selector)).filter(el => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true')
+}
+
 function handleKeydown(event: KeyboardEvent) {
-  if (event.key !== 'Escape' || !isOpen.value)
+  if (!isOpen.value)
     return
 
-  event.preventDefault()
-  closePopover()
+  if (event.key === 'Escape') {
+    event.preventDefault()
+    closePopover()
+    return
+  }
+
+  if (event.key === 'Tab') {
+    const popover = popoverRef.value
+    const trigger = triggerRef.value
+    if (!popover || !trigger)
+      return
+
+    const focusables = getFocusableElements(popover)
+    if (focusables.length === 0)
+      return
+
+    const activeEl = document.activeElement
+
+    if (activeEl === trigger && !event.shiftKey) {
+      event.preventDefault()
+      focusables[0].focus()
+      return
+    }
+
+    if (activeEl === focusables[0] && event.shiftKey) {
+      event.preventDefault()
+      trigger.focus()
+      return
+    }
+
+    if (activeEl === focusables[focusables.length - 1] && !event.shiftKey) {
+      event.preventDefault()
+      trigger.focus()
+    }
+  }
 }
 
 function handleViewportChange() {
@@ -146,20 +191,24 @@ function handleViewportChange() {
     return
   }
 
-  schedulePosition()
+  schedulePosition(true)
+}
+
+function handleResize() {
+  schedulePosition(false)
 }
 
 onMounted(() => {
   document.addEventListener('pointerdown', handlePointerDown)
   document.addEventListener('keydown', handleKeydown)
-  window.addEventListener('resize', schedulePosition)
+  window.addEventListener('resize', handleResize)
   window.addEventListener('scroll', handleViewportChange, true)
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', handlePointerDown)
   document.removeEventListener('keydown', handleKeydown)
-  window.removeEventListener('resize', schedulePosition)
+  window.removeEventListener('resize', handleResize)
   window.removeEventListener('scroll', handleViewportChange, true)
 
   if (positionFrame !== null)
@@ -199,8 +248,9 @@ onBeforeUnmount(() => {
               { 'is-positioned': isPositioned },
             ]"
             :style="positionStyle"
+            role="region"
+            :aria-label="props.label"
           >
-            <span class="info-popover-arrow" aria-hidden="true" />
             <div :id="bodyId" class="info-popover-body">
               <slot />
             </div>
@@ -376,27 +426,6 @@ html.dark .info-popover-surface {
   z-index: 1;
   min-width: min(15rem, calc(100vw - 48px));
   padding: 0.85rem 1.1rem 0.9rem;
-}
-
-.info-popover-arrow {
-  position: absolute;
-  left: var(--popover-arrow-left);
-  width: 10px;
-  height: 10px;
-  background: var(--info-popover-bg);
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.info-popover-surface.is-bottom .info-popover-arrow {
-  top: -6px;
-  border-top: 1px solid var(--info-popover-border);
-  border-left: 1px solid var(--info-popover-border);
-}
-
-.info-popover-surface.is-top .info-popover-arrow {
-  bottom: -6px;
-  border-right: 1px solid var(--info-popover-border);
-  border-bottom: 1px solid var(--info-popover-border);
 }
 
 .info-popover-enter-active {
