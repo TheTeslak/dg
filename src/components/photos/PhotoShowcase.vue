@@ -26,7 +26,7 @@ const photos = computed<Photo[]>(() => {
     const missing: string[] = []
 
     for (const id of ids.value) {
-      const found = raw.find(photo => photo.name === id || photo.url.includes(id))
+      const found = raw.find(photo => photo.name === id)
       if (found)
         selected.push(found)
       else
@@ -34,7 +34,7 @@ const photos = computed<Photo[]>(() => {
     }
 
     if (missing.length) {
-      console.warn(`[PhotoShowcase] Missing photo ids: ${missing.join(', ')}`)
+      throw new Error(`[PhotoShowcase] Missing photo ids: ${missing.join(', ')}`)
     }
 
     return selected

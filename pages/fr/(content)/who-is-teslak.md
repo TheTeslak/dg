@@ -1,6 +1,6 @@
 ---
 title: Qui est Teslak et pourquoi « Teslak »
-date: 2026-02-28T14:10:00Z
+date: 2026-02-28T14:01:00Z
 lang: fr
 type: note
 description: À propos de Teslak
@@ -11,6 +11,7 @@ open: true
 [Il n’est pas facile de déterminer quelles qualités et quelles passions mentionner. Le temps m’a paru être la bonne mesure : ce qui m’intéresse et ce à quoi je me consacre depuis des années, presque quotidiennement]{.muted}
 
 Adepte de la profondeur, 🔍 de la recherche, du travail sur les données et des meilleures pratiques
+À cet égard, je me sens particulièrement proche de [Gwern](https://gwern.net/)
 
 La majeure partie de ma carrière s’est déroulée dans le design d’interfaces. Cependant, il est difficile de me qualifier uniquement de designer : mes centres d’intérêt ont toujours été très larges
 
@@ -36,25 +37,27 @@ Mon vrai contact avec les réseaux de neurones a commencé avec un article [sur 
 
 La sortie de [Midjourney](https://t.me/TesNot/314) en 2022 m’a beaucoup marqué : je passais des journées entières à générer des images, même si l’outil était alors infiniment loin des modèles actuels
 
-J’utilisais GPT avant même la sortie de ChatGPT ([mon pic](https://t.me/Tes404/1058) + une publication juste avant), y compris [ru](https://t.me/Tes404/599), et j’ai [écrit](https://t.me/Tes404/2929) sur le lancement de 3.5 le jour même de sa sortie
+J’utilisais GPT avant même la sortie de ChatGPT ([mon pic](https://t.me/Tes404/1058) + une publication juste avant), y compris [ru](https://t.me/Tes404/599), et j’ai [écrit](https://t.me/Tes404/2929) sur le lancement de 3.5 le jour même de sa sortie
 
-J'ai développé des agents avec LangGraph et LlamaIndex, et j'ai automatisé certaines tâches du navigateur avec [Harpa](https://harpa.ai/). À la sortie d'OpenClaw, je suis passé dessus, analysant son architecture et son évolution. Actuellement, je m'intéresse à Hermes Agent et OpenHuman
+J'ai développé des agents avec LangGraph, LlamaIndex et n8n, et j'ai automatisé certaines tâches de navigation avec [Harpa](https://harpa.ai/). À la sortie d'OpenClaw, j'y ai basculé la majeure partie de mes pipelines, en analysant son architecture et son évolution. Maintenant sur Hermes. Je garde un œil sur les devtools et l'évolution des harnesses
 
 En expérimentant avec des modèles locaux, je reste sceptique envers tout ce qui est sous [au moins]{.muted} 30B pour des tâches générales
 
-Je suis activement tous les LLM : je les utilise, je lis les *papers*, et je comprends dans les grandes lignes les transformers, l’attention, les phases d’entraînement et l’inférence
+Je suis activement tous les LLM : je les utilise, je lis les *papers*, j'explore les implémentations de RAG et de [recherche approfondie](https://github.com/assafelovic/gpt-researcher), et j'expérimente en pratique. J'ai une compréhension de base des transformers, de l'attention, des phases d'entraînement, du matériel et de l'inférence
 
 :::
 
 J’ai le sentiment de rester en phase avec un monde qui change. Le Covid, par exemple, m’a aidé à mieux comprendre la biologie, les vaccins et les essais cliniques
 
-🗃️ Je structure les données. J’adore [Obsidian](https://obsidian.md/) depuis ses premières bêtas ; avant cela, j’utilisais [Roam Research](https://roamresearch.com/) et [Notion](https://www.notion.com), que j’apprécie toujours et que j’utilise pour le travail en équipe
+🗃️ Je structure les données. J’adore [Obsidian](https://obsidian.md/) depuis ses premières bêtas ; avant cela, j’utilisais [Zotero](https://www.zotero.org/), [Roam Research](https://roamresearch.com/) et [Notion](https://www.notion.com), que j’apprécie toujours et que j’utilise pour le travail en équipe
 
 L’écrit et la rédaction me sont proches. J’écris tout moi-même !
 
 J’ai lu environ 50 livres de fiction — aujourd’hui, ils ne me plaisent plus. Je suis passé à la non-fiction : travail, philosophie, art et vulgarisation scientifique. Parfois sur la technologie, la biologie et l’économie, mais sur ces sujets, je préfère les articles
 
-J’ai fait de la photo, mais je m’intéresse davantage au matériel technique et à la théorie de l’art
+🐧 J’utilise [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+
+[J’ai fait de la photo](/fr/photos), mais je m’intéresse davantage au matériel et à la théorie de l’art
 
 J’ai quitté la Russie il y a quelques années. J’ai voyagé dans des pays très éloignés ✈️ les uns des autres et je continue d’explorer activement le monde
 
@@ -62,9 +65,9 @@ Un mode de vie sobre
 
 ## Blogging
 
-En 2020, j’ai lancé un [canal Telegram](https://t.me/TesNot) sur lequel j’écris rarement. Peu après, j’en ai ouvert un [second](https://t.me/Tes404), composé de republications régulières sans édition majeure
+En 2020, j’ai lancé un [canal Telegram](https://t.me/TesNot) sur lequel j’écris rarement. Peu après, j’en ai ouvert un [second](https://t.me/Tes404), avec des republications quotidiennes et des réflexions sans filtre éditorial
 
-J’ai beaucoup de reproches à faire à Telegram ; cela, combiné à l’envie de me rapprocher de la communauté anglophone mondiale et à un désir d’indépendance, m’a conduit à créer ce site
+J’ai beaucoup de reproches à faire à Telegram [et à la plupart des plateformes]{.muted} ; cela, combiné à l’envie de me rapprocher de la communauté anglophone mondiale et à un désir d’indépendance, m’a conduit à créer ce site
 
 ✏️ J’écrivais sur des sujets pratiques : réflexions générales sur le monde et analyses technico-financières pointues. Pour l’instant, je retravaille d’anciennes idées pour le blog
 
@@ -80,6 +83,8 @@ La foudre et l’électricité sont associées à Nikola Tesla
 
 C’est ainsi qu’Il est né ⚡️
 
+<LightningGlow />
+
 [Non pas que je sois fan de Nikola : il était particulier, spéculatif et un brin dérangé. Encore moins de Tesla Inc., même si les voitures sont pas mal]{.muted}
 
 Désormais, j’utilise le pseudo Teslak partout
@@ -90,8 +95,15 @@ La lettre « k » n’a pas de signification particulière. Peut-être qu’à l
 
 J’utilisais différents avatars, surtout des chevaliers, et par souci de confidentialité, jamais de vraies photos. Dès que je me suis appelé Teslak, j’ai mis un éclair
 
-![Un collage d’avatars de Teslak avec des chevaliers, un éclair, un elfe et un robot|caption=Évolution des avatars](/images/avatars.avif)
+![Une grille d’avatars de Teslak avec des chevaliers, un éclair, un elfe et un robot|caption=Évolution des avatars](/images/avatars.avif)
 
 Je voulais une identité visuelle plus personnelle : j’ai imaginé un personnage, engagé une illustratrice et retouché le résultat. Quand je m’en suis lassé, j’en ai embauché une autre et, avec encore plus de modifications de ma part, l’elfe est resté bien plus longtemps
 
-Avec la sortie de Midjourney v4, j’ai créé un robot avec un clin d’œil au [Master Chief](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>) ; avec la v5, un autre, et c’est celui-ci que j’utilise aujourd’hui
+Avec la sortie de Midjourney v4, j’ai créé un robot avec un clin d’œil au [Master Chief](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>) et à [Soundwave](https://tfwiki.net/wiki/File:SoundwavePlayingSparkbeat..jpg) ; avec la v5 en 2023, un autre, et c’est celui-ci que j’utilise aujourd’hui
+
+::: ascii cheeseburger
+
+:::
+
+
+

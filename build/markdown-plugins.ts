@@ -3,9 +3,10 @@ import { existsSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sizeOf from 'image-size'
+import { getAsciiPreset } from '../src/data/ascii.ts'
 import { defaultLocale, isSupportedLocale, localeConfig } from '../src/locales/config.ts'
 import { isRealArticle } from './article.ts'
-import { parseSpoilerOpeningTitle } from './content-cleanup.ts'
+import { extractDirectiveLine, parseAsciiOpeningLabel, parseSpoilerOpeningTitle } from './content-cleanup.ts'
 import { isRealFind } from './find.ts'
 import { warnFrontmatter } from './frontmatter.ts'
 
@@ -157,11 +158,51 @@ export function spoilerBlockPlugin(md: MarkdownExit) {
       return true
 
     let nextLine = startLine + 1
+    let depth = 1
+    let inAscii = false
+    let fenceChar: string | null = null
+    let fenceLen = 0
+
     while (nextLine < endLine) {
       const lineStart = state.bMarks[nextLine] + state.tShift[nextLine]
       const lineMax = state.eMarks[nextLine]
-      if (state.src.slice(lineStart, lineMax).trim() === ':::')
-        break
+      const currentLine = extractDirectiveLine(state.src.slice(lineStart, lineMax))
+
+      const prevLineStart = state.bMarks[nextLine - 1] + state.tShift[nextLine - 1]
+      const prevLineMax = state.eMarks[nextLine - 1]
+      const prevLine = extractDirectiveLine(state.src.slice(prevLineStart, prevLineMax))
+      const isPrevBlank = prevLine === ''
+
+      if (inAscii) {
+        if (currentLine === ':::' && isPrevBlank) {
+          inAscii = false
+        }
+      }
+      else if (fenceChar !== null) {
+        const closeMatch = currentLine.match(/^(`{3,}|~{3,})[ \t]*$/)
+        if (closeMatch && closeMatch[1][0] === fenceChar && closeMatch[1].length >= fenceLen) {
+          fenceChar = null
+          fenceLen = 0
+        }
+      }
+      else {
+        const openMatch = currentLine.match(/^(?:`{3,}|~{3,})/)
+        if (openMatch) {
+          fenceChar = openMatch[0][0]
+          fenceLen = openMatch[0].length
+        }
+        else if (parseAsciiOpeningLabel(currentLine) != null) {
+          inAscii = true
+        }
+        else if (parseSpoilerOpeningTitle(currentLine) != null) {
+          depth += 1
+        }
+        else if (currentLine === ':::' && isPrevBlank) {
+          depth -= 1
+          if (depth === 0)
+            break
+        }
+      }
       nextLine += 1
     }
 
@@ -183,6 +224,122 @@ export function spoilerBlockPlugin(md: MarkdownExit) {
     const close = state.push('html_block', '', 0)
     close.content = '</div>\n</details>\n'
     close.map = [nextLine, nextLine + 1]
+
+    state.line = nextLine + 1
+    return true
+  }, {
+    alt: ['paragraph', 'reference', 'blockquote', 'list'],
+  })
+}
+
+export function asciiBlockPlugin(md: MarkdownExit) {
+  md.block.ruler.before('fence', 'ascii', (state, startLine, endLine, silent) => {
+    const start = state.bMarks[startLine] + state.tShift[startLine]
+    const max = state.eMarks[startLine]
+    const line = state.src.slice(start, max).trimEnd()
+    const rawArg = parseAsciiOpeningLabel(line)
+
+    if (rawArg == null)
+      return false
+    if (state.sCount[startLine] - state.blkIndent >= 4)
+      return false
+    if (silent)
+      return true
+
+    if (startLine + 1 < endLine) {
+      const nextStart = state.bMarks[startLine + 1] + state.tShift[startLine + 1]
+      const nextMax = state.eMarks[startLine + 1]
+      const nextClean = extractDirectiveLine(state.src.slice(nextStart, nextMax))
+      if (nextClean !== '') {
+        addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+          line: startLine + 1,
+          message: 'missing blank line after opening ascii block.',
+          severity: 'error',
+        })
+      }
+    }
+
+    let nextLine = startLine + 1
+    let foundClosing = false
+
+    while (nextLine < endLine) {
+      const lineStart = state.bMarks[nextLine] + state.tShift[nextLine]
+      const lineMax = state.eMarks[nextLine]
+      const currentLine = extractDirectiveLine(state.src.slice(lineStart, lineMax))
+
+      const prevStart = state.bMarks[nextLine - 1] + state.tShift[nextLine - 1]
+      const prevMax = state.eMarks[nextLine - 1]
+      const prevLine = extractDirectiveLine(state.src.slice(prevStart, prevMax))
+
+      if (currentLine === ':::') {
+        if (prevLine === '') {
+          foundClosing = true
+          break
+        }
+      }
+      nextLine += 1
+    }
+
+    if (!foundClosing) {
+      addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+        line: startLine + 1,
+        message: 'unclosed ascii block.',
+        severity: 'error',
+      })
+      return false
+    }
+
+    const lines: string[] = []
+    for (let i = startLine + 1; i < nextLine; i++) {
+      const lineStart = state.bMarks[i]
+      const lineMax = state.eMarks[i]
+      const rawText = state.src.slice(lineStart, lineMax)
+      const cleanLine = rawText.replace(/^[ \t]*>[ \t]?/, '')
+      lines.push(cleanLine.replace(/[\s\u2800]+$/, ''))
+    }
+
+    while (lines.length > 0 && lines[0] === '')
+      lines.shift()
+    while (lines.length > 0 && lines[lines.length - 1] === '')
+      lines.pop()
+
+    let contentText = lines.join('\n')
+    let label = ''
+
+    if (contentText.length > 0) {
+      label = rawArg
+    }
+    else {
+      const presetKey = rawArg.trim()
+      if (!presetKey) {
+        addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+          line: startLine + 1,
+          message: 'empty ascii block.',
+          severity: 'error',
+        })
+        state.line = nextLine + 1
+        return true
+      }
+      const presetContent = getAsciiPreset(presetKey)
+      if (!presetContent) {
+        addMarkdownDiagnostic(state.env as MarkdownRenderEnv, {
+          line: startLine + 1,
+          message: `unknown ascii preset "${rawArg}".`,
+          severity: 'error',
+        })
+        state.line = nextLine + 1
+        return true
+      }
+      contentText = presetContent
+      label = rawArg
+    }
+
+    const rawContent = md.utils.escapeHtml(contentText)
+    const labelAttr = label ? ` label="${md.utils.escapeHtml(label)}"` : ''
+
+    const token = state.push('html_block', '', 0)
+    token.content = `<ASCII${labelAttr}><pre v-pre class="ascii-art font-mono">${rawContent}</pre></ASCII>\n`
+    token.map = [startLine, nextLine + 1]
 
     state.line = nextLine + 1
     return true
@@ -684,6 +841,7 @@ export function markHighlightPlugin(md: MarkdownExit) {
  */
 export function registerCustomPlugins(md: MarkdownExit, normalizedFrontmatterById: Map<string, Record<string, any>>) {
   spoilerBlockPlugin(md)
+  asciiBlockPlugin(md)
   mutedSpanPlugin(md)
   glossaryTermPlugin(md)
   imageFiguresPlugin(md)

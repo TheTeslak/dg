@@ -46,13 +46,13 @@ export const finds: FindItem[] = [
     id: 'anthropic-economic-index',
     url: 'https://www.anthropic.com/economic-index',
     title: 'Anthropic Economic Index',
-    desc: 'Interactive data on global AI adoption and its effects on the economy',
+    desc: 'Interactive data on global AI adoption and its effects on the economy',
   },
   {
     id: '1000-players-simulate-civilization',
     url: 'https://youtu.be/ef568d0CrRY',
-    title: '1000 Players Simulate Civilization: Rich & Poor',
-    desc: 'A hardcore simulation where death is permanent. Divided into two contrasting biomes, players built empires and formed alliances. But resource inequality and political ambition quickly turned a peaceful experiment into a story of espionage, framed leaders, and global war',
+    title: '1000 Players Simulate Civilization: Rich & Poor',
+    desc: 'A hardcore simulation where death is permanent. Divided into two contrasting biomes, players built empires and formed alliances. But resource inequality and political ambition quickly turned a peaceful experiment into a story of espionage, framed leaders, and global war',
   },
   {
     id: 'internet-hall-of-fame',
@@ -92,7 +92,7 @@ export const finds: FindItem[] = [
   {
     id: 'hubble-observing',
     url: 'https://spacetelescopelive.org/hubble',
-    title: 'What is Hubble observing?',
+    title: 'What is Hubble observing?',
   },
   {
     id: 'meshtastic',
@@ -103,14 +103,14 @@ export const finds: FindItem[] = [
   {
     id: 'chatgpt-usage-study',
     url: 'https://openai.com/index/how-people-are-using-chatgpt/',
-    title: 'How people are using ChatGPT',
+    title: 'How people are using ChatGPT',
     desc: 'Analysis of 1.5 million conversations on everyday and work uses',
   },
   {
     id: 'cessna-172-systems',
     url: 'https://youtu.be/DvCv2SuKCE8',
     title: 'Inside a Single-Engine Aircraft',
-    desc: 'How a Cessna 172 is built and how its main systems work',
+    desc: 'How a Cessna 172 is built and how its main systems work',
   },
   {
     id: 'greatest-solved-mysteries',
@@ -133,9 +133,15 @@ export const finds: FindItem[] = [
     title: 'Russia’s war in Ukraine',
   },
   {
+    id: 'meditations-on-moloch',
+    url: 'https://www.lesswrong.com/posts/TxcRbCYHaeL59aY7E/meditations-on-moloch',
+    title: '⭐️ Meditations on Moloch ⋅ Scott Alexander',
+    desc: 'How competition can trap systems into outcomes nobody chose and almost nobody wants — across game theory, markets, evolution, institutions, and AI',
+  },
+  {
     id: 'humans-guide-to-words',
     url: 'https://www.lesswrong.com/w/a-humans-guide-to-words',
-    title: 'A Human’s Guide to Words',
+    title: '⭐️ A Human’s Guide to Words',
     desc: 'There’s a lot to say about LessWrong, and one day I’ll write an essay on it — including what deserves criticism. Still, this section is one of its greatest',
   },
   {

@@ -27,9 +27,11 @@ patchedDependencies:
 
 catalog:
   '@fluent/bundle': ^0.19.1
+  '@types/three': ^0.186.0
   fluent-vue: ^3.8.2
   image-size: ^2.0.2
   minisearch: ^7.1.0
+  three: ^0.186.0
 
 catalogs:
   build:

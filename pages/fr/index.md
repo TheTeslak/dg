@@ -33,3 +33,7 @@ J’ai [photographié](/fr/photos) toutes sortes de choses
 </p>
 
 Ou par e-mail à <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="Pourquoi pas de GPG ?">L’e-mail n’est pas sûr par nature. Pour les échanges privés — Signal [ou SimpleX]{.muted}</Popover>
+
+::: ascii capybara
+
+:::

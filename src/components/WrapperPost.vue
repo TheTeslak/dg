@@ -128,6 +128,8 @@ const currentLanguageTag = computed(() => getLanguageTag(currentLocale.value))
 const isFind = computed(() => String(frontmatter.type || '').split('+').includes('find'))
 const isClip = computed(() => isClipPost(frontmatter.type))
 const isHidden = computed(() => isHiddenPost(frontmatter.type))
+const isArticle = computed(() => route.meta.isArticle === true)
+const isPost = computed(() => isArticle.value || route.meta.isFind === true || isFind.value)
 const contentLanguageTag = computed(() => {
   return isSupportedLocale(frontmatter.lang)
     ? getLanguageTag(frontmatter.lang)
@@ -722,7 +724,7 @@ onMounted(() => {
         </Transition>
       </Teleport>
     </ClientOnly>
-    <div v-if="route.path !== '/' && (frontmatter.date || frontmatter.title)" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
+    <div v-if="isPost" class="prose m-auto mt-8 mb-8 slide-enter animate-delay-500 print:hidden">
       <template v-if="frontmatter.telegram || frontmatter.twitter">
         <span font-mono op50>> </span>
         <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
@@ -759,12 +761,14 @@ onMounted(() => {
         class="mt-9 mb-6"
       />
 
-      <span font-mono op50>> </span>
-      <RouterLink
-        :to="backToAllPath"
-        class="font-mono op50 hover:op75 transition-opacity duration-200"
-        v-text="$t('action-back-to-all')"
-      />
+      <template v-if="route.path !== backToAllPath">
+        <span font-mono op50>> </span>
+        <RouterLink
+          :to="backToAllPath"
+          class="font-mono op50 hover:op75 transition-opacity duration-200"
+          v-text="$t('action-back-to-all')"
+        />
+      </template>
     </div>
   </div>
 </template>

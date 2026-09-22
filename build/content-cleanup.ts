@@ -1,30 +1,85 @@
 const mutedSpanRE = /\[([^\]\n]+)\]\{\.muted\}/g
 const glossaryTermRE = /\[([^\]\n]+)\]\{([^}\n]+)\}/g
 
-export function parseSpoilerOpeningTitle(line: string) {
-  const trimmed = line.trim()
-  const parts = trimmed.split(/[ \t]+/)
-  if (parts[0] !== ':::' || parts[1] !== 'spoiler')
-    return
-
-  return trimmed.slice('::: spoiler'.length).trim()
+export function extractDirectiveLine(line: string): string {
+  return line.replace(/^(?:[ \t]*>[ \t]?)+/, '').trim()
 }
 
-export function stripSpoilerMarkers(content: string, closeMarkerReplacement = '') {
-  let isInSpoiler = false
+export function parseSpoilerOpeningTitle(line: string) {
+  const clean = extractDirectiveLine(line)
+  const match = clean.match(/^:::[ \t]+spoiler(?:[ \t]+(\S.*))?$/)
+  if (!match)
+    return
 
-  return content
-    .split('\n')
-    .map((line) => {
-      const title = parseSpoilerOpeningTitle(line)
-      if (title != null) {
-        isInSpoiler = true
-        return title
+  return (match[1] ?? '').trim()
+}
+
+export function parseAsciiOpeningLabel(line: string) {
+  const clean = extractDirectiveLine(line)
+  const match = clean.match(/^:::[ \t]+ascii(?:[ \t]+(\S.*))?$/)
+  if (!match)
+    return
+
+  return (match[1] ?? '').trim()
+}
+
+export function stripContainers(content: string, closeMarkerReplacement = '') {
+  type Container = { kind: 'spoiler' } | { kind: 'ascii' }
+  const stack: Container[] = []
+  let fenceChar: string | null = null
+  let fenceLen = 0
+
+  const lines = content.split('\n')
+  return lines
+    .map((line, i) => {
+      const clean = extractDirectiveLine(line)
+      const prevLine = i > 0 ? extractDirectiveLine(lines[i - 1]) : ''
+      const prevLineBlank = prevLine === ''
+
+      const top = stack[stack.length - 1]
+
+      if (top?.kind === 'ascii') {
+        if (clean === ':::' && prevLineBlank) {
+          stack.pop()
+        }
+        return ''
       }
 
-      if (isInSpoiler && line.trim() === ':::') {
-        isInSpoiler = false
-        return closeMarkerReplacement
+      if (fenceChar !== null) {
+        const closeMatch = clean.match(/^(`{3,}|~{3,})[ \t]*$/)
+        if (closeMatch && closeMatch[1][0] === fenceChar && closeMatch[1].length >= fenceLen) {
+          fenceChar = null
+          fenceLen = 0
+        }
+        return line
+      }
+
+      const openMatch = clean.match(/^(?:`{3,}|~{3,})/)
+      if (openMatch) {
+        fenceChar = openMatch[0][0]
+        fenceLen = openMatch[0].length
+        return line
+      }
+
+      const asciiArg = parseAsciiOpeningLabel(line)
+      if (asciiArg !== undefined) {
+        stack.push({ kind: 'ascii' })
+        return ''
+      }
+
+      const spoilerTitle = parseSpoilerOpeningTitle(line)
+      if (spoilerTitle !== undefined) {
+        stack.push({ kind: 'spoiler' })
+        return spoilerTitle
+      }
+
+      if (clean === ':::') {
+        if (prevLineBlank && stack.length > 0) {
+          const popped = stack.pop()
+          if (popped?.kind === 'spoiler')
+            return closeMarkerReplacement
+        }
+        return ''
       }
 
       return line
@@ -58,7 +113,7 @@ export function markdownToPlainText(content: string, options: MarkdownPlainTextO
     // Remove code fences before handling custom block markers.
     .replace(/```[\s\S]*?```/g, replacement)
 
-  text = stripSpoilerMarkers(text, options.closeMarkerReplacement ?? replacement)
+  text = stripContainers(text, options.closeMarkerReplacement ?? replacement)
 
   text = stripMutedSpans(stripGlossaryTerms(text))
     // Remove inline code.

@@ -33,3 +33,7 @@ Creo [proyectos personales](/es/projects)
 </p>
 
 O por correo <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="¿Por qué no GPG?">El correo electrónico es intrínsecamente inseguro. Para mensajes privados — Signal [o SimpleX]{.muted}</Popover>
+
+::: ascii capybara
+
+:::

@@ -20,5 +20,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     frontmatter?: any
     locale?: string
+    isArticle?: boolean
+    isFind?: boolean
   }
 }

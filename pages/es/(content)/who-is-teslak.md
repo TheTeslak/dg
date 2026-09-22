@@ -1,6 +1,6 @@
 ---
 title: Quién es Teslak y por qué «Teslak»
-date: 2026-02-28T14:10:00Z
+date: 2026-02-28T14:01:00Z
 lang: es
 type: note
 description: Sobre Teslak
@@ -11,6 +11,7 @@ open: true
 [No es fácil determinar qué cualidades y pasatiempos incluir. El tiempo me pareció un criterio justo: aquello que me interesa y a lo que me dedico desde hace años casi a diario]{.muted}
 
 Partidario de la profundidad, 🔍 la investigación, el trabajo con datos y las mejores prácticas
+En este sentido, siento una gran afinidad con [Gwern](https://gwern.net/)
 
 La mayor parte de mi carrera ha transcurrido en el diseño de interfaces. Sin embargo, es difícil llamarme únicamente diseñador: mi círculo de intereses siempre ha sido amplio
 
@@ -20,7 +21,7 @@ Durante un tiempo dibujé y me dediqué al diseño gráfico, pero siempre me sen
 
 Trabajé en un [CRM para fintech]{term="Fintech CRM" definition="Sistema para brókeres en línea y plataformas financieras (empresas a través de las cuales la gente opera en bolsa o invierte). Ayuda a guiar al cliente desde la primera solicitud hasta la apertura de la cuenta: verificar la identidad y los documentos, realizar el seguimiento de los depósitos y retiros de fondos, calcular las comisiones de afiliados y almacenar todo el historial en un solo lugar"}, en un estudio de diseño de alto nivel y en startups de redes neuronales. Lancé proyectos para grandes corporaciones y agencias
 
-Conozco los buenos procesos y valoro los detalles
+Conozco los buenos procesos и valoro los detalles
 
 Con la aparición de las redes neuronales, las sigo activamente _a todas_, hago vibe-coding y entiendo sus límites de aplicación
 
@@ -36,25 +37,27 @@ Mi acercamiento a las redes neuronales comenzó con un artículo [sobre Artbreed
 
 El lanzamiento de [Midjourney](https://t.me/TesNot/314) en 2022 me impresionó mucho: pasaba días enteros generando, aunque estaba infinitamente lejos de las actuales
 
-Usaba GPT antes del lanzamiento de ChatGPT ([mi pico](https://t.me/Tes404/1058) + una publicación previa), incluyendo [ru](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
+Usaba GPT antes del lanzamiento de ChatGPT ([mi pico](https://t.me/Tes404/1058) + una publicación previa), incluyendo [ru](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
 
-Desarrollé agentes con LangGraph y LlamaIndex, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Con la salida de OpenClaw, me pasé a él, analizando su arquitectura y cómo iba evolucionando. Actualmente, estoy explorando Hermes Agent y OpenHuman
+Desarrollé agentes con LangGraph, LlamaIndex y n8n, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Con la salida de OpenClaw, migré la mayor parte de mi flujo de trabajo hacia él, analizando su arquitectura y cómo iba evolucionando. Ahora estoy con Hermes. Sigo de cerca las devtools y la evolución de los harnesses
 
 Al experimentar con modelos locales, soy escéptico ante cualquier modelo de menos de [al menos]{.muted} 30B para tareas generales
 
-Sigo activamente todos los LLM: los uso, leo papers, entiendo a grandes rasgos los transformers, la atención, las etapas de entrenamiento y la inferencia
+Sigo activamente todos los LLM: los uso, leo papers, exploro implementaciones de RAG e [investigación profunda](https://github.com/assafelovic/gpt-researcher) y experimento en la práctica. Tengo una comprensión básica de los transformers, la atención, las etapas de entrenamiento, el hardware y la inferencia
 
 :::
 
 Siento que sigo el ritmo de un mundo en constante cambio. La covid-19, por ejemplo, me ayudó a comprender mejor la biología, las vacunas y los ensayos clínicos
 
-🗃️ Estructuro datos. Adoro [Obsidian](https://obsidian.md/) desde sus primeras betas; antes usaba [Roam Research](https://roamresearch.com/) and [Notion](https://www.notion.com), que todavía me encanta y uso en el trabajo en equipo
+🗃️ Estructuro datos. Adoro [Obsidian](https://obsidian.md/) desde sus primeras betas; antes usaba [Zotero](https://www.zotero.org/), [Roam Research](https://roamresearch.com/) y [Notion](https://www.notion.com), que todavía me encanta y uso en el trabajo en equipo
 
 Me apasionan la redacción y la edición. ¡Escribo yo mismo!
 
 He leído unos 50 libros de ficción, pero ahora ya no me gustan. Pasé a la no ficción: sobre trabajo, filosofía, arte y divulgación científica. A veces sobre tecnología, biología y economía, pero en estos campos prefiero los artículos
 
-Hacía fotografía, pero me interesa más el equipo técnico y la teoría del arte
+🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+
+[Hacía fotografía](/es/photos), pero me interesa más el equipo y la teoría del arte
 
 Hace unos años que me fui de Rusia. He estado en países muy lejanos ✈️ entre sí y continúo explorando el mundo activamente
 
@@ -62,9 +65,9 @@ Estilo de vida sobrio
 
 ## El blog
 
-En 2020 abrí un [canal de Telegram](https://t.me/TesNot), donde escribo de vez en cuando. Poco después abrí un [segundo](https://t.me/Tes404), con reenvíos frecuentes sin mucha edición
+En 2020 abrí un [canal de Telegram](https://t.me/TesNot), donde escribo de vez en cuando. Poco después abrí un [segundo](https://t.me/Tes404), con reenvíos diarios y reflexiones sin mucha edición
 
-Tengo muchas quejas sobre Telegram; además, el deseo de estar más cerca de la comunidad global angloparlante y el anhelo de independencia me trajeron a este sitio web
+Tengo muchas quejas sobre Telegram [y la mayoría de las plataformas]{.muted}; eso, sumado al deseo de estar más cerca de la comunidad global angloparlante y el anhelo de independencia, me trajo a este sitio web
 
 ✏️ Escribía sobre temas prácticos: visiones generales del mundo y análisis técnico-financieros especializados. Por ahora, estoy adaptando ideas antiguas para el blog
 
@@ -80,6 +83,8 @@ Los rayos y la electricidad se asocian con Nikola Tesla
 
 Así surgió Él ⚡️
 
+<LightningGlow />
+
 [No es que sea fan de Nikola: era peculiar, especulativo y un poco excéntrico. Menos aún soy fan de Tesla Inc., aunque sus autos son buenos]{.muted}
 
 Ahora uso Teslak como apodo en todas partes
@@ -90,8 +95,14 @@ La «k» no tiene un significado especial. Quizás en aquel entonces me influyó
 
 Solía usar avatares diversos, especialmente caballeros, y por cuestiones de privacidad, nunca fotos reales. Al llamarme Teslak, me puse un rayo
 
-![Un collage de avatares de Teslak con caballeros, un rayo, un elfo y un robot|caption=Evolución de los avatares](/images/avatars.avif)
+![Una cuadrícula de avatares de Teslak con caballeros, un rayo, un elfo y un robot|caption=Evolución de los avatares](/images/avatars.avif)
 
 Quise mayor identidad propia: ideé un personaje, contraté a una ilustradora y edité el resultado. Cuando me dejó de gustar, contraté a otra y, con aún más modificaciones de mi parte, el elfo se quedó bastante más tiempo
 
-Con el lanzamiento de Midjourney v4, creé un robot con un guiño al [Jefe Maestro](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>); con la v5, hice otro, y es con el que estoy ahora
+Con el lanzamiento de Midjourney v4, creé un robot con un guiño al [Jefe Maestro](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>) y a [Soundwave](https://tfwiki.net/wiki/File:SoundwavePlayingSparkbeat..jpg); con la v5 en 2023, hice otro, y es con el que estoy ahora
+
+::: ascii cheeseburger
+
+:::
+
+

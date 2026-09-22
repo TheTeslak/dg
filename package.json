@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@11.25.0",
   "scripts": {
-    "build": "pnpm lint:md && pnpm check:i18n && tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects && pnpm check:seo",
+    "build": "pnpm check:photos && pnpm lint:md && pnpm check:i18n && tsx ./scripts/search-index.ts && cross-env NODE_OPTIONS=--localstorage-file=.localstorage NODE_ENV=production vite-ssg build && tsx ./scripts/copy-fonts.ts && tsx ./scripts/rss.ts && tsx scripts/redirects.ts && cp _dist_redirects dist/_redirects && pnpm check:seo",
     "check:i18n": "tsx scripts/check-i18n.ts",
     "check:seo": "tsx scripts/check-seo.ts",
     "dev": "NODE_OPTIONS='--localstorage-file=.localstorage' vite --port 1111 --open",
@@ -15,6 +15,8 @@
     "typecheck:app": "vue-tsc --noEmit -p tsconfig.app.json",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json",
     "photos": "tsx scripts/photos-manage.ts",
+    "check:photos": "tsx scripts/photos-manage.ts --check",
+    "test:photos": "tsx --test scripts/photos.test.ts",
     "process-audio": "tsx scripts/process-audio.ts",
     "prepare": "simple-git-hooks"
   },
@@ -33,6 +35,7 @@
     "pixi.js": "catalog:frontend",
     "shiki": "catalog:frontend",
     "simplex-noise": "catalog:frontend",
+    "three": "catalog:",
     "vue": "catalog:frontend",
     "vue-router": "catalog:frontend"
   },
@@ -50,6 +53,7 @@
     "@types/markdown-it-link-attributes": "catalog:types",
     "@types/node": "catalog:types",
     "@types/nprogress": "catalog:types",
+    "@types/three": "catalog:",
     "@unocss/preset-web-fonts": "catalog:build",
     "@unpic/placeholder": "catalog:frontend",
     "@vitejs/plugin-vue": "catalog:build",

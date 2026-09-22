@@ -33,3 +33,7 @@ display: Теслак увлекается IT, нейросетями, UX-диз
 </p>
 
 Или почта <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="Почему без GPG?">Электронная почта по своей природе небезопасна. Для приватной переписки — Signal [или SimpleX]{.muted}</Popover>
+
+::: ascii capybara
+
+:::

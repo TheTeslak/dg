@@ -1,6 +1,6 @@
 ---
 title: Робофобия
-date: 2026-02-28T14:11:00Z
+date: 2026-02-28T14:02:00Z
 lang: ru
 type: note
 backlink: who-is-teslak

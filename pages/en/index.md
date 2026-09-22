@@ -33,3 +33,7 @@ Building [pet projects](/en/projects)
 </p>
 
 Or email <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="Why no GPG?">Email is fundamentally insecure. For private messaging — Signal [or SimpleX]{.muted}</Popover>
+
+::: ascii capybara
+
+:::

@@ -1,6 +1,6 @@
 ---
 title: Quem é Teslak e por que «Teslak»
-date: 2026-02-28T14:10:00Z
+date: 2026-02-28T14:01:00Z
 lang: pt
 type: note
 description: Sobre o Teslak
@@ -11,6 +11,7 @@ open: true
 [Não é fácil determinar quais qualidades e passatempos listar. O tempo me pareceu um critério justo: aquilo pelo que me interesso e ao que me dedico há anos, quase diariamente]{.muted}
 
 Partidário da profundidade, 🔍 da pesquisa, do trabalho com dados e das melhores práticas
+Nesse sentido, sinto uma forte afinidade com [Gwern](https://gwern.net/)
 
 A maior parte da minha carreira foi dedicada ao design de interfaces. No entanto, é difícil me chamar apenas de designer: meu círculo de interesses sempre foi amplo
 
@@ -36,25 +37,27 @@ Minha aproximação com as redes neurais começou com um artigo [sobre o Artbree
 
 O lançamento do [Midjourney](https://t.me/TesNot/314) em 2022 me impressionou muito: eu passava dias inteiros gerando, embora estivesse infinitamente longe das atuais
 
-Já usava o GPT antes do lançamento do ChatGPT ([meu pico](https://t.me/Tes404/1058) + um post anterior), incluindo [ru](https://t.me/Tes404/599), e [escrevi](https://t.me/Tes404/2929) sobre o lançamento de 3.5 no mesmo dia em que saiu
+Já usava o GPT antes do lançamento do ChatGPT ([meu pico](https://t.me/Tes404/1058) + um post anterior), incluindo [ru](https://t.me/Tes404/599), e [escrevi](https://t.me/Tes404/2929) sobre o lançamento de 3.5 no mesmo dia em que saiu
 
-Desenvolvi agentes com LangGraph e LlamaIndex, e automatizei algumas tarefas do navegador com [Harpa](https://harpa.ai/). Com o lançamento do OpenClaw, migrei para ele, analisando sua arquitetura e como ela foi evoluindo. Atualmente, estou explorando o Hermes Agent e o OpenHuman
+Desenvolvi agentes com LangGraph, LlamaIndex e n8n, e automatizei algumas tarefas do navegador com [Harpa](https://harpa.ai/). Com o lançamento do OpenClaw, migrei a maior parte do meu pipeline para ele, analisando sua arquitetura e evolução. Agora estou no Hermes. Acompanho de perto as devtools e a evolução dos harnesses
 
 Ao experimentar com modelos locais, sou cético em relação a qualquer modelo com menos de [pelo menos]{.muted} 30B para tarefas gerais
 
-Acompanho ativamente todos os LLMs: uso-os, leio papers, entendo em linhas gerais os transformers, a atenção, as etapas de treinamento e a inferência
+Acompanho ativamente todos os LLMs: uso-os, leio papers, vejo implementações de RAG e [pesquisa profunda](https://github.com/assafelovic/gpt-researcher) e experimento na prática. Tenho uma compreensão básica de transformers, atenção, etapas de treinamento, hardware e inferência
 
 :::
 
 Sinto que acompanho o ritmo de um mundo em constante mudança. A covid-19, por exemplo, me ajudou a entender melhor a biologia, as vacinas e os ensaios clínicos
 
-🗃️ Estruturo dados. Adoro o [Obsidian](https://obsidian.md/) desde os seus primeiros betas; antes, usava o [Roam Research](https://roamresearch.com/) e o [Notion](https://www.notion.com), que ainda adoro e uso no trabalho em equipe
+🗃️ Estruturo dados. Adoro o [Obsidian](https://obsidian.md/) desde os seus primeiros betas; antes, usava o [Zotero](https://www.zotero.org/), o [Roam Research](https://roamresearch.com/) e o [Notion](https://www.notion.com), que ainda adoro e uso no trabalho em equipe
 
 A escrita e a edição me são próximas. Escrevo eu mesmo!
 
 Li cerca de 50 livros de ficção, mas hoje não me atraem mais. Mudei para a não-ficção: sobre trabalho, filosofia, arte e divulgação científica. Às vezes leio sobre tecnologia, biologia e economia, mas nessas áreas prefiro artigos
 
-Eu fotografava, mas me interesso mais pelo equipamento técnico e pela teoria da arte
+🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+
+[Fotografava](/pt/photos), mas me interesso mais pelo equipamento e pela teoria da arte
 
 Faz alguns anos que saí da Rússia. Estive em países muito distantes ✈️ uns dos outros e continuo a explorar o mundo ativamente
 
@@ -62,9 +65,9 @@ Estilo de vida sóbrio
 
 ## O blog
 
-Em 2020, criei um [canal no Telegram](https://t.me/TesNot), onde escrevo de vez em quando. Pouco depois, criei um [segundo](https://t.me/Tes404), com reenvios frequentes e sem muita edição
+Em 2020, criei um [canal no Telegram](https://t.me/TesNot), onde escrevo de vez em quando. Pouco depois, criei um [segundo](https://t.me/Tes404), com reenvíos diários e pensamentos sem grande edição
 
-Tenho muitas críticas ao Telegram; isso, somado ao desejo de estar mais próximo da comunidade global de língua inglesa e à busca por independência, me trouxe a este site
+Tenho muitas críticas ao Telegram [e à maioria das plataformas]{.muted}; isso, somado ao desejo de estar mais próximo da comunidade global de língua inglesa e à busca por independência, me trouxe a este site
 
 ✏️ Escrevia sobre assuntos práticos: visões gerais do mundo e análises técnico-financeiras especializadas. Por enquanto, estou adaptando ideias antigas para o blog
 
@@ -80,6 +83,8 @@ Raios e eletricidade são associados a Nikola Tesla
 
 E assim surgiu Ele ⚡️
 
+<LightningGlow />
+
 [Não que eu seja fã de Nikola: ele era peculiar, especulativo e um pouco excêntrico. Muito menos sou fã da Tesla Inc., embora os carros deles sejam bons]{.muted}
 
 Agora uso Teslak como apelido em todos os lugares
@@ -90,8 +95,15 @@ A letra «k» não tem um significado especial. Talvez, naquela época, eu tenha
 
 Eu costumava usar avatares variados, especialmente cavaleiros, e por questões de privacidade, nunca fotos reais. Quando adotei o nome Teslak, coloquei um raio
 
-![Uma colagem de avatares do Teslak com cavaleiros, um raio, um elfo e um robô|caption=Evolução dos avatares](/images/avatars.avif)
+![Uma grade de avatares do Teslak com cavaleiros, um raio, um elfo e um robô|caption=Evolução dos avatares](/images/avatars.avif)
 
 Quis maior identidade própria: criei um personagem, contratei uma ilustradora e editei o resultado. Quando deixou de me agradar, contratei outra e, com ainda mais edições de minha parte, o elfo acabou ficando por bastante mais tempo
 
-Com o lançamento do Midjourney v4, criei um robô com uma referência ao [Master Chief](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>); com a v5, criei outro, e é com ele que estou agora
+Com o lançamento do Midjourney v4, criei um robô com uma referência ao [Master Chief](<https://en.wikipedia.org/wiki/Master_Chief_(Halo)>) e ao [Soundwave](https://tfwiki.net/wiki/File:SoundwavePlayingSparkbeat..jpg); com a v5 em 2023, criei outro, e é com ele que estou agora
+
+::: ascii cheeseburger
+
+:::
+
+
+

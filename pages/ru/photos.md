@@ -8,8 +8,6 @@ display: ''
 
 <PhotoGalleryAll mt--10 />
 
-<div class="prose mx-auto mt-10">
-  <div>
-    <em op50>Спасибо за интерес к моим фотографиям. Список техники, которую я использую, можно найти <a href="https://teslak.me/ru/use" target="_blank">здесь</a>.</em>
-  </div>
+<div class="text-center mt-10 opacity-50 italic">
+  В последнее время почти не фотографирую, а многие снимки всё ещё ожидают обработки
 </div>

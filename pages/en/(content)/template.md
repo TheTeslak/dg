@@ -226,12 +226,12 @@ These are the most frequently used components for embedding rich media and linki
 
 ### Photos: Carousel and Tiles (`PhotoShowcase`)
 
-You can embed photos directly inside an article. They do not have to be limited to the `/photos` page.
+You can embed photos directly inside an article. They do not have to be limited to the `/photos` page. Edit `photos/catalog.ts` to choose gallery order. Photo IDs are relative filenames without extensions, or explicit `id` values from the catalog. The `ids` order controls the selection; without `ids`, catalog order applies.
 
 **Horizontal carousel (`mode="slide"`):**
-`<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />`
+`<PhotoShowcase mode="slide" ids="tower,mountains" />`
 
-<PhotoShowcase mode="slide" ids="p-2018-01-30-14-18-35-000-1,p-2018-01-31-08-17-06-000-1,p-2018-02-03-14-21-24-000-1" />
+<PhotoShowcase mode="slide" ids="tower,mountains" />
 
 **Tiled photos (`mode="grid"`):**
 `<PhotoShowcase mode="grid" :limit="8" />`
@@ -534,7 +534,23 @@ This content is hidden until the reader clicks the summary. You can put any Mark
 ```
 
 ::: spoiler Click to expand
+
 This content is hidden until the reader clicks the summary. You can put any Markdown here: **bold**, `code`, lists, images, etc.
+
+:::
+
+### ASCII Art Block
+
+Interactive Braille/ASCII art container. Clicking or tapping copies the art to clipboard with floating text feedback. Supports named presets like `capybara` or custom multi-line art.
+
+````markdown
+::: ascii capybara
+
+:::
+````
+
+::: ascii capybara
+
 :::
 
 ---

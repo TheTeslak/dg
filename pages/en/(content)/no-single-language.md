@@ -1,6 +1,6 @@
 ---
 title: No single language of the internet
-date: 2026-02-28T09:41:00Z
+date: 2026-02-28T14:03:00Z
 lang: en
 type: note
 description: Accessibility and translation methodology for this little site

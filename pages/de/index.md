@@ -33,3 +33,7 @@ Habe [alles Mögliche fotografiert](/de/photos)
 </p>
 
 Oder per E-Mail an <span font-mono>Teslak<span i-carbon-at/>proton.me</span> <Popover trigger="GPG?" label="Warum kein GPG?">E-Mail ist grundsätzlich unsicher. Für private Nachrichten — Signal [oder SimpleX]{.muted}</Popover>
+
+::: ascii capybara
+
+:::

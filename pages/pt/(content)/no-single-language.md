@@ -1,6 +1,6 @@
 ---
 title: Sem um único idioma na internet
-date: 2026-02-28T09:41:00Z
+date: 2026-02-28T14:03:00Z
 lang: pt
 type: note
 description: Acessibilidade e metodologia de tradução deste site
