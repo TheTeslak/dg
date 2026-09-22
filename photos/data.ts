@@ -1,42 +1,14 @@
-export interface PhotoMate {
-  text?: string
-  lang?: string
-  blurhash?: string
-}
+import { catalog } from './catalog'
+import generated from './generated.json'
+import { assemblePhotos } from './model'
 
-export interface Photo extends PhotoMate {
-  name: string
-  url: string
-}
+export type { Photo } from './model'
 
-const metaInfo = Object.entries(
-  import.meta.glob<PhotoMate>('./**/*.json', {
-    eager: true,
-    import: 'default',
-  }),
-).map(([name, data]) => {
-  name = name.replace(/\.\w+$/, '').replace(/^\.\//, '')
-  return {
-    name,
-    data,
-  }
+// Case-insensitive extensions, including mixed case; keep aligned with model.ts.
+const urls = import.meta.glob<string>('./**/*.{[jJ][pP][gG],[jJ][pP][eE][gG],[pP][nN][gG],[wW][eE][bB][pP],[aA][vV][iI][fF]}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
 })
 
-const photos = Object.entries(
-  import.meta.glob<string>('./**/*.{jpg,png,JPG,PNG}', {
-    eager: true,
-    query: '?url',
-    import: 'default',
-  }),
-)
-  .map(([name, url]): Photo => {
-    name = name.replace(/\.\w+$/, '').replace(/^\.\//, '')
-    return {
-      ...metaInfo.find(info => info.name === name)?.data,
-      name,
-      url,
-    }
-  })
-  .sort((a, b) => b.name.localeCompare(a.name))
-
-export default photos
+export default assemblePhotos(catalog, urls, generated)
