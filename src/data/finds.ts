@@ -15,6 +15,18 @@ export const finds: FindItem[] = [
     date: '2026-01-01',
   },
   {
+    id: 'mona-ascii-cat-lore',
+    url: 'https://nonexistentfandomsfandom.neocities.org/AAcats/mona',
+    title: 'Mona — ASCII cat lore',
+    desc: '2channel origins, variants, and family tree',
+  },
+  {
+    id: 'artcraft-apps',
+    url: 'https://getartcraft.com/apps',
+    title: 'ArtCraft Crafting Apps',
+    desc: 'Free, open-source reimplementations of Photoshop, Illustrator, CAD, Word, Excel, etc',
+  },
+  {
     id: 'making-of-naturalists-library',
     url: 'https://c82.net/blog/making-of-naturalists-library',
     title: 'Making of The Naturalist’s Library',
