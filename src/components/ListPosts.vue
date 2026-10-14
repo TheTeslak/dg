@@ -86,7 +86,7 @@ function getDurationLabel(duration?: Post['duration']) {
   <ul role="list" style="contain: layout;">
     <template v-if="!posts.length">
       <div role="listitem" py2 op50>
-        {{ $t('blog-nothing-here') }}
+        {{ $t('state-empty') }}
       </div>
     </template>
 
@@ -138,7 +138,7 @@ function getDurationLabel(duration?: Post['duration']) {
                 v-if="route.redirect"
                 align-middle op50 flex-none text-xs ml--1.5
                 i-carbon-arrow-up-right
-                :title="$t('label-external')"
+                :title="$t('tooltip-external-link')"
                 aria-hidden="true"
               />
             </div>

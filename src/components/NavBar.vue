@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
         v-if="isPostPage"
         class="flex items-center justify-center min-w-10 h-10 bg-base hover:bg-[#e7e7e7] dark:hover:bg-[#1b1b1b] rounded-full transition-all duration-300 overflow-hidden"
         :class="copied ? 'pl-3 pr-4' : 'px-0'"
-        :title="copied ? $t('post-link-copied') : $t('post-copy-link')"
+        :title="copied ? $t('state-link-copied') : $t('action-copy-link')"
         @click="copyLink()"
       >
         <div :class="copied ? 'i-ri-check-line' : 'i-ri-links-line'" class="shrink-0" />
@@ -134,7 +134,7 @@ onBeforeUnmount(() => {
           class="text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300"
           :class="copied ? 'ml-2 max-w-40 opacity-100' : 'ml-0 max-w-0 opacity-0'"
         >
-          {{ $t('post-link-copied') }}
+          {{ $t('state-link-copied') }}
         </span>
       </button>
 

@@ -144,7 +144,7 @@ const modKey = computed(() => {
       @click="onlyLanguage = !onlyLanguage"
     >
       <div :class="onlyLanguage ? 'i-carbon-checkbox-checked' : 'i-carbon-checkbox'" />
-      {{ $t('blog-only-lang', { lang: currentLocale.toUpperCase() }) }}
+      {{ $t('filter-only-lang', { lang: currentLocale.toUpperCase() }) }}
     </button>
 
     <div mb-0 flex="~ items-center gap-4 sm:gap-6" text-3xl>

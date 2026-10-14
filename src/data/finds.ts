@@ -15,16 +15,16 @@ export const finds: FindItem[] = [
     date: '2026-01-01',
   },
   {
+    id: 'artcraft-apps',
+    url: 'https://getartcraft.com/apps',
+    title: 'ArtCraft Crafting Apps',
+    desc: 'Free, open-source reimplementations of Photoshop, Illustrator, CAD, Word, Excel, etc. Contributions are needed',
+  },
+  {
     id: 'mona-ascii-cat-lore',
     url: 'https://nonexistentfandomsfandom.neocities.org/AAcats/mona',
     title: 'Mona — ASCII cat lore',
     desc: '2channel origins, variants, and family tree',
-  },
-  {
-    id: 'artcraft-apps',
-    url: 'https://getartcraft.com/apps',
-    title: 'ArtCraft Crafting Apps',
-    desc: 'Free, open-source reimplementations of Photoshop, Illustrator, CAD, Word, Excel, etc',
   },
   {
     id: 'making-of-naturalists-library',
@@ -155,6 +155,12 @@ export const finds: FindItem[] = [
     url: 'https://www.lesswrong.com/w/a-humans-guide-to-words',
     title: '⭐️ A Human’s Guide to Words',
     desc: 'There’s a lot to say about LessWrong, and one day I’ll write an essay on it — including what deserves criticism. Still, this section is one of its greatest',
+  },
+  {
+    id: 'rgb-colorspace-atlas',
+    url: 'https://taubaauerbach.com/view.php?id=286&alt=2945',
+    title: 'RGB Colorspace Atlas — Tauba Auerbach',
+    desc: 'Three cube-shaped books that materialize the digital RGB spectrum into a tangible atlas of continuous gradients',
   },
   {
     id: 'wikipedia-vital-articles',

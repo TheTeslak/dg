@@ -18,6 +18,6 @@ const daysLeft = computed(() => {
 <template>
   <time :date="date" :title="date" flex="~ col">
     {{ formatDate(props.date, true, locale) }}
-    <span v-if="daysLeft > 0" op50 text-xs mt--0.5 inline-block>in {{ daysLeft }} days</span>
+    <span v-if="daysLeft > 0" op50 text-xs mt--0.5 inline-block>{{ $t('time-in-days', { days: daysLeft }) }}</span>
   </time>
 </template>

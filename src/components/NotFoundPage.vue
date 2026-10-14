@@ -11,7 +11,7 @@ const locale = computed(() => getLocaleFromPath(route.path))
       404
     </h1>
     <p op50>
-      {{ $t('page-not-found') }}
+      {{ $t('state-page-not-found') }}
     </p>
     <div mt-5>
       <RouterLink :to="`/${locale}`" btn-gray>

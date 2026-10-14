@@ -58,7 +58,7 @@ const archivedFinds = computed(() => {
 <template>
   <div class="prose m-auto" style="contain: layout;">
     <div v-if="!allFinds.length" py2 op50 slide-enter>
-      {{ $t('blog-nothing-here') }}
+      {{ $t('state-empty') }}
     </div>
 
     <template v-else>
@@ -97,7 +97,7 @@ const archivedFinds = computed(() => {
                   v-if="item.kind === 'external'"
                   class="op45 flex-none self-center text-base"
                   i-carbon-arrow-up-right
-                  :title="$t('label-external')"
+                  :title="$t('tooltip-external-link')"
                   aria-hidden="true"
                 />
               </div>
@@ -112,7 +112,7 @@ const archivedFinds = computed(() => {
                 </template>
                 <template v-else>
                   <span>·</span>
-                  <span>{{ item.ai ? $t('finds-synthetic-trigger') : $t('finds-synthesis-trigger') }}</span>
+                  <span>{{ item.ai ? $t('badge-synthetic-trigger') : $t('badge-synthesis-trigger') }}</span>
                 </template>
               </div>
             </div>
@@ -154,7 +154,7 @@ const archivedFinds = computed(() => {
                 <span
                   class="op45 flex-none self-center text-base"
                   i-carbon-arrow-up-right
-                  :title="$t('label-external')"
+                  :title="$t('tooltip-external-link')"
                   aria-hidden="true"
                 />
               </div>

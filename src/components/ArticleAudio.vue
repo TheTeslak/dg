@@ -342,7 +342,7 @@ onBeforeUnmount(() => {
 
 <template>
   <p v-if="hasError" class="article-audio-error">
-    {{ $t('article-audio-error') }}
+    {{ $t('audio-error') }}
   </p>
 
   <div
@@ -352,7 +352,7 @@ onBeforeUnmount(() => {
     :class="{ 'is-active': showTimeline, 'is-playing': isPlaying }"
     role="group"
     tabindex="0"
-    :aria-label="$t('article-audio-label')"
+    :aria-label="$t('audio-label')"
     @keydown="onKeydown"
   >
     <audio
@@ -372,7 +372,7 @@ onBeforeUnmount(() => {
       <button
         class="article-audio-icon-button article-audio-play"
         type="button"
-        :aria-label="isPlaying ? $t('article-audio-pause') : $t('article-audio-play')"
+        :aria-label="isPlaying ? $t('audio-pause') : $t('audio-play')"
         @click="togglePlayback"
       >
         <span v-if="isWaiting" class="article-audio-spinner" aria-hidden="true" />
@@ -394,7 +394,7 @@ onBeforeUnmount(() => {
               step="0.1"
               :value="currentTime"
               :style="{ '--article-audio-progress': progressPercent }"
-              :aria-label="$t('article-audio-progress')"
+              :aria-label="$t('audio-progress')"
               @input="onProgressInput"
             >
             <span class="article-audio-time">
@@ -408,7 +408,7 @@ onBeforeUnmount(() => {
         <button
           class="article-audio-small-button"
           type="button"
-          :aria-label="$t('article-audio-rewind')"
+          :aria-label="$t('audio-rewind')"
           @click="seekBy(-15)"
         >
           <span i-fluent-skip-back-15-20-regular aria-hidden="true" />
@@ -416,7 +416,7 @@ onBeforeUnmount(() => {
         <button
           class="article-audio-small-button"
           type="button"
-          :aria-label="$t('article-audio-forward')"
+          :aria-label="$t('audio-forward')"
           @click="seekBy(15)"
         >
           <span i-fluent-skip-forward-15-20-regular aria-hidden="true" />
@@ -424,7 +424,7 @@ onBeforeUnmount(() => {
         <button
           class="article-audio-speed-button"
           type="button"
-          :aria-label="$t('article-audio-speed')"
+          :aria-label="$t('audio-speed')"
           @click="cycleSpeed"
         >
           {{ playbackRate }}x
@@ -435,7 +435,7 @@ onBeforeUnmount(() => {
         class="article-audio-icon-button article-audio-download"
         :href="downloadHref"
         download
-        :aria-label="$t('article-audio-download')"
+        :aria-label="$t('audio-download')"
       >
         <span i-ri-download-line aria-hidden="true" />
       </a>
@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
 
     <p v-if="outdated" class="article-audio-warning">
       <span i-ri-alert-line aria-hidden="true" />
-      {{ $t('article-audio-outdated') }}
+      {{ $t('audio-outdated') }}
     </p>
   </div>
 
@@ -455,14 +455,14 @@ onBeforeUnmount(() => {
         :class="{ 'is-playing': isPlaying }"
         role="group"
         tabindex="0"
-        :aria-label="$t('article-audio-label')"
+        :aria-label="$t('audio-label')"
         @keydown="onKeydown"
       >
         <div class="article-audio-row">
           <button
             class="article-audio-icon-button article-audio-play"
             type="button"
-            :aria-label="isPlaying ? $t('article-audio-pause') : $t('article-audio-play')"
+            :aria-label="isPlaying ? $t('audio-pause') : $t('audio-play')"
             @click="togglePlayback"
           >
             <span v-if="isWaiting" class="article-audio-spinner" aria-hidden="true" />
@@ -479,7 +479,7 @@ onBeforeUnmount(() => {
                 step="0.1"
                 :value="currentTime"
                 :style="{ '--article-audio-progress': progressPercent }"
-                :aria-label="$t('article-audio-progress')"
+                :aria-label="$t('audio-progress')"
                 @input="onProgressInput"
               >
               <span class="article-audio-time">
@@ -492,7 +492,7 @@ onBeforeUnmount(() => {
             <button
               class="article-audio-small-button"
               type="button"
-              :aria-label="$t('article-audio-rewind')"
+              :aria-label="$t('audio-rewind')"
               @click="seekBy(-15)"
             >
               <span i-fluent-skip-back-15-20-regular aria-hidden="true" />
@@ -500,7 +500,7 @@ onBeforeUnmount(() => {
             <button
               class="article-audio-small-button"
               type="button"
-              :aria-label="$t('article-audio-forward')"
+              :aria-label="$t('audio-forward')"
               @click="seekBy(15)"
             >
               <span i-fluent-skip-forward-15-20-regular aria-hidden="true" />
@@ -508,7 +508,7 @@ onBeforeUnmount(() => {
             <button
               class="article-audio-speed-button"
               type="button"
-              :aria-label="$t('article-audio-speed')"
+              :aria-label="$t('audio-speed')"
               @click="cycleSpeed"
             >
               {{ playbackRate }}x
@@ -519,7 +519,7 @@ onBeforeUnmount(() => {
             class="article-audio-icon-button article-audio-download"
             :href="downloadHref"
             download
-            :aria-label="$t('article-audio-download')"
+            :aria-label="$t('audio-download')"
           >
             <span i-ri-download-line aria-hidden="true" />
           </a>
@@ -527,7 +527,7 @@ onBeforeUnmount(() => {
           <button
             class="article-audio-icon-button article-audio-close"
             type="button"
-            :aria-label="$t('article-audio-close')"
+            :aria-label="$t('audio-close')"
             @click="closeSticky"
           >
             <span i-ri-close-line aria-hidden="true" />

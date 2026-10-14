@@ -32,7 +32,7 @@ function getDesc(item: ProjectItem) {
 <template>
   <div class="prose m-auto">
     <div v-if="!projects.length" py2 op50 slide-enter>
-      {{ $t('projects-nothing-here') }}
+      {{ $t('state-projects-brewing') }}
     </div>
 
     <template v-else>

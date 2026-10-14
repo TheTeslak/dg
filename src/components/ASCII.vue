@@ -112,8 +112,8 @@ function addSpark(success: boolean, coords?: { x: number, y: number }) {
   }
 
   const id = ++nextSparkId
-  const text = success ? `${$t('heading-copied')}!` : '✕'
-  statusMessage.value = success ? `${$t('heading-copied')}!` : '✕'
+  const text = success ? `${$t('state-link-copied')}!` : '✕'
+  statusMessage.value = success ? `${$t('state-link-copied')}!` : '✕'
 
   sparks.value.push({ id, x, y, text, isError: !success })
 

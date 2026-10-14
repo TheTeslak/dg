@@ -294,7 +294,7 @@ onMounted(() => {
   <div v-if="headings.length > 1" class="mobile-action-bar">
     <button
       class="mobile-action-btn"
-      :title="$t('heading-link')"
+      :title="$t('action-copy-link')"
       @click="isMobileOpen = true"
     >
       <div class="i-ri-menu-2-fill text-xl" />
@@ -302,7 +302,7 @@ onMounted(() => {
     <button
       class="mobile-action-btn"
       :class="mobileCopied ? 'is-copied' : ''"
-      :title="mobileCopied ? $t('post-link-copied') : $t('post-copy-link')"
+      :title="mobileCopied ? $t('state-link-copied') : $t('action-copy-link')"
       @click="mobileCopyLink()"
     >
       <div :class="mobileCopied ? 'i-ri-check-line' : 'i-ri-links-line'" class="shrink-0 text-xl" />
@@ -310,7 +310,7 @@ onMounted(() => {
         class="mobile-action-copied-text text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-300"
         :class="mobileCopied ? 'ml-2 max-w-40 opacity-100' : 'ml-0 max-w-0 opacity-0'"
       >
-        {{ $t('post-link-copied') }}
+        {{ $t('state-link-copied') }}
       </span>
     </button>
   </div>

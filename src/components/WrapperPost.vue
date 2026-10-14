@@ -369,8 +369,8 @@ onMounted(() => {
 
   useEventListener(content.value!, 'click', handleAnchors, { passive: false })
 
-  const tooltipDefault = fluent.format('heading-link')
-  const tooltipCopied = fluent.format('heading-copied')
+  const tooltipDefault = fluent.format('action-copy-link')
+  const tooltipCopied = fluent.format('state-link-copied')
 
   const headingSelector = 'h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]'
   const headings = content.value!.querySelectorAll<HTMLElement>(headingSelector)
@@ -601,18 +601,18 @@ onMounted(() => {
       >
         <span class="opacity-50"><span v-if="isDraftPost(frontmatter.type)" role="img" aria-label="Draft">🚧 </span><span v-if="isRecentPost(frontmatter.date, frontmatter.updated) && !isDraftPost(frontmatter.type)" role="img" aria-label="Recent">🌱 </span><time class="dt-published" :datetime="new Date(frontmatter.date).toISOString()">{{ formatDate(frontmatter.date, false, currentLocale) }}</time><span v-if="frontmatter.updated"> · {{ $t('post-updated') }} {{ formatDate(frontmatter.updated, false, currentLocale) }}</span><span v-if="localizedDuration"> · {{ localizedDuration }}</span><span v-if="isFind || isClip"> · </span></span><Popover
           v-if="isFind && frontmatter.ai === true"
-          :trigger="$t('finds-synthetic-trigger')"
-          :label="$t('finds-synthetic-label')"
+          :trigger="$t('badge-synthetic-trigger')"
+          :label="$t('badge-synthetic-label')"
           muted
         >
-          {{ $t('finds-synthetic-explanation') }}
-        </Popover><span v-else-if="isFind" class="opacity-50">{{ $t('finds-synthesis-trigger') }}</span><Popover
+          {{ $t('badge-synthetic-explanation') }}
+        </Popover><span v-else-if="isFind" class="opacity-50">{{ $t('badge-synthesis-trigger') }}</span><Popover
           v-else-if="isClip"
-          :trigger="$t('post-clip-trigger')"
-          :label="$t('post-clip-label')"
+          :trigger="$t('badge-clip-trigger')"
+          :label="$t('badge-clip-label')"
           muted
         >
-          {{ $t('post-clip-explanation') }}
+          {{ $t('badge-clip-explanation') }}
         </Popover>
       </p>
       <div v-if="frontmatter.date" class="p-author h-card" style="display: none;">
@@ -730,7 +730,7 @@ onMounted(() => {
         <span op50>{{ $t('post-comment-on') }}&nbsp;</span>
         <a v-if="frontmatter.telegram" :href="frontmatter.telegram" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-telegram') }}</a>
         <span v-if="frontmatter.telegram && frontmatter.twitter" op25> / </span>
-        <a v-if="frontmatter.twitter" :href="frontmatter.twitter" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-twitter') }}</a>
+        <a v-if="frontmatter.twitter" :href="frontmatter.twitter" target="_blank" rel="noopener noreferrer" op50>{{ $t('post-link-x') }}</a>
       </template>
 
       <div v-if="referencedBy.length" class="referenced-by mt-9">

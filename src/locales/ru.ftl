@@ -1,6 +1,10 @@
 -brand = Teslak
-
 meta-description = Блог { -brand }
+
+a11y-skip-to-content = Перейти к содержимому
+a11y-home = Главная
+a11y-main-navigation = Основная навигация
+a11y-site-logo = Логотип сайта
 
 nav-blog = Блог
 nav-articles = Статьи
@@ -8,76 +12,76 @@ nav-projects = Проекты
 nav-notes = Заметки
 nav-photos = Фото
 nav-now = Сейчас
-nav-menu = Меню
-nav-close = Закрыть
 nav-methodology = Методология
 nav-finds = Находки
-finds-earlier = Раньше
-finds-telegram-promo = Что зацепило внимание, хотя моя позиция может отличаться<br>Больше ежедневных находок — в тгк <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>
-finds-notice = Тексты в находках — только на английском и отличаются от остального блога
-finds-synthetic-trigger = синтетика
-finds-synthesis-trigger = синтез
-finds-synthetic-label = О синтетическом контенте
-finds-synthetic-explanation = Статьи в находках обычно составлены нейросетью по моим диалогам с ней
 
-post-clip-trigger = вырезка
-post-clip-label = О вырезках
-post-clip-explanation = Внешний материал сохранён на случай недоступности оригинала и для удобного чтения
-
-a11y-skip-to-content = Перейти к содержимому
-a11y-home = Главная
-a11y-main-navigation = Основная навигация
-a11y-site-logo = Логотип сайта
+nav-menu = Меню
+nav-close = Закрыть
 
 action-toggle-theme = Сменить тему
+action-change-language = Сменить язык
 action-to-top = Наверх
 action-back-to-all = Ко всему
-action-change-language = Сменить язык
 action-go-home = На главную
-page-not-translated = Ещё не переведена, показана { $lang } версия
-page-not-found = Страница не найдена
 
-blog-only-lang = Только { $lang }
-blog-nothing-here = { "{" } пока пусто { "}" }
-projects-nothing-here = { "{" } проекты в работе { "}" }
-search-placeholder = Поиск по статьям и заметкам
-search-start-typing = Введите запрос
-search-no-results = Ничего не найдено
-search-close = Закрыть поиск
-search-loading = Загрузка индекса...
+action-copy-link = ссылка
+state-link-copied = скопировано
 
-post-comment-on = комментировать в
-post-link-telegram = Телеграм
-post-link-twitter = X
-post-referenced-by = Моё по теме
-post-updated = обновлена
-post-draft-notice = Черновик
-post-copy-link = ссылка
-post-link-copied = скопировано
-post-place-at = в
-label-external = Внешняя ссылка
+state-empty = { "{" } пока пусто { "}" }
+state-projects-brewing = { "{" } проекты в работе { "}" }
+state-page-not-found = Страница не найдена
 
-article-audio-label = Аудио статьи
-article-audio-play = Воспроизвести аудио
-article-audio-pause = Поставить аудио на паузу
-article-audio-rewind = Назад на 15 секунд
-article-audio-forward = Вперёд на 15 секунд
-article-audio-speed = Изменить скорость воспроизведения
-article-audio-download = Скачать аудио
-article-audio-close = Закрыть мини-плеер
-article-audio-progress = Прогресс аудио
-article-audio-error = Аудио не удалось загрузить.
-article-audio-outdated = Текст был обновлён после записи этого аудио
+filter-only-lang = Только { $lang }
 
-heading-link = ссылка
-heading-copied = скопировано
-
-photos-view-cover = Обрезать
-photos-view-contain = Не обрезать
-
-days-left =
+time-in-days =
     { $days ->
         [one] через { $days } день
         [few] через { $days } дня
        *[other] через { $days } дней
     }
+
+search-placeholder = Поиск по статьям и заметкам
+search-start-typing = Введите запрос
+search-no-results = Ничего не найдено
+search-loading = Загрузка индекса...
+search-close = Закрыть поиск
+
+post-draft = Черновик
+post-updated = обновлено
+post-not-translated = Ещё не переведено, показана версия на { $lang }
+post-referenced-by = Моё по теме
+post-place-at = в
+
+post-comment-on = комментировать в
+post-link-telegram = Телеграме
+post-link-x = X
+
+finds-telegram-promo = Привлекло внимание ≠ получило одобрение<br>Больше ежедневных находок — в тгк <a href="https://t.me/Tes404" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-80">@Tes404</a>
+finds-notice = Тексты в Находках — только на английском и отличаются от остального блога
+finds-earlier = Раньше
+
+badge-synthetic-trigger = синтетика
+badge-synthesis-trigger = синтез
+badge-synthetic-label = О синтетическом контенте
+badge-synthetic-explanation = Статьи в Находках обычно составлены нейросетью по моим диалогам с ней
+
+badge-clip-trigger = вырезка
+badge-clip-label = О вырезках
+badge-clip-explanation = Внешний материал сохранён на случай недоступности оригинала и для удобного чтения
+
+tooltip-external-link = Внешняя ссылка
+
+audio-label = Аудио статьи
+audio-play = Воспроизвести аудио
+audio-pause = Поставить аудио на паузу
+audio-rewind = Назад на 15 секунд
+audio-forward = Вперёд на 15 секунд
+audio-speed = Изменить скорость воспроизведения
+audio-download = Скачать аудио
+audio-close = Закрыть мини-плеер
+audio-progress = Прогресс воспроизведения
+audio-error = Аудио не удалось загрузить.
+audio-outdated = Текст обновился после записи аудио
+
+photos-view-cover = Обрезать
+photos-view-contain = Не обрезать
