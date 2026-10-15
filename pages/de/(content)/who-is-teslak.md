@@ -31,15 +31,15 @@ Mehr Details im ausklappbaren Bereich
 
 ⚙️ Anfang 2024 stieg ich in ein RPA-Startup für einen halblokalen Assistenten ein, der einen Computer steuert, ähnlich wie [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Seit 2025 entwickle ich KI-Agenten für verschiedene Unternehmen
 
-Ich bin kein ML-Engineer, obwohl ich Modelle auf grundlegendem Niveau trainiert habe (OCR-CNN, mit Plänen für das Fine-Tuning einer kleinen Qwen). Ich passe eher bestehende Entwicklungen für den praktischen Nutzen an
+Ich bin kein ML-Engineer, obwohl ich Modelle auf grundlegendem Niveau trainiert habe (OCR-CNN, Fine-Tuning von Qwen). Ich passe eher bestehende Entwicklungen für den praktischen Nutzen an
 
 Mein erster engerer Kontakt mit neuronalen Netzen begann mit einem Artikel [über Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) und den für damalige Verhältnisse beeindruckenden Bildgenerierungen
 
 Das im Jahr 2022 erschienene [Midjourney](https://t.me/TesNot/314) hat mich stark beeindruckt – ich habe tagelang Bilder generiert, obwohl es noch unendlich weit von den heutigen Modellen entfernt war
 
-Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([mein Peak](https://t.me/Tes404/1058) + ein Post kurz davor), einschließlich [ru](https://t.me/Tes404/599), und über den Release von 3.5 noch am selben Tag [geschrieben](https://t.me/Tes404/2929)
+Ich habe GPT schon vor der Veröffentlichung von ChatGPT genutzt ([der damalige Peak](https://t.me/Tes404/1058) + ein Post kurz davor), einschließlich [russischer Adaptionen](https://t.me/Tes404/599), und über den Release von 3.5 noch am selben Tag [geschrieben](https://t.me/Tes404/2929)
 
-Ich habe Agenten mit LangGraph, LlamaIndex und n8n entwickelt und einige Browser-Aufgaben mit [Harpa](https://harpa.ai/) automatisiert. Mit dem Erscheinen von OpenClaw habe ich den Großteil meiner Pipeline dorthin verlagert und dessen Architektur und Wandel analysiert. Jetzt bin ich bei Hermes. Ich verfolge Dev-Tools und die Evolution von Test-Harnesses
+Ich habe Agenten mit LangGraph, LlamaIndex und n8n entwickelt und einige Browser-Aufgaben mit [Harpa](https://harpa.ai/) automatisiert. Mit dem Erscheinen von OpenClaw habe ich den Großteil meiner Pipeline dorthin verlagert und dessen Architektur und Wandel analysiert. Jetzt bin ich bei Hermes. Ich verfolge Devtools und die Evolution von Agent-Harnesses
 
 Beim Experimentieren mit lokalen Modellen bin ich skeptisch gegenüber allem, was unter [mindestens]{.muted} 30B Parametern für allgemeine Aufgaben liegt
 
@@ -55,9 +55,9 @@ Schreiben und Redigieren liegen mir nahe. Ich schreibe alles selbst!
 
 Ich habe etwa 50 Romane gelesen – mittlerweile gefallen sie mir nicht mehr. Ich bin auf Sachbücher umgestiegen: über Arbeit, Philosophie, Kunst und populärwissenschaftliche Literatur. Manchmal über Technologie, Biologie und Wirtschaft, aber hier bevorzuge ich Artikel
 
-🐧 Ich nutze [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+🐧 Ich nutze [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux), mein Server läuft auf [NixOS](https://nixos.org/)
 
-[Habe fotografiert](/de/photos), interessiere mich aber mehr für die Ausrüstung und Kunsttheorie
+[Habe fotografiert](/de/photos), interessiere mich aber mehr für die technische Seite und Kunsttheorie
 
 Vor einigen Jahren habe ich Russland verlassen. Ich war in weit ✈️ voneinander entfernten Ländern und erkunde die Welt weiterhin aktiv
 
@@ -69,7 +69,7 @@ Nüchterner Lebensstil
 
 Ich habe viele Kritikpunkte an Telegram [und den meisten Plattformen]{.muted}; das, zusammen mit dem Wunsch, der englischsprachigen Weltgemeinschaft näher zu sein, und dem Streben nach Unabhängigkeit, hat mich zu dieser Website geführt
 
-✏️ Ich habe über Praktisches geschrieben: Allgemeines über die Welt und spezialisierte technisch-finanzielle Analysen. Derzeit schreibe ich alte Ideen für das Blog um
+✏️ Ich habe über Praktisches geschrieben: Allgemeines über die Welt und spezialisierte technisch-finanzielle Analysen. Derzeit schreibe ich alte Ideen für den Blog um
 
 ## Der Nickname
 

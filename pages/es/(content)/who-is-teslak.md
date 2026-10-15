@@ -19,9 +19,9 @@ En mis inicios, probé la programación: C++ y desarrollo web. Pasé del código
 
 Durante un tiempo dibujé y me dediqué al diseño gráfico, pero siempre me sentí más fuerte en la parte técnica. Me llevo bien con los desarrolladores, entiendo el funcionamiento de los sistemas modernos y las limitaciones técnicas al implementar el producto
 
-Trabajé en un [CRM para fintech]{term="Fintech CRM" definition="Sistema para brókeres en línea y plataformas financieras (empresas a través de las cuales la gente opera en bolsa o invierte). Ayuda a guiar al cliente desde la primera solicitud hasta la apertura de la cuenta: verificar la identidad y los documentos, realizar el seguimiento de los depósitos y retiros de fondos, calcular las comisiones de afiliados y almacenar todo el historial en un solo lugar"}, en un estudio de diseño de alto nivel y en startups de redes neuronales. Lancé proyectos para grandes corporaciones y agencias
+Trabajé en un [CRM para fintech]{term="Fintech CRM" definition="Sistema para brókeres en línea y plataformas financieras (empresas a través de las cuales la gente opera en bolsa o invierte). Ayuda a guiar al cliente desde la primera solicitud hasta la apertura de la cuenta: verificar la identidad y los documentos, realizar el seguimiento de los depósitos y retiros de fondos, calcular las comisiones de afiliados y almacenar todo el historial en un solo lugar"}, en un estudio de diseño de alto nivel y en startups de IA. Lancé proyectos para grandes corporaciones y agencias
 
-Conozco los buenos procesos и valoro los detalles
+Conozco los buenos procesos y valoro los detalles
 
 Con la aparición de las redes neuronales, las sigo activamente _a todas_, hago vibe-coding y entiendo sus límites de aplicación
 
@@ -31,13 +31,13 @@ Más detalles en el bloque desplegable
 
 ⚙️ A principios de 2024 entré en una startup de RPA que desarrollaba un asistente semilocal que controla una computadora, al estilo de [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Desde 2025, desarrollo agentes de IA para diversas empresas
 
-No soy ingeniero de ML, aunque he entrenado modelos de forma básica (OCR CNN, con planes de hacer fine-tuning a una Qwen pequeña). Más bien adapto lo ajeno para un uso práctico
+No soy ingeniero de ML, aunque he entrenado modelos de forma básica (OCR CNN, fine-tuning de Qwen). Más bien adapto lo ajeno para un uso práctico
 
 Mi acercamiento a las redes neuronales comenzó con un artículo [sobre Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) y sus impresionantes (para la época) imágenes generadas
 
 El lanzamiento de [Midjourney](https://t.me/TesNot/314) en 2022 me impresionó mucho: pasaba días enteros generando, aunque estaba infinitamente lejos de las actuales
 
-Usaba GPT antes del lanzamiento de ChatGPT ([mi pico](https://t.me/Tes404/1058) + una publicación previa), incluyendo [ru](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
+Usaba GPT antes del lanzamiento de ChatGPT ([el pico de esa etapa](https://t.me/Tes404/1058) + una publicación previa), incluidas [adaptaciones al ruso](https://t.me/Tes404/599), y [escribí](https://t.me/Tes404/2929) sobre el lanzamiento de 3.5 el mismo día en que salió
 
 Desarrollé agentes con LangGraph, LlamaIndex y n8n, y automaticé algunas tareas del navegador con [Harpa](https://harpa.ai/). Con la salida de OpenClaw, migré la mayor parte de mi flujo de trabajo hacia él, analizando su arquitectura y cómo iba evolucionando. Ahora estoy con Hermes. Sigo de cerca las devtools y la evolución de los harnesses
 
@@ -55,9 +55,9 @@ Me apasionan la redacción y la edición. ¡Escribo yo mismo!
 
 He leído unos 50 libros de ficción, pero ahora ya no me gustan. Pasé a la no ficción: sobre trabajo, filosofía, arte y divulgación científica. A veces sobre tecnología, biología y economía, pero en estos campos prefiero los artículos
 
-🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux) y mi servidor corre [NixOS](https://nixos.org/)
 
-[Hacía fotografía](/es/photos), pero me interesa más el equipo y la teoría del arte
+[Hacía fotografía](/es/photos), pero me interesa más la parte técnica y la teoría del arte
 
 Hace unos años que me fui de Rusia. He estado en países muy lejanos ✈️ entre sí y continúo explorando el mundo activamente
 

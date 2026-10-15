@@ -23,25 +23,25 @@ I've worked on a [Fintech CRM]{term="Fintech CRM" definition="A system for onlin
 
 I know what good processes look like and value the details
 
-Since the rise of neural networks, I've been actively following _all_ of them, vibe-coding, and understanding where they fall short
+Since the AI boom, I've been actively following _all_ the models, vibe-coding, and learning their practical limits
 
-More details in the spoiler below:
+More details in the spoiler below
 
 ::: spoiler Teslak and AI
 
 ⚙️ In early 2024, I joined an RPA startup building a semi-local assistant that controls a computer, like [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Since 2025, I've been building AI agents for various companies
 
-I'm not an ML engineer, though I've done basic model training (OCR CNN, with plans to fine-tune a small Qwen). I mostly adapt others' work for practical use
+I'm not an ML engineer, though I've done basic model training (OCR CNN, fine-tuned Qwen). I mostly adapt others' work for practical use
 
 My hands-on experience with AI began with an article [about Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) and its impressive (for the time) image generations
 
 The release of [Midjourney](https://t.me/TesNot/314) in 2022 completely hooked me — I spent days generating images, though it was a far cry from today's models
 
-I was using GPT even before ChatGPT launched ([my peak](https://t.me/Tes404/1058) + a post leading up to it), including [ru](https://t.me/Tes404/599), and I [wrote](https://t.me/Tes404/2929) about the release of GPT-3.5 on the very day it came out
+I was using GPT even before ChatGPT launched ([the peak of that era](https://t.me/Tes404/1058) + the post right before it), including [Russian adaptations](https://t.me/Tes404/599), and I [wrote](https://t.me/Tes404/2929) about the release of GPT-3.5 on the very day it came out
 
 I've built agents using LangGraph, LlamaIndex, and n8n, and automated some browser tasks with [Harpa](https://harpa.ai/). When OpenClaw dropped, I moved most of my pipeline over, analyzing its architecture and how it evolved. Now on Hermes. Keeping an eye on devtools and how harnesses evolve
 
-Through experimenting with local LLMs, I've become skeptical of anything under [at least]{.muted} 30B parameters for general-purpose tasks
+Through experimenting with local LLMs, I've become skeptical of anything smaller than [at least]{.muted} 30B parameters for general-purpose tasks
 
 I actively follow all LLMs: using them, reading papers, checking out RAG and [deep research](https://github.com/assafelovic/gpt-researcher) implementations, and experimenting hands-on. I have a surface-level grasp of transformers, attention, training stages, hardware, and inference
 
@@ -53,11 +53,11 @@ I feel like I keep up with the changing world. COVID-19, for instance, prompted 
 
 I have an affinity for writing and editing. I write everything myself!
 
-I've read about 50 fiction books, but they no longer appeal to me. I've since switched to non-fiction: productivity, philosophy, art, and popular science. While I enjoy tech, biology, and economics, I prefer articles for those subjects
+I've read about 50 fiction books, but they no longer appeal to me. I've since switched to non-fiction: work, philosophy, art, and popular science. While I enjoy tech, biology, and economics, I prefer articles for those subjects
 
-🐧 I run [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+🐧 I run [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux); my server runs [NixOS](https://nixos.org/)
 
-[Did some photography](/en/photos), but I'm more into the gear and art theory
+[Did some photography](/en/photos), though I'm more into the technical side and art theory
 
 I left Russia a few years ago. Since then, I've traveled to countries far ✈️ apart and continue to actively explore the world
 
@@ -81,11 +81,11 @@ According to the Russian [Wikipedia](https://ru.wikipedia.org/wiki/%D0%9C%D0%BE%
 
 Lightning and electricity naturally lead to Nikola Tesla
 
-And that's how the name came to be. ⚡️
+And thus, He was born ⚡️
 
 <LightningGlow />
 
-[Not that I'm a fan of Nikola: he was a peculiar, speculative, and slightly eccentric person. Even more so, I'm not a fan of Tesla Inc., though they do make nice cars]{.muted}
+[Not that I'm a fan of Nikola: he was a peculiar, speculative, and slightly eccentric person. And I'm even less of a fan of Tesla Inc., though they do make nice cars]{.muted}
 
 Now, I use Teslak as my handle everywhere
 

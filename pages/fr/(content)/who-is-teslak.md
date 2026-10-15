@@ -31,19 +31,19 @@ Plus de détails dans le bloc déroulant
 
 ⚙️ Début 2024, j’ai rejoint une startup de RPA développant un assistant semi-local capable de contrôler l’ordinateur, à l’instar de [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Depuis 2025, je conçois des agents d’IA pour différentes entreprises
 
-Je ne suis pas ingénieur ML, bien que j’aie entraîné des modèles à un niveau de base (OCR CNN, et j’envisage de faire du fine-tuning sur une petite Qwen). J’adapte plutôt des solutions existantes pour des applications concrètes
+Je ne suis pas ingénieur ML, bien que j’aie entraîné des modèles à un niveau de base (OCR CNN, fine-tuning de Qwen). J’adapte plutôt des solutions existantes pour des applications concrètes
 
 Mon vrai contact avec les réseaux de neurones a commencé avec un article [sur Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) et ses générations d’images, impressionnantes pour l’époque
 
 La sortie de [Midjourney](https://t.me/TesNot/314) en 2022 m’a beaucoup marqué : je passais des journées entières à générer des images, même si l’outil était alors infiniment loin des modèles actuels
 
-J’utilisais GPT avant même la sortie de ChatGPT ([mon pic](https://t.me/Tes404/1058) + une publication juste avant), y compris [ru](https://t.me/Tes404/599), et j’ai [écrit](https://t.me/Tes404/2929) sur le lancement de 3.5 le jour même de sa sortie
+J’utilisais GPT avant même la sortie de ChatGPT ([l’apogée de cette époque](https://t.me/Tes404/1058) + un post juste avant), y compris des [adaptations russes](https://t.me/Tes404/599), et j’ai [écrit](https://t.me/Tes404/2929) sur le lancement de 3.5 le jour même de sa sortie
 
-J'ai développé des agents avec LangGraph, LlamaIndex et n8n, et j'ai automatisé certaines tâches de navigation avec [Harpa](https://harpa.ai/). À la sortie d'OpenClaw, j'y ai basculé la majeure partie de mes pipelines, en analysant son architecture et son évolution. Maintenant sur Hermes. Je garde un œil sur les devtools et l'évolution des harnesses
+J’ai développé des agents avec LangGraph, LlamaIndex et n8n, et j’ai automatisé certaines tâches de navigation avec [Harpa](https://harpa.ai/). À la sortie d’OpenClaw, j’y ai basculé la majeure partie de mes pipelines, en analysant son architecture et son évolution. Maintenant sur Hermes. Je garde un œil sur les devtools et l’évolution des harnesses
 
 En expérimentant avec des modèles locaux, je reste sceptique envers tout ce qui est sous [au moins]{.muted} 30B pour des tâches générales
 
-Je suis activement tous les LLM : je les utilise, je lis les *papers*, j'explore les implémentations de RAG et de [recherche approfondie](https://github.com/assafelovic/gpt-researcher), et j'expérimente en pratique. J'ai une compréhension de base des transformers, de l'attention, des phases d'entraînement, du matériel et de l'inférence
+Je suis activement tous les LLM : je les utilise, je lis les *papers*, j’explore les implémentations de RAG et de [recherche approfondie](https://github.com/assafelovic/gpt-researcher), et j’expérimente en pratique. J’ai une compréhension de base des transformers, de l’attention, des phases d’entraînement, du matériel et de l’inférence
 
 :::
 
@@ -55,9 +55,9 @@ L’écrit et la rédaction me sont proches. J’écris tout moi-même !
 
 J’ai lu environ 50 livres de fiction — aujourd’hui, ils ne me plaisent plus. Je suis passé à la non-fiction : travail, philosophie, art et vulgarisation scientifique. Parfois sur la technologie, la biologie et l’économie, mais sur ces sujets, je préfère les articles
 
-🐧 J’utilise [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+🐧 Je suis sous [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux), mon serveur tourne sous [NixOS](https://nixos.org/)
 
-[J’ai fait de la photo](/fr/photos), mais je m’intéresse davantage au matériel et à la théorie de l’art
+[J’ai fait de la photo](/fr/photos), mais je m’intéresse davantage à l’aspect technique et à la théorie de l’art
 
 J’ai quitté la Russie il y a quelques années. J’ai voyagé dans des pays très éloignés ✈️ les uns des autres et je continue d’explorer activement le monde
 

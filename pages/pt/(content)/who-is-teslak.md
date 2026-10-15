@@ -19,7 +19,7 @@ No início, experimentei a programação: C++ e desenvolvimento web. Saí do có
 
 Durante um tempo, desenhei e me dediquei ao design gráfico, mas sempre me senti mais forte na parte técnica. Me dou bem com desenvolvedores, entendo o funcionamento dos sistemas modernos e as limitações técnicas ao implementar o produto
 
-Trabalhei com um [CRM para fintech]{term="Fintech CRM" definition="Um sistema para corretoras on-line e plataformas financeiras — empresas por meio das quais as pessoas operam na bolsa ou investem. Ajuda a guiar o cliente desde a primeira solicitação até a abertura da conta: verificar identidade e documentos, acompanhar depósitos e retiradas de fundos, calcular recompensas de afiliados e armazenar todo o histórico em um só lugar"}, em um estúdio de design de alto nível e em startups de redes neurais. Lancei projetos para grandes corporações e agências
+Trabalhei com um [CRM para fintech]{term="Fintech CRM" definition="Um sistema para corretoras on-line e plataformas financeiras — empresas por meio das quais as pessoas operam na bolsa ou investem. Ajuda a guiar o cliente desde a primeira solicitação até a abertura da conta: verificar identidade e documentos, acompanhar depósitos e retiradas de fundos, calcular recompensas de afiliados e armazenar todo o histórico em um só lugar"}, em um estúdio de design de alto nível e em startups de IA. Lancei projetos para grandes corporações e agências
 
 Conheço os bons processos e valorizo os detalhes
 
@@ -31,13 +31,13 @@ Mais detalhes no bloco retrátil
 
 ⚙️ No início de 2024, entrei em uma startup de RPA que desenvolvia um assistente semilocal para controlar o computador, nos moldes do [Claude computer use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool). Desde 2025, crio agentes de IA para diversas empresas
 
-Não sou engenheiro de ML, embora tenha treinado modelos de forma básica (OCR CNN, com planos de fazer fine-tuning em uma Qwen pequena). Antes, adapto o alheio para uso prático
+Não sou engenheiro de ML, embora tenha treinado modelos de forma básica (OCR CNN, fine-tuning de Qwen). Na prática, adapto soluções existentes para uso aplicado
 
 Minha aproximação com as redes neurais começou com um artigo [sobre o Artbreeder](https://www.theverge.com/2020/8/21/21395115/roman-emperors-photorealistic-portraits-ai-artbreeder-dan-voshart) e suas imagens geradas, impressionantes para a época
 
 O lançamento do [Midjourney](https://t.me/TesNot/314) em 2022 me impressionou muito: eu passava dias inteiros gerando, embora estivesse infinitamente longe das atuais
 
-Já usava o GPT antes do lançamento do ChatGPT ([meu pico](https://t.me/Tes404/1058) + um post anterior), incluindo [ru](https://t.me/Tes404/599), e [escrevi](https://t.me/Tes404/2929) sobre o lançamento de 3.5 no mesmo dia em que saiu
+Já usava o GPT antes do lançamento do ChatGPT ([o auge daquela época](https://t.me/Tes404/1058) + um post anterior), incluindo [adaptações em russo](https://t.me/Tes404/599), e [escrevi](https://t.me/Tes404/2929) sobre o lançamento de 3.5 no mesmo dia em que saiu
 
 Desenvolvi agentes com LangGraph, LlamaIndex e n8n, e automatizei algumas tarefas do navegador com [Harpa](https://harpa.ai/). Com o lançamento do OpenClaw, migrei a maior parte do meu pipeline para ele, analisando sua arquitetura e evolução. Agora estou no Hermes. Acompanho de perto as devtools e a evolução dos harnesses
 
@@ -55,9 +55,9 @@ A escrita e a edição me são próximas. Escrevo eu mesmo!
 
 Li cerca de 50 livros de ficção, mas hoje não me atraem mais. Mudei para a não-ficção: sobre trabalho, filosofia, arte e divulgação científica. Às vezes leio sobre tecnologia, biologia e economia, mas nessas áreas prefiro artigos
 
-🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux)
+🐧 Uso [Fedora](https://en.wikipedia.org/wiki/Fedora_Linux), e meu servidor roda [NixOS](https://nixos.org/)
 
-[Fotografava](/pt/photos), mas me interesso mais pelo equipamento e pela teoria da arte
+[Fotografava](/pt/photos), mas me interesso mais pela parte técnica e pela teoria da arte
 
 Faz alguns anos que saí da Rússia. Estive em países muito distantes ✈️ uns dos outros e continuo a explorar o mundo ativamente
 
@@ -65,7 +65,7 @@ Estilo de vida sóbrio
 
 ## O blog
 
-Em 2020, criei um [canal no Telegram](https://t.me/TesNot), onde escrevo de vez em quando. Pouco depois, criei um [segundo](https://t.me/Tes404), com reenvíos diários e pensamentos sem grande edição
+Em 2020, criei um [canal no Telegram](https://t.me/TesNot), onde escrevo de vez em quando. Pouco depois, criei um [segundo](https://t.me/Tes404), com reposts diários e pensamentos sem grande edição
 
 Tenho muitas críticas ao Telegram [e à maioria das plataformas]{.muted}; isso, somado ao desejo de estar mais próximo da comunidade global de língua inglesa e à busca por independência, me trouxe a este site
 
