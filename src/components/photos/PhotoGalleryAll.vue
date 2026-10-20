@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import raw from '../../../photos/data'
-import { galleryView } from '../../logics'
+import { galleryView, toggleGalleryView } from '../../logics'
 
 const props = defineProps<{
   limit?: number
@@ -11,21 +11,25 @@ const photos = computed(() => {
     return raw.slice(0, props.limit)
   return raw
 })
-
-function toggleView() {
-  galleryView.value = galleryView.value === 'cover' ? 'contain' : 'cover'
-}
 </script>
 
 <template>
-  <div flex="~ gap-1 col items-center justify-center" absolute sm:fixed left-6 top-20>
-    <button
-      title="Switch view"
-      rounded-full p2 op20 hover="op100 bg-#8881"
-      @click="toggleView"
-    >
-      <div :class="galleryView === 'cover' ? 'i-ri-grid-line' : 'i-ri-layout-masonry-line'" />
-    </button>
+  <div>
+    <div class="flex justify-center mb-6 relative z-10 slide-enter">
+      <button
+        class="group flex items-center gap-2 px-4 py-2 rounded-full op40 hover:op80 transition-all duration-300 outline-none select-none cursor-pointer"
+        :aria-label="galleryView === 'cover' ? $t('photos-view-contain') : $t('photos-view-cover')"
+        @click="toggleGalleryView"
+      >
+        <div
+          class="text-lg transition-transform duration-300 ease-out"
+          :class="galleryView === 'cover' ? 'i-ri-layout-masonry-line rotate-0' : 'i-ri-grid-line rotate-180'"
+        />
+        <span class="transition-opacity duration-200">
+          {{ galleryView === 'cover' ? $t('photos-view-contain') : $t('photos-view-cover') }}
+        </span>
+      </button>
+    </div>
+    <PhotoGrid :photos="photos" :view="galleryView" />
   </div>
-  <PhotoGrid :photos="photos" :view="galleryView" />
 </template>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <image href="{{background}}" width="1200" height="630" />
+  <text
+    fill="#fff"
+    font-family="Inter, sans-serif"
+    font-size="54"
+    font-weight="400"
+    letter-spacing="0"
+  >
+    <tspan x="210" y="270">{{line1}}</tspan>
+    <tspan x="210" y="345">{{line2}}</tspan>
+    <tspan x="210" y="420">{{line3}}</tspan>
+  </text>
+</svg>

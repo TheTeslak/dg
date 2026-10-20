@@ -1,19 +1,32 @@
 import dayjs from 'dayjs'
+import { nextTick } from 'vue'
+import { defaultLocale, getDateLocale, isSupportedLocale, localeConfig } from '../locales/config'
+
+export * from './post-visibility'
 
 export const isDark = useDark()
-export const englishOnly = useLocalStorage('antfu-english-only', false)
-export const galleryView = useLocalStorage<'cover' | 'contain'>('antfu-gallery-view', 'cover')
 
-/**
- * Credit to [@hooray](https://github.com/hooray)
- * @see https://github.com/vuejs/vitepress/pull/2347
- */
+export const onlyLanguage = useLocalStorage('teslak-only-language', false)
+
+export const galleryView = useLocalStorage<'cover' | 'contain'>('teslak-gallery-view', 'cover')
+
+export function toggleGalleryView() {
+  galleryView.value = galleryView.value === 'cover' ? 'contain' : 'cover'
+}
+
+export const isLightboxOpen = ref(false)
+
+type DocumentWithOptionalViewTransition = Document & {
+  startViewTransition?: Document['startViewTransition']
+}
+
 export function toggleDark(event: MouseEvent) {
-  // @ts-expect-error experimental API
-  const isAppearanceTransition = document.startViewTransition
-    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // lib.dom models this API as always present, but we still need a runtime guard.
+  const startViewTransition = (document as DocumentWithOptionalViewTransition)
+    .startViewTransition
+    ?.bind(document)
 
-  if (!isAppearanceTransition) {
+  if (!startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     isDark.value = !isDark.value
     return
   }
@@ -24,7 +37,7 @@ export function toggleDark(event: MouseEvent) {
     Math.max(x, innerWidth - x),
     Math.max(y, innerHeight - y),
   )
-  const transition = document.startViewTransition(async () => {
+  const transition = startViewTransition(async () => {
     isDark.value = !isDark.value
     await nextTick()
   })
@@ -52,9 +65,84 @@ export function toggleDark(event: MouseEvent) {
     })
 }
 
-export function formatDate(d: string | Date, onlyDate = true) {
-  const date = dayjs(d)
-  if (onlyDate || date.year() === dayjs().year())
-    return date.format('MMM D')
-  return date.format('MMM D, YYYY')
+function parseDisplayDate(d: string | Date) {
+  if (typeof d === 'string') {
+    const match = d.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/)
+    if (match)
+      return dayjs(`${match[1]}-${match[2]}-${match[3]}`)
+  }
+
+  return dayjs(d)
+}
+
+function getDisplayDateFormat(locale: string, includeYear: boolean) {
+  if (locale === 'en')
+    return includeYear ? 'MMM D, YYYY' : 'MMM D'
+  return includeYear ? 'D MMM YYYY' : 'D MMM'
+}
+
+export function formatDate(d: string | Date, onlyDate = true, locale = dayjs.locale()) {
+  const resolvedLocale = isSupportedLocale(locale) ? locale : defaultLocale
+  const date = parseDisplayDate(d).locale(getDateLocale(resolvedLocale))
+  if (!date.isValid())
+    return ''
+  const now = dayjs()
+  const includeYear = !onlyDate && date.year() !== now.year()
+  const formatted = date.format(getDisplayDateFormat(resolvedLocale, includeYear))
+  return formatted.replace('.', '')
+}
+
+export function isRecentPost(date: string | Date, updated?: string | Date): boolean {
+  const effectiveDate = updated ? dayjs(updated) : dayjs(date)
+  const now = dayjs()
+  // 1-day grace period: show 🌱 even if the date is slightly in the future
+  // (handles timezone mismatches and minor scheduling errors)
+  return now.diff(effectiveDate, 'day') < 15 && effectiveDate.isBefore(now.add(1, 'day'))
+}
+
+export function parseReadingMinutes(duration: unknown): number | undefined {
+  if (typeof duration === 'number' && Number.isFinite(duration))
+    return Math.max(1, Math.round(duration))
+
+  if (typeof duration === 'string') {
+    const match = duration.trim().match(/^(\d+)(?:\s*min)?$/i)
+    if (match)
+      return Math.max(1, Number.parseInt(match[1], 10))
+  }
+
+  return undefined
+}
+
+export function formatReadingDuration(duration: unknown, locale = 'en') {
+  const minutes = parseReadingMinutes(duration)
+  if (minutes == null)
+    return undefined
+
+  const resolvedLocale = isSupportedLocale(locale) ? locale : defaultLocale
+  return `${minutes} ${localeConfig[resolvedLocale].minuteAbbreviation}`
+}
+
+export function resolvePath(path: string, currentRoutePath: string) {
+  if (path.startsWith('http') || path.startsWith('#') || path.startsWith('mailto'))
+    return path
+
+  const parts = currentRoutePath.split('/')
+  const locale = isSupportedLocale(parts[1]) ? parts[1] : defaultLocale
+
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  const explicitLocale = cleanPath.split('/', 1)[0]
+
+  if (isSupportedLocale(explicitLocale))
+    return `/${cleanPath}`
+
+  return `/${locale}/${cleanPath}`
+}
+
+export function extractDomain(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  }
+  catch {
+    return url.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '')
+  }
 }
