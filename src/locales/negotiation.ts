@@ -2,8 +2,8 @@
  * Locale negotiation is only for neutral entry routes (`/` and `/index.html`).
  * Explicit locale URLs stay stable; cookie choice outranks the browser hint.
  */
-import type { SupportedLocale } from './config'
-import { defaultLocale, isSupportedLocale, resolveSupportedLocale } from './config'
+import type { SupportedLocale } from './config.ts'
+import { defaultLocale, isSupportedLocale, resolveSupportedLocale } from './config.ts'
 
 const languageRangeRE = /^(?:[a-z]{1,8}(?:-[a-z0-9]{1,8})*|\*)$/i
 const qualityValueRE = /^(?:0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/

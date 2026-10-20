@@ -1,5 +1,5 @@
-import { LOCALE_COOKIE_NAME } from '../../src/locales/config'
-import { negotiateLocale } from '../../src/locales/negotiation'
+import { LOCALE_COOKIE_NAME } from '../../src/locales/config.ts'
+import { negotiateLocale } from '../../src/locales/negotiation.ts'
 
 interface EdgeContext {
   cookies: {
